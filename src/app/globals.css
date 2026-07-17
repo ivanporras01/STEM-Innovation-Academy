@@ -28,41 +28,60 @@
 
   .nova-cosmos-vignette {
     @apply absolute inset-0;
-    background: radial-gradient(ellipse at center, transparent 40%, rgba(1, 4, 9, 0.65) 100%);
+    background: radial-gradient(ellipse at center, transparent 55%, rgba(1, 4, 9, 0.35) 100%);
+  }
+
+  .nova-hyperspace .nova-cosmos-canvas {
+    filter: brightness(1.12) saturate(1.15);
+    transition: filter 0.4s ease;
+  }
+
+  .nova-hyperspace .nova-nebula {
+    opacity: 1.15;
+    filter: blur(80px) brightness(1.2);
   }
 
   .nova-nebula {
-    @apply absolute rounded-full blur-3xl;
+    @apply absolute rounded-full;
+    filter: blur(72px);
     animation: nova-nebula-float 20s ease-in-out infinite alternate;
+    transform: translate(
+      calc(var(--nova-parallax-x, 0px) * 12),
+      calc(var(--nova-parallax-y, 0px) * 12)
+    );
+    will-change: transform;
   }
 
   .nova-nebula--cyan {
-    width: min(90vw, 640px);
-    height: min(90vw, 640px);
-    top: -12%;
-    left: -8%;
-    background: radial-gradient(circle, rgba(0, 180, 216, 0.35) 0%, rgba(0, 180, 216, 0.08) 40%, transparent 70%);
+    width: min(100vw, 780px);
+    height: min(100vw, 780px);
+    top: -14%;
+    left: -10%;
+    background: radial-gradient(circle, rgba(0, 180, 216, 0.55) 0%, rgba(0, 180, 216, 0.18) 35%, transparent 68%);
     animation-duration: 18s;
+    opacity: 0.95;
   }
 
   .nova-nebula--violet {
-    width: min(80vw, 520px);
-    height: min(80vw, 520px);
-    top: 30%;
-    right: -15%;
-    background: radial-gradient(circle, rgba(118, 87, 232, 0.28) 0%, rgba(118, 87, 232, 0.06) 45%, transparent 70%);
+    width: min(90vw, 640px);
+    height: min(90vw, 640px);
+    top: 28%;
+    right: -18%;
+    background: radial-gradient(circle, rgba(118, 87, 232, 0.48) 0%, rgba(118, 87, 232, 0.14) 40%, transparent 68%);
     animation-duration: 24s;
     animation-delay: -6s;
+    opacity: 0.9;
   }
 
   .nova-nebula--orange {
-    width: min(70vw, 480px);
-    height: min(70vw, 480px);
-    bottom: -10%;
-    left: 20%;
-    background: radial-gradient(circle, rgba(255, 122, 0, 0.2) 0%, rgba(255, 122, 0, 0.05) 45%, transparent 70%);
+    width: min(80vw, 560px);
+    height: min(80vw, 560px);
+    bottom: -12%;
+    left: 18%;
+    background: radial-gradient(circle, rgba(255, 122, 0, 0.42) 0%, rgba(255, 122, 0, 0.12) 40%, transparent 68%);
     animation-duration: 22s;
     animation-delay: -12s;
+    opacity: 0.88;
   }
 
   .nova-orbit-satellite {
@@ -126,7 +145,7 @@
   }
 
   .nova-glass-nav {
-    @apply border-b border-white/10 bg-[#0a1628]/75 backdrop-blur-xl;
+    @apply border-b border-white/10 bg-[#0a1628]/45 backdrop-blur-xl;
   }
 
   .nova-glass-nav-light {

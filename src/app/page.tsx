@@ -99,7 +99,7 @@ export default function HomePage() {
         <section className="nova-section-cosmic relative overflow-hidden py-20 text-white sm:py-28">
           <div className="nova-nebula-glow absolute -left-32 top-0 h-96 w-96 bg-nova-cyan/25" />
           <div className="nova-nebula-glow absolute -right-32 bottom-0 h-[28rem] w-[28rem] bg-nova-orange/15" />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-deep-blue/90 via-[#0a1628]/80 to-nova-deep-blue/95" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-deep-blue/45 via-[#0a1628]/30 to-nova-deep-blue/50" />
 
           <div className="nova-container relative grid items-center gap-12 lg:grid-cols-2">
             <div>
@@ -270,7 +270,7 @@ export default function HomePage() {
               {FOUNDING_PATHWAYS.map((pathway) => (
                 <div
                   key={pathway.title}
-                  className="nova-glass-card-light flex flex-col"
+                  className="nova-glass-card flex flex-col"
                 >
                   <PathwayIcon
                     pathway={pathway.id}
@@ -280,8 +280,8 @@ export default function HomePage() {
                   <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-nova-cyan">
                     {pathway.grades}
                   </p>
-                  <h3 className="mb-2 text-lg font-bold text-nova-deep-blue">{pathway.title}</h3>
-                  <p className="mb-4 flex-1 text-sm text-nova-gray">{pathway.desc}</p>
+                  <h3 className="mb-2 text-lg font-bold text-white">{pathway.title}</h3>
+                  <p className="mb-4 flex-1 text-sm text-nova-cyan-light/75">{pathway.desc}</p>
                   <Link href={pathway.href} className="nova-btn-primary w-full text-center">
                     Explore Mission Path
                   </Link>

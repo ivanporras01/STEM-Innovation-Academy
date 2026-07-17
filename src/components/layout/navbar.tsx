@@ -95,7 +95,7 @@ export function Navbar() {
           className={cn(
             "absolute left-0 right-0 top-[72px] flex flex-col gap-1 border-b p-4 shadow-nova lg:static lg:flex-row lg:items-center lg:gap-1 lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none",
             isCosmicRoute
-              ? "border-white/10 bg-[#0a1628]/95 backdrop-blur-xl lg:bg-transparent"
+              ? "border-white/10 bg-[#0a1628]/70 backdrop-blur-xl lg:bg-transparent"
               : "border-nova-light-gray bg-white lg:bg-transparent",
             !menuOpen && "hidden lg:flex"
           )}

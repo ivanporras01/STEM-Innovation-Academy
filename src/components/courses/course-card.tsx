@@ -31,7 +31,7 @@ export function CourseCard({
   experienceTitle,
 }: CourseCardProps) {
   return (
-    <article className="nova-glass-card-light group flex flex-col">
+    <article className="nova-glass-card group flex flex-col">
       <div className="mb-4 flex items-start justify-between gap-3">
         <PathwayIcon
           pathway={pathway as PathwayKey}
@@ -44,18 +44,18 @@ export function CourseCard({
         </div>
       </div>
 
-      <h3 className="mb-2 text-lg font-bold text-nova-deep-blue group-hover:text-nova-cyan">
+      <h3 className="mb-2 text-lg font-bold text-white group-hover:text-nova-cyan-light">
         <Link href={`/courses/${slug}`}>{title}</Link>
       </h3>
 
-      <p className="mb-4 flex-1 text-sm leading-relaxed text-nova-gray line-clamp-3">
+      <p className="mb-4 flex-1 text-sm leading-relaxed text-nova-cyan-light/75 line-clamp-3">
         {description}
       </p>
 
       {mentorName && (
-        <p className="mb-3 text-xs text-nova-gray">
+        <p className="mb-3 text-xs text-nova-cyan-light/60">
           Innovation Mentor:{" "}
-          <span className="font-medium text-nova-dark-gray">{mentorName}</span>
+          <span className="font-medium text-white/90">{mentorName}</span>
         </p>
       )}
 
