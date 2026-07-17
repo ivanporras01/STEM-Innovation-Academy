@@ -6,13 +6,7 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { dashboardRoutes } from "@/lib/auth.config";
-
-const publicLinks = [
-  { href: "/#discover", label: "Discover NOVA" },
-  { href: "/courses", label: "Mission Paths" },
-  { href: "/experiences", label: "Missions" },
-  { href: "/#contact", label: "Contact" },
-];
+import { NOVA_PUBLIC_NAV } from "@/lib/nova-nav";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -24,6 +18,8 @@ export function Navbar() {
     : "/login";
 
   const isDashboard = pathname.startsWith("/dashboard");
+  const dashboardLabel =
+    session?.user?.role === "STUDENT" ? "Explorer Dashboard" : "Dashboard";
 
   return (
     <header className="sticky top-0 z-50 border-b border-nova-light-gray/80 bg-white/95 backdrop-blur-md">
@@ -57,7 +53,7 @@ export function Navbar() {
           )}
         >
           {!isDashboard &&
-            publicLinks.map((link) => (
+            NOVA_PUBLIC_NAV.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -75,7 +71,7 @@ export function Navbar() {
                 className="rounded-lg px-3 py-2 text-sm font-medium text-nova-dark-gray transition hover:bg-nova-off-white hover:text-nova-cyan"
                 onClick={() => setMenuOpen(false)}
               >
-                Dashboard
+                {dashboardLabel}
               </Link>
               <Link
                 href="/api/auth/signout"

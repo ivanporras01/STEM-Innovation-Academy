@@ -240,7 +240,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Founding Programs / Pathways */}
+        {/* Mission Paths */}
         <section id="pathways" className="py-20">
           <div className="nova-container">
             <div className="mb-10 flex flex-wrap items-end justify-between gap-4">

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { NOVA_FOOTER_EXPLORE, NOVA_FOOTER_PORTAL } from "@/lib/nova-nav";
 
 export function Footer() {
   return (
@@ -22,33 +23,22 @@ export function Footer() {
         <div>
           <h3 className="mb-3 text-sm font-semibold">Explore</h3>
           <div className="flex flex-col gap-2 text-sm text-nova-cyan-light/80">
-            <Link href="/#discover" className="hover:text-white">
-              Discover NOVA
-            </Link>
-            <Link href="/courses" className="hover:text-white">
-              Mission Paths
-            </Link>
-            <Link href="/experiences" className="hover:text-white">
-              Missions
-            </Link>
-            <Link href="/#contact" className="hover:text-white">
-              Contact
-            </Link>
+            {NOVA_FOOTER_EXPLORE.map((link) => (
+              <Link key={link.href} href={link.href} className="hover:text-white">
+                {link.label}
+              </Link>
+            ))}
           </div>
         </div>
 
         <div>
           <h3 className="mb-3 text-sm font-semibold">Portal</h3>
           <div className="flex flex-col gap-2 text-sm text-nova-cyan-light/80">
-            <Link href="/login" className="hover:text-white">
-              Login
-            </Link>
-            <Link href="/register" className="hover:text-white">
-              Register
-            </Link>
-            <Link href="/dashboard/student" className="hover:text-white">
-              Explorer Dashboard
-            </Link>
+            {NOVA_FOOTER_PORTAL.map((link) => (
+              <Link key={link.href} href={link.href} className="hover:text-white">
+                {link.label}
+              </Link>
+            ))}
           </div>
         </div>
 
