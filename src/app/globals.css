@@ -23,7 +23,7 @@
 
   .nova-cosmos-canvas {
     @apply absolute inset-0 h-full w-full;
-    opacity: 0.5;
+    opacity: 0.25;
   }
 
   .nova-cosmos-vignette {
@@ -44,8 +44,8 @@
   .nova-cosmos-parallax {
     @apply absolute inset-0;
     transform: translate(
-      calc(var(--nova-parallax-x, 0px) * 14),
-      calc(var(--nova-parallax-y, 0px) * 14)
+      calc(var(--nova-parallax-x, 0px) * 7),
+      calc(var(--nova-parallax-y, 0px) * 7)
     );
     will-change: transform;
   }
@@ -61,9 +61,9 @@
     height: min(100vw, 780px);
     top: -14%;
     left: -10%;
-    background: radial-gradient(circle, rgba(0, 180, 216, 0.16) 0%, rgba(0, 180, 216, 0.05) 35%, transparent 68%);
+    background: radial-gradient(circle, rgba(0, 180, 216, 0.08) 0%, rgba(0, 180, 216, 0.025) 35%, transparent 68%);
     animation-duration: 18s;
-    opacity: 0.32;
+    opacity: 0.16;
   }
 
   .nova-nebula--violet {
@@ -71,10 +71,10 @@
     height: min(90vw, 640px);
     top: 28%;
     right: -18%;
-    background: radial-gradient(circle, rgba(118, 87, 232, 0.14) 0%, rgba(118, 87, 232, 0.04) 40%, transparent 68%);
+    background: radial-gradient(circle, rgba(118, 87, 232, 0.07) 0%, rgba(118, 87, 232, 0.02) 40%, transparent 68%);
     animation-duration: 24s;
     animation-delay: -6s;
-    opacity: 0.28;
+    opacity: 0.14;
   }
 
   .nova-nebula--orange {
@@ -82,10 +82,10 @@
     height: min(80vw, 560px);
     bottom: -12%;
     left: 18%;
-    background: radial-gradient(circle, rgba(255, 122, 0, 0.12) 0%, rgba(255, 122, 0, 0.035) 40%, transparent 68%);
+    background: radial-gradient(circle, rgba(255, 122, 0, 0.06) 0%, rgba(255, 122, 0, 0.018) 40%, transparent 68%);
     animation-duration: 22s;
     animation-delay: -12s;
-    opacity: 0.26;
+    opacity: 0.13;
   }
 
   .nova-orbit-satellite {
@@ -329,7 +329,8 @@
 
   .experience-lab {
     color: white;
-    background: #071225;
+    background: linear-gradient(180deg, #071225 0%, #050d1a 100%);
+    position: relative;
   }
 
   .experience-lab-btn {
@@ -339,6 +340,250 @@
   .experience-lab-btn-active {
     background: var(--exp-accent);
     border-color: var(--exp-accent);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--exp-accent) 40%, transparent);
+  }
+
+  /* ── Mission Control LAB HUD ── */
+  .lab-hud-shell {
+    @apply relative overflow-hidden rounded-2xl border border-white/15 shadow-2xl;
+    background: linear-gradient(145deg, rgba(10, 22, 40, 0.95) 0%, rgba(5, 13, 26, 0.98) 100%);
+    backdrop-filter: blur(12px);
+  }
+
+  .lab-hud-shell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 180, 216, 0.015) 2px,
+      rgba(0, 180, 216, 0.015) 4px
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .lab-hud-scanline {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--exp-accent), transparent);
+    opacity: 0.25;
+    animation: lab-scanline 4s linear infinite;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .lab-hud-header {
+    @apply relative border-b border-white/10 px-5 py-4;
+    background: linear-gradient(90deg, rgba(0, 180, 216, 0.06) 0%, transparent 50%, rgba(118, 87, 232, 0.04) 100%);
+    z-index: 3;
+  }
+
+  .lab-hud-status-led {
+    @apply inline-block h-2 w-2 rounded-full;
+    animation: lab-led-pulse 2s ease-in-out infinite;
+  }
+
+  .lab-hud-status-led--live {
+    background: #22c55e;
+    box-shadow: 0 0 8px #22c55e;
+  }
+
+  .lab-hud-status-led--success {
+    background: #34d399;
+    box-shadow: 0 0 12px #34d399;
+    animation: lab-success-glow 1.5s ease-in-out infinite;
+  }
+
+  .lab-hud-corner {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-color: var(--exp-accent);
+    opacity: 0.5;
+    z-index: 3;
+  }
+
+  .lab-hud-corner--tl { top: 8px; left: 8px; border-top: 2px solid; border-left: 2px solid; }
+  .lab-hud-corner--tr { top: 8px; right: 8px; border-top: 2px solid; border-right: 2px solid; }
+  .lab-hud-corner--bl { bottom: 8px; left: 8px; border-bottom: 2px solid; border-left: 2px solid; }
+  .lab-hud-corner--br { bottom: 8px; right: 8px; border-bottom: 2px solid; border-right: 2px solid; }
+
+  .lab-telemetry-panel {
+    @apply relative overflow-hidden rounded-xl border border-white/10 px-4 py-3;
+    background: rgba(0, 0, 0, 0.35);
+  }
+
+  .lab-telemetry-panel::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--exp-accent-2), transparent);
+    opacity: 0.4;
+  }
+
+  .lab-telemetry-bar {
+    @apply h-1.5 rounded-full overflow-hidden bg-white/10;
+  }
+
+  .lab-telemetry-bar-fill {
+    @apply h-full rounded-full transition-all duration-700 ease-out;
+    background: linear-gradient(90deg, var(--exp-accent), var(--exp-accent-2));
+    box-shadow: 0 0 8px color-mix(in srgb, var(--exp-accent) 50%, transparent);
+  }
+
+  .lab-telemetry-bar-fill--danger {
+    background: linear-gradient(90deg, #ef4444, #f97316);
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+  }
+
+  .lab-telemetry-bar-fill--success {
+    background: linear-gradient(90deg, #10b981, #34d399);
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+  }
+
+  .lab-console {
+    @apply rounded-xl border border-white/10 font-mono text-xs leading-relaxed;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .lab-console-line {
+    @apply border-l-2 border-transparent pl-2 py-0.5;
+  }
+
+  .lab-console-line--new {
+    border-color: var(--exp-accent);
+    animation: lab-console-flash 0.6s ease-out;
+  }
+
+  .lab-sector-map {
+    @apply relative rounded-xl border border-white/15 p-3 sm:p-4;
+    background:
+      radial-gradient(ellipse at center, rgba(0, 180, 216, 0.04) 0%, transparent 70%),
+      rgba(0, 0, 0, 0.4);
+  }
+
+  .lab-sector-cell {
+    @apply relative flex aspect-square flex-col items-center justify-center rounded-lg border text-center transition-all duration-300;
+  }
+
+  .lab-waveform {
+    @apply flex h-14 items-end gap-0.5 rounded-lg border border-white/10 px-3 py-2;
+    background: rgba(0, 0, 0, 0.4);
+  }
+
+  .lab-waveform-bar {
+    @apply flex-1 rounded-sm transition-all duration-500;
+    background: var(--exp-accent);
+  }
+
+  .lab-editor-pane {
+    @apply rounded-xl border border-white/10 overflow-hidden;
+    background: rgba(0, 0, 0, 0.45);
+  }
+
+  .lab-editor-header {
+    @apply flex items-center gap-2 border-b border-white/10 px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-white/50;
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  .lab-greenhouse-grid {
+    @apply grid grid-cols-5 gap-1.5 rounded-xl border border-emerald-500/20 p-4;
+    background: linear-gradient(180deg, rgba(6, 78, 59, 0.3) 0%, rgba(0, 0, 0, 0.4) 100%);
+  }
+
+  .lab-greenhouse-plant {
+    @apply flex items-center justify-center rounded-lg text-xl transition-all duration-500;
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.15);
+  }
+
+  .lab-greenhouse-plant--wilting {
+    opacity: 0.45;
+    filter: grayscale(0.6);
+    border-color: rgba(239, 68, 68, 0.3);
+  }
+
+  .lab-greenhouse-plant--healthy {
+    background: rgba(16, 185, 129, 0.15);
+    border-color: rgba(16, 185, 129, 0.35);
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
+  }
+
+  .lab-gauge-arc {
+    transform: rotate(-90deg);
+    transform-origin: center;
+  }
+
+  .lab-arm-toggle {
+    @apply relative inline-flex h-8 w-14 cursor-pointer items-center rounded-full transition-colors duration-300;
+  }
+
+  .lab-arm-toggle--off {
+    @apply bg-red-950/60 border border-red-500/40;
+  }
+
+  .lab-arm-toggle--on {
+    @apply bg-emerald-950/60 border border-emerald-500/40;
+    box-shadow: 0 0 16px rgba(16, 185, 129, 0.3);
+  }
+
+  .lab-arm-knob {
+    @apply absolute h-6 w-6 rounded-full transition-all duration-300;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  }
+
+  .lab-success-particles {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 10;
+  }
+
+  .lab-success-particles span {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    animation: lab-particle-burst 2s ease-out forwards;
+  }
+
+  .lab-alert-banner {
+    @apply rounded-lg border px-4 py-3 text-sm font-bold;
+    animation: lab-alert-pulse 1.5s ease-in-out infinite;
+  }
+
+  .lab-alert-banner--danger {
+    @apply border-red-500/50 bg-red-950/50 text-red-300;
+  }
+
+  .lab-phase-step {
+    @apply flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-bold transition-all duration-300;
+  }
+
+  .lab-phase-step--active {
+    border-color: var(--exp-accent);
+    background: color-mix(in srgb, var(--exp-accent) 15%, transparent);
+    color: var(--exp-accent-2);
+  }
+
+  .lab-phase-step--done {
+    border-color: rgba(16, 185, 129, 0.4);
+    background: rgba(16, 185, 129, 0.1);
+    color: #34d399;
+  }
+
+  .lab-phase-step--pending {
+    @apply border-white/10 bg-white/5 text-white/40;
   }
 
   .experience-badge {
@@ -405,8 +650,40 @@
 }
 
 @keyframes nova-nebula-float {
-  0% { transform: translate(0, 0) scale(1); opacity: 0.85; }
-  100% { transform: translate(30px, -20px) scale(1.08); opacity: 1; }
+  0% { transform: translate(0, 0) scale(1); opacity: 0.7; }
+  100% { transform: translate(15px, -10px) scale(1.04); opacity: 0.85; }
+}
+
+@keyframes lab-scanline {
+  0% { top: -2px; opacity: 0; }
+  10% { opacity: 0.25; }
+  90% { opacity: 0.25; }
+  100% { top: 100%; opacity: 0; }
+}
+
+@keyframes lab-led-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes lab-success-glow {
+  0%, 100% { box-shadow: 0 0 8px #34d399; transform: scale(1); }
+  50% { box-shadow: 0 0 20px #34d399; transform: scale(1.2); }
+}
+
+@keyframes lab-console-flash {
+  0% { background: color-mix(in srgb, var(--exp-accent) 20%, transparent); }
+  100% { background: transparent; }
+}
+
+@keyframes lab-particle-burst {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--dx, 0), var(--dy, -40px)) scale(0); }
+}
+
+@keyframes lab-alert-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.75; }
 }
 
 @keyframes nova-star-drift {

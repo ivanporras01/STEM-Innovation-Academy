@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 import { LabMissionShell } from "./lab-mission-shell";
 
 const STARTER = `# Relay Theta-9 · Decoder Patch
@@ -58,6 +59,8 @@ export function LabCode({ onComplete }: Props) {
     }
   }
 
+  const phase1Done = phase === 2 || success;
+
   return (
     <LabMissionShell
       labCode="NOVA LAB 001"
@@ -74,65 +77,104 @@ export function LabCode({ onComplete }: Props) {
             : "Patch the decoder and bring signal strength to 100%."
       }
     >
+      <div className="mb-4 flex flex-wrap gap-2">
+        <div className={phase1Done ? "lab-phase-step lab-phase-step--done" : "lab-phase-step lab-phase-step--active"}>
+          <span>{phase1Done ? "✓" : "1"}</span> Decode Signal
+        </div>
+        <div className={success ? "lab-phase-step lab-phase-step--done" : phase === 2 ? "lab-phase-step lab-phase-step--active" : "lab-phase-step lab-phase-step--pending"}>
+          <span>{success ? "✓" : "2"}</span> Activate Uplink
+        </div>
+      </div>
+
       <div className="mb-4 grid gap-3 sm:grid-cols-3">
-        <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-center">
-          <p className="text-[10px] font-bold uppercase text-white/50">Signal</p>
-          <p className="text-xl font-black text-[var(--exp-accent-2)]">{signalStrength}%</p>
+        <div className="lab-telemetry-panel">
+          <p className="text-[10px] font-bold uppercase text-white/50">Signal strength</p>
+          <p className="mt-1 text-2xl font-black text-[var(--exp-accent-2)]">{signalStrength}%</p>
+          <div className="lab-telemetry-bar mt-2">
+            <div
+              className={cn(
+                "lab-telemetry-bar-fill",
+                success && "lab-telemetry-bar-fill--success"
+              )}
+              style={{ width: `${signalStrength}%` }}
+            />
+          </div>
         </div>
-        <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-center">
+        <div className="lab-telemetry-panel text-center">
           <p className="text-[10px] font-bold uppercase text-white/50">Phase</p>
-          <p className="text-xl font-black text-white">{phase}/2</p>
+          <p className="mt-1 text-2xl font-black text-white">{phase}/2</p>
         </div>
-        <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-center">
-          <p className="text-[10px] font-bold uppercase text-white/50">Relay</p>
-          <p className={`text-sm font-bold ${success ? "text-emerald-400" : "text-red-400"}`}>
+        <div className="lab-telemetry-panel text-center">
+          <p className="text-[10px] font-bold uppercase text-white/50">Relay Theta-9</p>
+          <p className={`mt-1 text-lg font-black ${success ? "text-emerald-400" : "text-red-400"}`}>
             {success ? "ONLINE" : "OFFLINE"}
           </p>
+          <span className={`mt-1 inline-block h-1.5 w-1.5 rounded-full ${success ? "bg-emerald-400" : "bg-red-500 animate-pulse"}`} />
         </div>
       </div>
 
-      <div className="mb-4 flex h-12 items-end gap-0.5 rounded-lg border border-white/10 bg-black/30 px-3 py-2">
-        {Array.from({ length: 24 }, (_, i) => (
-          <div
-            key={i}
-            className="flex-1 rounded-sm bg-[var(--exp-accent)] transition-all duration-300"
-            style={{
-              height: `${success ? 80 + Math.sin(i * 0.8) * 20 : 12 + (signalStrength / 100) * 40 * Math.abs(Math.sin(i * 0.5))}%`,
-              opacity: success ? 0.9 : 0.3 + (signalStrength / 100) * 0.5,
-            }}
+      <div className="mb-4">
+        <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-white/40">Live waveform</p>
+        <div className="lab-waveform">
+          {Array.from({ length: 32 }, (_, i) => (
+            <div
+              key={i}
+              className="lab-waveform-bar"
+              style={{
+                height: `${success ? 70 + Math.sin(i * 0.6 + Date.now() / 500) * 25 : 8 + (signalStrength / 100) * 50 * Math.abs(Math.sin(i * 0.45))}%`,
+                opacity: success ? 0.95 : 0.25 + (signalStrength / 100) * 0.6,
+              }}
+            />
+          ))}
+        </div>
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <div className="lab-editor-pane">
+          <div className="lab-editor-header">
+            <span className="h-2 w-2 rounded-full bg-red-500/70" />
+            <span className="h-2 w-2 rounded-full bg-amber-400/70" />
+            <span className="h-2 w-2 rounded-full bg-emerald-400/70" />
+            <span className="ml-2">decoder_patch.py</span>
+          </div>
+          <textarea
+            spellCheck={false}
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            className="min-h-[280px] w-full resize-y border-0 bg-transparent px-4 py-3 font-mono text-sm leading-relaxed text-cyan-100 outline-none"
           />
-        ))}
-      </div>
-
-      <div className="rounded-xl border border-white/10 bg-[#06131a] p-4">
-        <textarea
-          spellCheck={false}
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          className="min-h-[260px] w-full resize-y border-0 bg-transparent font-mono text-sm leading-relaxed text-cyan-100 outline-none"
-        />
-        <div className="mt-4 flex flex-wrap gap-2">
-          <button type="button" onClick={run} className="experience-lab-btn experience-lab-btn-active">
-            ▶ Transmit Patch
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setCode(STARTER);
-              setSuccess(false);
-              setSignalStrength(8);
-              setPhase(1);
-              setAttempts(0);
-              setOutput("▸ Mission Control standing by…");
-            }}
-            className="experience-lab-btn"
-          >
-            Reset
-          </button>
+          <div className="flex flex-wrap gap-2 border-t border-white/10 px-4 py-3">
+            <button type="button" onClick={run} className="experience-lab-btn experience-lab-btn-active">
+              ▶ Transmit Patch
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setCode(STARTER);
+                setSuccess(false);
+                setSignalStrength(8);
+                setPhase(1);
+                setAttempts(0);
+                setOutput("▸ Mission Control standing by…");
+              }}
+              className="experience-lab-btn"
+            >
+              Reset
+            </button>
+          </div>
         </div>
-        <pre className="mt-4 whitespace-pre-wrap rounded-lg bg-black/30 p-3 font-mono text-xs text-emerald-300">
-          {output}
-        </pre>
+
+        <div className="lab-console p-4">
+          <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-emerald-400/80">
+            ▸ Mission Control Console
+          </p>
+          <pre className="whitespace-pre-wrap text-emerald-300/90">{output}</pre>
+          {success && (
+            <p className="mt-4 animate-pulse text-center text-xs font-bold uppercase tracking-widest text-emerald-400">
+              Signal lock achieved
+            </p>
+          )}
+        </div>
       </div>
     </LabMissionShell>
   );

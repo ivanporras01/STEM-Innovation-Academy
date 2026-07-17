@@ -4,7 +4,6 @@ import { useState } from "react";
 import {
   FRIENDLY_BUDDIES,
   PRO_BUDDIES,
-  TRAIT_COLORS,
   traitColor,
   getBuddy,
   type BuddyId,

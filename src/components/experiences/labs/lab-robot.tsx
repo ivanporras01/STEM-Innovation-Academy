@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 import { LabMissionShell } from "./lab-mission-shell";
 
 type Dir = "N" | "E" | "S" | "W";
@@ -23,13 +24,20 @@ const SECTOR_LABELS: Record<string, string> = {
   "0-0": "Rescue Module",
 };
 
+type RoverState = { r: number; c: number; dir: Dir };
+
+const ROWS = 4;
+const COLS = 4;
+const START: RoverState = { r: 3, c: 0, dir: "E" };
+const GOAL = { r: 0, c: 0 };
+const ROCK = { r: 2, c: 1 };
+
 function cellAt(r: number, c: number): Cell {
   if (r === ROCK.r && c === ROCK.c) return "rock";
   if (r === GOAL.r && c === GOAL.c) return "goal";
   return "empty";
 }
 
-type RoverState = { r: number; c: number; dir: Dir };
 type Props = { onComplete: (msg: string) => void };
 
 export function LabRobot({ onComplete }: Props) {
@@ -54,7 +62,7 @@ export function LabRobot({ onComplete }: Props) {
   }, [success]);
 
   const log = useCallback((msg: string) => {
-    setCommsLog((prev) => [...prev.slice(-4), msg]);
+    setCommsLog((prev) => [...prev.slice(-5), msg]);
   }, []);
 
   function add(cmd: string) {
@@ -147,22 +155,18 @@ export function LabRobot({ onComplete }: Props) {
     return (
       <div
         key={`${r}-${c}`}
-        className={[
-          "relative flex aspect-square flex-col items-center justify-center rounded-lg border text-center transition-all duration-300",
-          type === "rock"
-            ? "border-red-500/50 bg-red-950/60"
-            : type === "goal"
-              ? "border-emerald-400/50 bg-emerald-950/50"
-              : onTrail
-                ? "border-[var(--exp-accent)]/40 bg-[var(--exp-accent)]/15"
-                : "border-white/10 bg-white/[0.03]",
-          isRover && crashed && "ring-2 ring-red-500",
+        className={cn(
+          "lab-sector-cell",
+          type === "rock" && "border-red-500/50 bg-red-950/60",
+          type === "goal" && "border-emerald-400/50 bg-emerald-950/50",
+          type === "empty" && onTrail && "border-[var(--exp-accent)]/40 bg-[var(--exp-accent)]/15",
+          type === "empty" && !onTrail && "border-white/10 bg-white/[0.03]",
+          isRover && crashed && "ring-2 ring-red-500 animate-pulse",
           isRover && success && "ring-2 ring-emerald-400",
-        ]
-          .filter(Boolean)
-          .join(" ")}
+          running && isRover && "shadow-[0_0_20px_var(--exp-accent)]"
+        )}
       >
-        {type === "rock" && !isRover && <span className="text-2xl">🪨</span>}
+        {type === "rock" && !isRover && <span className="text-2xl drop-shadow-lg">🪨</span>}
         {type === "goal" && !isRover && (
           <>
             <span className="text-2xl">🛟</span>
@@ -172,14 +176,14 @@ export function LabRobot({ onComplete }: Props) {
         {isRover && (
           <>
             <span className="text-2xl">🤖</span>
-            <span className="text-[10px] font-black text-[var(--exp-accent-2)]">{ARROW[rover.dir]}</span>
+            <span className="text-sm font-black text-[var(--exp-accent-2)]">{ARROW[rover.dir]}</span>
           </>
         )}
         {label && !isRover && type !== "goal" && type !== "rock" && (
-          <span className="text-[8px] font-bold uppercase tracking-wide text-white/40">{label}</span>
+          <span className="text-[8px] font-bold uppercase tracking-wide text-white/50">{label}</span>
         )}
         {!isRover && !label && type === "empty" && (
-          <span className="text-[9px] font-mono text-white/15">
+          <span className="text-[9px] font-mono text-white/20">
             {r + 1},{c + 1}
           </span>
         )}
@@ -192,7 +196,7 @@ export function LabRobot({ onComplete }: Props) {
       labCode="NOVA LAB 002"
       title="ARIA-7 · Rescue Navigation"
       objective="Program ARIA-7 from Launch Pad to Dr. Vega's Rescue Module. Forward = move. Left/Right = turn in place. Avoid Debris Field."
-      hint="Route along the bottom, turn toward the goal, approach from the east — don't drive through debris."
+      hint="Study the sector map — find a path that goes around debris, not through it."
       attempts={attempts}
       success={success}
       status={
@@ -201,16 +205,36 @@ export function LabRobot({ onComplete }: Props) {
           : `Pod life-support: ${podLife}% · Program and launch your route.`
       }
     >
-      <div className="mb-4 grid gap-3 sm:grid-cols-2">
-        <div className="rounded-xl border border-amber-500/30 bg-amber-950/30 px-4 py-3">
-          <p className="text-[10px] font-bold uppercase text-amber-400/80">Dr. Vega · Pod status</p>
-          <p className="mt-1 text-lg font-black text-amber-300">Life-support {podLife}%</p>
+      <div className="mb-4 grid gap-3 lg:grid-cols-2">
+        <div className="lab-telemetry-panel">
+          <p className="text-[10px] font-bold uppercase text-amber-400/80">Dr. Vega · Pod life-support</p>
+          <p className="mt-1 text-2xl font-black text-amber-300">{podLife}%</p>
+          <div className="lab-telemetry-bar mt-2">
+            <div
+              className={cn(
+                "lab-telemetry-bar-fill",
+                podLife < 70 && "lab-telemetry-bar-fill--danger"
+              )}
+              style={{ width: `${podLife}%` }}
+            />
+          </div>
+          {podLife < 70 && (
+            <p className="mt-1 text-[10px] font-bold uppercase text-red-400 animate-pulse">
+              Critical — route ARIA-7 now
+            </p>
+          )}
         </div>
-        <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+        <div className="lab-telemetry-panel">
           <p className="text-[10px] font-bold uppercase text-white/50">Comms · Mission Control</p>
-          <ul className="mt-2 space-y-1">
+          <ul className="mt-2 max-h-24 space-y-1 overflow-y-auto">
             {commsLog.map((line, i) => (
-              <li key={`${line}-${i}`} className="font-mono text-[10px] leading-snug text-white/70">
+              <li
+                key={`${line}-${i}`}
+                className={cn(
+                  "lab-console-line font-mono text-[10px] leading-snug text-white/70",
+                  i === commsLog.length - 1 && "lab-console-line--new"
+                )}
+              >
                 {line}
               </li>
             ))}
@@ -218,7 +242,13 @@ export function LabRobot({ onComplete }: Props) {
         </div>
       </div>
 
-      <div className="rounded-xl border border-white/10 bg-[#06131a] p-4 sm:p-5">
+      <div className="lab-sector-map">
+        <div className="mb-2 flex items-center justify-between">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--exp-accent-2)]">
+            Sector Map · Top-down view
+          </p>
+          <span className="font-mono text-[10px] text-white/30">4×4 grid</span>
+        </div>
         <div
           className="grid gap-1.5 sm:gap-2"
           style={{ gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))` }}
@@ -230,7 +260,7 @@ export function LabRobot({ onComplete }: Props) {
           })}
         </div>
 
-        <div className="mt-6 flex flex-wrap gap-2">
+        <div className="mt-5 flex flex-wrap gap-2">
           {(
             [
               ["F", "↑ Forward"],
@@ -249,7 +279,7 @@ export function LabRobot({ onComplete }: Props) {
             </button>
           ))}
           <button type="button" onClick={clearAll} disabled={running} className="experience-lab-btn">
-            Clear
+            Clear Route
           </button>
           <button
             type="button"
@@ -261,9 +291,12 @@ export function LabRobot({ onComplete }: Props) {
           </button>
         </div>
 
-        <p className="mt-4 rounded-lg bg-black/30 px-3 py-2 font-mono text-xs text-white/80">
-          Queue: {cmds.length ? cmds.join(" → ") : "—"}
-        </p>
+        <div className="mt-4 rounded-lg border border-white/10 bg-black/40 px-3 py-2">
+          <p className="text-[10px] font-bold uppercase text-white/40">Command queue</p>
+          <p className="mt-1 font-mono text-sm text-[var(--exp-accent-2)]">
+            {cmds.length ? cmds.join(" → ") : "— awaiting commands —"}
+          </p>
+        </div>
       </div>
     </LabMissionShell>
   );
