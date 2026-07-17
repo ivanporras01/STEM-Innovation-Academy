@@ -1,7 +1,35 @@
 import type { ExperienceStageId } from "./catalog";
+import { getExperience } from "./catalog";
 import { getBuddy, type BuddyId, type BuddyTrait } from "./buddies";
 
 type LabContext = "code" | "robot" | "iot";
+
+const SLUG_BRIEFING: Record<string, string> = {
+  "restore-nova-signal":
+    "Theta-9 is silent. We'll read the decoder together — one line at a time until Mission Control sees green.",
+  "rescue-rover":
+    "Dr. Vega is counting on us. Plan each move on the grid before you launch ARIA-7.",
+  "smart-greenhouse":
+    "Those plants are someone's semester of work. Let's arm the automation before it's too late.",
+};
+
+const SLUG_LAB: Record<string, string> = {
+  "restore-nova-signal": "Watch the signal meter — every edit you make moves the needle.",
+  "rescue-rover": "Build your queue, launch, watch ARIA-7 move. Iterate until the module is reached.",
+  "smart-greenhouse": "Plant viability is dropping. Configure fast, test smart, protect the crop.",
+};
+
+const SLUG_QUIZ: Record<string, string> = {
+  "restore-nova-signal": "Think like a coder — why did the logic work?",
+  "rescue-rover": "Engineers learn from failure. Which mindset matches NOVA?",
+  "smart-greenhouse": "IoT is about connected action. Pick the answer that proves you get it.",
+};
+
+const SLUG_REFLECTION: Record<string, string> = {
+  "restore-nova-signal": "Dream bigger — what would YOUR beacon detect next?",
+  "rescue-rover": "You're the engineer now. What upgrade would you ship on ARIA-8?",
+  "smart-greenhouse": "Imagine the whole campus connected. What would you automate first?",
+};
 
 const TRAIT_BRIEFING: Record<BuddyTrait, Record<LabContext, string>> = {
   PATIENT: {
@@ -11,12 +39,12 @@ const TRAIT_BRIEFING: Record<BuddyTrait, Record<LabContext, string>> = {
   },
   LOGICAL: {
     code: "Trace the condition: if READY, then restore. Pure logic.",
-    robot: "Forward × 3, Right × 1. Sequence = solution.",
+    robot: "Forward moves advance. Turns change heading. Sequence = path.",
     iot: "If temperature > threshold, activate cooling. Simple rule.",
   },
   CURIOUS: {
     code: "What else could the beacon send? Explore after we fix it.",
-    robot: "Why three forwards? Test and discover the pattern.",
+    robot: "Why that route? Test and discover the pattern.",
     iot: "What other sensors could protect these plants?",
   },
   THOUGHTFUL: {
@@ -31,7 +59,7 @@ const TRAIT_BRIEFING: Record<BuddyTrait, Record<LabContext, string>> = {
   },
   DETERMINED: {
     code: "We don't stop until the signal reads ONLINE.",
-    robot: "The module waits. We will reach it.",
+    robot: "Dr. Vega waits. We will reach her.",
     iot: "Those plants depend on us. Build the automation.",
   },
   CREATIVE: {
@@ -51,7 +79,7 @@ const TRAIT_BRIEFING: Record<BuddyTrait, Record<LabContext, string>> = {
   },
   IMAGINATIVE: {
     code: "Picture the beacon glowing again because of YOUR code.",
-    robot: "Visualize the rover rolling toward the module.",
+    robot: "Visualize ARIA-7 rolling toward the module.",
     iot: "Envision a farm that runs itself. You're building it.",
   },
   INNOVATIVE: {
@@ -66,8 +94,8 @@ const TRAIT_BRIEFING: Record<BuddyTrait, Record<LabContext, string>> = {
   },
   PRECISE: {
     code: "Exact syntax. Exact condition. Exact result.",
-    robot: "Precisely three forwards, one right. No shortcuts.",
-    iot: "Set threshold below 30°C. Precision matters.",
+    robot: "Precise commands. Precise path. No guesswork.",
+    iot: "Set threshold ≤ 28°C. Precision saves plants.",
   },
   OBSERVANT: {
     code: "Watch the output closely — the clue is in the details.",
@@ -75,9 +103,9 @@ const TRAIT_BRIEFING: Record<BuddyTrait, Record<LabContext, string>> = {
     iot: "Notice how small temperature shifts trigger big changes.",
   },
   STRATEGIC: {
-    code: "Strategy: locate READY, print success, mission done.",
-    robot: "Strategy: shortest valid path to the module.",
-    iot: "Strategy: automate before temperature spikes.",
+    code: "Strategy: locate READY, print success, activate uplink.",
+    robot: "Strategy: route around debris, reach the module.",
+    iot: "Strategy: automate before viability hits zero.",
   },
   FOCUSED: {
     code: "One mission. One goal. Restore the signal.",
@@ -166,22 +194,23 @@ export function getBuddyDialogue(
   const buddy = getBuddy(buddyId);
   const ctx = labContextFromSlug(experienceSlug);
   const trait = buddy.trait;
+  const exp = getExperience(experienceSlug);
 
   switch (stage) {
     case "buddy":
       return buddy.intro;
     case "briefing":
-      return TRAIT_BRIEFING[trait][ctx];
+      return SLUG_BRIEFING[experienceSlug] ?? TRAIT_BRIEFING[trait][ctx];
     case "lab":
-      return TRAIT_LAB[trait];
+      return SLUG_LAB[experienceSlug] ?? TRAIT_LAB[trait];
     case "quiz":
-      return "Think it through. Pick the answer that shows you understand the system.";
+      return SLUG_QUIZ[experienceSlug] ?? "Think it through. Pick the answer that shows you understand the system.";
     case "reflection":
-      return "I want to hear YOUR idea. What would you build next?";
+      return SLUG_REFLECTION[experienceSlug] ?? "I want to hear YOUR idea. What would you build next?";
     case "debrief":
       return TRAIT_DEBRIEF[trait];
     case "achievement":
-      return buddy.cheer;
+      return exp ? `${buddy.cheer} ${exp.achievementMessage.split(".")[0]}.` : buddy.cheer;
     default:
       return buddy.intro;
   }

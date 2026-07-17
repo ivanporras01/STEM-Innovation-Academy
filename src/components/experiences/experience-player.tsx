@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import {
-  BUDDIES,
   STAGE_LABELS,
   STAGE_ORDER,
   getBuddy,
@@ -198,41 +197,45 @@ export function ExperiencePlayer({
 
         <main
           className={cn(
-            "experience-stage rounded-[28px] shadow-2xl",
-            stage === "lab"
-              ? "bg-transparent p-0 text-white"
-              : "bg-white/[0.97] p-6 text-nova-deep-blue sm:p-10 lg:p-14",
+            "experience-stage overflow-hidden rounded-[28px] border border-white/10 shadow-2xl",
+            stage === "lab" ? "bg-transparent p-0" : "bg-[#0a1628]/95 p-6 text-white sm:p-10 lg:p-14",
             animating && "experience-stage-exit"
           )}
         >
           {stage === "launch" && (
-            <div className="relative overflow-hidden rounded-[28px]">
+            <div className="relative">
               <div
-                className="pointer-events-none absolute inset-0 opacity-40"
+                className="pointer-events-none absolute inset-0 opacity-50"
                 style={{
-                  background: `radial-gradient(ellipse at 20% 20%, ${experience.accent}55, transparent 50%), radial-gradient(ellipse at 80% 80%, ${experience.accentSecondary}44, transparent 55%)`,
+                  background: `radial-gradient(ellipse at 15% 0%, ${experience.accent}44, transparent 55%), radial-gradient(ellipse at 90% 100%, ${experience.accentSecondary}33, transparent 50%)`,
                 }}
               />
-              <div className="relative grid items-center gap-10 p-6 sm:p-10 lg:grid-cols-[1.15fr_0.85fr] lg:p-14">
+              <div className="relative grid items-start gap-10 lg:grid-cols-[1.2fr_0.8fr]">
                 <div>
-                  <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[var(--exp-accent)]/40 bg-[var(--exp-accent)]/10 px-4 py-1.5">
+                  <p className="text-xs font-black uppercase tracking-[0.18em] text-[var(--exp-accent-2)]">
+                    {experience.launchTagline}
+                  </p>
+                  <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-[var(--exp-accent)]/40 bg-[var(--exp-accent)]/10 px-4 py-1.5">
                     <span className="h-2 w-2 animate-pulse rounded-full bg-[var(--exp-accent)]" />
                     <span className="text-xs font-black uppercase tracking-[0.14em] text-[var(--exp-accent-2)]">
                       Explore Now · {experience.labCode}
                     </span>
                   </div>
-                  <h1 className="text-4xl font-black leading-[1.05] tracking-tight text-nova-deep-blue sm:text-5xl lg:text-6xl">
+                  <h1 className="mt-5 text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
                     {experience.headline}
                   </h1>
-                  <p className="mt-4 text-lg leading-relaxed text-nova-gray">
-                    {experience.missionLead}
-                  </p>
+                  <p className="mt-2 text-xl font-semibold text-[var(--exp-accent-2)]">{experience.title}</p>
+                  <p className="mt-5 text-lg leading-relaxed text-white/85">{experience.storyHook}</p>
+
+                  <div className="mt-6 rounded-xl border border-amber-500/30 bg-amber-950/25 px-4 py-3 text-sm font-medium text-amber-200/90">
+                    {experience.stakes}
+                  </div>
 
                   <div className="mt-6 flex flex-wrap gap-2">
                     {experience.skills.map((skill) => (
                       <span
                         key={skill}
-                        className="rounded-full border border-nova-light-gray bg-white px-3 py-1 text-xs font-bold text-nova-deep-blue shadow-sm"
+                        className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-bold text-white"
                       >
                         {skill}
                       </span>
@@ -240,40 +243,17 @@ export function ExperiencePlayer({
                   </div>
 
                   <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                    {[
-                      ["01", "Choose Buddy"],
-                      ["02", "Briefing"],
-                      ["03", "Interactive LAB"],
-                      ["04", "Earn Badge"],
-                    ].map(([num, label]) => (
+                    {STAGE_ORDER.slice(0, 4).map((sid, i) => (
                       <div
-                        key={label}
-                        className="rounded-xl border border-white/15 bg-[#0a1628]/50 p-3 text-center backdrop-blur-sm"
+                        key={sid}
+                        className="rounded-xl border border-white/10 bg-white/5 p-3 text-center"
                       >
                         <span className="text-[0.65rem] font-black uppercase text-[var(--exp-accent)]">
-                          {num}
+                          {String(i + 1).padStart(2, "0")}
                         </span>
-                        <p className="mt-1 text-xs font-bold text-white">{label}</p>
+                        <p className="mt-1 text-xs font-bold text-white/90">{STAGE_LABELS[sid]}</p>
                       </div>
                     ))}
-                  </div>
-
-                  <div className="mt-8 rounded-2xl border border-white/15 bg-[#0a1628]/40 p-5 backdrop-blur-sm">
-                    <p className="text-sm font-bold text-white">
-                      Your NOVA Buddy stays with you the whole way
-                    </p>
-                    <div className="mt-4 flex flex-wrap items-center gap-2">
-                      {BUDDIES.slice(0, 8).map((b) => (
-                        <BuddyAvatar
-                          key={b.id}
-                          src={b.image}
-                          alt={b.name}
-                          size="sm"
-                          className={cn("ring-2 ring-white/20 shadow-md", b.color)}
-                        />
-                      ))}
-                      <span className="text-xs font-bold text-nova-cyan-light/70">+12 more</span>
-                    </div>
                   </div>
 
                   <button
@@ -281,42 +261,33 @@ export function ExperiencePlayer({
                     onClick={() => goTo(1)}
                     className="experience-btn-primary mt-8 w-full sm:w-auto"
                   >
-                    Begin Your Quest →
+                    Accept Mission →
                   </button>
                 </div>
 
-                <aside className="experience-panel relative overflow-hidden rounded-3xl p-8 text-white">
+                <aside className="experience-panel relative overflow-hidden rounded-3xl p-8">
                   <div
                     className="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full blur-3xl"
                     style={{ background: experience.accent }}
                   />
-                  <div className="experience-hero relative mb-6">
-                    <PathwayIcon pathway={experience.pathway} variant="hero" />
-                  </div>
-                  <h2 className="relative text-2xl font-bold">{experience.pathwayTitle}</h2>
-                  <p className="relative mt-3 text-white/85">
-                    You are not watching a lesson. You are entering a live quest — build,
-                    test, reflect, and unlock your achievement.
+                  <PathwayIcon pathway={experience.pathway} variant="hero" className="relative mx-auto mb-6" />
+                  <h2 className="relative text-center text-xl font-bold">{experience.pathwayTitle}</h2>
+                  <p className="relative mt-3 text-center text-sm text-white/80">
+                    {experience.questTeaser}
                   </p>
-                  <div className="relative mt-6 rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-sm">
-                    <p className="text-xs font-black uppercase tracking-wider text-white/70">
-                      Achievement waiting
-                    </p>
+                  <div className="relative mt-6 rounded-2xl border border-white/20 bg-white/10 p-4">
+                    <p className="text-xs font-black uppercase tracking-wider text-white/60">Badge waiting</p>
                     <p className="mt-1 text-lg font-black text-[var(--exp-accent-2)]">
                       {experience.achievementTitle}
                     </p>
                   </div>
-                  <div className="relative mt-6 grid grid-cols-3 gap-2 text-center text-xs">
-                    {[
-                      ["Experience", "Interactive"],
-                      ["Level", "Explorer"],
-                      ["Outcome", "Build & Discover"],
-                    ].map(([k, v]) => (
-                      <div key={k} className="rounded-lg bg-white/10 px-2 py-2">
-                        <span className="block text-[0.6rem] uppercase text-white/60">{k}</span>
-                        <strong>{v}</strong>
-                      </div>
+                  <div className="relative mt-4 flex justify-center gap-1">
+                    {Array.from({ length: experience.difficulty }, (_, i) => (
+                      <span key={i} className="text-[var(--exp-accent-2)]">
+                        ⚡
+                      </span>
                     ))}
+                    <span className="ml-2 text-xs text-white/50">~{experience.durationMinutes} min</span>
                   </div>
                 </aside>
               </div>
@@ -340,32 +311,42 @@ export function ExperiencePlayer({
           )}
 
           {(stage === "briefing" || stage === "debrief") && (
-            <div className="grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr]">
+            <div className="grid items-start gap-10 lg:grid-cols-[1.15fr_0.85fr]">
               <div>
                 <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--exp-accent)]">
-                  {stage === "briefing" ? "Mission 01" : "Mission Debrief"}
+                  {stage === "briefing" ? "Mission Briefing" : "Mission Debrief"}
                 </p>
                 <h2 className="mt-2 text-3xl font-black sm:text-4xl">
-                  {stage === "briefing" ? "Mission Briefing" : "You built more than an answer."}
+                  {stage === "briefing" ? experience.title : "You changed the outcome."}
                 </h2>
-                <p className="mt-4 text-lg text-nova-gray">
+                <p className="mt-4 text-lg text-white/80">
                   {stage === "briefing" ? experience.missionLead : experience.debriefLead}
                 </p>
                 {stage === "briefing" && (
-                  <div className="mt-6 rounded-2xl border border-[var(--exp-accent)]/30 bg-[#0a1628]/40 p-6 backdrop-blur-sm">
-                    <strong className="block text-[var(--exp-accent-2)]">Your objective</strong>
-                    <p className="mt-2 text-white/85">{experience.missionObjective}</p>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {experience.skills.map((s) => (
-                        <span
-                          key={s}
-                          className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-bold text-white"
+                  <>
+                    <div className="mt-6 space-y-3">
+                      {experience.briefingBeats.map((beat, i) => (
+                        <div
+                          key={beat.label}
+                          className="flex gap-4 rounded-xl border border-white/10 bg-white/5 p-4"
                         >
-                          {s}
-                        </span>
+                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--exp-accent)]/20 text-xs font-black text-[var(--exp-accent-2)]">
+                            {i + 1}
+                          </span>
+                          <div>
+                            <p className="text-xs font-black uppercase tracking-wider text-[var(--exp-accent)]">
+                              {beat.label}
+                            </p>
+                            <p className="mt-1 text-sm text-white/85">{beat.text}</p>
+                          </div>
+                        </div>
                       ))}
                     </div>
-                  </div>
+                    <div className="mt-6 rounded-2xl border border-[var(--exp-accent)]/30 bg-[var(--exp-accent)]/10 p-5">
+                      <strong className="block text-[var(--exp-accent-2)]">LAB objective</strong>
+                      <p className="mt-2 text-white/90">{experience.missionObjective}</p>
+                    </div>
+                  </>
                 )}
                 <div className="mt-8 flex flex-wrap gap-3">
                   {stage === "briefing" ? (
@@ -443,7 +424,7 @@ export function ExperiencePlayer({
           {stage === "quiz" && (
             <div>
               <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--exp-accent)]">
-                Think Like an Innovator
+                Innovation Check
               </p>
               <h2 className="mt-2 text-3xl font-black">{experience.quizQuestion}</h2>
               <BuddyCompanion
@@ -459,12 +440,12 @@ export function ExperiencePlayer({
                     type="button"
                     onClick={() => handleQuizSelect(i)}
                     className={cn(
-                      "block w-full rounded-xl border-2 px-4 py-4 text-left transition",
+                      "experience-quiz-option block w-full rounded-xl border-2 px-4 py-4 text-left transition",
                       selectedQuiz === i && opt.correct
-                        ? "border-nova-green bg-green-50"
+                        ? "border-emerald-400 bg-emerald-950/50 text-emerald-200"
                         : selectedQuiz === i
-                          ? "border-red-300 bg-red-50"
-                          : "border-nova-light-gray bg-white hover:border-[var(--exp-accent)]"
+                          ? "border-red-400/60 bg-red-950/40 text-red-200"
+                          : "border-white/15 bg-white/5 text-white hover:border-[var(--exp-accent)]"
                     )}
                   >
                     {String.fromCharCode(65 + i)}. {opt.text}
@@ -476,8 +457,8 @@ export function ExperiencePlayer({
                   className={cn(
                     "mt-4 rounded-xl border-l-4 px-4 py-3 text-sm",
                     quizComplete
-                      ? "border-nova-green bg-green-50 text-green-800"
-                      : "border-[var(--exp-accent)] bg-blue-50"
+                      ? "border-emerald-400 bg-emerald-950/40 text-emerald-200"
+                      : "border-[var(--exp-accent)] bg-white/5 text-white/85"
                   )}
                 >
                   {quizFeedback}
@@ -512,10 +493,10 @@ export function ExperiencePlayer({
                 compact
               />
               <textarea
-                className="nova-input mt-4 min-h-[160px] resize-y"
+                className="mt-4 min-h-[160px] w-full resize-y rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/40 focus:border-[var(--exp-accent)] focus:outline-none focus:ring-2 focus:ring-[var(--exp-accent)]/30"
                 value={reflection}
                 onChange={(e) => setReflection(e.target.value)}
-                placeholder="Write your idea here..."
+                placeholder="Your innovation idea belongs here — no wrong answers, only honest thinking…"
               />
               <div className="mt-8 flex flex-wrap gap-3">
                 <button
@@ -549,15 +530,17 @@ export function ExperiencePlayer({
                 <PathwayIcon pathway={experience.pathway} variant="badge" />
               </div>
               <p className="mt-8 text-xs font-black uppercase tracking-[0.14em] text-[var(--exp-accent)]">
-                Achievement Unlocked
+                Achievement Unlocked ✦
               </p>
               <h2 className="mt-2 text-4xl font-black sm:text-5xl">{experience.achievementTitle}</h2>
-              <p className="mx-auto mt-4 max-w-lg text-lg text-nova-gray">
-                Congratulations, <strong className="text-nova-deep-blue">{displayName}</strong>.
-                You completed this mission with{" "}
-                <strong className="text-nova-deep-blue">{buddyDisplayName}</strong>.
+              <p className="mx-auto mt-4 max-w-lg text-lg text-white/85">
+                {experience.achievementMessage}
               </p>
-              <p className="mx-auto mt-3 max-w-md text-sm italic text-nova-gray">
+              <p className="mx-auto mt-4 max-w-md text-sm text-white/70">
+                Explorer <strong className="text-[var(--exp-accent-2)]">{displayName}</strong> ·
+                with <strong className="text-[var(--exp-accent-2)]">{buddyDisplayName}</strong>
+              </p>
+              <p className="mx-auto mt-3 max-w-md text-sm italic text-white/60">
                 &ldquo;{getBuddyDialogue(buddyId, experience.slug, "achievement")}&rdquo;
               </p>
               <div className="mx-auto mt-6 flex items-center justify-center gap-3">
@@ -568,8 +551,8 @@ export function ExperiencePlayer({
                   className={cn("h-16 w-16 rounded-2xl bg-gradient-to-br", buddy.color)}
                 />
                 <div className="text-left">
-                  <p className="font-bold text-nova-deep-blue">{buddyDisplayName}</p>
-                  <p className="text-xs text-nova-gray">{buddy.subtitle} · {buddy.trait}</p>
+                  <p className="font-bold text-white">{buddyDisplayName}</p>
+                  <p className="text-xs text-white/60">{buddy.subtitle} · {buddy.trait}</p>
                 </div>
               </div>
               <div className="mt-10 flex flex-wrap justify-center gap-3">
@@ -587,20 +570,17 @@ export function ExperiencePlayer({
                     setQuizFeedback("");
                     setShowConfetti(false);
                   }}
-                  className="experience-btn-secondary"
+                  className="experience-btn-secondary experience-btn-secondary-dark"
                 >
-                  Launch Mission Again
+                  Replay Mission
                 </button>
-                <Link href={`/courses/${experience.courseSlug}`} className="experience-btn-secondary">
-                  Back to Mission Path
-                </Link>
               </div>
               {!isLoggedIn && (
-                <p className="mt-6 text-sm text-nova-gray">
+                <p className="mt-6 text-sm text-white/60">
                   <Link href="/login" className="font-semibold text-[var(--exp-accent)] hover:underline">
                     Sign in
                   </Link>{" "}
-                  to save your achievement to your dashboard.
+                  to save your badge to the NOVA Portal.
                 </p>
               )}
             </div>

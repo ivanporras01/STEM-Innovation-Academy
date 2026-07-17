@@ -64,7 +64,7 @@ const FOUNDING_PATHWAYS = [
     desc: "Programming fundamentals, Python, AI concepts, and computational thinking through real projects.",
     href: "/courses/intro-python-ai",
     experienceSlug: "restore-nova-signal",
-    experienceTitle: "Restore the NOVA Signal",
+    experienceTitle: "The Signal Goes Dark",
     gradient: "from-nova-cyan/20 to-nova-blue/10",
   },
   {
@@ -74,7 +74,7 @@ const FOUNDING_PATHWAYS = [
     desc: "Engineering design process, electronics, microcontrollers, and robotics challenges.",
     href: "/courses/robotics-engineering",
     experienceSlug: "rescue-rover",
-    experienceTitle: "Guide the Rescue Rover",
+    experienceTitle: "Rescue at Sector 7",
     gradient: "from-nova-orange/20 to-nova-deep-blue/10",
   },
   {
@@ -84,7 +84,7 @@ const FOUNDING_PATHWAYS = [
     desc: "Smart devices, sensors, wireless systems, cloud integration, and emerging tech.",
     href: "/courses/iot-smart-systems",
     experienceSlug: "smart-greenhouse",
-    experienceTitle: "Protect the Smart Greenhouse",
+    experienceTitle: "Red Alert: Greenhouse",
     gradient: "from-nova-green/20 to-nova-cyan/10",
   },
 ] as const;

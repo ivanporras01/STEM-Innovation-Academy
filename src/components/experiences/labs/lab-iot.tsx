@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LabMissionShell } from "./lab-mission-shell";
 
 type Props = { onComplete: (msg: string) => void };
@@ -12,93 +12,105 @@ export function LabIot({ onComplete }: Props) {
   const [fan, setFan] = useState("STANDBY");
   const [success, setSuccess] = useState(false);
   const [attempts, setAttempts] = useState(0);
+  const [viability, setViability] = useState(88);
+  const [alertSent, setAlertSent] = useState(false);
+
+  useEffect(() => {
+    if (success || temp <= 28) return;
+    const t = setInterval(() => {
+      setViability((v) => Math.max(40, v - 2));
+      setTemp((t) => Math.min(36, t + 0.3));
+    }, 4000);
+    return () => clearInterval(t);
+  }, [success, temp]);
 
   function test() {
     setAttempts((a) => a + 1);
 
     if (!auto) {
-      setFan("ERROR — Arm automation before testing.");
+      setFan("ERROR — Arm automation first.");
       return;
     }
     if (threshold > 28) {
-      setFan(`ERROR — Threshold ${threshold}°C exceeds safe max (28°C).`);
+      setFan(`ERROR — ${threshold}°C exceeds safe max (28°C).`);
       return;
     }
     if (temp <= threshold) {
-      setFan("ERROR — Trigger a heat spike first, then test cooling.");
+      setFan("ERROR — Simulate heat spike, then test.");
       return;
     }
 
     setTemp(26);
-    setFan("ACTIVE — Cooling + dashboard alert sent");
+    setFan("COOLING ACTIVE");
+    setAlertSent(true);
+    setViability(95);
     setSuccess(true);
     onComplete("Automation protected the greenhouse.");
   }
 
-  const tempStatus =
-    temp > 30 ? "critical" : temp > 28 ? "warning" : "normal";
-
   return (
     <LabMissionShell
       labCode="NOVA LAB 003"
-      title="Smart Greenhouse Control"
-      objective="Configure the cooling system: set threshold ≤ 28°C, enable automation, simulate a heat spike, then run a live test."
-      hint="Plants overheat above 28°C. Automation must be armed before testing."
+      title="Greenhouse Command Center"
+      objective="Save 200 research crops: threshold ≤ 28°C, arm automation, simulate heat spike, run system test."
+      hint="Plant viability drops while temperature stays high. Move fast — configure, arm, test."
       attempts={attempts}
       success={success}
       status={
         success
-          ? "✓ Mission complete — greenhouse protected by automation."
-          : "Configure → arm automation → simulate heat → test system."
+          ? "✓ 200 student research projects protected. Automation verified."
+          : `Crop viability ${Math.round(viability)}% — configure before it hits critical.`
       }
     >
+      <div className="mb-4 grid gap-3 sm:grid-cols-3">
+        <div
+          className={`rounded-xl border px-4 py-3 ${
+            viability < 60
+              ? "border-red-500/40 bg-red-950/40"
+              : "border-emerald-500/30 bg-emerald-950/30"
+          }`}
+        >
+          <p className="text-[10px] font-bold uppercase text-white/50">Crop viability</p>
+          <p className="text-2xl font-black text-white">{Math.round(viability)}%</p>
+          <p className="text-[10px] text-white/50">200 student projects</p>
+        </div>
+        <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+          <p className="text-[10px] font-bold uppercase text-white/50">Temperature</p>
+          <p className={`text-2xl font-black ${temp > 28 ? "text-red-400" : "text-emerald-400"}`}>
+            {temp.toFixed(1)}°C
+          </p>
+        </div>
+        <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+          <p className="text-[10px] font-bold uppercase text-white/50">Dashboard</p>
+          <p className={`text-sm font-bold ${alertSent ? "text-emerald-400" : "text-white/50"}`}>
+            {alertSent ? "Alert sent ✓" : "No alert"}
+          </p>
+          <p className="text-[10px] text-white/50">{fan}</p>
+        </div>
+      </div>
+
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="rounded-xl border border-white/10 bg-[#06131a] p-5">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-white/50">
-            Live sensor feed
-          </p>
-          <div
-            className={`mt-2 text-5xl font-black ${
-              tempStatus === "critical"
-                ? "text-red-400"
-                : tempStatus === "warning"
-                  ? "text-amber-400"
-                  : "text-emerald-400"
-            }`}
-          >
-            {temp}°C
-          </div>
-          <p className="mt-1 text-xs text-white/50">Safe zone: ≤ 28°C</p>
-          <div className="mt-4 grid grid-cols-3 gap-2 text-center text-[10px]">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-white/50">Sensor array</p>
+          <div className="mt-4 grid grid-cols-2 gap-2 text-center text-[10px]">
             {[
-              ["Humidity", "62%"],
-              ["Light", "840 lux"],
-              ["CO₂", "412 ppm"],
-            ].map(([k, v]) => (
+              ["Humidity", "58%", "ok"],
+              ["Soil moisture", "42%", "ok"],
+              ["Light", "920 lux", "ok"],
+              ["CO₂", "418 ppm", "ok"],
+            ].map(([k, v, status]) => (
               <div key={k} className="rounded-lg border border-white/10 bg-white/5 px-2 py-2">
                 <span className="block text-white/40">{k}</span>
                 <strong className="text-white/90">{v}</strong>
+                <span className="ml-1 text-emerald-400">{status}</span>
               </div>
             ))}
           </div>
         </div>
 
         <div className="rounded-xl border border-white/10 bg-[#06131a] p-5">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-white/50">
-            Automation status
-          </p>
-          <p
-            className={`mt-2 text-lg font-bold ${
-              fan.startsWith("ACTIVE")
-                ? "text-emerald-400"
-                : fan.startsWith("ERROR")
-                  ? "text-red-400"
-                  : "text-white/70"
-            }`}
-          >
-            {fan}
-          </p>
-          <label className="mt-6 block text-sm text-white/80">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-white/50">Automation rules</p>
+          <label className="mt-4 block text-sm text-white/80">
             Cooling threshold: <strong className="text-white">{threshold}°C</strong>
           </label>
           <input
@@ -116,22 +128,25 @@ export function LabIot({ onComplete }: Props) {
               onChange={(e) => setAuto(e.target.checked)}
               className="h-5 w-5 rounded accent-[var(--exp-accent)]"
             />
-            <span>Arm automatic cooling + alerts</span>
+            <span>Arm automatic cooling + dashboard alerts</span>
           </label>
         </div>
       </div>
 
       <div className="mt-4 flex flex-wrap gap-2">
         <button type="button" onClick={test} className="experience-lab-btn experience-lab-btn-active">
-          Run System Test
+          Run Emergency Test
         </button>
         <button
           type="button"
-          onClick={() => setTemp(34)}
+          onClick={() => {
+            setTemp(34);
+            setViability((v) => Math.max(50, v - 5));
+          }}
           className="experience-lab-btn"
           disabled={success}
         >
-          Simulate Heat Spike (+34°C)
+          Simulate Heat Spike
         </button>
       </div>
     </LabMissionShell>

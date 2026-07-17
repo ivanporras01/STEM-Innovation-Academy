@@ -1,17 +1,10 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { LabMissionShell } from "./lab-mission-shell";
 
 type Dir = "N" | "E" | "S" | "W";
 type Cell = "empty" | "rock" | "goal";
-
-const ROWS = 4;
-const COLS = 4;
-
-const START = { r: 3, c: 0, dir: "E" as Dir };
-const GOAL = { r: 0, c: 0 };
-const ROCK = { r: 2, c: 1 };
 
 const DELTA: Record<Dir, [number, number]> = {
   N: [-1, 0],
@@ -24,6 +17,12 @@ const TURN_RIGHT: Record<Dir, Dir> = { N: "E", E: "S", S: "W", W: "N" };
 const TURN_LEFT: Record<Dir, Dir> = { N: "W", W: "S", S: "E", E: "N" };
 const ARROW: Record<Dir, string> = { N: "↑", E: "→", S: "↓", W: "←" };
 
+const SECTOR_LABELS: Record<string, string> = {
+  "3-0": "Launch Pad",
+  "2-1": "Debris Field",
+  "0-0": "Rescue Module",
+};
+
 function cellAt(r: number, c: number): Cell {
   if (r === ROCK.r && c === ROCK.c) return "rock";
   if (r === GOAL.r && c === GOAL.c) return "goal";
@@ -31,7 +30,6 @@ function cellAt(r: number, c: number): Cell {
 }
 
 type RoverState = { r: number; c: number; dir: Dir };
-
 type Props = { onComplete: (msg: string) => void };
 
 export function LabRobot({ onComplete }: Props) {
@@ -40,16 +38,23 @@ export function LabRobot({ onComplete }: Props) {
   const [trail, setTrail] = useState<{ r: number; c: number }[]>([{ r: START.r, c: START.c }]);
   const [success, setSuccess] = useState(false);
   const [running, setRunning] = useState(false);
-  const [feedback, setFeedback] = useState(
-    "Build your command queue, then launch to simulate the rescue route."
-  );
   const [attempts, setAttempts] = useState(0);
   const [crashed, setCrashed] = useState(false);
+  const [commsLog, setCommsLog] = useState<string[]>([
+    "Mission Control: ARIA-7 online. Dr. Vega pod at Sector [1,1]. Awaiting route.",
+  ]);
+  const [podLife, setPodLife] = useState(78);
 
-  const resetSim = useCallback(() => {
-    setRover(START);
-    setTrail([{ r: START.r, c: START.c }]);
-    setCrashed(false);
+  useEffect(() => {
+    if (success) return;
+    const t = setInterval(() => {
+      setPodLife((p) => Math.max(60, p - 1));
+    }, 8000);
+    return () => clearInterval(t);
+  }, [success]);
+
+  const log = useCallback((msg: string) => {
+    setCommsLog((prev) => [...prev.slice(-4), msg]);
   }, []);
 
   function add(cmd: string) {
@@ -60,9 +65,11 @@ export function LabRobot({ onComplete }: Props) {
   function clearAll() {
     if (running) return;
     setCmds([]);
-    resetSim();
+    setRover(START);
+    setTrail([{ r: START.r, c: START.c }]);
     setSuccess(false);
-    setFeedback("Build your command queue, then launch to simulate the rescue route.");
+    setCrashed(false);
+    log("Route cleared. Reprogram ARIA-7.");
   }
 
   async function launch() {
@@ -71,21 +78,23 @@ export function LabRobot({ onComplete }: Props) {
     setRunning(true);
     setSuccess(false);
     setCrashed(false);
+    log(`Launching ${cmds.length}-command sequence…`);
 
     let state: RoverState = { ...START };
     const path: { r: number; c: number }[] = [{ r: START.r, c: START.c }];
     setRover(state);
     setTrail(path);
-    setFeedback("Running simulation…");
 
     for (let i = 0; i < cmds.length; i++) {
-      await new Promise((r) => setTimeout(r, 450));
+      await new Promise((r) => setTimeout(r, 500));
       const cmd = cmds[i];
 
       if (cmd === "L") {
         state = { ...state, dir: TURN_LEFT[state.dir] };
+        log(`CMD ${i + 1}: Turn Left → facing ${state.dir}`);
       } else if (cmd === "R") {
         state = { ...state, dir: TURN_RIGHT[state.dir] };
+        log(`CMD ${i + 1}: Turn Right → facing ${state.dir}`);
       } else if (cmd === "F") {
         const [dr, dc] = DELTA[state.dir];
         const nr = state.r + dr;
@@ -93,7 +102,7 @@ export function LabRobot({ onComplete }: Props) {
 
         if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) {
           setCrashed(true);
-          setFeedback(`Command ${i + 1}: Forward would leave the mission zone — route failed.`);
+          log(`CMD ${i + 1}: ABORT — boundary breach.`);
           setRunning(false);
           return;
         }
@@ -104,13 +113,14 @@ export function LabRobot({ onComplete }: Props) {
           setRover({ ...state });
           setTrail([...path]);
           setCrashed(true);
-          setFeedback(`Command ${i + 1}: Collision with debris field at sector [${nr + 1}, ${nc + 1}].`);
+          log(`CMD ${i + 1}: COLLISION at Debris Field [${nr + 1},${nc + 1}]`);
           setRunning(false);
           return;
         }
 
         state = { r: nr, c: nc, dir: state.dir };
         path.push({ r: nr, c: nc });
+        log(`CMD ${i + 1}: Forward → Sector [${nr + 1},${nc + 1}]`);
       }
 
       setRover({ ...state });
@@ -121,12 +131,10 @@ export function LabRobot({ onComplete }: Props) {
 
     if (state.r === GOAL.r && state.c === GOAL.c) {
       setSuccess(true);
-      setFeedback("Rescue module reached. Route logged for NOVA Mission Control.");
-      onComplete("Route confirmed. The rover reached the rescue module.");
+      log("ARIA-7 at Rescue Module. Dr. Vega: 'Thank you, Explorer!'");
+      onComplete("Route confirmed. Dr. Vega is safe.");
     } else {
-      setFeedback(
-        `Simulation ended at sector [${state.r + 1}, ${state.c + 1}] — the rescue module is at [1, 1]. Adjust your route.`
-      );
+      log(`Route ended at [${state.r + 1},${state.c + 1}] — not the Rescue Module.`);
     }
   }
 
@@ -134,18 +142,19 @@ export function LabRobot({ onComplete }: Props) {
     const isRover = rover.r === r && rover.c === c;
     const onTrail = trail.some((t) => t.r === r && t.c === c);
     const type = cellAt(r, c);
+    const label = SECTOR_LABELS[`${r}-${c}`];
 
     return (
       <div
         key={`${r}-${c}`}
         className={[
-          "relative flex aspect-square items-center justify-center rounded-lg border text-lg font-bold transition-all duration-300 sm:text-xl",
+          "relative flex aspect-square flex-col items-center justify-center rounded-lg border text-center transition-all duration-300",
           type === "rock"
-            ? "border-red-500/40 bg-red-950/50"
+            ? "border-red-500/50 bg-red-950/60"
             : type === "goal"
-              ? "border-emerald-400/50 bg-emerald-950/40"
+              ? "border-emerald-400/50 bg-emerald-950/50"
               : onTrail
-                ? "border-[var(--exp-accent)]/30 bg-[var(--exp-accent)]/10"
+                ? "border-[var(--exp-accent)]/40 bg-[var(--exp-accent)]/15"
                 : "border-white/10 bg-white/[0.03]",
           isRover && crashed && "ring-2 ring-red-500",
           isRover && success && "ring-2 ring-emerald-400",
@@ -153,26 +162,24 @@ export function LabRobot({ onComplete }: Props) {
           .filter(Boolean)
           .join(" ")}
       >
-        {type === "rock" && !isRover && (
-          <span className="text-2xl" title="Debris field">
-            🪨
-          </span>
-        )}
+        {type === "rock" && !isRover && <span className="text-2xl">🪨</span>}
         {type === "goal" && !isRover && (
-          <span className="text-2xl" title="Rescue module">
-            🛟
-          </span>
+          <>
+            <span className="text-2xl">🛟</span>
+            <span className="mt-0.5 text-[8px] font-bold uppercase text-emerald-400/80">Dr. Vega</span>
+          </>
         )}
         {isRover && (
-          <span className="flex flex-col items-center gap-0.5">
+          <>
             <span className="text-2xl">🤖</span>
-            <span className="text-[10px] font-black text-[var(--exp-accent-2)]">
-              {ARROW[rover.dir]}
-            </span>
-          </span>
+            <span className="text-[10px] font-black text-[var(--exp-accent-2)]">{ARROW[rover.dir]}</span>
+          </>
         )}
-        {!isRover && type === "empty" && (
-          <span className="text-[9px] font-mono text-white/20">
+        {label && !isRover && type !== "goal" && type !== "rock" && (
+          <span className="text-[8px] font-bold uppercase tracking-wide text-white/40">{label}</span>
+        )}
+        {!isRover && !label && type === "empty" && (
+          <span className="text-[9px] font-mono text-white/15">
             {r + 1},{c + 1}
           </span>
         )}
@@ -183,34 +190,35 @@ export function LabRobot({ onComplete }: Props) {
   return (
     <LabMissionShell
       labCode="NOVA LAB 002"
-      title="Rescue Rover Navigation"
-      objective="Program the rover from the launch pad to the rescue module (top-left). Avoid the debris field. Turns change facing direction before moving forward."
-      hint="Try routing along the bottom row, turning toward the goal, and approaching from the west — don't cut through the debris."
+      title="ARIA-7 · Rescue Navigation"
+      objective="Program ARIA-7 from Launch Pad to Dr. Vega's Rescue Module. Forward = move. Left/Right = turn in place. Avoid Debris Field."
+      hint="Route along the bottom, turn toward the goal, approach from the east — don't drive through debris."
       attempts={attempts}
       success={success}
       status={
         success
-          ? "✓ Mission complete — rescue module secured."
-          : feedback
+          ? "✓ Dr. Vega rescued — ARIA-7 mission complete."
+          : `Pod life-support: ${podLife}% · Program and launch your route.`
       }
     >
-      <div className="mb-4 flex flex-wrap gap-3 text-[10px] font-semibold uppercase tracking-wider text-white/60">
-        <span className="inline-flex items-center gap-1.5">
-          <span className="text-base">🤖</span> Rover + heading
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <span className="text-base">🪨</span> Debris (avoid)
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <span className="text-base">🛟</span> Rescue module
-        </span>
+      <div className="mb-4 grid gap-3 sm:grid-cols-2">
+        <div className="rounded-xl border border-amber-500/30 bg-amber-950/30 px-4 py-3">
+          <p className="text-[10px] font-bold uppercase text-amber-400/80">Dr. Vega · Pod status</p>
+          <p className="mt-1 text-lg font-black text-amber-300">Life-support {podLife}%</p>
+        </div>
+        <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+          <p className="text-[10px] font-bold uppercase text-white/50">Comms · Mission Control</p>
+          <ul className="mt-2 space-y-1">
+            {commsLog.map((line, i) => (
+              <li key={`${line}-${i}`} className="font-mono text-[10px] leading-snug text-white/70">
+                {line}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
 
       <div className="rounded-xl border border-white/10 bg-[#06131a] p-4 sm:p-5">
-        <div className="mb-2 flex justify-between text-[10px] font-bold uppercase tracking-widest text-white/40">
-          <span>North ↑</span>
-          <span>Mission grid 4×4</span>
-        </div>
         <div
           className="grid gap-1.5 sm:gap-2"
           style={{ gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))` }}
@@ -240,12 +248,7 @@ export function LabRobot({ onComplete }: Props) {
               {label}
             </button>
           ))}
-          <button
-            type="button"
-            onClick={clearAll}
-            disabled={running}
-            className="experience-lab-btn disabled:opacity-40"
-          >
+          <button type="button" onClick={clearAll} disabled={running} className="experience-lab-btn">
             Clear
           </button>
           <button
@@ -254,12 +257,12 @@ export function LabRobot({ onComplete }: Props) {
             disabled={running || cmds.length === 0 || success}
             className="experience-lab-btn experience-lab-btn-active disabled:opacity-40"
           >
-            {running ? "Simulating…" : "Launch Route"}
+            {running ? "ARIA-7 moving…" : "Launch ARIA-7"}
           </button>
         </div>
 
         <p className="mt-4 rounded-lg bg-black/30 px-3 py-2 font-mono text-xs text-white/80">
-          Command queue: {cmds.length ? cmds.join(" → ") : "—"} ({cmds.length} commands)
+          Queue: {cmds.length ? cmds.join(" → ") : "—"}
         </p>
       </div>
     </LabMissionShell>
