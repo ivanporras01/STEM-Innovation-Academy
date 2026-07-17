@@ -11,6 +11,7 @@ const pathways = [
       "Learn Python, data science, and AI fundamentals through hands-on projects. Build chatbots, train models, and solve real-world problems with code.",
     color: "from-nova-cyan to-nova-blue",
     slug: "intro-python-ai",
+    experienceSlug: "restore-nova-signal",
     topics: ["Python", "Machine Learning", "Data Visualization", "Ethics in AI"],
   },
   {
@@ -20,6 +21,7 @@ const pathways = [
       "Design, build, and program robots using the engineering design process. From line followers to competition-ready autonomous systems.",
     color: "from-nova-orange to-nova-deep-blue",
     slug: "robotics-engineering",
+    experienceSlug: "rescue-rover",
     topics: ["Engineering Design", "Arduino", "Sensors & Actuators", "Competition Prep"],
   },
   {
@@ -29,6 +31,7 @@ const pathways = [
       "Connect sensors, microcontrollers, and cloud platforms to build intelligent systems for homes, schools, and communities.",
     color: "from-nova-green to-nova-blue",
     slug: "iot-smart-systems",
+    experienceSlug: "smart-greenhouse",
     topics: ["Sensors", "Cloud Dashboards", "Smart Agriculture", "Environmental Monitoring"],
   },
 ];
@@ -69,12 +72,20 @@ export default function PathwaysPage() {
                       </Badge>
                     ))}
                   </div>
-                  <Link
-                    href={`/courses/${pathway.slug}`}
-                    className="nova-btn-primary w-full text-center"
-                  >
-                    Explore Pathway →
-                  </Link>
+                  <div className="flex flex-col gap-3">
+                    <Link
+                      href={`/experiences/${pathway.experienceSlug}`}
+                      className="nova-btn-primary w-full text-center"
+                    >
+                      Start NOVA Experience ✦
+                    </Link>
+                    <Link
+                      href={`/courses/${pathway.slug}`}
+                      className="nova-btn-secondary w-full text-center"
+                    >
+                      View Full Course →
+                    </Link>
+                  </div>
                 </div>
               </article>
             ))}

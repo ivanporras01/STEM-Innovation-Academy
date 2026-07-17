@@ -6,6 +6,8 @@ import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { StatCard } from "@/components/ui/stat-card";
 import { CourseCard } from "@/components/courses/course-card";
 import { getUserEnrollments } from "@/lib/courses";
+import { db } from "@/lib/db";
+import { EXPERIENCES } from "@/lib/experiences/catalog";
 
 export const metadata: Metadata = {
   title: "Student Dashboard",
@@ -16,6 +18,9 @@ export default async function StudentDashboardPage() {
   if (!session?.user) redirect("/login");
 
   const enrollments = await getUserEnrollments(session.user.id);
+  const experienceProgress = await db.experienceProgress.findMany({
+    where: { userId: session.user.id },
+  });
   const avgProgress =
     enrollments.length > 0
       ? Math.round(
@@ -43,6 +48,40 @@ export default async function StudentDashboardPage() {
           icon="trophy"
           accent="orange"
         />
+      </div>
+
+      <div className="mb-8">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-nova-deep-blue">NOVA Experiences</h2>
+          <Link href="/experiences" className="text-sm font-medium text-nova-cyan hover:underline">
+            All experiences →
+          </Link>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-3">
+          {EXPERIENCES.map((exp) => {
+            const prog = experienceProgress.find((p) => p.experienceSlug === exp.slug);
+            const done = !!prog?.completedAt;
+            return (
+              <Link
+                key={exp.slug}
+                href={`/experiences/${exp.slug}`}
+                className="nova-card transition hover:shadow-nova"
+              >
+                <div className="mb-2 text-3xl">{exp.emoji}</div>
+                <h3 className="font-semibold text-nova-deep-blue">{exp.title}</h3>
+                <p className="mt-1 text-xs text-nova-gray">
+                  {done ? (
+                    <span className="font-bold text-nova-green">✓ {exp.achievementTitle}</span>
+                  ) : prog ? (
+                    `In progress — stage ${prog.currentStage + 1}/8`
+                  ) : (
+                    "Not started"
+                  )}
+                </p>
+              </Link>
+            );
+          })}
+        </div>
       </div>
 
       <div className="mb-6 flex items-center justify-between">

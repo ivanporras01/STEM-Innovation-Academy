@@ -80,4 +80,163 @@
   .prose-nova strong {
     @apply font-semibold text-nova-deep-blue;
   }
+
+  /* NOVA Experience immersive mode */
+  .experience-shell {
+    background: radial-gradient(
+        circle at 15% 10%,
+        color-mix(in srgb, var(--exp-accent) 22%, transparent),
+        transparent 35%
+      ),
+      radial-gradient(
+        circle at 85% 10%,
+        color-mix(in srgb, var(--exp-accent-2) 18%, transparent),
+        transparent 34%
+      ),
+      linear-gradient(145deg, #061127, #0b1a3b 48%, #103663);
+  }
+
+  .experience-stars {
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(1px 1px at 20px 30px, #fff8, transparent),
+      radial-gradient(1px 1px at 80px 120px, #fff6, transparent),
+      radial-gradient(1px 1px at 160px 80px, #fff5, transparent);
+    background-size: 200px 200px;
+    animation: experience-twinkle 8s ease-in-out infinite alternate;
+  }
+
+  .experience-mark {
+    display: grid;
+    place-items: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    background: radial-gradient(circle, #fff 0 6%, var(--exp-accent-2) 18%, var(--exp-accent) 50%, #173469);
+    box-shadow: 0 0 28px color-mix(in srgb, var(--exp-accent) 45%, transparent);
+  }
+
+  .experience-progress-fill {
+    background: linear-gradient(90deg, var(--exp-accent), var(--exp-accent-2));
+  }
+
+  .experience-stage {
+    animation: experience-stage-in 0.35s ease-out;
+  }
+
+  .experience-stage-exit {
+    opacity: 0.6;
+    transform: translateY(8px);
+    transition: opacity 0.18s, transform 0.18s;
+  }
+
+  .experience-panel {
+    background: linear-gradient(145deg, #0d1b3d, #123f73);
+  }
+
+  .experience-hero {
+    display: grid;
+    place-items: center;
+    width: 112px;
+    height: 112px;
+    border-radius: 32px;
+    font-size: 3.5rem;
+    background: linear-gradient(145deg, #fff, var(--exp-accent-2));
+  }
+
+  .experience-buddy-avatar {
+    display: grid;
+    place-items: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 18px;
+    font-size: 2rem;
+  }
+
+  .experience-btn-primary {
+    @apply inline-flex min-h-[47px] items-center justify-center rounded-full px-6 py-3 text-sm font-black text-white transition hover:scale-[1.02] hover:shadow-lg;
+    background: linear-gradient(135deg, var(--exp-accent), #1e3a8a);
+  }
+
+  .experience-btn-secondary {
+    @apply inline-flex min-h-[47px] items-center justify-center rounded-full border-2 border-nova-light-gray bg-white px-6 py-3 text-sm font-black text-nova-deep-blue transition hover:border-[var(--exp-accent)];
+  }
+
+  .experience-lab {
+    color: white;
+    background: #071225;
+  }
+
+  .experience-lab-btn {
+    @apply rounded-xl border border-white/30 bg-white/10 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-white/20;
+  }
+
+  .experience-lab-btn-active {
+    background: var(--exp-accent);
+    border-color: var(--exp-accent);
+  }
+
+  .experience-badge {
+    display: grid;
+    place-items: center;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    font-size: 4rem;
+    color: white;
+    background: radial-gradient(
+      circle at 50% 35%,
+      var(--exp-accent-2),
+      var(--exp-accent) 40%,
+      #1e3a8a 75%,
+      #0d1b3d
+    );
+    box-shadow: 0 0 0 12px color-mix(in srgb, var(--exp-accent) 12%, transparent),
+      0 28px 60px #1e3a8a44;
+    animation: experience-badge-pulse 2s ease-in-out infinite;
+  }
+
+  .experience-confetti {
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    background: radial-gradient(circle, transparent 40%, rgba(255, 255, 255, 0.03)),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 80px,
+        rgba(0, 180, 216, 0.08) 80px,
+        rgba(0, 180, 216, 0.08) 82px
+      );
+    animation: experience-confetti-fade 4s ease-out forwards;
+  }
+}
+
+@keyframes experience-twinkle {
+  from { opacity: 0.4; }
+  to { opacity: 0.9; }
+}
+
+@keyframes experience-stage-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes experience-badge-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes experience-confetti-fade {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
 }

@@ -1,0 +1,295 @@
+export type BuddyId = "nova" | "byte" | "spark" | "orbit" | "echo";
+
+export type LabType = "code" | "robot" | "iot";
+
+export type ExperienceStageId =
+  | "launch"
+  | "buddy"
+  | "briefing"
+  | "lab"
+  | "quiz"
+  | "reflection"
+  | "debrief"
+  | "achievement";
+
+export const STAGE_LABELS: Record<ExperienceStageId, string> = {
+  launch: "Launch Briefing",
+  buddy: "Choose Your Buddy",
+  briefing: "Mission Briefing",
+  lab: "Interactive LAB",
+  quiz: "Innovation Check",
+  reflection: "Reflection",
+  debrief: "Debrief",
+  achievement: "Achievement",
+};
+
+export const STAGE_ORDER: ExperienceStageId[] = [
+  "launch",
+  "buddy",
+  "briefing",
+  "lab",
+  "quiz",
+  "reflection",
+  "debrief",
+  "achievement",
+];
+
+export type Buddy = {
+  id: BuddyId;
+  name: string;
+  role: string;
+  emoji: string;
+  tagline: string;
+  color: string;
+};
+
+export const BUDDIES: Buddy[] = [
+  {
+    id: "nova",
+    name: "Nova",
+    role: "Strategic Guide",
+    emoji: "🧭",
+    tagline: "Curiosity first. Perfection later.",
+    color: "from-cyan-400 to-blue-600",
+  },
+  {
+    id: "byte",
+    name: "Byte",
+    role: "Coding Coach",
+    emoji: "💻",
+    tagline: "Every bug is a clue, not a failure.",
+    color: "from-violet-400 to-purple-600",
+  },
+  {
+    id: "spark",
+    name: "Spark",
+    role: "Engineering Mentor",
+    emoji: "⚙️",
+    tagline: "Build, break, rebuild — that's engineering.",
+    color: "from-orange-400 to-amber-500",
+  },
+  {
+    id: "orbit",
+    name: "Orbit",
+    role: "Systems Thinker",
+    emoji: "🛰️",
+    tagline: "See the whole system, then optimize.",
+    color: "from-sky-400 to-indigo-600",
+  },
+  {
+    id: "echo",
+    name: "Echo",
+    role: "Creative Challenger",
+    emoji: "✨",
+    tagline: "What if the obvious answer is wrong?",
+    color: "from-pink-400 to-rose-500",
+  },
+];
+
+export function getBuddy(id: BuddyId): Buddy {
+  return BUDDIES.find((b) => b.id === id) ?? BUDDIES[0];
+}
+
+type DialogueMap = Record<BuddyId, string>;
+
+export function getBuddyDialogue(
+  buddyId: BuddyId,
+  experienceSlug: string,
+  stage: ExperienceStageId
+): string {
+  const dialogues: Record<string, Partial<Record<ExperienceStageId, DialogueMap>>> = {
+    "restore-nova-signal": {
+      briefing: {
+        nova: "A silent beacon means lost data. We'll restore it step by step.",
+        byte: "Your code is the key. Find READY in the message and the signal returns.",
+        spark: "Treat this like debugging hardware — observe, test, fix.",
+        orbit: "The system checks one condition. Understand that and you control the flow.",
+        echo: "What other words could trigger the signal? Explore after you succeed.",
+      },
+      lab: {
+        nova: "Run your mission. I'll watch every test with you.",
+        byte: "Keep READY in the message and use print(). You've got this.",
+        spark: "First attempt rarely works. Adjust and run again.",
+        orbit: "The if-statement is your decision gate. Trace it mentally first.",
+        echo: "Try breaking the code on purpose — then fix it. That's real learning.",
+      },
+      debrief: {
+        nova: "You didn't just run code — you restored a system. That's innovation.",
+        byte: "Conditionals unlocked the signal. Next level: multiple conditions.",
+        spark: "Test, learn, improve. You followed the engineering cycle.",
+        orbit: "One sensor, one rule, one action. Scale that and you build AI.",
+        echo: "Imagine adding voice recognition next. What would YOU invent?",
+      },
+    },
+    "rescue-rover": {
+      briefing: {
+        nova: "The rover needs a clear path. Plan before you launch.",
+        byte: "Sequences are programs too — order matters.",
+        spark: "Three forward, one right. Simple plan, real rescue.",
+        orbit: "Every command changes state. Track the rover's position.",
+        echo: "Could a shorter route exist? Optimize after the first success.",
+      },
+      lab: {
+        nova: "Build your route command by command.",
+        byte: "F = Forward, R = Right. String them like code.",
+        spark: "If launch fails, clear and redesign. No shame in iteration.",
+        orbit: "The sequence is your algorithm. Read it before launching.",
+        echo: "What if the rover had sensors? How would the route change?",
+      },
+      debrief: {
+        nova: "The module is reached. Mission accomplished through planning.",
+        byte: "You wrote a program without typing Python — same logic.",
+        spark: "Failed routes teach more than perfect first tries.",
+        orbit: "Robotics is software + hardware + feedback loops.",
+        echo: "Design a rover that avoids obstacles on its own. That's next.",
+      },
+    },
+    "smart-greenhouse": {
+      briefing: {
+        nova: "Plants depend on the system you build. Think like a caretaker.",
+        byte: "Threshold + automation = smart code that runs 24/7.",
+        spark: "Sensors feed data. Actuators respond. Connect them.",
+        orbit: "This is IoT: sense → decide → act → repeat.",
+        echo: "What else could the greenhouse monitor? Humidity? Light?",
+      },
+      lab: {
+        nova: "Set the threshold below 30°C and enable automation.",
+        byte: "The if-condition triggers the fan. Classic control logic.",
+        spark: "Real greenhouses use the same pattern at industrial scale.",
+        orbit: "Watch temperature drop when your rule fires. That's closed-loop control.",
+        echo: "Add a mobile alert next. Notify the farmer when it's too hot.",
+      },
+      debrief: {
+        nova: "You protected living systems with technology. Powerful work.",
+        byte: "Automation saved the plants without human intervention.",
+        spark: "Sensor + threshold + actuator = smart system. Master this pattern.",
+        orbit: "IoT scales from one greenhouse to entire cities.",
+        echo: "Build a dashboard showing live data from 100 greenhouses. Dream big.",
+      },
+    },
+  };
+
+  const exp = dialogues[experienceSlug]?.[stage];
+  if (exp) return exp[buddyId];
+  return getBuddy(buddyId).tagline;
+}
+
+export type QuizOption = { text: string; correct: boolean };
+
+export type NovaExperience = {
+  slug: string;
+  labCode: string;
+  title: string;
+  headline: string;
+  pathway: string;
+  pathwayTitle: string;
+  labType: LabType;
+  emoji: string;
+  accent: string;
+  accentSecondary: string;
+  achievementTitle: string;
+  achievementEmoji: string;
+  missionObjective: string;
+  missionLead: string;
+  skills: string[];
+  quizQuestion: string;
+  quizOptions: QuizOption[];
+  quizSuccess: string;
+  reflectionPrompt: string;
+  debriefLead: string;
+  courseSlug: string;
+};
+
+export const EXPERIENCES: NovaExperience[] = [
+  {
+    slug: "restore-nova-signal",
+    labCode: "NOVA LAB 001",
+    title: "Restore the NOVA Signal",
+    headline: "Restore the NOVA Signal",
+    pathway: "CODING_AI",
+    pathwayTitle: "Coding & Artificial Intelligence",
+    labType: "code",
+    emoji: "💻",
+    accent: "#00b4d8",
+    accentSecondary: "#7657e8",
+    achievementTitle: "Signal Coder",
+    achievementEmoji: "💻",
+    missionObjective: "Edit the message, keep READY, and run the mission.",
+    missionLead:
+      "A communication beacon has gone silent. Build a smart message analyzer that recognizes the signal and restores the connection.",
+    skills: ["Variables", "Conditionals", "AI Thinking"],
+    quizQuestion: "Why does the program restore the signal?",
+    quizOptions: [
+      { text: "Because the message contains READY.", correct: true },
+      { text: "Because every program prints it.", correct: false },
+      { text: "Because the computer guesses randomly.", correct: false },
+    ],
+    quizSuccess: "Correct. You explained how the system works.",
+    reflectionPrompt: "What would you improve or invent next?",
+    debriefLead:
+      "You observed, tested, learned from feedback, and improved a system. That is how innovators work.",
+    courseSlug: "intro-python-ai",
+  },
+  {
+    slug: "rescue-rover",
+    labCode: "NOVA LAB 002",
+    title: "Guide the Rescue Rover",
+    headline: "Guide the Rescue Rover",
+    pathway: "ROBOTICS",
+    pathwayTitle: "Robotics & Engineering Design",
+    labType: "robot",
+    emoji: "🤖",
+    accent: "#ff7a00",
+    accentSecondary: "#ffd166",
+    achievementTitle: "Rover Engineer",
+    achievementEmoji: "🤖",
+    missionObjective: "Create a route with three Forward commands and one Right turn.",
+    missionLead:
+      "A rover must reach a stranded research module. Build a command sequence, test it, and improve the route.",
+    skills: ["Sequencing", "Sensors", "Engineering Design"],
+    quizQuestion: "What should an engineer do when a first design fails?",
+    quizOptions: [
+      { text: "Test, learn, and improve it.", correct: true },
+      { text: "Hide the result.", correct: false },
+      { text: "Never change the plan.", correct: false },
+    ],
+    quizSuccess: "Correct. Iteration is the heart of engineering.",
+    reflectionPrompt: "What would you improve or invent next?",
+    debriefLead:
+      "You observed, tested, learned from feedback, and improved a system. That is how innovators work.",
+    courseSlug: "robotics-engineering",
+  },
+  {
+    slug: "smart-greenhouse",
+    labCode: "NOVA LAB 003",
+    title: "Protect the Smart Greenhouse",
+    headline: "Protect the Smart Greenhouse",
+    pathway: "IOT",
+    pathwayTitle: "IoT & Smart Systems",
+    labType: "iot",
+    emoji: "🌐",
+    accent: "#12a66a",
+    accentSecondary: "#6ee7b7",
+    achievementTitle: "Smart Systems Builder",
+    achievementEmoji: "🌐",
+    missionObjective: "Set the cooling threshold below 30°C and activate automation.",
+    missionLead:
+      "A greenhouse is overheating. Connect its sensor to automatic cooling and return the plants to a safe temperature.",
+    skills: ["Sensors", "Automation", "Connected Systems"],
+    quizQuestion: "What makes this an Internet of Things system?",
+    quizOptions: [
+      { text: "A sensor shares data with a connected controller.", correct: true },
+      { text: "It uses electricity.", correct: false },
+      { text: "It has a green display.", correct: false },
+    ],
+    quizSuccess: "Correct. Connected sensing and action define IoT.",
+    reflectionPrompt: "What would you improve or invent next?",
+    debriefLead:
+      "You observed, tested, learned from feedback, and improved a system. That is how innovators work.",
+    courseSlug: "iot-smart-systems",
+  },
+];
+
+export function getExperience(slug: string): NovaExperience | undefined {
+  return EXPERIENCES.find((e) => e.slug === slug);
+}

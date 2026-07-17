@@ -1,0 +1,1 @@
+Open any of the three HTML files in a modern browser. Keep nova.css and nova.js in the same folder.

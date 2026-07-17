@@ -52,6 +52,7 @@ model User {
   enrollments   Enrollment[]
   progress      LessonProgress[]
   submissions   Submission[]
+  experienceProgress ExperienceProgress[]
   taughtCourses Course[]  @relation("CourseMentor")
   accounts      Account[]
   sessions      Session[]
@@ -206,4 +207,21 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model ExperienceProgress {
+  id             String    @id @default(cuid())
+  userId         String
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  experienceSlug String
+  buddyId        String?
+  currentStage   Int       @default(0)
+  labComplete    Boolean   @default(false)
+  quizComplete   Boolean   @default(false)
+  reflection     String?
+  completedAt    DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@unique([userId, experienceSlug])
 }
