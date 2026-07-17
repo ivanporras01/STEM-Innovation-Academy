@@ -116,13 +116,13 @@ export default function HomePage() {
                   href="/courses"
                   className="nova-btn-primary bg-nova-cyan hover:bg-nova-cyan-light"
                 >
-                  Explore Mission Paths
+                  Explore Learning Pathways
                 </Link>
                 <Link
-                  href="/experiences"
+                  href="/#discover"
                   className="nova-btn-secondary border-white/20 bg-white/10 text-white hover:border-white hover:bg-white/20 hover:text-white"
                 >
-                  Launch a Mission
+                  Discover NOVA
                 </Link>
               </div>
               <div className="mt-10 flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold text-nova-cyan-light">
@@ -194,8 +194,8 @@ export default function HomePage() {
                 },
                 {
                   num: "03",
-                  title: "Three Mission Paths",
-                  desc: "Coding & AI, Robotics, and IoT — structured paths with immersive missions and mentor support.",
+                  title: "Three Founding Pathways",
+                  desc: "Coding & AI, Robotics, and IoT — each designed for authentic engineering experiences.",
                 },
               ].map((item) => (
                 <div key={item.title} className="nova-card text-center">
@@ -246,18 +246,18 @@ export default function HomePage() {
             <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
               <div>
                 <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-nova-cyan">
-                  Mission Paths
+                  Founding Programs
                 </p>
                 <h2 className="text-3xl font-bold text-nova-deep-blue">
-                  Three paths to innovation
+                  Three pathways to innovation
                 </h2>
                 <p className="mt-2 max-w-2xl text-nova-gray">
-                  Each mission path offers structured phases, hands-on builds, and mentor support —
+                  Each pathway offers structured missions, hands-on builds, and mentor support —
                   designed for middle and high school Explorers.
                 </p>
               </div>
               <Link href="/courses" className="nova-btn-secondary shrink-0">
-                View All Mission Paths
+                View Full Catalog
               </Link>
             </div>
 
@@ -279,7 +279,7 @@ export default function HomePage() {
                   <h3 className="mb-2 text-lg font-bold text-nova-deep-blue">{pathway.title}</h3>
                   <p className="mb-4 text-sm text-nova-gray">{pathway.desc}</p>
                   <span className="text-sm font-semibold text-nova-cyan">
-                    Explore Mission Path →
+                    Explore Pathway →
                   </span>
                 </Link>
               ))}
@@ -318,6 +318,76 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* For Families & Schools */}
+        <section className="py-20">
+          <div className="nova-container grid gap-8 lg:grid-cols-2">
+            <div id="parents" className="nova-card">
+              <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-nova-cyan">
+                For Families
+              </p>
+              <h2 className="mb-4 text-xl font-bold text-nova-deep-blue">
+                Transparent learning with real outcomes
+              </h2>
+              <ul className="space-y-3 text-sm text-nova-gray">
+                <li className="flex gap-2">
+                  <span className="mt-1 text-nova-cyan">•</span>
+                  Clear learning expectations for every mission and pathway
+                </li>
+                <li className="flex gap-2">
+                  <span className="mt-1 text-nova-cyan">•</span>
+                  Visible project progress and achievement milestones
+                </li>
+                <li className="flex gap-2">
+                  <span className="mt-1 text-nova-cyan">•</span>
+                  Monthly Innovation Mentor support and feedback
+                </li>
+                <li className="flex gap-2">
+                  <span className="mt-1 text-nova-cyan">•</span>
+                  A growing digital STEM portfolio of Explorer work
+                </li>
+              </ul>
+            </div>
+
+            <div id="schools" className="nova-card">
+              <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-nova-cyan">
+                For Schools
+              </p>
+              <h2 className="mb-4 text-xl font-bold text-nova-deep-blue">
+                A practical STEM elective, ready to launch
+              </h2>
+              <p className="mb-4 text-sm text-nova-gray">
+                Partner with NOVA for structured online instruction plus a monthly mentor-led
+                lab session — a complete STEM program aligned with project-based learning.
+              </p>
+              <ul className="mb-6 space-y-3 text-sm text-nova-gray">
+                <li className="flex gap-2">
+                  <span className="mt-1 text-nova-cyan">•</span>
+                  Practical STEM elective for middle and high school
+                </li>
+                <li className="flex gap-2">
+                  <span className="mt-1 text-nova-cyan">•</span>
+                  Online instruction with monthly mentor lab sessions
+                </li>
+                <li className="flex gap-2">
+                  <span className="mt-1 text-nova-cyan">•</span>
+                  Progress reporting and roster management support
+                </li>
+              </ul>
+              <div className="flex flex-wrap gap-3">
+                <Link href="/#contact" className="nova-btn-primary">
+                  Explore School Partnerships
+                </Link>
+                <a
+                  href="mailto:info@steminnovationacademy.org?subject=NOVA%20Program%20Information"
+                  className="nova-btn-secondary"
+                >
+                  Request Program Information
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Portal */}
         <section id="portal" className="border-y border-nova-light-gray bg-white py-16">
           <div className="nova-container text-center">
@@ -328,8 +398,8 @@ export default function HomePage() {
               The NOVA Portal is coming soon
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-nova-gray">
-              Secure access for Explorers, Innovation Mentors, and administrators — all in one
-              place.
+              Secure access for Explorers, Innovation Mentors, families, schools, and
+              administrators — all in one place.
             </p>
             <Link href="/login" className="nova-btn-secondary mt-6 inline-flex">
               Preview Login
@@ -347,8 +417,8 @@ export default function HomePage() {
               Help another NOVA Explorer discover what is possible.
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-nova-cyan-light/80">
-              Connect with NOVA to learn about Explorer enrollment, mentorship, and sponsorship
-              opportunities.
+              Connect with NOVA for enrollment, school partnerships, mentorship, sponsorship,
+              or pilot program opportunities.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
               <Link href="/register" className="nova-btn-primary bg-nova-cyan">

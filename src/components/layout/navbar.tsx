@@ -9,8 +9,9 @@ import { dashboardRoutes } from "@/lib/auth.config";
 
 const publicLinks = [
   { href: "/#discover", label: "Discover NOVA" },
-  { href: "/courses", label: "Mission Paths" },
-  { href: "/experiences", label: "Missions" },
+  { href: "/courses", label: "Learning Pathways" },
+  { href: "/#parents", label: "For Families" },
+  { href: "/#schools", label: "For Schools" },
   { href: "/#contact", label: "Contact" },
 ];
 
