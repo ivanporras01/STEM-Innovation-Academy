@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { DashboardShell, StatCard } from "@/components/layout/dashboard-shell";
+import { DashboardShell } from "@/components/layout/dashboard-shell";
+import { StatCard } from "@/components/ui/stat-card";
 import { CourseCard } from "@/components/courses/course-card";
 import { getUserEnrollments } from "@/lib/courses";
-import { BookOpen, GraduationCap, Trophy } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Student Dashboard",
@@ -35,12 +35,12 @@ export default async function StudentDashboardPage() {
       </div>
 
       <div className="mb-8 grid gap-4 sm:grid-cols-3">
-        <StatCard label="Enrolled Courses" value={enrollments.length} icon={BookOpen} />
-        <StatCard label="Avg. Progress" value={`${avgProgress}%`} icon={GraduationCap} accent="green" />
+        <StatCard label="Enrolled Courses" value={enrollments.length} icon="book" />
+        <StatCard label="Avg. Progress" value={`${avgProgress}%`} icon="graduation" accent="green" />
         <StatCard
           label="Lessons Completed"
           value={enrollments.reduce((acc, e) => acc + e.completedLessons, 0)}
-          icon={Trophy}
+          icon="trophy"
           accent="orange"
         />
       </div>

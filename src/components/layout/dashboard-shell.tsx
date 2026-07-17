@@ -99,35 +99,3 @@ export function DashboardShell({
     </div>
   );
 }
-
-export function StatCard({
-  label,
-  value,
-  icon: Icon,
-  accent = "cyan",
-}: {
-  label: string;
-  value: string | number;
-  icon: React.ComponentType<{ className?: string }>;
-  accent?: "cyan" | "green" | "orange";
-}) {
-  const colors = {
-    cyan: "from-nova-cyan/20 to-nova-blue/10 text-nova-blue",
-    green: "from-nova-green/20 to-nova-green/5 text-nova-green",
-    orange: "from-nova-orange/20 to-nova-orange/5 text-nova-orange",
-  };
-
-  return (
-    <div className="nova-card flex items-center gap-4">
-      <div className={cn("flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br", colors[accent])}>
-        <Icon className="h-5 w-5" />
-      </div>
-      <div>
-        <p className="text-2xl font-bold text-nova-deep-blue">{value}</p>
-        <p className="text-sm text-nova-gray">{label}</p>
-      </div>
-    </div>
-  );
-}
-
-export { GraduationCap, ClipboardList };

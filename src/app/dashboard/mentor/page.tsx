@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { DashboardShell, StatCard } from "@/components/layout/dashboard-shell";
+import { DashboardShell } from "@/components/layout/dashboard-shell";
+import { StatCard } from "@/components/ui/stat-card";
 import { ReviewSubmissionForm } from "@/components/courses/review-submission-form";
 import { getMentorDashboard } from "@/lib/courses";
-import { BookOpen, ClipboardList, Users } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -35,9 +35,9 @@ export default async function MentorDashboardPage() {
       </div>
 
       <div className="mb-8 grid gap-4 sm:grid-cols-3">
-        <StatCard label="My Courses" value={courses.length} icon={BookOpen} />
-        <StatCard label="Total Students" value={totalStudents} icon={Users} accent="green" />
-        <StatCard label="Pending Reviews" value={pendingReviews} icon={ClipboardList} accent="orange" />
+        <StatCard label="My Courses" value={courses.length} icon="book" />
+        <StatCard label="Total Students" value={totalStudents} icon="users" accent="green" />
+        <StatCard label="Pending Reviews" value={pendingReviews} icon="clipboard" accent="orange" />
       </div>
 
       <h2 className="mb-4 text-lg font-semibold text-nova-deep-blue">Pending Submissions</h2>

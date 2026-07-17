@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { DashboardShell, StatCard } from "@/components/layout/dashboard-shell";
+import { DashboardShell } from "@/components/layout/dashboard-shell";
+import { StatCard } from "@/components/ui/stat-card";
 import { getAdminStats } from "@/lib/courses";
 import { db } from "@/lib/db";
-import { Users, BookOpen, GraduationCap, Building2 } from "lucide-react";
 import { roleLabels } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -42,10 +42,10 @@ export default async function AdminDashboardPage() {
       </div>
 
       <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Total Users" value={stats.users} icon={Users} />
-        <StatCard label="Published Courses" value={stats.courses} icon={BookOpen} accent="green" />
-        <StatCard label="Enrollments" value={stats.enrollments} icon={GraduationCap} accent="orange" />
-        <StatCard label="Schools" value={stats.schools} icon={Building2} accent="cyan" />
+        <StatCard label="Total Users" value={stats.users} icon="users" />
+        <StatCard label="Published Courses" value={stats.courses} icon="book" accent="green" />
+        <StatCard label="Enrollments" value={stats.enrollments} icon="graduation" accent="orange" />
+        <StatCard label="Schools" value={stats.schools} icon="building" accent="cyan" />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
