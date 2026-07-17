@@ -22,6 +22,7 @@ export async function POST(
   const body = await req.json();
   const {
     buddyId,
+    buddyNickname,
     currentStage,
     labComplete,
     quizComplete,
@@ -29,6 +30,7 @@ export async function POST(
     completed,
   } = body as {
     buddyId?: BuddyId;
+    buddyNickname?: string;
     currentStage?: number;
     labComplete?: boolean;
     quizComplete?: boolean;
@@ -47,6 +49,7 @@ export async function POST(
       userId: session.user.id,
       experienceSlug: slug,
       buddyId: buddyId ?? null,
+      buddyNickname: buddyNickname ?? null,
       currentStage: currentStage ?? 0,
       labComplete: labComplete ?? false,
       quizComplete: quizComplete ?? false,
@@ -55,6 +58,7 @@ export async function POST(
     },
     update: {
       ...(buddyId !== undefined && { buddyId }),
+      ...(buddyNickname !== undefined && { buddyNickname }),
       ...(currentStage !== undefined && { currentStage }),
       ...(labComplete !== undefined && { labComplete }),
       ...(quizComplete !== undefined && { quizComplete }),

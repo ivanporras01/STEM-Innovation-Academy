@@ -3,14 +3,17 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import {
-  BUDDIES,
   STAGE_LABELS,
   STAGE_ORDER,
   getBuddy,
   getBuddyDialogue,
+  getBuddyDisplayName,
+  isValidBuddyId,
   type BuddyId,
   type NovaExperience,
 } from "@/lib/experiences/catalog";
+import { StageBuddySelect } from "./stage-buddy-select";
+import { BuddyCompanion } from "./buddy-companion";
 import { LabCode } from "./labs/lab-code";
 import { LabRobot } from "./labs/lab-robot";
 import { LabIot } from "./labs/lab-iot";
@@ -18,6 +21,7 @@ import { cn } from "@/lib/utils";
 
 type ProgressPayload = {
   buddyId?: BuddyId;
+  buddyNickname?: string;
   currentStage: number;
   labComplete?: boolean;
   quizComplete?: boolean;
@@ -30,6 +34,7 @@ type Props = {
   explorerName: string;
   initialProgress?: {
     buddyId: BuddyId | null;
+    buddyNickname: string | null;
     currentStage: number;
     labComplete: boolean;
     quizComplete: boolean;
@@ -45,8 +50,16 @@ export function ExperiencePlayer({
   initialProgress,
   isLoggedIn,
 }: Props) {
+  const defaultBuddy: BuddyId =
+    initialProgress?.buddyId && isValidBuddyId(initialProgress.buddyId)
+      ? initialProgress.buddyId
+      : "navito";
+
   const [stageIndex, setStageIndex] = useState(initialProgress?.currentStage ?? 0);
-  const [buddyId, setBuddyId] = useState<BuddyId>(initialProgress?.buddyId ?? "nova");
+  const [buddyId, setBuddyId] = useState<BuddyId>(defaultBuddy);
+  const [buddyNickname, setBuddyNickname] = useState(
+    initialProgress?.buddyNickname ?? ""
+  );
   const [displayName, setDisplayName] = useState(explorerName);
   const [labComplete, setLabComplete] = useState(initialProgress?.labComplete ?? false);
   const [quizComplete, setQuizComplete] = useState(initialProgress?.quizComplete ?? false);
@@ -81,9 +94,9 @@ export function ExperiencePlayer({
         setAnimating(false);
         window.scrollTo({ top: 0, behavior: "smooth" });
       }, 180);
-      saveProgress({ buddyId, currentStage: next, labComplete, quizComplete, reflection });
+      saveProgress({ buddyId, buddyNickname, currentStage: next, labComplete, quizComplete, reflection });
     },
-    [buddyId, labComplete, quizComplete, reflection, saveProgress]
+    [buddyId, buddyNickname, labComplete, quizComplete, reflection, saveProgress]
   );
 
   useEffect(() => {
@@ -91,6 +104,7 @@ export function ExperiencePlayer({
       setShowConfetti(true);
       saveProgress({
         buddyId,
+        buddyNickname,
         currentStage: stageIndex,
         labComplete: true,
         quizComplete: true,
@@ -98,18 +112,20 @@ export function ExperiencePlayer({
         completed: true,
       });
     }
-  }, [stage, stageIndex, buddyId, reflection, saveProgress]);
+  }, [stage, stageIndex, buddyId, buddyNickname, reflection, saveProgress]);
 
   function handleBuddyConfirm() {
     if (displayName.trim().length < 2) return;
-    saveProgress({ buddyId, currentStage: 2 });
+    saveProgress({ buddyId, buddyNickname, currentStage: 2 });
     goTo(2);
   }
 
   function handleLabComplete() {
     setLabComplete(true);
-    saveProgress({ buddyId, currentStage: stageIndex, labComplete: true });
+    saveProgress({ buddyId, buddyNickname, currentStage: stageIndex, labComplete: true });
   }
+
+  const buddyDisplayName = getBuddyDisplayName(buddyId, buddyNickname);
 
   function handleQuizSelect(index: number) {
     const option = experience.quizOptions[index];
@@ -136,7 +152,7 @@ export function ExperiencePlayer({
 
       <div className="experience-stars" aria-hidden />
 
-      <div className="relative z-10 mx-auto w-full max-w-[1160px] px-3 py-5 sm:px-4">
+      <div className="relative z-10 mx-auto w-full max-w-[1280px] px-3 py-5 sm:px-4">
         <header className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="experience-mark">{experience.emoji}</div>
@@ -211,8 +227,22 @@ export function ExperiencePlayer({
                   ))}
                 </div>
                 <p className="mt-6 text-sm italic text-nova-gray">
-                  You are not watching a lesson. You are entering a mission.
+                  You are not watching a lesson. You are entering a mission — with a Buddy
+                  who stays by your side until the achievement unlocks.
                 </p>
+                <div className="mt-6 flex flex-wrap gap-2">
+                  {["🐼", "🤖", "👩‍🚀", "🐺", "🦉", "🧠"].map((e) => (
+                    <span
+                      key={e}
+                      className="flex h-10 w-10 items-center justify-center rounded-xl bg-nova-off-white text-xl shadow-sm"
+                    >
+                      {e}
+                    </span>
+                  ))}
+                  <span className="flex h-10 items-center px-2 text-xs font-bold text-nova-gray">
+                    +14 more Buddies
+                  </span>
+                </div>
                 <button type="button" onClick={() => goTo(1)} className="experience-btn-primary mt-8">
                   Begin Experience →
                 </button>
@@ -228,58 +258,19 @@ export function ExperiencePlayer({
           )}
 
           {stage === "buddy" && (
-            <div>
-              <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--exp-accent)]">
-                Choose Your Guide
-              </p>
-              <h2 className="mt-2 text-3xl font-black sm:text-4xl">Select your NOVA Buddy</h2>
-              <p className="mt-2 text-nova-gray">
-                Your Buddy guides you through every stage of the mission.
-              </p>
-              <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-                {BUDDIES.map((b) => (
-                  <button
-                    key={b.id}
-                    type="button"
-                    onClick={() => setBuddyId(b.id)}
-                    className={cn(
-                      "experience-buddy-card rounded-2xl border-2 p-3 text-center transition-all",
-                      buddyId === b.id
-                        ? "border-[var(--exp-accent)] bg-nova-off-white shadow-lg -translate-y-1"
-                        : "border-nova-light-gray bg-white hover:border-[var(--exp-accent)]/50"
-                    )}
-                  >
-                    <div className={cn("experience-buddy-avatar mx-auto mb-2 bg-gradient-to-br", b.color)}>
-                      {b.emoji}
-                    </div>
-                    <strong className="block text-sm">{b.name}</strong>
-                    <small className="text-[0.65rem] text-nova-gray">{b.role}</small>
-                  </button>
-                ))}
-              </div>
-              <div className="mt-8 max-w-md">
-                <label className="nova-label">Explorer name</label>
-                <input
-                  className="nova-input mt-1"
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
-                  placeholder="Enter your first name"
-                />
-              </div>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <button
-                  type="button"
-                  disabled={displayName.trim().length < 2}
-                  onClick={handleBuddyConfirm}
-                  className="experience-btn-primary disabled:opacity-40"
-                >
-                  Continue with {buddy.name} →
-                </button>
-                <button type="button" onClick={() => goTo(0)} className="experience-btn-secondary">
-                  Back
-                </button>
-              </div>
-            </div>
+            <StageBuddySelect
+              buddyId={buddyId}
+              buddyNickname={buddyNickname}
+              explorerName={displayName}
+              onSelectBuddy={(id) => {
+                setBuddyId(id);
+                if (!buddyNickname) setBuddyNickname(getBuddy(id).name);
+              }}
+              onNicknameChange={setBuddyNickname}
+              onExplorerNameChange={setDisplayName}
+              onConfirm={handleBuddyConfirm}
+              onBack={() => goTo(0)}
+            />
           )}
 
           {(stage === "briefing" || stage === "debrief") && (
@@ -332,16 +323,11 @@ export function ExperiencePlayer({
                   )}
                 </div>
               </div>
-              <aside className="experience-panel rounded-3xl p-8 text-white">
-                <div className={cn("experience-buddy-avatar mb-4 bg-gradient-to-br", buddy.color)}>
-                  {buddy.emoji}
-                </div>
-                <h2 className="text-2xl font-bold">{buddy.name}</h2>
-                <p className="mt-1 text-sm text-white/70">{buddy.role}</p>
-                <p className="mt-4 leading-relaxed text-white/90">
-                  {getBuddyDialogue(buddyId, experience.slug, stage)}
-                </p>
-              </aside>
+              <BuddyCompanion
+                buddyId={buddyId}
+                buddyNickname={buddyNickname}
+                message={getBuddyDialogue(buddyId, experience.slug, stage)}
+              />
             </div>
           )}
 
@@ -352,10 +338,12 @@ export function ExperiencePlayer({
               </p>
               <h2 className="mt-2 text-3xl font-black">{experience.title}</h2>
               <p className="mt-2 text-nova-gray">{experience.missionObjective}</p>
-              <div className="mt-4 rounded-xl border-l-4 border-[var(--exp-accent)] bg-blue-50/80 px-4 py-3 text-sm">
-                <strong>{buddy.emoji} {buddy.name}:</strong>{" "}
-                {getBuddyDialogue(buddyId, experience.slug, "lab")}
-              </div>
+              <BuddyCompanion
+                buddyId={buddyId}
+                buddyNickname={buddyNickname}
+                message={getBuddyDialogue(buddyId, experience.slug, "lab")}
+                compact
+              />
               <div className="mt-6">
                 {experience.labType === "code" && (
                   <LabCode onComplete={handleLabComplete} />
@@ -389,7 +377,13 @@ export function ExperiencePlayer({
                 Think Like an Innovator
               </p>
               <h2 className="mt-2 text-3xl font-black">{experience.quizQuestion}</h2>
-              <div className="mt-8 space-y-3">
+              <BuddyCompanion
+                buddyId={buddyId}
+                buddyNickname={buddyNickname}
+                message={getBuddyDialogue(buddyId, experience.slug, "quiz")}
+                compact
+              />
+              <div className="mt-6 space-y-3">
                 {experience.quizOptions.map((opt, i) => (
                   <button
                     key={opt.text}
@@ -442,8 +436,14 @@ export function ExperiencePlayer({
                 Explorer Reflection
               </p>
               <h2 className="mt-2 text-3xl font-black">{experience.reflectionPrompt}</h2>
+              <BuddyCompanion
+                buddyId={buddyId}
+                buddyNickname={buddyNickname}
+                message={getBuddyDialogue(buddyId, experience.slug, "reflection")}
+                compact
+              />
               <textarea
-                className="nova-input mt-6 min-h-[160px] resize-y"
+                className="nova-input mt-4 min-h-[160px] resize-y"
                 value={reflection}
                 onChange={(e) => setReflection(e.target.value)}
                 placeholder="Write your idea here..."
@@ -455,6 +455,7 @@ export function ExperiencePlayer({
                   onClick={() => {
                     saveProgress({
                       buddyId,
+                      buddyNickname,
                       currentStage: 6,
                       labComplete: true,
                       quizComplete: true,
@@ -483,8 +484,20 @@ export function ExperiencePlayer({
               <p className="mx-auto mt-4 max-w-lg text-lg text-nova-gray">
                 Congratulations, <strong className="text-nova-deep-blue">{displayName}</strong>.
                 You completed this mission with{" "}
-                <strong className="text-nova-deep-blue">{buddy.name}</strong>.
+                <strong className="text-nova-deep-blue">{buddyDisplayName}</strong>.
               </p>
+              <p className="mx-auto mt-3 max-w-md text-sm italic text-nova-gray">
+                &ldquo;{getBuddyDialogue(buddyId, experience.slug, "achievement")}&rdquo;
+              </p>
+              <div className="mx-auto mt-6 flex items-center justify-center gap-3">
+                <div className={cn("flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br text-3xl", buddy.color)}>
+                  {buddy.emoji}
+                </div>
+                <div className="text-left">
+                  <p className="font-bold text-nova-deep-blue">{buddyDisplayName}</p>
+                  <p className="text-xs text-nova-gray">{buddy.subtitle} · {buddy.trait}</p>
+                </div>
+              </div>
               <div className="mt-10 flex flex-wrap justify-center gap-3">
                 <Link href={`/courses/${experience.courseSlug}`} className="experience-btn-primary">
                   Explore Full Course →

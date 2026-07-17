@@ -27,8 +27,9 @@ export default function ExperiencesPage() {
               Enter the Mission
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-white/75">
-              You are not watching a lesson. Choose your Buddy, complete interactive
-              labs, and unlock achievements across three founding pathways.
+              Choose from <strong className="text-white">20 NOVA Buddies</strong> — Friendly
+              Explorers for middle school and Pro Explorers for high school. Your companion
+              guides every mission, lab, and breakthrough.
             </p>
           </div>
         </section>

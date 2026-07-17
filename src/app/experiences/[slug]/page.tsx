@@ -4,7 +4,8 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { getExperience } from "@/lib/experiences/catalog";
 import { ExperiencePlayer } from "@/components/experiences/experience-player";
-import type { BuddyId } from "@/lib/experiences/catalog";
+import type { BuddyId } from "@/lib/experiences/buddies";
+import { isValidBuddyId } from "@/lib/experiences/buddies";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -37,7 +38,8 @@ export default async function ExperiencePage({ params }: Props) {
     });
     if (row) {
       initialProgress = {
-        buddyId: (row.buddyId as BuddyId) ?? null,
+        buddyId: isValidBuddyId(row.buddyId ?? "") ? row.buddyId as BuddyId : null,
+        buddyNickname: row.buddyNickname,
         currentStage: row.currentStage,
         labComplete: row.labComplete,
         quizComplete: row.quizComplete,
