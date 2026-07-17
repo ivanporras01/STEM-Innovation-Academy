@@ -69,7 +69,11 @@ All accounts use password: **`nova2026`**
 1. Set environment variables (see `.env.example`)
 2. Change `DATABASE_URL` to PostgreSQL
 3. Generate a secure `AUTH_SECRET`
-4. Deploy to Vercel or similar
+4. Deploy to Vercel or similar — see **[docs/DEPLOY.md](docs/DEPLOY.md)** for step-by-step instructions
+
+### One-click Vercel import
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/ivanporras01/STEM-Innovation-Academy&env=DATABASE_URL,AUTH_SECRET,NEXTAUTH_URL&project-name=nova-lms)
 
 ---
 

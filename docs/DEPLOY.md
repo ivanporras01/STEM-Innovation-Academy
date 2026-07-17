@@ -1,43 +1,69 @@
-# Deploy NOVA LMS to Vercel
+# Deploy NOVA LMS — Final Steps
 
-## Step 1 — GitHub (done after push)
+## Option A: Vercel Dashboard (recommended, ~3 minutes)
 
-Repository: https://github.com/ivanporras01/STEM-Innovation-Academy
+### 1. Create free PostgreSQL database
 
-## Step 2 — PostgreSQL for production
+1. Go to **[neon.tech](https://neon.tech)** → Sign up with GitHub
+2. **New Project** → name it `nova-lms`
+3. Copy the **connection string** (starts with `postgresql://`)
 
-Vercel requires a hosted database. Create a free database at [Neon](https://neon.tech):
+### 2. Deploy on Vercel
 
-1. Sign up → New Project → copy the **connection string**
-2. In `prisma/schema.prisma`, change `provider = "sqlite"` to `provider = "postgresql"`
-3. Set `DATABASE_URL` to your Neon connection string
+1. Open **[vercel.com/new/clone?repository-url=https://github.com/ivanporras01/STEM-Innovation-Academy](https://vercel.com/new/clone?repository-url=https://github.com/ivanporras01/STEM-Innovation-Academy)**
+2. Sign in with GitHub
+3. Before clicking Deploy, add **Environment Variables**:
 
-## Step 3 — Deploy on Vercel
-
-1. Open [vercel.com/new](https://vercel.com/new)
-2. Import **ivanporras01/STEM-Innovation-Academy**
-3. Add environment variables:
-
-| Variable | Value |
-|----------|-------|
-| `DATABASE_URL` | `postgresql://...` (Neon connection string) |
-| `AUTH_SECRET` | Random secret (32+ characters) |
-| `NEXTAUTH_URL` | `https://your-project.vercel.app` |
+| Name | Value |
+|------|-------|
+| `DATABASE_URL` | Your Neon connection string |
+| `AUTH_SECRET` | Any random 32+ character string |
+| `NEXTAUTH_URL` | `https://YOUR-PROJECT.vercel.app` (update after first deploy if needed) |
 
 4. Click **Deploy**
 
-## Step 4 — Seed production database
+The build automatically:
+- Switches Prisma to PostgreSQL
+- Creates database tables
+- Seeds demo users and courses
 
-After deploy, run locally against production DB:
+### 3. Demo login (production)
 
-```bash
-DATABASE_URL="postgresql://..." npm run db:push
-DATABASE_URL="postgresql://..." npm run db:seed
-```
+Password for all: **`nova2026`**
 
-## CLI deploy (optional)
+- Student: `student@steminnovationacademy.org`
+- Mentor: `mentor@steminnovationacademy.org`
+- Admin: `admin@steminnovationacademy.org`
+
+---
+
+## Option B: Vercel CLI
 
 ```bash
 npx vercel login
 npx vercel --prod
 ```
+
+Set environment variables in the Vercel dashboard under **Settings → Environment Variables**.
+
+---
+
+## Troubleshooting
+
+| Issue | Fix |
+|-------|-----|
+| Build fails on `db push` | Ensure `DATABASE_URL` is set in Vercel env vars |
+| Login redirects fail | Set `NEXTAUTH_URL` to your exact Vercel URL |
+| Empty courses | Re-run deploy or run `npm run db:seed` with production DATABASE_URL |
+
+---
+
+## Local development (unchanged)
+
+```bash
+npm install
+npm run db:setup
+npm run dev
+```
+
+Local uses SQLite (`file:./dev.db`) — no Neon needed for development.
