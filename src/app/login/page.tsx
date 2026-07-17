@@ -41,7 +41,7 @@ export default async function LoginPage({
 
             <div className="mt-6 rounded-xl bg-nova-off-white p-4 text-xs text-nova-gray">
               <p className="mb-2 font-semibold text-nova-dark-gray">Demo accounts (password: nova2026)</p>
-              <p>Student: student@steminnovationacademy.org</p>
+              <p>Explorer: student@steminnovationacademy.org</p>
               <p>Mentor: mentor@steminnovationacademy.org</p>
               <p>Admin: admin@steminnovationacademy.org</p>
             </div>

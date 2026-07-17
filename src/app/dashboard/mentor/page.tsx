@@ -30,13 +30,13 @@ export default async function MentorDashboardPage() {
           Mentor Dashboard
         </h1>
         <p className="mt-1 text-nova-gray">
-          Manage your courses and review student submissions
+          Manage your courses and review Explorer submissions
         </p>
       </div>
 
       <div className="mb-8 grid gap-4 sm:grid-cols-3">
         <StatCard label="My Courses" value={courses.length} icon="book" />
-        <StatCard label="Total Students" value={totalStudents} icon="users" accent="green" />
+        <StatCard label="Total Explorers" value={totalStudents} icon="users" accent="green" />
         <StatCard label="Pending Reviews" value={pendingReviews} icon="clipboard" accent="orange" />
       </div>
 
@@ -90,7 +90,7 @@ export default async function MentorDashboardPage() {
           >
             <h3 className="font-semibold text-nova-deep-blue">{course.title}</h3>
             <p className="mt-1 text-sm text-nova-gray">
-              {course._count.enrollments} students enrolled
+              {course._count.enrollments} Explorers enrolled
             </p>
           </Link>
         ))}

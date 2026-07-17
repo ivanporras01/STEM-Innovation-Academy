@@ -6,47 +6,64 @@ export function Footer() {
       <div className="nova-container grid gap-8 py-12 md:grid-cols-4">
         <div>
           <div className="mb-4 flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-nova-cyan text-sm">✦</span>
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-nova-cyan text-sm font-bold">
+              ✦
+            </span>
             <div>
-              <strong className="block text-sm">NOVA</strong>
-              <small className="text-xs text-nova-cyan-light/70">STEM Innovation Academy</small>
+              <strong className="block text-sm">NOVA STEM Innovation Academy</strong>
             </div>
           </div>
           <p className="text-sm text-nova-cyan-light/80">
-            Empowering future innovators through project-based STEM education.
+            Empowering future innovators through practical STEM education, emerging technologies,
+            mentorship, and authentic projects.
           </p>
         </div>
 
         <div>
           <h3 className="mb-3 text-sm font-semibold">Explore</h3>
           <div className="flex flex-col gap-2 text-sm text-nova-cyan-light/80">
-            <Link href="/#discover" className="hover:text-white">Discover NOVA</Link>
-            <Link href="/pathways" className="hover:text-white">Learning Pathways</Link>
-            <Link href="/courses" className="hover:text-white">Mission Board</Link>
+            <Link href="/#discover" className="hover:text-white">
+              Discover NOVA
+            </Link>
+            <Link href="/courses" className="hover:text-white">
+              Learning Pathways
+            </Link>
+            <Link href="/experiences" className="hover:text-white">
+              Missions
+            </Link>
+            <Link href="/#contact" className="hover:text-white">
+              Contact
+            </Link>
           </div>
         </div>
 
         <div>
           <h3 className="mb-3 text-sm font-semibold">Portal</h3>
           <div className="flex flex-col gap-2 text-sm text-nova-cyan-light/80">
-            <Link href="/login" className="hover:text-white">Login</Link>
-            <Link href="/register" className="hover:text-white">Register</Link>
-            <Link href="/dashboard/student" className="hover:text-white">Student Dashboard</Link>
+            <Link href="/login" className="hover:text-white">
+              Login
+            </Link>
+            <Link href="/register" className="hover:text-white">
+              Register
+            </Link>
+            <Link href="/dashboard/student" className="hover:text-white">
+              Explorer Dashboard
+            </Link>
           </div>
         </div>
 
         <div>
           <h3 className="mb-3 text-sm font-semibold">Our Principle</h3>
           <p className="text-sm italic text-nova-cyan-light/80">
-            Every student is a NOVA waiting to shine.
+            Every NOVA Explorer has the potential to learn, build, innovate, and inspire.
           </p>
         </div>
       </div>
 
       <div className="border-t border-white/10">
         <div className="nova-container flex flex-col items-center justify-between gap-2 py-4 text-xs text-nova-cyan-light/60 sm:flex-row">
-          <p>© {new Date().getFullYear()} STEM Innovation Academy. All rights reserved.</p>
-          <p>Learn • Build • Innovate</p>
+          <p>© NOVA – STEM Innovation Academy</p>
+          <p>Learn • Build • Innovate • Inspire</p>
         </div>
       </div>
     </footer>

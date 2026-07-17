@@ -42,7 +42,7 @@ export default async function AdminCoursesPage() {
               </div>
               <h3 className="font-semibold text-nova-deep-blue">{course.title}</h3>
               <p className="mt-1 text-sm text-nova-gray">
-                {course._count.modules} modules · {course._count.enrollments} students
+                {course._count.modules} modules · {course._count.enrollments} Explorers
                 {course.mentor && (
                   <> · Mentor: {course.mentor.firstName} {course.mentor.lastName}</>
                 )}

@@ -132,7 +132,7 @@ export const EXPERIENCES: NovaExperience[] = [
     title: "Protect the Smart Greenhouse",
     headline: "Protect the Smart Greenhouse",
     pathway: "IOT",
-    pathwayTitle: "IoT & Smart Systems",
+    pathwayTitle: "IoT & Emerging Technologies",
     labType: "iot",
     accent: "#12a66a",
     accentSecondary: "#6ee7b7",

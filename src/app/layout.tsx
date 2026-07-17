@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     template: "%s | NOVA LMS",
   },
   description:
-    "Project-based STEM learning platform for middle and high school students. Learn • Build • Innovate.",
+    "Practical STEM education for future innovators. NOVA helps middle and high school learners explore technology, build projects, and grow into confident innovators. Learn • Build • Innovate • Inspire.",
 };
 
 export default function RootLayout({

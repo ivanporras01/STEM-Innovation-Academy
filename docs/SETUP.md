@@ -24,7 +24,7 @@ Browser → Next.js App Router
 
 | Role | Dashboard | Capabilities |
 |------|-----------|-------------|
-| STUDENT | `/dashboard/student` | Enroll, view lessons, submit assignments |
+| Explorer (STUDENT) | `/dashboard/student` | Enroll, view lessons, submit assignments |
 | MENTOR | `/dashboard/mentor` | Review submissions, manage courses |
 | PARENT | `/dashboard/student` | View child progress (future) |
 | ADMIN | `/dashboard/admin` | Manage users, courses, platform |

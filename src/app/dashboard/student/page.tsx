@@ -11,7 +11,7 @@ import { EXPERIENCES } from "@/lib/experiences/catalog";
 import { PathwayIcon } from "@/components/ui/pathway-icon";
 
 export const metadata: Metadata = {
-  title: "Student Dashboard",
+  title: "Explorer Dashboard",
 };
 
 export default async function StudentDashboardPage() {
@@ -53,7 +53,7 @@ export default async function StudentDashboardPage() {
 
       <div className="mb-8">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-nova-deep-blue">Active Missions</h2>
+          <h2 className="text-lg font-semibold text-nova-deep-blue">Interactive Missions</h2>
           <Link href="/experiences" className="text-sm font-medium text-nova-cyan hover:underline">
             Mission Board →
           </Link>
@@ -88,7 +88,7 @@ export default async function StudentDashboardPage() {
       <div className="mb-6 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-nova-deep-blue">My Mission Paths</h2>
         <Link href="/courses" className="text-sm font-medium text-nova-cyan hover:underline">
-          Explore mission board →
+          Browse Mission Paths →
         </Link>
       </div>
 

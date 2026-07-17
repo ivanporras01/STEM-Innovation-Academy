@@ -2,7 +2,7 @@ import { LessonType, Pathway } from "@prisma/client";
 import type { SeedCourse } from "./types";
 
 export const roboticsCourse: SeedCourse = {
-  title: "Robotics & Engineering Mission Path",
+  title: "Robotics & Engineering Design Mission Path",
   slug: "robotics-engineering",
   description:
     "Design, build, and program robots through the engineering design process — from first sketch to competition-ready autonomous systems.",

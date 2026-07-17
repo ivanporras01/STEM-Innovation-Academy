@@ -63,7 +63,7 @@ export function CourseCard({
         href={`/courses/${slug}`}
         className="nova-btn-primary mt-auto w-full text-center"
       >
-        {enrolled ? "Continue Mission" : "Explore Mission Path"}
+        {enrolled ? "Continue Mission Path" : "Explore Mission Path"}
       </Link>
     </article>
   );

@@ -1,12 +1,42 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 68 68" fill="none">
-  <rect width="68" height="68" rx="20" fill="#0d1b3d"/>
-  <circle cx="34" cy="34" r="26" fill="url(#g)" stroke="rgba(255,255,255,0.35)" stroke-width="2"/>
-  <text x="34" y="42" text-anchor="middle" fill="#fff" font-size="26" font-weight="900" font-family="system-ui,sans-serif">�</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+  <rect width="120" height="120" rx="28" fill="#0d1b3d"/>
+  <circle cx="60" cy="60" r="48" fill="url(#robotics-glow)" opacity="0.5"/>
+  <circle cx="60" cy="60" r="44" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
+  <!-- Gear -->
+  <g transform="translate(28 68)">
+    <circle cx="18" cy="18" r="14" fill="url(#robotics-gear)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+    <circle cx="18" cy="18" r="5" fill="#0d1b3d" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+    <path d="M18 2V7M18 29V34M2 18H7M29 18H34M6.5 6.5L10 10M26 26L29.5 29.5M29.5 6.5L26 10M10 26L6.5 29.5" stroke="#ffd166" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+  <!-- Robotic arm base -->
+  <rect x="52" y="78" width="16" height="10" rx="3" fill="url(#robotics-base)" stroke="rgba(255,255,255,0.45)" stroke-width="1.5"/>
+  <circle cx="60" cy="78" r="5" fill="#ff6b35" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+  <!-- Arm segment 1 -->
+  <path d="M60 73L60 58L74 46" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="60" cy="58" r="4" fill="#ff6b35" stroke="#fff" stroke-width="1.5"/>
+  <!-- Arm segment 2 -->
+  <path d="M74 46L88 38" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="74" cy="46" r="3.5" fill="#ff6b35" stroke="#fff" stroke-width="1.5"/>
+  <!-- Gripper -->
+  <path d="M88 38L94 34M88 38L94 42" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+  <rect x="92" y="32" width="8" height="12" rx="2" stroke="#fff" stroke-width="2" fill="none"/>
+  <!-- Chassis hint -->
+  <path d="M38 88H82" stroke="rgba(255,255,255,0.25)" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="44" cy="88" r="3" fill="rgba(255,255,255,0.35)"/>
+  <circle cx="76" cy="88" r="3" fill="rgba(255,255,255,0.35)"/>
   <defs>
-    <radialGradient id="g" cx="50%" cy="35%" r="65%">
+    <radialGradient id="robotics-glow" cx="50%" cy="42%" r="62%">
       <stop offset="0%" stop-color="#ffd166"/>
-      <stop offset="45%" stop-color="#ff7a00"/>
+      <stop offset="45%" stop-color="#ff6b35"/>
       <stop offset="100%" stop-color="#1e3a8a"/>
     </radialGradient>
+    <linearGradient id="robotics-gear" x1="4" y1="4" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ff8c42"/>
+      <stop offset="1" stop-color="#c2410c"/>
+    </linearGradient>
+    <linearGradient id="robotics-base" x1="52" y1="78" x2="68" y2="88" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1a3058"/>
+      <stop offset="1" stop-color="#0d1b3d"/>
+    </linearGradient>
   </defs>
 </svg>

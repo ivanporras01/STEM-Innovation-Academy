@@ -12,7 +12,7 @@ Password para todas las cuentas: **`nova2026`**
 
 | Rol | Email |
 |-----|-------|
-| Estudiante | student@steminnovationacademy.org |
+| Explorador | student@steminnovationacademy.org |
 | Mentor | mentor@steminnovationacademy.org |
 | Admin | admin@steminnovationacademy.org |
 
@@ -22,7 +22,7 @@ Password para todas las cuentas: **`nova2026`**
 
 1. **Homepage** — https://stem-innovation-academy.vercel.app
 2. **Login** — https://stem-innovation-academy.vercel.app/login
-3. **Dashboard estudiante** — después de login, deberías ver tus cursos y estadísticas
+3. **Dashboard explorador** — después de login, deberías ver tus cursos y estadísticas
 4. **Cursos** — https://stem-innovation-academy.vercel.app/courses
 5. **Lección** — abre un curso → click en una lección → **Mark as Complete**
 6. **Mentor** — cierra sesión → entra con mentor@steminnovationacademy.org

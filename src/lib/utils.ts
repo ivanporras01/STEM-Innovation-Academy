@@ -19,9 +19,9 @@ export function getInitials(firstName: string, lastName: string): string {
 }
 
 export const pathwayLabels: Record<string, string> = {
-  CODING_AI: "Coding & AI",
-  ROBOTICS: "Robotics & Engineering",
-  IOT: "IoT & Smart Systems",
+  CODING_AI: "Coding & Artificial Intelligence",
+  ROBOTICS: "Robotics & Engineering Design",
+  IOT: "IoT & Emerging Technologies",
 };
 
 export const roleLabels: Record<string, string> = {

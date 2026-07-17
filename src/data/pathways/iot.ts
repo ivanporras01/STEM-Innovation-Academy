@@ -2,7 +2,7 @@ import { LessonType, Pathway } from "@prisma/client";
 import type { SeedCourse } from "./types";
 
 export const iotCourse: SeedCourse = {
-  title: "IoT & Smart Systems Mission Path",
+  title: "IoT & Emerging Technologies Mission Path",
   slug: "iot-smart-systems",
   description:
     "Connect sensors, microcontrollers, and cloud dashboards to build intelligent systems for classrooms, greenhouses, and communities.",
@@ -671,7 +671,7 @@ Compare readings → discover pollution sources → advocate for change
 Plan a 3-node sensor network for your community:
 1. Draw node locations on a map
 2. Specify sensor type at each node
-3. Identify who acts on the data (principal, city council, students)
+3. Identify who acts on the data (principal, city council, Explorers)
 
 ## Stretch goal
 Research Sensor.Community or similar open networks — how do they share data publicly?`,
@@ -794,7 +794,7 @@ Record a 60-second teaser video for social media using only your phone.`,
 - Energy awareness (classroom power, solar output)
 - Environmental (air quality, noise, flood detection)
 - Safety (hallway occupancy, emergency exit monitoring)
-- Accessibility (smart alert for hearing-impaired students)
+- Accessibility (smart alert for hearing-impaired Explorers)
 
 ## Deliverables
 1. **System diagram** — sensors, microcontroller, connectivity, cloud, users

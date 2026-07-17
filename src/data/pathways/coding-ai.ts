@@ -2,7 +2,7 @@ import { LessonType, Pathway } from "@prisma/client";
 import type { SeedCourse } from "./types";
 
 export const codingAiCourse: SeedCourse = {
-  title: "Coding & AI Mission Path",
+  title: "Coding & Artificial Intelligence Mission Path",
   slug: "intro-python-ai",
   description:
     "Launch from Python basics into AI-powered builds. Decode signals, automate tasks, and ship a personal AI project worthy of mission control.",

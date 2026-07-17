@@ -15,11 +15,11 @@ Login with demo accounts (password: `nova2026`) — see [docs/COMO-PROBAR.md](do
 ## Features
 
 - **Authentication** — Secure login/register with role-based access
-- **Roles** — Student (NOVA Explorer), Mentor, Parent, Admin, School Admin
+- **Roles** — Explorer (NOVA), Mentor, Parent, Admin, School Admin
 - **Course Catalog** — Three STEM pathways with modules and lessons
 - **Lesson Viewer** — Reading, video, lab, and project content with progress tracking
-- **Student Dashboard** — Enrolled courses, progress stats, continue learning
-- **Mentor Dashboard** — Review student submissions with scores and feedback
+- **Explorer Dashboard** — Enrolled courses, progress stats, continue learning
+- **Mentor Dashboard** — Review Explorer submissions with scores and feedback
 - **Admin Dashboard** — User and course management overview
 - **Assignments** — Submit work and receive mentor reviews
 - **Marketing Site** — Beautiful NOVA-branded landing pages
@@ -58,7 +58,7 @@ All accounts use password: **`nova2026`**
 |------|-------|
 | Admin | admin@steminnovationacademy.org |
 | Mentor | mentor@steminnovationacademy.org |
-| Student | student@steminnovationacademy.org |
+| Explorer | student@steminnovationacademy.org |
 
 ## Project Structure
 

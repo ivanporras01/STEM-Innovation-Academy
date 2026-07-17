@@ -171,7 +171,7 @@ async function main() {
   console.log("Demo accounts (password: nova2026):");
   console.log("  Admin:   admin@steminnovationacademy.org");
   console.log("  Mentor:  mentor@steminnovationacademy.org");
-  console.log("  Student: student@steminnovationacademy.org");
+  console.log("  Explorer: student@steminnovationacademy.org");
 }
 
 main()

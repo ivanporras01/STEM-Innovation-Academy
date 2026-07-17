@@ -111,7 +111,7 @@ export function RegisterForm() {
           value={form.role}
           onChange={(e) => update("role", e.target.value)}
         >
-          <option value="STUDENT">NOVA Explorer (Student)</option>
+          <option value="STUDENT">NOVA Explorer</option>
           <option value="MENTOR">Innovation Mentor</option>
           <option value="PARENT">Parent / Guardian</option>
         </select>

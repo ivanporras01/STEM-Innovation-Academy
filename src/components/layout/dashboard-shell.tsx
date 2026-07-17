@@ -7,13 +7,15 @@ import { cn, getInitials, roleLabels } from "@/lib/utils";
 import {
   BookOpen,
   LayoutDashboard,
+  Rocket,
   Settings,
   Users,
 } from "lucide-react";
 
 const studentLinks = [
   { href: "/dashboard/student", label: "Overview", icon: LayoutDashboard },
-  { href: "/courses", label: "My Courses", icon: BookOpen },
+  { href: "/courses", label: "Mission Paths", icon: BookOpen },
+  { href: "/experiences", label: "Missions", icon: Rocket },
 ];
 
 const mentorLinks = [

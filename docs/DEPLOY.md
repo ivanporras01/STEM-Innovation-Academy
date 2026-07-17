@@ -31,7 +31,7 @@ The build automatically:
 
 Password for all: **`nova2026`**
 
-- Student: `student@steminnovationacademy.org`
+- Explorer: `student@steminnovationacademy.org`
 - Mentor: `mentor@steminnovationacademy.org`
 - Admin: `admin@steminnovationacademy.org`
 
