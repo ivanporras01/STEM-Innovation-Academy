@@ -14,11 +14,24 @@ NOVA is an **EXPERIENCE**, not an LMS. Every screen, label, and interaction must
 - The platform should feel like Pixar storytelling + Apple polish + NASA mission control
 - Interfaces must feel **alive** (motion, warmth, personality) — never static admin panels
 
+## Explorer First (North Star)
+
+**Every decision filters through one question:**
+
+> **Does this make the Explorer feel capable, excited, and supported?**
+
+Explorers should never feel tested, lost, or like they're in a gradebook. They should feel like **mission heroes** with a crew behind them — Buddies, Innovation Mentors, and a universe that celebrates trying.
+
+- Celebrate progress, not perfection
+- Offer a path when hardware isn't available (simulation counts)
+- Mentor sessions = showcase + troubleshooting, not judgment
+- Copy speaks *to* the Explorer with warmth, never *at* them with syllabus tone
+
 ## Emotional Goal
 
 Every NOVA experience should evoke **wonder, curiosity, and joy**.
 
-The student should think: *"I don't want to leave."*
+The Explorer should think: *"I don't want to leave."*
 
 Design for delight first. Learning follows engagement.
 
@@ -118,6 +131,16 @@ When touching `src/components/experiences/*`, `src/app/experiences/*`, or `src/l
 - [ ] Passes the 2-hour voluntary engagement test
 - [ ] Interactive element present — not read-only content
 
+## Hardware & Mentor-Led Builds (Arduino / ESP32)
+
+Official kit: **NOVA Explorer Kit (ESP32)** — see `src/lib/nova-kit.ts`.  
+Mentor-led mission metadata: `src/lib/pathways/mentor-missions.ts`.
+
+- Robotics + IoT build missions use **ESP32** (Arduino IDE) — one base kit, optional Robotics Add-On
+- Mentor-led LABs/PROJECTs get **Explorer Mission** banners with encouragement + checkpoints
+- Always include **Wokwi fallback** so Explorers without hardware still belong
+- Innovation Mentors review at monthly sessions — frame as *celebration*, not audit
+
 ## Scope Note
 
-The broader LMS (`/courses`, admin, enrollments) may retain course terminology until migrated. **Prioritize** experience player, catalog, homepage CTA, and student dashboard experience sections for mission language.
+The broader LMS (`/courses`, admin, enrollments) may retain course terminology until migrated. **Prioritize** experience player, catalog, homepage CTA, and Explorer Portal sections for mission language.

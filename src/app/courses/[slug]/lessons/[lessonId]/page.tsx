@@ -5,8 +5,10 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { MarkdownContent } from "@/components/ui/markdown-content";
 import { Badge } from "@/components/ui/badge";
+import { ExplorerMissionBanner } from "@/components/courses/explorer-mission-banner";
 import { CompleteLessonButton } from "@/components/courses/complete-lesson-button";
 import { getLessonWithProgress } from "@/lib/courses";
+import { getMentorMissionMeta } from "@/lib/pathways/mentor-missions";
 import { getPathwayMeta } from "@/lib/pathways/meta";
 import { PathwayIcon } from "@/components/ui/pathway-icon";
 import { auth } from "@/lib/auth";
@@ -54,6 +56,7 @@ export default async function LessonPage({
     currentIndex < allLessons.length - 1 ? allLessons[currentIndex + 1] : null;
 
   const meta = getPathwayMeta(slug);
+  const mentorMeta = getMentorMissionMeta(slug, lesson.title);
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -69,13 +72,13 @@ export default async function LessonPage({
           </Link>
 
           {meta && (
-            <div className="mb-6 flex items-center gap-3 rounded-2xl border border-nova-light-gray bg-nova-off-white px-4 py-3">
+            <div className="nova-glass-card mb-6 flex items-center gap-3 border-nova-cyan/20">
               <PathwayIcon pathway={meta.pathway} variant="card" className="h-12 w-12 text-xl" />
               <div>
                 <p className="text-xs font-black uppercase tracking-wider text-nova-cyan">
                   {lesson.module.title}
                 </p>
-                <p className="text-sm font-semibold text-nova-deep-blue">
+                <p className="text-sm font-semibold text-white">
                   Mission {currentIndex + 1} of {allLessons.length}
                 </p>
               </div>
@@ -85,11 +88,19 @@ export default async function LessonPage({
           <div className="mb-6 flex flex-wrap items-center gap-2">
             <Badge variant="cyan">{lessonTypeLabels[lesson.type]}</Badge>
             <Badge variant="default">{lesson.duration} min</Badge>
+            {completed && (
+              <Badge variant="green">Achievement unlocked ✦</Badge>
+            )}
           </div>
 
-          <h1 className="mb-6 text-2xl font-bold text-nova-deep-blue sm:text-3xl">
-            {lesson.title}
-          </h1>
+          <h1 className="mb-6 text-2xl font-bold text-white sm:text-3xl">{lesson.title}</h1>
+
+          <ExplorerMissionBanner
+            lessonTitle={lesson.title}
+            lessonType={lesson.type}
+            meta={mentorMeta}
+            courseSlug={slug}
+          />
 
           {lesson.type === "VIDEO" && lesson.videoUrl && (
             <div className="mb-8 aspect-video overflow-hidden rounded-nova shadow-nova">
@@ -103,7 +114,7 @@ export default async function LessonPage({
             </div>
           )}
 
-          <div className="nova-card mb-8">
+          <div className="nova-glass-card mb-8 text-nova-cyan-light/90">
             <MarkdownContent content={lesson.content} />
           </div>
 
