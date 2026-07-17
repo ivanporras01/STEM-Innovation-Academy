@@ -26,7 +26,7 @@ type ShootingStar = {
   maxLife: number;
 };
 
-const STAR_COUNT = 280;
+const STAR_COUNT = 140;
 const TINT_COLORS: Record<StarTint, [number, number, number]> = {
   white: [255, 255, 255],
   cyan: [110, 231, 249],
@@ -80,7 +80,7 @@ export function NovaCosmosBackground() {
         by: (Math.random() - 0.5) * 2,
         z: Math.random() * 0.95 + 0.05,
         radius: Math.random() * 2.4 + 0.5,
-        opacity: Math.random() * 0.35 + 0.35,
+        opacity: Math.random() * 0.25 + 0.2,
         twinkleSpeed: Math.random() * 0.025 + 0.01,
         twinklePhase: Math.random() * Math.PI * 2,
         tint: pickTint(),
@@ -106,9 +106,9 @@ export function NovaCosmosBackground() {
     function projectStar(star: Star, cx: number, cy: number, spread: number) {
       const scale = spread / star.z;
       return {
-        px: cx + star.bx * scale + parallaxX * (1 - star.z) * 8,
-        py: cy + star.by * scale + parallaxY * (1 - star.z) * 8,
-        size: star.radius * (1.4 / star.z) * 0.55,
+        px: cx + star.bx * scale + parallaxX * (1 - star.z) * 3,
+        py: cy + star.by * scale + parallaxY * (1 - star.z) * 3,
+        size: star.radius * (1.4 / star.z) * 0.4,
       };
     }
 
@@ -123,15 +123,14 @@ export function NovaCosmosBackground() {
       parallaxY += (targetParallaxY - parallaxY) * 0.06;
       scrollBoost *= 0.94;
 
-      const speedMult = 1 + scrollBoost * 1.1;
+      const speedMult = 1 + scrollBoost * 0.45;
       root!.style.setProperty("--nova-parallax-x", `${parallaxX}px`);
       root!.style.setProperty("--nova-parallax-y", `${parallaxY}px`);
-      root!.classList.toggle("nova-hyperspace", scrollBoost > 0.55);
 
       ctx!.clearRect(0, 0, w, h);
 
       for (const star of stars) {
-        const warpSpeed = (0.004 + (1 - star.z) * 0.012) * speedMult;
+        const warpSpeed = (0.002 + (1 - star.z) * 0.005) * speedMult;
         star.z -= warpSpeed;
 
         if (star.z <= 0.02) {
@@ -150,8 +149,8 @@ export function NovaCosmosBackground() {
         const alpha = Math.min(1, star.opacity * twinkle * (0.35 + depth * 0.85));
         const [r, g, b] = TINT_COLORS[star.tint];
 
-        if (depth > 0.55 && star.z < 0.75) {
-          const streakLen = depth * speedMult * 6;
+        if (depth > 0.7 && star.z < 0.6) {
+          const streakLen = depth * speedMult * 3;
           const dx = px - star.prevPx;
           const dy = py - star.prevPy;
           const len = Math.hypot(dx, dy) || 1;
@@ -179,67 +178,25 @@ export function NovaCosmosBackground() {
         star.prevPy = py;
       }
 
-      if (time - lastShootingStarSpawn > 9000 + Math.random() * 14000) {
-        spawnShootingStar();
-        lastShootingStarSpawn = time;
-      }
-
-      shootingStars = shootingStars.filter((ss) => {
-        ss.x += ss.vx * speedMult;
-        ss.y += ss.vy * speedMult;
-        ss.life -= 0.028 * speedMult;
-
-        if (ss.life <= 0) return false;
-
-        const fade = ss.life / ss.maxLife;
-        const tailLen = 80 * fade;
-        const angle = Math.atan2(ss.vy, ss.vx);
-
-        const grad = ctx!.createLinearGradient(
-          ss.x,
-          ss.y,
-          ss.x - Math.cos(angle) * tailLen,
-          ss.y - Math.sin(angle) * tailLen
-        );
-        grad.addColorStop(0, `rgba(255, 255, 255, ${fade * 0.95})`);
-        grad.addColorStop(0.3, `rgba(110, 231, 249, ${fade * 0.5})`);
-        grad.addColorStop(1, "rgba(110, 231, 249, 0)");
-
-        ctx!.beginPath();
-        ctx!.moveTo(ss.x, ss.y);
-        ctx!.lineTo(
-          ss.x - Math.cos(angle) * tailLen,
-          ss.y - Math.sin(angle) * tailLen
-        );
-        ctx!.strokeStyle = grad;
-        ctx!.lineWidth = 2.2 * fade;
-        ctx!.stroke();
-
-        ctx!.beginPath();
-        ctx!.arc(ss.x, ss.y, 2.5 * fade, 0, Math.PI * 2);
-        ctx!.fillStyle = `rgba(255, 255, 255, ${fade})`;
-        ctx!.fill();
-
-        return ss.x > -100 && ss.x < w + 100 && ss.y > -100 && ss.y < h + 100;
-      });
+      // Shooting stars disabled — keeps Explorers focused on missions
 
       animationId = requestAnimationFrame(draw);
     }
 
     const onMouseMove = (e: MouseEvent) => {
-      targetParallaxX = (e.clientX / window.innerWidth - 0.5) * 2;
-      targetParallaxY = (e.clientY / window.innerHeight - 0.5) * 2;
+      targetParallaxX = (e.clientX / window.innerWidth - 0.5) * 0.8;
+      targetParallaxY = (e.clientY / window.innerHeight - 0.5) * 0.8;
     };
 
     let lastScrollY = window.scrollY;
     const onScroll = () => {
       const delta = Math.abs(window.scrollY - lastScrollY);
       lastScrollY = window.scrollY;
-      scrollBoost = Math.min(0.55, scrollBoost + delta * 0.007);
+      scrollBoost = Math.min(0.25, scrollBoost + delta * 0.003);
     };
 
     const onWheel = (e: WheelEvent) => {
-      scrollBoost = Math.min(0.55, scrollBoost + Math.abs(e.deltaY) * 0.0005);
+      scrollBoost = Math.min(0.25, scrollBoost + Math.abs(e.deltaY) * 0.0002);
     };
 
     resize();

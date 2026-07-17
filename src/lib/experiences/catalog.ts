@@ -117,7 +117,7 @@ export const EXPERIENCES: NovaExperience[] = [
     accent: "#ff7a00",
     accentSecondary: "#ffd166",
     achievementTitle: "Rover Engineer",
-    missionObjective: "Program the exact route F → F → F → R to reach the rescue module.",
+    missionObjective: "Navigate the 4×4 grid from the launch pad to the rescue module. Program turns and forward moves — avoid the debris field.",
     missionLead:
       "A rover must reach a stranded research module. Build a command sequence, test it, and improve the route.",
     skills: ["Sequencing", "Sensors", "Engineering Design"],

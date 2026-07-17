@@ -198,7 +198,10 @@ export function ExperiencePlayer({
 
         <main
           className={cn(
-            "experience-stage rounded-[28px] bg-white/[0.97] p-6 text-nova-deep-blue shadow-2xl sm:p-10 lg:p-14",
+            "experience-stage rounded-[28px] shadow-2xl",
+            stage === "lab"
+              ? "bg-transparent p-0 text-white"
+              : "bg-white/[0.97] p-6 text-nova-deep-blue sm:p-10 lg:p-14",
             animating && "experience-stage-exit"
           )}
         >
@@ -395,30 +398,33 @@ export function ExperiencePlayer({
           )}
 
           {stage === "lab" && (
-            <div>
-              <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--exp-accent)]">
-                Interactive LAB
-              </p>
-              <h2 className="mt-2 text-3xl font-black">{experience.title}</h2>
-              <p className="mt-2 text-nova-gray">{experience.missionObjective}</p>
-              <BuddyCompanion
-                buddyId={buddyId}
-                buddyNickname={buddyNickname}
-                message={getBuddyDialogue(buddyId, experience.slug, "lab")}
-                compact
-              />
-              <div className="mt-6">
-                {experience.labType === "code" && (
-                  <LabCode onComplete={handleLabComplete} />
-                )}
-                {experience.labType === "robot" && (
-                  <LabRobot onComplete={handleLabComplete} />
-                )}
-                {experience.labType === "iot" && (
-                  <LabIot onComplete={handleLabComplete} />
-                )}
+            <div className="overflow-hidden rounded-[28px] border border-white/10 bg-[#0a1628]/95 shadow-2xl">
+              <div className="border-b border-white/10 px-6 py-5 sm:px-10">
+                <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--exp-accent)]">
+                  Interactive LAB · Live Mission
+                </p>
+                <h2 className="mt-2 text-2xl font-black text-white sm:text-3xl">{experience.title}</h2>
               </div>
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="px-4 py-6 sm:px-8 sm:py-8">
+                <BuddyCompanion
+                  buddyId={buddyId}
+                  buddyNickname={buddyNickname}
+                  message={getBuddyDialogue(buddyId, experience.slug, "lab")}
+                  compact
+                />
+                <div className="mt-6">
+                  {experience.labType === "code" && (
+                    <LabCode onComplete={handleLabComplete} />
+                  )}
+                  {experience.labType === "robot" && (
+                    <LabRobot onComplete={handleLabComplete} />
+                  )}
+                  {experience.labType === "iot" && (
+                    <LabIot onComplete={handleLabComplete} />
+                  )}
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-3 border-t border-white/10 bg-[#071225] px-6 py-5 sm:px-10">
                 <button
                   type="button"
                   disabled={!labComplete}
