@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { dashboardRoutes } from "@/lib/auth";
+import { dashboardRoutes } from "@/lib/auth.config";
 
 export default async function DashboardPage() {
   const session = await auth();

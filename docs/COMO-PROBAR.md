@@ -53,6 +53,19 @@ Abre: **http://localhost:3000**
 
 ---
 
+## Si ves errores en localhost (pantalla roja / webpack)
+
+Eso pasa cuando hay servidores viejos corriendo. Haz esto:
+
+```bash
+cd C:\Users\Laptop9\Documents\GitHub\STEM-Innovation-Academy
+npm run dev:clean
+```
+
+Espera `✓ Ready` y abre **http://localhost:3000/login**
+
+---
+
 ## Si el login no funciona en Vercel
 
 En Vercel → Settings → Environment Variables, verifica:

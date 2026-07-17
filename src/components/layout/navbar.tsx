@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { dashboardRoutes } from "@/lib/auth";
+import { dashboardRoutes } from "@/lib/auth.config";
 
 const publicLinks = [
   { href: "/#discover", label: "Discover NOVA" },
