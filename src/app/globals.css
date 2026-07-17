@@ -41,15 +41,19 @@
     filter: blur(80px) brightness(1.2);
   }
 
+  .nova-cosmos-parallax {
+    @apply absolute inset-0;
+    transform: translate(
+      calc(var(--nova-parallax-x, 0px) * 14),
+      calc(var(--nova-parallax-y, 0px) * 14)
+    );
+    will-change: transform;
+  }
+
   .nova-nebula {
     @apply absolute rounded-full;
     filter: blur(72px);
     animation: nova-nebula-float 20s ease-in-out infinite alternate;
-    transform: translate(
-      calc(var(--nova-parallax-x, 0px) * 12),
-      calc(var(--nova-parallax-y, 0px) * 12)
-    );
-    will-change: transform;
   }
 
   .nova-nebula--cyan {

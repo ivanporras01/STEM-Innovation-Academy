@@ -268,9 +268,11 @@ export function NovaCosmosBackground() {
 
   return (
     <div ref={rootRef} className="nova-cosmos-root" aria-hidden>
-      <div className="nova-nebula nova-nebula--cyan" />
-      <div className="nova-nebula nova-nebula--violet" />
-      <div className="nova-nebula nova-nebula--orange" />
+      <div className="nova-cosmos-parallax">
+        <div className="nova-nebula nova-nebula--cyan" />
+        <div className="nova-nebula nova-nebula--violet" />
+        <div className="nova-nebula nova-nebula--orange" />
+      </div>
       <canvas ref={canvasRef} className="nova-cosmos-canvas" />
       <div className="nova-cosmos-vignette" />
     </div>
