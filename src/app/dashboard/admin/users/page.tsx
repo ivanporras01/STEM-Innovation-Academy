@@ -24,12 +24,12 @@ export default async function AdminUsersPage() {
 
   return (
     <DashboardShell user={session.user}>
-      <h1 className="mb-6 text-2xl font-bold text-nova-deep-blue">Users</h1>
+      <h1 className="mb-6 text-2xl font-bold text-white">Users</h1>
 
       <div className="nova-card overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead>
-            <tr className="border-b border-nova-light-gray text-nova-gray">
+            <tr className="border-b border-white/10 text-nova-cyan-light/70">
               <th className="pb-3 pr-4 font-medium">Name</th>
               <th className="pb-3 pr-4 font-medium">Email</th>
               <th className="pb-3 pr-4 font-medium">Role</th>
@@ -39,18 +39,18 @@ export default async function AdminUsersPage() {
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr key={user.id} className="border-b border-nova-light-gray/60">
-                <td className="py-3 pr-4 font-medium text-nova-deep-blue">
+              <tr key={user.id} className="border-b border-white/10">
+                <td className="py-3 pr-4 font-medium text-white">
                   {user.firstName} {user.lastName}
                 </td>
-                <td className="py-3 pr-4 text-nova-gray">{user.email}</td>
+                <td className="py-3 pr-4 text-nova-cyan-light/80">{user.email}</td>
                 <td className="py-3 pr-4">
                   <Badge variant="cyan">{roleLabels[user.role]}</Badge>
                 </td>
-                <td className="py-3 pr-4 text-nova-gray">
+                <td className="py-3 pr-4 text-nova-cyan-light/80">
                   {user.school?.name ?? "—"}
                 </td>
-                <td className="py-3 text-nova-gray">{formatDate(user.createdAt)}</td>
+                <td className="py-3 text-nova-cyan-light/80">{formatDate(user.createdAt)}</td>
               </tr>
             ))}
           </tbody>

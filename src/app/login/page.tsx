@@ -18,15 +18,15 @@ export default async function LoginPage({
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
-      <main className="flex flex-1 items-center justify-center py-12">
+      <main className="nova-page-main flex flex-1 items-center justify-center py-12">
         <div className="nova-container max-w-md">
-          <div className="nova-card shadow-nova">
+          <div className="nova-glass-island shadow-nova">
             <div className="mb-6 text-center">
               <span className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nova-cyan to-nova-blue text-xl text-white">
                 ✦
               </span>
-              <h1 className="text-2xl font-bold text-nova-deep-blue">NOVA Portal</h1>
-              <p className="mt-1 text-sm text-nova-gray">
+              <h1 className="text-2xl font-bold text-white">NOVA Portal</h1>
+              <p className="mt-1 text-sm text-nova-cyan-light/80">
                 Enter your mission command center — Explorers, Mentors, and administrators welcome.
               </p>
             </div>
@@ -39,14 +39,14 @@ export default async function LoginPage({
 
             <LoginForm callbackUrl={params.callbackUrl} />
 
-            <div className="mt-6 rounded-xl bg-nova-off-white p-4 text-xs text-nova-gray">
-              <p className="mb-2 font-semibold text-nova-dark-gray">Demo accounts (password: nova2026)</p>
+            <div className="mt-6 rounded-xl border border-white/10 bg-white/5 p-4 text-xs text-nova-cyan-light/80">
+              <p className="mb-2 font-semibold text-white">Demo accounts (password: nova2026)</p>
               <p>Explorer: student@steminnovationacademy.org</p>
               <p>Mentor: mentor@steminnovationacademy.org</p>
               <p>Admin: admin@steminnovationacademy.org</p>
             </div>
 
-            <p className="mt-4 text-center text-sm text-nova-gray">
+            <p className="mt-4 text-center text-sm text-nova-cyan-light/80">
               New to NOVA?{" "}
               <Link href="/register" className="font-semibold text-nova-cyan hover:underline">
                 Create an account

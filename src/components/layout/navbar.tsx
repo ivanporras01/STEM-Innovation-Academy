@@ -18,13 +18,7 @@ export function Navbar() {
     : "/login";
 
   const isDashboard = pathname.startsWith("/dashboard");
-  const isCosmicRoute =
-    !isDashboard &&
-    (pathname === "/" ||
-      pathname.startsWith("/courses") ||
-      pathname.startsWith("/experiences") ||
-      pathname === "/login" ||
-      pathname === "/register");
+  const isCosmicRoute = !pathname.startsWith("/api");
 
   const dashboardLabel = "NOVA Portal";
   const onPortal = pathname.startsWith("/dashboard");

@@ -28,7 +28,7 @@ export default async function AdminCoursesPage() {
 
   return (
     <DashboardShell user={session.user}>
-      <h1 className="mb-6 text-2xl font-bold text-nova-deep-blue">Courses</h1>
+      <h1 className="mb-6 text-2xl font-bold text-white">Courses</h1>
 
       <div className="space-y-4">
         {courses.map((course) => (
@@ -40,8 +40,8 @@ export default async function AdminCoursesPage() {
                   {course.published ? "Published" : "Draft"}
                 </Badge>
               </div>
-              <h3 className="font-semibold text-nova-deep-blue">{course.title}</h3>
-              <p className="mt-1 text-sm text-nova-gray">
+              <h3 className="font-semibold text-white">{course.title}</h3>
+              <p className="mt-1 text-sm text-nova-cyan-light/80">
                 {course._count.modules} modules · {course._count.enrollments} Explorers
                 {course.mentor && (
                   <> · Mentor: {course.mentor.firstName} {course.mentor.lastName}</>

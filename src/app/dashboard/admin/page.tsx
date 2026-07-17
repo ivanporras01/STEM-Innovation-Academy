@@ -128,7 +128,7 @@ export default async function AdminDashboardPage() {
 
           </div>
 
-          <div className="divide-y divide-nova-light-gray">
+          <div className="divide-y divide-white/10">
 
             {recentUsers.map((user) => (
 

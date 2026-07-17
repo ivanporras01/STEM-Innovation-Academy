@@ -109,6 +109,10 @@
     @apply relative py-20;
   }
 
+  .nova-page-main {
+    @apply relative flex-1;
+  }
+
   .nova-glass-island {
     @apply rounded-[24px] border border-white/10 bg-[#0a1628]/55 p-6 shadow-[0_8px_40px_rgba(0,0,0,0.4)] backdrop-blur-xl;
   }
@@ -184,7 +188,7 @@
   }
 
   .nova-card {
-    @apply rounded-nova border border-nova-light-gray bg-white p-6 shadow-sm;
+    @apply rounded-nova border border-white/15 bg-[#0d1b3d]/70 p-6 shadow-[0_0_30px_rgba(0,180,216,0.08)] backdrop-blur-md;
   }
 
   .nova-btn-primary {
@@ -192,15 +196,15 @@
   }
 
   .nova-btn-secondary {
-    @apply inline-flex items-center justify-center rounded-xl border border-nova-light-gray bg-white px-5 py-2.5 text-sm font-semibold text-nova-deep-blue transition hover:border-nova-cyan hover:text-nova-cyan;
+    @apply inline-flex items-center justify-center rounded-xl border border-white/20 bg-white/10 px-5 py-2.5 text-sm font-semibold text-white transition hover:border-nova-cyan hover:bg-white/15 hover:text-nova-cyan-light;
   }
 
   .nova-input {
-    @apply w-full rounded-xl border border-nova-light-gray bg-white px-4 py-2.5 text-sm text-nova-black placeholder:text-nova-gray focus:border-nova-cyan focus:outline-none focus:ring-2 focus:ring-nova-cyan/20;
+    @apply w-full rounded-xl border border-white/15 bg-[#071225]/80 px-4 py-2.5 text-sm text-white placeholder:text-white/40 focus:border-nova-cyan focus:outline-none focus:ring-2 focus:ring-nova-cyan/20;
   }
 
   .nova-label {
-    @apply mb-1.5 block text-sm font-medium text-nova-dark-gray;
+    @apply mb-1.5 block text-sm font-medium text-nova-cyan-light/90;
   }
 
   .nova-badge {
@@ -208,31 +212,31 @@
   }
 
   .prose-nova h1 {
-    @apply mb-4 text-2xl font-bold text-nova-deep-blue;
+    @apply mb-4 text-2xl font-bold text-white;
   }
 
   .prose-nova h2 {
-    @apply mb-3 mt-6 text-xl font-semibold text-nova-deep-blue;
+    @apply mb-3 mt-6 text-xl font-semibold text-white;
   }
 
   .prose-nova h3 {
-    @apply mb-2 mt-4 text-lg font-semibold text-nova-blue;
+    @apply mb-2 mt-4 text-lg font-semibold text-nova-cyan-light;
   }
 
   .prose-nova p {
-    @apply mb-3 leading-relaxed text-nova-dark-gray;
+    @apply mb-3 leading-relaxed text-nova-cyan-light/85;
   }
 
   .prose-nova ul {
-    @apply mb-3 list-disc space-y-1 pl-5 text-nova-dark-gray;
+    @apply mb-3 list-disc space-y-1 pl-5 text-nova-cyan-light/85;
   }
 
   .prose-nova ol {
-    @apply mb-3 list-decimal space-y-1 pl-5 text-nova-dark-gray;
+    @apply mb-3 list-decimal space-y-1 pl-5 text-nova-cyan-light/85;
   }
 
   .prose-nova code {
-    @apply rounded bg-nova-light-gray px-1.5 py-0.5 font-mono text-sm text-nova-deep-blue;
+    @apply rounded bg-white/10 px-1.5 py-0.5 font-mono text-sm text-nova-cyan-light;
   }
 
   .prose-nova pre {
@@ -244,28 +248,29 @@
   }
 
   .prose-nova strong {
-    @apply font-semibold text-nova-deep-blue;
+    @apply font-semibold text-white;
   }
 
-  /* NOVA Experience immersive mode */
+  /* NOVA Experience immersive mode — translucent so global cosmos shows through */
   .experience-shell {
     background: radial-gradient(
         circle at 15% 10%,
-        color-mix(in srgb, var(--exp-accent) 22%, transparent),
+        color-mix(in srgb, var(--exp-accent) 14%, transparent),
         transparent 35%
       ),
       radial-gradient(
         circle at 85% 10%,
-        color-mix(in srgb, var(--exp-accent-2) 18%, transparent),
+        color-mix(in srgb, var(--exp-accent-2) 12%, transparent),
         transparent 34%
       ),
-      linear-gradient(145deg, #061127, #0b1a3b 48%, #103663);
+      linear-gradient(145deg, rgba(6, 17, 39, 0.72), rgba(11, 26, 59, 0.78) 48%, rgba(16, 54, 99, 0.75));
   }
 
   .experience-stars {
     pointer-events: none;
     position: fixed;
     inset: 0;
+    opacity: 0.35;
     background-image: radial-gradient(1px 1px at 20px 30px, #fff8, transparent),
       radial-gradient(1px 1px at 80px 120px, #fff6, transparent),
       radial-gradient(1px 1px at 160px 80px, #fff5, transparent);

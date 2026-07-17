@@ -52,8 +52,8 @@ export function StatCard({
         <Icon className="h-5 w-5" />
       </div>
       <div>
-        <p className="text-2xl font-bold text-nova-deep-blue">{value}</p>
-        <p className="text-sm text-nova-gray">{label}</p>
+        <p className="text-2xl font-bold text-white">{value}</p>
+        <p className="text-sm text-nova-cyan-light/80">{label}</p>
       </div>
     </div>
   );

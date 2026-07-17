@@ -11,12 +11,12 @@ export default function RegisterPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
-      <main className="flex flex-1 items-center justify-center py-12">
+      <main className="nova-page-main flex flex-1 items-center justify-center py-12">
         <div className="nova-container max-w-lg">
-          <div className="nova-card shadow-nova">
+          <div className="nova-glass-island shadow-nova">
             <div className="mb-6 text-center">
-              <h1 className="text-2xl font-bold text-nova-deep-blue">Join NOVA</h1>
-              <p className="mt-1 text-sm text-nova-gray">
+              <h1 className="text-2xl font-bold text-white">Join NOVA</h1>
+              <p className="mt-1 text-sm text-nova-cyan-light/80">
                 Create your Explorer account and begin your NOVA journey
               </p>
             </div>

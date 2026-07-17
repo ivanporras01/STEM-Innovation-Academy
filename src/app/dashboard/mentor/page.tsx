@@ -71,7 +71,7 @@ export default async function MentorDashboardPage() {
                         </p>
                       </div>
                     </div>
-                    <pre className="mt-3 max-h-40 overflow-auto rounded-xl bg-nova-off-white p-3 text-xs text-nova-dark-gray">
+                    <pre className="mt-3 max-h-40 overflow-auto rounded-xl border border-white/10 bg-black/30 p-3 text-xs text-nova-cyan-light/90">
                       {submission.content}
                     </pre>
                     <ReviewSubmissionForm

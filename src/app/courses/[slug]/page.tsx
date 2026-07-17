@@ -82,7 +82,7 @@ export default async function CourseDetailPage({
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
-      <main className="flex-1 py-12">
+      <main className="nova-page-main py-12">
         <div className="nova-container">
           {meta ? (
             <MissionPathHero
@@ -94,8 +94,8 @@ export default async function CourseDetailPage({
             />
           ) : (
             <div className="mb-8">
-              <h1 className="text-3xl font-bold text-nova-deep-blue">{course.title}</h1>
-              <p className="mt-3 max-w-3xl text-lg text-nova-gray">{course.description}</p>
+              <h1 className="text-3xl font-bold text-white">{course.title}</h1>
+              <p className="mt-3 max-w-3xl text-lg text-nova-cyan-light/85">{course.description}</p>
             </div>
           )}
 
@@ -110,7 +110,7 @@ export default async function CourseDetailPage({
                   {course.mentor && (
                     <span>
                       Mentor:{" "}
-                      <strong className="text-nova-dark-gray">
+                      <strong className="text-white">
                         {course.mentor.firstName} {course.mentor.lastName}
                       </strong>
                     </span>
@@ -122,9 +122,9 @@ export default async function CourseDetailPage({
             )}
 
             {meta && course.mentor && (
-              <p className="mb-3 text-sm text-nova-gray">
+              <p className="mb-3 text-sm text-nova-cyan-light/80">
                 Innovation Mentor:{" "}
-                <strong className="text-nova-dark-gray">
+                <strong className="text-white">
                   {course.mentor.firstName} {course.mentor.lastName}
                 </strong>
               </p>
@@ -146,11 +146,11 @@ export default async function CourseDetailPage({
             <div className="lg:col-span-2 space-y-6">
               {course.modules.map((mod) => (
                 <section key={mod.id} className="nova-card">
-                  <h2 className="mb-1 text-lg font-semibold text-nova-deep-blue">
+                  <h2 className="mb-1 text-lg font-semibold text-white">
                     Phase {mod.order}: {mod.title}
                   </h2>
                   {mod.description && (
-                    <p className="mb-4 text-sm text-nova-gray">{mod.description}</p>
+                    <p className="mb-4 text-sm text-nova-cyan-light/80">{mod.description}</p>
                   )}
                   <ul className="space-y-2">
                     {mod.lessons.map((lesson) => {
@@ -161,30 +161,30 @@ export default async function CourseDetailPage({
                           {enrolled ? (
                             <Link
                               href={`/courses/${slug}/lessons/${lesson.id}`}
-                              className="flex items-center gap-3 rounded-xl px-3 py-2.5 transition hover:bg-nova-off-white"
+                              className="flex items-center gap-3 rounded-xl px-3 py-2.5 transition hover:bg-white/10"
                             >
                               {completed ? (
                                 <CheckCircle2 className="h-5 w-5 shrink-0 text-nova-green" />
                               ) : (
-                                <Circle className="h-5 w-5 shrink-0 text-nova-light-gray" />
+                                <Circle className="h-5 w-5 shrink-0 text-white/30" />
                               )}
                               <div className="min-w-0 flex-1">
-                                <p className="text-sm font-medium text-nova-deep-blue">
+                                <p className="text-sm font-medium text-white">
                                   {lesson.title}
                                 </p>
-                                <p className="text-xs text-nova-gray">
+                                <p className="text-xs text-nova-cyan-light/70">
                                   {lessonTypeLabels[lesson.type]} · {lesson.duration} min
                                 </p>
                               </div>
                             </Link>
                           ) : (
                             <div className="flex items-center gap-3 rounded-xl px-3 py-2.5 opacity-60">
-                              <Lock className="h-5 w-5 shrink-0 text-nova-gray" />
+                              <Lock className="h-5 w-5 shrink-0 text-nova-cyan-light/50" />
                               <div>
-                                <p className="text-sm font-medium text-nova-dark-gray">
+                                <p className="text-sm font-medium text-white/80">
                                   {lesson.title}
                                 </p>
-                                <p className="text-xs text-nova-gray">Join path to unlock</p>
+                                <p className="text-xs text-nova-cyan-light/60">Join path to unlock</p>
                               </div>
                             </div>
                           )}
@@ -199,14 +199,14 @@ export default async function CourseDetailPage({
             <aside className="space-y-6">
               {enrolled && course.assignments[0] && (
                 <div className="nova-card">
-                  <h3 className="mb-2 font-semibold text-nova-deep-blue">
+                  <h3 className="mb-2 font-semibold text-white">
                     {course.assignments[0].title}
                   </h3>
-                  <p className="mb-4 text-sm text-nova-gray">
+                  <p className="mb-4 text-sm text-nova-cyan-light/80">
                     {course.assignments[0].description}
                   </p>
                   {course.assignments[0].dueDate && (
-                    <p className="mb-4 text-xs text-nova-gray">
+                    <p className="mb-4 text-xs text-nova-cyan-light/70">
                       Due: {formatDate(course.assignments[0].dueDate)}
                     </p>
                   )}

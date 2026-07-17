@@ -61,7 +61,7 @@ export default async function LessonPage({
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
-      <main className="flex-1 py-8">
+      <main className="nova-page-main py-8">
         <div className="nova-container max-w-4xl">
           <Link
             href={`/courses/${slug}`}
