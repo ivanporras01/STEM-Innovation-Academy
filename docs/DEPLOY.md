@@ -52,7 +52,8 @@ Set environment variables in the Vercel dashboard under **Settings → Environme
 
 | Issue | Fix |
 |-------|-----|
-| Build fails on `db push` | Ensure `DATABASE_URL` is set in Vercel env vars |
+| **P1012: Environment variable not found: DATABASE_URL** | Add `DATABASE_URL` in Vercel → Settings → Environment Variables (Production + Preview + Development), then **Redeploy** |
+| Build fails on `db push` | Ensure `DATABASE_URL` is a valid `postgresql://...` string from Neon |
 | Login redirects fail | Set `NEXTAUTH_URL` to your exact Vercel URL |
 | Empty courses | Re-run deploy or run `npm run db:seed` with production DATABASE_URL |
 
