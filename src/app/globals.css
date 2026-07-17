@@ -320,8 +320,8 @@
   }
 
   .buddy-portrait--card {
-    object-position: center 20%;
-    transform: scale(1.1);
+    object-position: center 22%;
+    transform: scale(1.05);
   }
 
   .experience-btn-primary {

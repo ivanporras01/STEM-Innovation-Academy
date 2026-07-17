@@ -19,6 +19,7 @@ import { PathwayIcon } from "@/components/ui/pathway-icon";
 import { LabCode } from "./labs/lab-code";
 import { LabRobot } from "./labs/lab-robot";
 import { LabIot } from "./labs/lab-iot";
+import { ExperienceExitNav } from "./experience-exit-nav";
 import { cn } from "@/lib/utils";
 
 type ProgressPayload = {
@@ -167,16 +168,14 @@ export function ExperiencePlayer({
               </small>
             </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <span className="rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-xs font-bold">
               ● Mission Live
             </span>
-            <Link
-              href={`/courses/${experience.courseSlug}`}
-              className="rounded-full border border-white/20 px-3 py-1.5 text-xs font-semibold text-white/80 transition hover:bg-white/10"
-            >
-              ← Mission Path
-            </Link>
+            <ExperienceExitNav
+              courseSlug={experience.courseSlug}
+              isLoggedIn={isLoggedIn}
+            />
           </div>
         </header>
 
@@ -369,6 +368,13 @@ export function ExperiencePlayer({
                     </>
                   )}
                 </div>
+                {stage === "debrief" && (
+                  <ExperienceExitNav
+                    courseSlug={experience.courseSlug}
+                    isLoggedIn={isLoggedIn}
+                    variant="footer"
+                  />
+                )}
               </div>
               <BuddyCompanion
                 buddyId={buddyId}
@@ -559,6 +565,12 @@ export function ExperiencePlayer({
                 <Link href={`/courses/${experience.courseSlug}`} className="experience-btn-primary">
                   Continue Mission Path →
                 </Link>
+                <Link href="/courses" className="experience-btn-secondary">
+                  All Mission Paths
+                </Link>
+                <Link href={isLoggedIn ? "/dashboard" : "/"} className="experience-btn-secondary">
+                  {isLoggedIn ? "NOVA Portal" : "NOVA Home"}
+                </Link>
                 <button
                   type="button"
                   onClick={() => {
@@ -575,6 +587,11 @@ export function ExperiencePlayer({
                   Replay Mission
                 </button>
               </div>
+              <ExperienceExitNav
+                courseSlug={experience.courseSlug}
+                isLoggedIn={isLoggedIn}
+                variant="footer"
+              />
               {!isLoggedIn && (
                 <p className="mt-6 text-sm text-white/60">
                   <Link href="/login" className="font-semibold text-[var(--exp-accent)] hover:underline">
