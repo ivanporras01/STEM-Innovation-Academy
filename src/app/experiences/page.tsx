@@ -6,7 +6,7 @@ import { EXPERIENCES } from "@/lib/experiences/catalog";
 import { PathwayIcon } from "@/components/ui/pathway-icon";
 
 export const metadata: Metadata = {
-  title: "NOVA Mission Board",
+  title: "Missions",
   description: "Interactive mission-based STEM adventures with your NOVA Buddy.",
 };
 
@@ -22,7 +22,7 @@ export default function ExperiencesPage() {
           </div>
           <div className="nova-container relative text-center">
             <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-nova-cyan">
-              NOVA Mission Board
+              Missions
             </p>
             <h1 className="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">
               Choose Your Next Mission

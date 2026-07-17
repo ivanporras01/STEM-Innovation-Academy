@@ -531,7 +531,7 @@ export function ExperiencePlayer({
                   Launch Mission Again
                 </button>
                 <Link href="/experiences" className="experience-btn-secondary">
-                  Mission Board
+                  All Missions
                 </Link>
               </div>
               {!isLoggedIn && (

@@ -17,7 +17,7 @@ export default function RegisterPage() {
             <div className="mb-6 text-center">
               <h1 className="text-2xl font-bold text-nova-deep-blue">Join NOVA</h1>
               <p className="mt-1 text-sm text-nova-gray">
-                Create your account to start learning
+                Create your Explorer account and begin your NOVA journey
               </p>
             </div>
             <RegisterForm />

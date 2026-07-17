@@ -55,7 +55,7 @@ export default async function StudentDashboardPage() {
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-nova-deep-blue">Interactive Missions</h2>
           <Link href="/experiences" className="text-sm font-medium text-nova-cyan hover:underline">
-            Mission Board →
+            All Missions →
           </Link>
         </div>
         <div className="grid gap-4 sm:grid-cols-3">
