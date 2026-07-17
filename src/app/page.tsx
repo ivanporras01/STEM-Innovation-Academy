@@ -288,6 +288,7 @@ export default function HomePage() {
                   <ExploreNowButton
                     experienceSlug={pathway.experienceSlug}
                     experienceTitle={pathway.experienceTitle}
+                    pathway={pathway.id}
                   />
                 </div>
               ))}

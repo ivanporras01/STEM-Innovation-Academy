@@ -69,6 +69,9 @@ export type NovaExperience = {
   reflectionPrompt: string;
   debriefLead: string;
   courseSlug: string;
+  difficulty: 1 | 2 | 3;
+  durationMinutes: number;
+  questTeaser: string;
 };
 
 export const EXPERIENCES: NovaExperience[] = [
@@ -83,7 +86,7 @@ export const EXPERIENCES: NovaExperience[] = [
     accent: "#00b4d8",
     accentSecondary: "#7657e8",
     achievementTitle: "Signal Coder",
-    missionObjective: "Edit the message, keep READY, and run the mission.",
+    missionObjective: "Set message to \"NOVA READY\" and print \"Signal restored!\" to bring the beacon online.",
     missionLead:
       "A communication beacon has gone silent. Build a smart message analyzer that recognizes the signal and restores the connection.",
     skills: ["Variables", "Conditionals", "AI Thinking"],
@@ -98,6 +101,10 @@ export const EXPERIENCES: NovaExperience[] = [
     debriefLead:
       "You observed, tested, learned from feedback, and improved a system. That is how innovators work.",
     courseSlug: "intro-python-ai",
+    difficulty: 2,
+    durationMinutes: 25,
+    questTeaser:
+      "Decode a silent beacon, edit live code, pass an Innovation Check, and earn the Signal Coder badge.",
   },
   {
     slug: "rescue-rover",
@@ -110,7 +117,7 @@ export const EXPERIENCES: NovaExperience[] = [
     accent: "#ff7a00",
     accentSecondary: "#ffd166",
     achievementTitle: "Rover Engineer",
-    missionObjective: "Create a route with three Forward commands and one Right turn.",
+    missionObjective: "Program the exact route F → F → F → R to reach the rescue module.",
     missionLead:
       "A rover must reach a stranded research module. Build a command sequence, test it, and improve the route.",
     skills: ["Sequencing", "Sensors", "Engineering Design"],
@@ -125,6 +132,10 @@ export const EXPERIENCES: NovaExperience[] = [
     debriefLead:
       "You observed, tested, learned from feedback, and improved a system. That is how innovators work.",
     courseSlug: "robotics-engineering",
+    difficulty: 2,
+    durationMinutes: 30,
+    questTeaser:
+      "Plot a rescue route through obstacles, program rover logic, iterate your design, and unlock Rover Engineer.",
   },
   {
     slug: "smart-greenhouse",
@@ -137,7 +148,7 @@ export const EXPERIENCES: NovaExperience[] = [
     accent: "#12a66a",
     accentSecondary: "#6ee7b7",
     achievementTitle: "Smart Systems Builder",
-    missionObjective: "Set the cooling threshold below 30°C and activate automation.",
+    missionObjective: "Set cooling threshold ≤ 28°C, enable automation, and trigger a successful test.",
     missionLead:
       "A greenhouse is overheating. Connect its sensor to automatic cooling and return the plants to a safe temperature.",
     skills: ["Sensors", "Automation", "Connected Systems"],
@@ -152,6 +163,10 @@ export const EXPERIENCES: NovaExperience[] = [
     debriefLead:
       "You observed, tested, learned from feedback, and improved a system. That is how innovators work.",
     courseSlug: "iot-smart-systems",
+    difficulty: 2,
+    durationMinutes: 28,
+    questTeaser:
+      "Tune sensors, configure automation thresholds, protect a live greenhouse, and earn Smart Systems Builder.",
   },
 ];
 

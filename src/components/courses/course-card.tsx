@@ -76,6 +76,7 @@ export function CourseCard({
         <ExploreNowButton
           experienceSlug={experienceSlug}
           experienceTitle={experienceTitle}
+          pathway={pathway as PathwayKey}
         />
       )}
     </article>

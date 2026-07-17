@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 
-const STARTER = `message = "NOVA READY"
+const STARTER = `# Mission: restore the beacon signal
+message = "NOVA STANDBY"
 
 if "READY" in message:
     print("Signal restored!")
@@ -13,27 +14,42 @@ type Props = { onComplete: (msg: string) => void };
 
 export function LabCode({ onComplete }: Props) {
   const [code, setCode] = useState(STARTER);
-  const [output, setOutput] = useState("Buddy: Console ready. Press Run Mission.");
+  const [output, setOutput] = useState("Buddy: Console ready. Edit the message and run.");
   const [success, setSuccess] = useState(false);
+  const [attempts, setAttempts] = useState(0);
 
   function run() {
-    if (code.includes("READY") && code.includes("print")) {
-      setOutput("Signal restored!\nNOVA connection: ONLINE\n\n✓ Mission objective achieved.");
+    setAttempts((a) => a + 1);
+    const hasReady = code.includes("NOVA READY");
+    const hasPrint = code.includes("print") && /Signal restored/i.test(code);
+
+    if (hasReady && hasPrint) {
+      setOutput(
+        "Signal restored!\nNOVA connection: ONLINE\nChecksum: OK\n\n✓ Beacon handshake complete."
+      );
       setSuccess(true);
-      onComplete("Mission complete. Your condition restored the signal.");
+      onComplete("Mission complete. You decoded and restored the NOVA signal.");
+    } else if (!hasReady) {
+      setOutput("Keep searching...\nHint: set message to exactly \"NOVA READY\".");
     } else {
-      setOutput("Keep searching...\nHint: include READY and print.");
+      setOutput("Logic detected, but output wrong.\nHint: print must confirm \"Signal restored!\"");
     }
   }
 
   return (
     <div className="experience-lab rounded-2xl p-5 sm:p-6">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-xs">
+        <span className="font-bold uppercase tracking-wider text-[var(--exp-accent-2)]">
+          Challenge: Edit → Run → Verify
+        </span>
+        <span className="text-white/60">Attempts: {attempts}</span>
+      </div>
       <div className="rounded-xl border border-white/10 bg-[#06131a] p-4">
         <textarea
           spellCheck={false}
           value={code}
           onChange={(e) => setCode(e.target.value)}
-          className="min-h-[220px] w-full resize-y border-0 bg-transparent font-mono text-sm leading-relaxed text-cyan-100 outline-none"
+          className="min-h-[240px] w-full resize-y border-0 bg-transparent font-mono text-sm leading-relaxed text-cyan-100 outline-none"
         />
         <div className="mt-4 flex flex-wrap gap-2">
           <button type="button" onClick={run} className="experience-lab-btn experience-lab-btn-active">
@@ -44,7 +60,8 @@ export function LabCode({ onComplete }: Props) {
             onClick={() => {
               setCode(STARTER);
               setSuccess(false);
-              setOutput("Buddy: Console ready. Press Run Mission.");
+              setAttempts(0);
+              setOutput("Buddy: Console ready. Edit the message and run.");
             }}
             className="experience-lab-btn"
           >
@@ -63,8 +80,8 @@ export function LabCode({ onComplete }: Props) {
         }`}
       >
         {success
-          ? "Mission complete. Your condition restored the signal."
-          : "Complete the mission to unlock the next stage."}
+          ? "Mission complete. You decoded and restored the NOVA signal."
+          : "Set message to \"NOVA READY\" and print \"Signal restored!\" to unlock the next stage."}
       </p>
     </div>
   );

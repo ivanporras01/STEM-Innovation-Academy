@@ -245,18 +245,18 @@ export function ExperiencePlayer({
                     ].map(([num, label]) => (
                       <div
                         key={label}
-                        className="rounded-xl border border-nova-light-gray bg-gradient-to-br from-white to-nova-off-white p-3 text-center shadow-sm"
+                        className="rounded-xl border border-white/15 bg-[#0a1628]/50 p-3 text-center backdrop-blur-sm"
                       >
                         <span className="text-[0.65rem] font-black uppercase text-[var(--exp-accent)]">
                           {num}
                         </span>
-                        <p className="mt-1 text-xs font-bold text-nova-deep-blue">{label}</p>
+                        <p className="mt-1 text-xs font-bold text-white">{label}</p>
                       </div>
                     ))}
                   </div>
 
-                  <div className="mt-8 rounded-2xl border border-nova-light-gray bg-gradient-to-br from-nova-off-white to-blue-50/60 p-5">
-                    <p className="text-sm font-bold text-nova-deep-blue">
+                  <div className="mt-8 rounded-2xl border border-white/15 bg-[#0a1628]/40 p-5 backdrop-blur-sm">
+                    <p className="text-sm font-bold text-white">
                       Your NOVA Buddy stays with you the whole way
                     </p>
                     <div className="mt-4 flex flex-wrap items-center gap-2">
@@ -266,10 +266,10 @@ export function ExperiencePlayer({
                           src={b.image}
                           alt={b.name}
                           size="sm"
-                          className={cn("ring-2 ring-white shadow-md", b.color)}
+                          className={cn("ring-2 ring-white/20 shadow-md", b.color)}
                         />
                       ))}
-                      <span className="text-xs font-bold text-nova-gray">+12 more</span>
+                      <span className="text-xs font-bold text-nova-cyan-light/70">+12 more</span>
                     </div>
                   </div>
 
@@ -349,14 +349,14 @@ export function ExperiencePlayer({
                   {stage === "briefing" ? experience.missionLead : experience.debriefLead}
                 </p>
                 {stage === "briefing" && (
-                  <div className="mt-6 rounded-2xl border border-nova-light-gray bg-gradient-to-br from-nova-off-white to-blue-50/50 p-6">
-                    <strong className="block text-nova-deep-blue">Your objective</strong>
-                    <p className="mt-2 text-nova-gray">{experience.missionObjective}</p>
+                  <div className="mt-6 rounded-2xl border border-[var(--exp-accent)]/30 bg-[#0a1628]/40 p-6 backdrop-blur-sm">
+                    <strong className="block text-[var(--exp-accent-2)]">Your objective</strong>
+                    <p className="mt-2 text-white/85">{experience.missionObjective}</p>
                     <div className="mt-4 flex flex-wrap gap-2">
                       {experience.skills.map((s) => (
                         <span
                           key={s}
-                          className="rounded-full border border-nova-light-gray bg-white px-3 py-1 text-xs font-bold"
+                          className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-bold text-white"
                         >
                           {s}
                         </span>

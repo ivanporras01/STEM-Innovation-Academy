@@ -26,7 +26,7 @@ type ShootingStar = {
   maxLife: number;
 };
 
-const STAR_COUNT = 520;
+const STAR_COUNT = 280;
 const TINT_COLORS: Record<StarTint, [number, number, number]> = {
   white: [255, 255, 255],
   cyan: [110, 231, 249],
@@ -80,7 +80,7 @@ export function NovaCosmosBackground() {
         by: (Math.random() - 0.5) * 2,
         z: Math.random() * 0.95 + 0.05,
         radius: Math.random() * 2.4 + 0.5,
-        opacity: Math.random() * 0.45 + 0.55,
+        opacity: Math.random() * 0.35 + 0.35,
         twinkleSpeed: Math.random() * 0.025 + 0.01,
         twinklePhase: Math.random() * Math.PI * 2,
         tint: pickTint(),
@@ -106,8 +106,8 @@ export function NovaCosmosBackground() {
     function projectStar(star: Star, cx: number, cy: number, spread: number) {
       const scale = spread / star.z;
       return {
-        px: cx + star.bx * scale + parallaxX * (1 - star.z) * 18,
-        py: cy + star.by * scale + parallaxY * (1 - star.z) * 18,
+        px: cx + star.bx * scale + parallaxX * (1 - star.z) * 8,
+        py: cy + star.by * scale + parallaxY * (1 - star.z) * 8,
         size: star.radius * (1.4 / star.z) * 0.55,
       };
     }
@@ -123,15 +123,15 @@ export function NovaCosmosBackground() {
       parallaxY += (targetParallaxY - parallaxY) * 0.06;
       scrollBoost *= 0.94;
 
-      const speedMult = 1 + scrollBoost * 2.8;
+      const speedMult = 1 + scrollBoost * 1.1;
       root!.style.setProperty("--nova-parallax-x", `${parallaxX}px`);
       root!.style.setProperty("--nova-parallax-y", `${parallaxY}px`);
-      root!.classList.toggle("nova-hyperspace", scrollBoost > 0.35);
+      root!.classList.toggle("nova-hyperspace", scrollBoost > 0.55);
 
       ctx!.clearRect(0, 0, w, h);
 
       for (const star of stars) {
-        const warpSpeed = (0.008 + (1 - star.z) * 0.022) * speedMult;
+        const warpSpeed = (0.004 + (1 - star.z) * 0.012) * speedMult;
         star.z -= warpSpeed;
 
         if (star.z <= 0.02) {
@@ -150,8 +150,8 @@ export function NovaCosmosBackground() {
         const alpha = Math.min(1, star.opacity * twinkle * (0.35 + depth * 0.85));
         const [r, g, b] = TINT_COLORS[star.tint];
 
-        if (depth > 0.35 && star.z < 0.85) {
-          const streakLen = depth * speedMult * 12;
+        if (depth > 0.55 && star.z < 0.75) {
+          const streakLen = depth * speedMult * 6;
           const dx = px - star.prevPx;
           const dy = py - star.prevPy;
           const len = Math.hypot(dx, dy) || 1;
@@ -179,10 +179,9 @@ export function NovaCosmosBackground() {
         star.prevPy = py;
       }
 
-      if (time - lastShootingStarSpawn > 2200 + Math.random() * 4000) {
+      if (time - lastShootingStarSpawn > 9000 + Math.random() * 14000) {
         spawnShootingStar();
         lastShootingStarSpawn = time;
-        if (Math.random() > 0.6) spawnShootingStar();
       }
 
       shootingStars = shootingStars.filter((ss) => {
@@ -236,11 +235,11 @@ export function NovaCosmosBackground() {
     const onScroll = () => {
       const delta = Math.abs(window.scrollY - lastScrollY);
       lastScrollY = window.scrollY;
-      scrollBoost = Math.min(1.2, scrollBoost + delta * 0.018);
+      scrollBoost = Math.min(0.55, scrollBoost + delta * 0.007);
     };
 
     const onWheel = (e: WheelEvent) => {
-      scrollBoost = Math.min(1.2, scrollBoost + Math.abs(e.deltaY) * 0.0015);
+      scrollBoost = Math.min(0.55, scrollBoost + Math.abs(e.deltaY) * 0.0005);
     };
 
     resize();
