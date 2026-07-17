@@ -37,9 +37,11 @@ cd C:\Users\Laptop9\Documents\GitHub\STEM-Innovation-Academy
 npm run dev
 ```
 
-Abre: **http://localhost:3000**
+Abre la URL que diga la terminal (ej: **http://localhost:3000** o **http://localhost:3003**)
 
-> Si el puerto 3000 no funciona, mira la terminal: puede decir `3001` o `3002`. Usa ese número.
+> **Recomendado:** para probar sin complicaciones, usa el **link público de Vercel** (arriba).
+
+> Si el puerto 3000 no funciona, mira la terminal: puede decir `3001`, `3002` o `3003`. Usa ese número.
 
 ---
 
