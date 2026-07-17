@@ -4,7 +4,13 @@
 
 A full-stack Learning Management System built for STEM Innovation Academy's NOVA learning platform.
 
-**Status:** ✅ Built, tested, and ready for pilot deployment.
+**Status:** ✅ Live at [stem-innovation-academy.vercel.app](https://stem-innovation-academy.vercel.app)
+
+## Live Demo
+
+**Public URL:** https://stem-innovation-academy.vercel.app
+
+Login with demo accounts (password: `nova2026`) — see [docs/COMO-PROBAR.md](docs/COMO-PROBAR.md) for a step-by-step testing guide in Spanish.
 
 ## Features
 

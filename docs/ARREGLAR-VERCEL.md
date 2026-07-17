@@ -39,7 +39,7 @@ Tu build falló porque **falta la base de datos**. Sigue estos pasos **en orden*
 
 ### Variable 3
 - **Key:** `NEXTAUTH_URL`
-- **Value:** tu URL de Vercel, ejemplo: `https://nova-lms.vercel.app`
+- **Value:** tu URL de Vercel: `https://stem-innovation-academy.vercel.app`
   (La ves en Vercel → Project → Domains)
 - Marca: ✅ Production ✅ Preview ✅ Development
 - Click **Save**
@@ -59,7 +59,7 @@ Tu build falló porque **falta la base de datos**. Sigue estos pasos **en orden*
 
 Cuando termine, abre la URL que te da Vercel, por ejemplo:
 
-**https://nova-lms.vercel.app**
+**https://stem-innovation-academy.vercel.app**
 
 Login de prueba:
 - Email: `student@steminnovationacademy.org`

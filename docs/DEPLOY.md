@@ -18,7 +18,7 @@
 |------|-------|
 | `DATABASE_URL` | Your Neon connection string |
 | `AUTH_SECRET` | Any random 32+ character string |
-| `NEXTAUTH_URL` | `https://YOUR-PROJECT.vercel.app` (update after first deploy if needed) |
+| `NEXTAUTH_URL` | `https://stem-innovation-academy.vercel.app` |
 
 4. Click **Deploy**
 
