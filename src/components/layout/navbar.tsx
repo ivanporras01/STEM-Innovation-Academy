@@ -26,8 +26,8 @@ export function Navbar() {
       pathname === "/login" ||
       pathname === "/register");
 
-  const dashboardLabel =
-    session?.user?.role === "STUDENT" ? "Explorer Dashboard" : "Dashboard";
+  const dashboardLabel = "NOVA Portal";
+  const onPortal = pathname.startsWith("/dashboard");
 
   return (
     <header
@@ -119,18 +119,20 @@ export function Navbar() {
 
           {session ? (
             <>
-              <Link
-                href={dashboardHref}
-                className={cn(
-                  "rounded-lg px-3 py-2 text-sm font-medium transition",
-                  isCosmicRoute
-                    ? "text-white/85 hover:bg-white/10 hover:text-nova-cyan-light"
-                    : "text-nova-dark-gray hover:bg-nova-off-white hover:text-nova-cyan"
-                )}
-                onClick={() => setMenuOpen(false)}
-              >
-                {dashboardLabel}
-              </Link>
+              {!onPortal && (
+                <Link
+                  href={dashboardHref}
+                  className={cn(
+                    "rounded-lg px-3 py-2 text-sm font-medium transition",
+                    isCosmicRoute
+                      ? "text-white/85 hover:bg-white/10 hover:text-nova-cyan-light"
+                      : "text-nova-dark-gray hover:bg-nova-off-white hover:text-nova-cyan"
+                  )}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {dashboardLabel}
+                </Link>
+              )}
               <Link
                 href="/api/auth/signout"
                 className="nova-btn-primary nova-btn-glow ml-0 mt-2 lg:ml-2 lg:mt-0"

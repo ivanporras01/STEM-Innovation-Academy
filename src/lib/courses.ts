@@ -141,6 +141,46 @@ export async function getMentorDashboard(mentorId: string) {
   return { courses, pendingReviews };
 }
 
+export async function getFirstIncompleteLessonUrl(
+  userId: string,
+  courseSlug: string,
+  courseId: string
+): Promise<string | null> {
+  const completedRecords = await db.lessonProgress.findMany({
+    where: {
+      userId,
+      completed: true,
+      lesson: { module: { courseId } },
+    },
+    select: { lessonId: true },
+  });
+  const completedIds = new Set(completedRecords.map((r) => r.lessonId));
+
+  const course = await db.course.findUnique({
+    where: { id: courseId },
+    include: {
+      modules: {
+        orderBy: { order: "asc" },
+        include: {
+          lessons: { orderBy: { order: "asc" }, select: { id: true } },
+        },
+      },
+    },
+  });
+
+  if (!course) return null;
+
+  for (const mod of course.modules) {
+    for (const lesson of mod.lessons) {
+      if (!completedIds.has(lesson.id)) {
+        return `/courses/${courseSlug}/lessons/${lesson.id}`;
+      }
+    }
+  }
+
+  return null;
+}
+
 export async function getAdminStats() {
   const [users, courses, enrollments, schools] = await Promise.all([
     db.user.count(),

@@ -8,51 +8,109 @@
   }
 
   body {
-    @apply bg-[#050b18] text-nova-black antialiased;
+    @apply bg-[#030712] text-nova-black antialiased;
   }
 }
 
 @layer components {
-  /* ── NOVA Universe — Explorers navigate the cosmos ── */
+  /* ── NOVA Infinite Universe ── */
+  .nova-cosmos-root {
+    @apply pointer-events-none fixed inset-0;
+    z-index: 0;
+    overflow: hidden;
+    background: radial-gradient(ellipse 120% 80% at 50% 0%, #0d1b3d 0%, #030712 45%, #010409 100%);
+  }
+
+  .nova-cosmos-canvas {
+    @apply absolute inset-0 h-full w-full;
+    opacity: 1;
+  }
+
+  .nova-cosmos-vignette {
+    @apply absolute inset-0;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(1, 4, 9, 0.65) 100%);
+  }
+
+  .nova-nebula {
+    @apply absolute rounded-full blur-3xl;
+    animation: nova-nebula-float 20s ease-in-out infinite alternate;
+  }
+
+  .nova-nebula--cyan {
+    width: min(90vw, 640px);
+    height: min(90vw, 640px);
+    top: -12%;
+    left: -8%;
+    background: radial-gradient(circle, rgba(0, 180, 216, 0.35) 0%, rgba(0, 180, 216, 0.08) 40%, transparent 70%);
+    animation-duration: 18s;
+  }
+
+  .nova-nebula--violet {
+    width: min(80vw, 520px);
+    height: min(80vw, 520px);
+    top: 30%;
+    right: -15%;
+    background: radial-gradient(circle, rgba(118, 87, 232, 0.28) 0%, rgba(118, 87, 232, 0.06) 45%, transparent 70%);
+    animation-duration: 24s;
+    animation-delay: -6s;
+  }
+
+  .nova-nebula--orange {
+    width: min(70vw, 480px);
+    height: min(70vw, 480px);
+    bottom: -10%;
+    left: 20%;
+    background: radial-gradient(circle, rgba(255, 122, 0, 0.2) 0%, rgba(255, 122, 0, 0.05) 45%, transparent 70%);
+    animation-duration: 22s;
+    animation-delay: -12s;
+  }
+
+  .nova-orbit-satellite {
+    animation: nova-orbit-spin 20s linear infinite;
+    transform-origin: 50% 400%;
+  }
+
+  .nova-orbit-satellite--slow {
+    animation-duration: 35s;
+    transform-origin: 50% 350%;
+  }
+
+  .nova-orbit-satellite--fast {
+    animation-duration: 12s;
+    animation-direction: reverse;
+    transform-origin: 50% 280%;
+  }
+
+  /* Floating glass islands in space */
+  .nova-space-section {
+    @apply relative py-20;
+  }
+
+  .nova-glass-island {
+    @apply rounded-[24px] border border-white/10 bg-[#0a1628]/55 p-6 shadow-[0_8px_40px_rgba(0,0,0,0.4)] backdrop-blur-xl;
+  }
+
+  .nova-glass-card {
+    @apply rounded-nova border border-white/15 bg-[#0d1b3d]/70 p-6 shadow-[0_0_30px_rgba(0,180,216,0.08)] backdrop-blur-md transition duration-300 hover:-translate-y-1 hover:border-nova-cyan/40 hover:shadow-[0_0_40px_rgba(0,180,216,0.18)];
+  }
+
+  .nova-glass-card-light {
+    @apply rounded-nova border border-white/20 bg-white/90 p-6 shadow-nova backdrop-blur-md transition duration-300 hover:-translate-y-1 hover:border-nova-cyan/50 hover:shadow-nova-lg;
+  }
+
   .nova-starfield {
-    background-color: #050b18;
-    background-image:
-      radial-gradient(1px 1px at 10% 20%, rgba(255, 255, 255, 0.45), transparent),
-      radial-gradient(1px 1px at 35% 65%, rgba(110, 231, 249, 0.35), transparent),
-      radial-gradient(1.5px 1.5px at 55% 15%, rgba(255, 255, 255, 0.5), transparent),
-      radial-gradient(1px 1px at 72% 48%, rgba(255, 255, 255, 0.3), transparent),
-      radial-gradient(1px 1px at 88% 78%, rgba(0, 180, 216, 0.4), transparent),
-      radial-gradient(ellipse at 50% 0%, rgba(30, 58, 138, 0.35), transparent 55%),
-      radial-gradient(ellipse at 100% 80%, rgba(0, 180, 216, 0.08), transparent 45%);
-    background-size: 420px 420px, 520px 520px, 380px 380px, 440px 440px, 500px 500px, 100% 100%, 100% 100%;
-    animation: nova-star-drift 120s linear infinite;
+    /* legacy — canvas handles stars now */
+    display: none;
   }
 
   .nova-starfield-dense {
-    background-image:
-      radial-gradient(1px 1px at 5% 10%, rgba(255, 255, 255, 0.55), transparent),
-      radial-gradient(1px 1px at 15% 40%, rgba(255, 255, 255, 0.35), transparent),
-      radial-gradient(1px 1px at 25% 70%, rgba(110, 231, 249, 0.4), transparent),
-      radial-gradient(1.5px 1.5px at 40% 25%, rgba(255, 255, 255, 0.5), transparent),
-      radial-gradient(1px 1px at 50% 55%, rgba(255, 255, 255, 0.3), transparent),
-      radial-gradient(1px 1px at 65% 85%, rgba(0, 180, 216, 0.45), transparent),
-      radial-gradient(1px 1px at 78% 30%, rgba(255, 255, 255, 0.4), transparent),
-      radial-gradient(1px 1px at 92% 60%, rgba(255, 122, 0, 0.25), transparent),
-      radial-gradient(ellipse at 50% 0%, rgba(30, 58, 138, 0.4), transparent 55%),
-      radial-gradient(ellipse at 0% 100%, rgba(0, 180, 216, 0.1), transparent 50%);
-    background-size: 280px 280px, 320px 320px, 360px 360px, 400px 400px, 440px 440px, 480px 480px, 520px 520px, 560px 560px, 100% 100%, 100% 100%;
+    display: none;
   }
 
-  .nova-universe-cosmos {
-    background: linear-gradient(165deg, #050b18 0%, #0a1628 40%, #0d1b3d 100%);
-  }
-
-  .nova-universe-nebula {
-    background: linear-gradient(180deg, #050b18 0%, #0d1b3d 35%, #f7f9fc 35%);
-  }
-
+  .nova-universe-cosmos,
+  .nova-universe-nebula,
   .nova-universe-light {
-    background: linear-gradient(180deg, #050b18 0%, #0a1628 8%, #eef2f8 8%);
+    background: transparent;
   }
 
   .nova-orbit-ring {
@@ -317,6 +375,11 @@
 @keyframes experience-confetti-fade {
   0% { opacity: 1; }
   100% { opacity: 0; }
+}
+
+@keyframes nova-nebula-float {
+  0% { transform: translate(0, 0) scale(1); opacity: 0.85; }
+  100% { transform: translate(30px, -20px) scale(1.08); opacity: 1; }
 }
 
 @keyframes nova-star-drift {

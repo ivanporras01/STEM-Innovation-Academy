@@ -3,7 +3,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { PathwayIcon, type PathwayKey } from "@/components/ui/pathway-icon";
 import { ExploreNowButton } from "@/components/courses/explore-now-button";
-import { NovaStarfield, NovaOrbitRings } from "@/components/ui/nova-universe";
+import { NovaOrbitRings } from "@/components/ui/nova-universe";
 
 const NOVA_PILLARS = [
   {
@@ -91,8 +91,7 @@ const FOUNDING_PATHWAYS = [
 
 export default function HomePage() {
   return (
-    <div className="nova-universe-nebula relative flex min-h-screen flex-col">
-      <NovaStarfield dense />
+    <div className="relative flex min-h-screen flex-col">
       <Navbar />
 
       <main className="relative flex-1">
@@ -169,17 +168,17 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Discover NOVA */}
-        <section id="discover" className="relative bg-white/95 py-20 backdrop-blur-sm">
+        {/* Discover NOVA — floating in space */}
+        <section id="discover" className="nova-space-section">
           <div className="nova-container">
             <div className="mx-auto max-w-3xl text-center">
               <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-nova-cyan">
                 Discover NOVA
               </p>
-              <h2 className="text-3xl font-bold text-nova-deep-blue">
+              <h2 className="text-3xl font-bold text-white">
                 More than a classroom — an innovation ecosystem
               </h2>
-              <p className="mt-4 text-lg text-nova-gray">
+              <p className="mt-4 text-lg text-nova-cyan-light/85">
                 NOVA combines structured online learning, Innovation Mentor support, hands-on
                 labs, and authentic STEM projects. Explorers don&apos;t just study technology — they
                 build with it.
@@ -204,12 +203,12 @@ export default function HomePage() {
                   desc: "Coding & AI, Robotics, and IoT — structured paths with immersive missions and mentor support.",
                 },
               ].map((item) => (
-                <div key={item.title} className="nova-card-float text-center">
-                  <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-nova-cyan/10 text-sm font-bold text-nova-cyan">
+                <div key={item.title} className="nova-glass-card text-center">
+                  <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-nova-cyan/20 text-sm font-bold text-nova-cyan-light">
                     {item.num}
                   </div>
-                  <h3 className="mb-2 font-semibold text-nova-deep-blue">{item.title}</h3>
-                  <p className="text-sm text-nova-gray">{item.desc}</p>
+                  <h3 className="mb-2 font-semibold text-white">{item.title}</h3>
+                  <p className="text-sm text-nova-cyan-light/75">{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -217,16 +216,16 @@ export default function HomePage() {
         </section>
 
         {/* The NOVA Experience */}
-        <section id="experience" className="relative bg-gradient-to-b from-white to-nova-off-white py-20">
+        <section id="experience" className="nova-space-section">
           <div className="nova-container">
             <div className="mx-auto mb-12 max-w-3xl text-center">
               <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-nova-cyan">
                 The NOVA Experience
               </p>
-              <h2 className="text-3xl font-bold text-nova-deep-blue">
+              <h2 className="text-3xl font-bold text-white">
                 Learn. Build. Innovate. Inspire.
               </h2>
-              <p className="mt-4 text-nova-gray">
+              <p className="mt-4 text-nova-cyan-light/80">
                 Four pillars guide every Explorer journey — from first discovery to sharing
                 breakthrough work with the world.
               </p>
@@ -234,12 +233,12 @@ export default function HomePage() {
 
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {NOVA_PILLARS.map((pillar) => (
-                <div key={pillar.title} className="nova-card-float border-t-4 border-t-nova-cyan">
+                <div key={pillar.title} className="nova-glass-card border-t-4 border-t-nova-cyan">
                   <span className="mb-3 block text-xs font-bold uppercase tracking-widest text-nova-cyan">
                     {pillar.num}
                   </span>
-                  <h3 className="mb-2 text-lg font-bold text-nova-deep-blue">{pillar.title}</h3>
-                  <p className="text-sm text-nova-gray">{pillar.desc}</p>
+                  <h3 className="mb-2 text-lg font-bold text-white">{pillar.title}</h3>
+                  <p className="text-sm text-nova-cyan-light/75">{pillar.desc}</p>
                 </div>
               ))}
             </div>
@@ -247,22 +246,22 @@ export default function HomePage() {
         </section>
 
         {/* Mission Paths overview */}
-        <section id="pathways" className="relative bg-nova-off-white/95 py-20 backdrop-blur-sm">
+        <section id="pathways" className="nova-space-section">
           <div className="nova-container">
             <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
               <div>
                 <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-nova-cyan">
                   Mission Paths
                 </p>
-                <h2 className="text-3xl font-bold text-nova-deep-blue">
+                <h2 className="text-3xl font-bold text-white">
                   Three paths to innovation
                 </h2>
-                <p className="mt-2 max-w-2xl text-nova-gray">
+                <p className="mt-2 max-w-2xl text-nova-cyan-light/80">
                   Each mission path offers structured phases, hands-on builds, and mentor support —
                   designed for middle and high school Explorers.
                 </p>
               </div>
-              <Link href="/courses" className="nova-btn-secondary shrink-0">
+              <Link href="/courses" className="nova-btn-primary nova-btn-glow shrink-0">
                 View All Mission Paths
               </Link>
             </div>
@@ -271,7 +270,7 @@ export default function HomePage() {
               {FOUNDING_PATHWAYS.map((pathway) => (
                 <div
                   key={pathway.title}
-                  className={`nova-card-float flex flex-col bg-gradient-to-br ${pathway.gradient}`}
+                  className="nova-glass-card-light flex flex-col"
                 >
                   <PathwayIcon
                     pathway={pathway.id}
@@ -297,10 +296,8 @@ export default function HomePage() {
         </section>
 
         {/* How NOVA Works */}
-        <section id="how-it-works" className="nova-section-cosmic relative overflow-hidden bg-nova-deep-blue py-20 text-white">
-          <NovaStarfield dense />
-          <div className="pointer-events-none absolute inset-0 bg-nova-deep-blue/85" />
-          <div className="nova-container relative">
+        <section id="how-it-works" className="nova-space-section text-white">
+          <div className="nova-container">
             <div className="mx-auto mb-12 max-w-3xl text-center">
               <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-nova-cyan-light">
                 How NOVA Works
@@ -316,7 +313,7 @@ export default function HomePage() {
               {HOW_NOVA_WORKS.map((item) => (
                 <div
                   key={item.title}
-                  className="rounded-nova border border-white/10 bg-white/5 p-5 backdrop-blur-sm"
+                  className="nova-glass-card p-5"
                 >
                   <span className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-nova-cyan text-sm font-bold text-nova-deep-blue">
                     {item.step}
@@ -330,26 +327,33 @@ export default function HomePage() {
         </section>
 
         {/* Portal */}
-        <section id="portal" className="border-y border-nova-light-gray bg-white py-16">
-          <div className="nova-container text-center">
+        <section id="portal" className="nova-space-section">
+          <div className="nova-container">
+            <div className="nova-glass-island mx-auto max-w-2xl text-center">
             <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-nova-cyan">
               NOVA Portal
             </p>
-            <h2 className="text-2xl font-bold text-nova-deep-blue sm:text-3xl">
-              The NOVA Portal is coming soon
+            <h2 className="text-2xl font-bold text-white sm:text-3xl">
+              Enter the NOVA Portal
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-nova-gray">
-              Secure access for Explorers, Innovation Mentors, and administrators — all in one
-              place.
+            <p className="mx-auto mt-4 max-w-xl text-nova-cyan-light/80">
+              Live for logged-in Explorers, Innovation Mentors, and administrators — track Mission
+              Paths, resume Explore Now quests, and see what&apos;s next.
             </p>
-            <Link href="/login" className="nova-btn-secondary mt-6 inline-flex">
-              Preview Login
-            </Link>
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+              <Link href="/login" className="nova-btn-primary nova-btn-glow inline-flex">
+                Sign In to Portal
+              </Link>
+              <Link href="/register" className="nova-btn-secondary inline-flex border-white/20 text-white hover:bg-white/10">
+                Create Account
+              </Link>
+            </div>
+            </div>
           </div>
         </section>
 
         {/* Journey CTA */}
-        <section id="contact" className="bg-nova-deep-blue py-20 text-white">
+        <section id="contact" className="nova-space-section pb-24 text-white">
           <div className="nova-container text-center">
             <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-nova-cyan-light">
               The Journey Begins Here

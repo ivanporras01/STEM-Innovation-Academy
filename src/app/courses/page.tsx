@@ -6,7 +6,6 @@ import { getPublishedCourses } from "@/lib/courses";
 import { getPathwayMeta } from "@/lib/pathways/meta";
 import { auth } from "@/lib/auth";
 import { getUserEnrollments } from "@/lib/courses";
-import { NovaStarfield } from "@/components/ui/nova-universe";
 
 export const metadata: Metadata = {
   title: "Mission Paths",
@@ -25,19 +24,17 @@ export default async function CoursesPage() {
   }
 
   return (
-    <div className="nova-universe-light relative flex min-h-screen flex-col">
-      <NovaStarfield />
+    <div className="relative flex min-h-screen flex-col">
       <Navbar />
 
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white">
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-deep-blue via-[#0a1628] to-[#103663]" />
-        <div className="nova-nebula-glow absolute left-1/4 top-0 h-64 w-64 bg-nova-cyan/20" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-deep-blue/40 via-transparent to-transparent" />
         <div className="nova-container relative text-center">
           <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-nova-cyan">
-            ✦ Chart Your Course
+            ✦ Chart Your Course Through the Cosmos
           </p>
           <h1 className="text-3xl font-black sm:text-4xl lg:text-5xl">Mission Paths</h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-white/75">
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-white/80">
             Three galaxies of innovation await. Pick a path, tap{" "}
             <strong className="text-nova-cyan-light">Explore Now</strong> to begin your first
             quest, then journey through phases with your Innovation Mentor.
@@ -45,7 +42,7 @@ export default async function CoursesPage() {
         </div>
       </section>
 
-      <main className="relative flex-1 py-12">
+      <main className="nova-space-section relative flex-1">
         <div className="nova-container">
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {courses.map((course) => {

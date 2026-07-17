@@ -3,8 +3,7 @@ import { NOVA_FOOTER_EXPLORE, NOVA_FOOTER_PORTAL } from "@/lib/nova-nav";
 
 export function Footer() {
   return (
-    <footer className="relative overflow-hidden border-t border-white/10 bg-nova-deep-blue text-white">
-      <div className="nova-starfield pointer-events-none absolute inset-0 opacity-30" aria-hidden />
+    <footer className="relative overflow-hidden border-t border-white/10 bg-[#030712]/80 text-white backdrop-blur-md">
       <div className="relative">
         <div className="nova-container grid gap-8 py-12 md:grid-cols-4">
           <div>

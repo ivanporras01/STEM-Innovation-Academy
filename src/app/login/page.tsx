@@ -27,7 +27,7 @@ export default async function LoginPage({
               </span>
               <h1 className="text-2xl font-bold text-nova-deep-blue">NOVA Portal</h1>
               <p className="mt-1 text-sm text-nova-gray">
-                Sign in to access your learning dashboard
+                Enter your mission command center — Explorers, Mentors, and administrators welcome.
               </p>
             </div>
 

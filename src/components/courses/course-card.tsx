@@ -31,7 +31,7 @@ export function CourseCard({
   experienceTitle,
 }: CourseCardProps) {
   return (
-    <article className="nova-card-float group flex flex-col">
+    <article className="nova-glass-card-light group flex flex-col">
       <div className="mb-4 flex items-start justify-between gap-3">
         <PathwayIcon
           pathway={pathway as PathwayKey}

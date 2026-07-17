@@ -19,5 +19,5 @@ export const NOVA_FOOTER_EXPLORE = [
 export const NOVA_FOOTER_PORTAL = [
   { href: "/login", label: "Login" },
   { href: "/register", label: "Register" },
-  { href: "/dashboard/student", label: "Explorer Dashboard" },
+  { href: "/dashboard", label: "NOVA Portal" },
 ] as const;
