@@ -116,13 +116,13 @@ export default function HomePage() {
                   href="/courses"
                   className="nova-btn-primary bg-nova-cyan hover:bg-nova-cyan-light"
                 >
-                  Explore Learning Pathways
+                  Explore Mission Paths
                 </Link>
                 <Link
-                  href="/#discover"
+                  href="/experiences"
                   className="nova-btn-secondary border-white/20 bg-white/10 text-white hover:border-white hover:bg-white/20 hover:text-white"
                 >
-                  Discover NOVA
+                  Launch a Mission
                 </Link>
               </div>
               <div className="mt-10 flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold text-nova-cyan-light">
@@ -194,8 +194,8 @@ export default function HomePage() {
                 },
                 {
                   num: "03",
-                  title: "Three Founding Pathways",
-                  desc: "Coding & AI, Robotics, and IoT — each designed for authentic engineering experiences.",
+                  title: "Three Mission Paths",
+                  desc: "Coding & AI, Robotics, and IoT — structured paths with immersive missions and mentor support.",
                 },
               ].map((item) => (
                 <div key={item.title} className="nova-card text-center">
@@ -246,18 +246,18 @@ export default function HomePage() {
             <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
               <div>
                 <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-nova-cyan">
-                  Founding Programs
+                  Mission Paths
                 </p>
                 <h2 className="text-3xl font-bold text-nova-deep-blue">
-                  Three pathways to innovation
+                  Three paths to innovation
                 </h2>
                 <p className="mt-2 max-w-2xl text-nova-gray">
-                  Each pathway offers structured missions, hands-on builds, and mentor support —
+                  Each mission path offers structured phases, hands-on builds, and mentor support —
                   designed for middle and high school Explorers.
                 </p>
               </div>
               <Link href="/courses" className="nova-btn-secondary shrink-0">
-                View Full Catalog
+                View All Mission Paths
               </Link>
             </div>
 
@@ -279,7 +279,7 @@ export default function HomePage() {
                   <h3 className="mb-2 text-lg font-bold text-nova-deep-blue">{pathway.title}</h3>
                   <p className="mb-4 text-sm text-nova-gray">{pathway.desc}</p>
                   <span className="text-sm font-semibold text-nova-cyan">
-                    Explore Pathway →
+                    Explore Mission Path →
                   </span>
                 </Link>
               ))}
