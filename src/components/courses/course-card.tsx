@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { PathwayIcon, type PathwayKey } from "@/components/ui/pathway-icon";
+import { ExploreNowButton } from "@/components/courses/explore-now-button";
 import { pathwayLabels } from "@/lib/utils";
 
 type CourseCardProps = {
@@ -13,6 +14,8 @@ type CourseCardProps = {
   progress?: number;
   enrolled?: boolean;
   mentorName?: string;
+  experienceSlug?: string;
+  experienceTitle?: string;
 };
 
 export function CourseCard({
@@ -24,9 +27,11 @@ export function CourseCard({
   progress,
   enrolled,
   mentorName,
+  experienceSlug,
+  experienceTitle,
 }: CourseCardProps) {
   return (
-    <article className="nova-card group flex flex-col transition hover:shadow-nova">
+    <article className="nova-card-float group flex flex-col">
       <div className="mb-4 flex items-start justify-between gap-3">
         <PathwayIcon
           pathway={pathway as PathwayKey}
@@ -49,7 +54,8 @@ export function CourseCard({
 
       {mentorName && (
         <p className="mb-3 text-xs text-nova-gray">
-          Mentor: <span className="font-medium text-nova-dark-gray">{mentorName}</span>
+          Innovation Mentor:{" "}
+          <span className="font-medium text-nova-dark-gray">{mentorName}</span>
         </p>
       )}
 
@@ -65,6 +71,13 @@ export function CourseCard({
       >
         {enrolled ? "Continue Mission Path" : "Explore Mission Path"}
       </Link>
+
+      {experienceSlug && experienceTitle && (
+        <ExploreNowButton
+          experienceSlug={experienceSlug}
+          experienceTitle={experienceTitle}
+        />
+      )}
     </article>
   );
 }

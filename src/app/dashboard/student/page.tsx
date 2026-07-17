@@ -5,10 +5,9 @@ import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { StatCard } from "@/components/ui/stat-card";
 import { CourseCard } from "@/components/courses/course-card";
-import { getUserEnrollments } from "@/lib/courses";
+import { getUserEnrollments, getPublishedCourses } from "@/lib/courses";
+import { getPathwayMeta } from "@/lib/pathways/meta";
 import { db } from "@/lib/db";
-import { EXPERIENCES } from "@/lib/experiences/catalog";
-import { PathwayIcon } from "@/components/ui/pathway-icon";
 
 export const metadata: Metadata = {
   title: "Explorer Dashboard",
@@ -18,16 +17,22 @@ export default async function StudentDashboardPage() {
   const session = await auth();
   if (!session?.user) redirect("/login");
 
-  const enrollments = await getUserEnrollments(session.user.id);
-  const experienceProgress = await db.experienceProgress.findMany({
-    where: { userId: session.user.id },
-  });
+  const [enrollments, publishedCourses, experienceProgress] = await Promise.all([
+    getUserEnrollments(session.user.id),
+    getPublishedCourses(),
+    db.experienceProgress.findMany({ where: { userId: session.user.id } }),
+  ]);
+
+  const enrolledSlugs = new Set(enrollments.map((e) => e.course.slug));
   const avgProgress =
     enrollments.length > 0
       ? Math.round(
           enrollments.reduce((acc, e) => acc + e.progress, 0) / enrollments.length
         )
       : 0;
+
+  const exploreProgress = (slug: string) =>
+    experienceProgress.find((p) => p.experienceSlug === slug);
 
   return (
     <DashboardShell user={session.user}>
@@ -36,7 +41,7 @@ export default async function StudentDashboardPage() {
           Welcome back, {session.user.firstName}! ✦
         </h1>
         <p className="mt-1 text-nova-gray">
-          Continue your NOVA learning journey
+          Continue your NOVA learning journey — pick a path or jump in with Explore Now.
         </p>
       </div>
 
@@ -51,75 +56,51 @@ export default async function StudentDashboardPage() {
         />
       </div>
 
-      <div className="mb-8">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-nova-deep-blue">Interactive Missions</h2>
-          <Link href="/experiences" className="text-sm font-medium text-nova-cyan hover:underline">
-            All Missions →
-          </Link>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-3">
-          {EXPERIENCES.map((exp) => {
-            const prog = experienceProgress.find((p) => p.experienceSlug === exp.slug);
-            const done = !!prog?.completedAt;
-            return (
-              <Link
-                key={exp.slug}
-                href={`/experiences/${exp.slug}`}
-                className="nova-card transition hover:shadow-nova"
-              >
-                <PathwayIcon pathway={exp.pathway} variant="card" className="mb-2 h-12 w-12 text-xl" />
-                <h3 className="font-semibold text-nova-deep-blue">{exp.title}</h3>
-                <p className="mt-1 text-xs text-nova-gray">
-                  {done ? (
-                    <span className="font-bold text-nova-green">✓ {exp.achievementTitle}</span>
-                  ) : prog ? (
-                    `In progress — quest stage ${prog.currentStage + 1}/8`
-                  ) : (
-                    "Mission awaiting"
-                  )}
-                </p>
-              </Link>
-            );
-          })}
-        </div>
-      </div>
-
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-nova-deep-blue">My Mission Paths</h2>
+        <h2 className="text-lg font-semibold text-nova-deep-blue">Mission Paths</h2>
         <Link href="/courses" className="text-sm font-medium text-nova-cyan hover:underline">
-          Browse Mission Paths →
+          Browse all paths →
         </Link>
       </div>
 
-      {enrollments.length === 0 ? (
-        <div className="nova-card text-center py-12">
-          <p className="mb-4 text-nova-gray">You haven&apos;t joined any mission paths yet.</p>
-          <Link href="/courses" className="nova-btn-primary">
-            Explore Mission Paths
-          </Link>
-        </div>
-      ) : (
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {enrollments.map((enrollment) => (
-            <CourseCard
-              key={enrollment.id}
-              slug={enrollment.course.slug}
-              title={enrollment.course.title}
-              description={enrollment.course.description}
-              pathway={enrollment.course.pathway}
-              level={enrollment.course.level}
-              progress={enrollment.progress}
-              enrolled
-              mentorName={
-                enrollment.course.mentor
-                  ? `${enrollment.course.mentor.firstName} ${enrollment.course.mentor.lastName}`
-                  : undefined
-              }
-            />
-          ))}
-        </div>
-      )}
+      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        {publishedCourses.map((course) => {
+          const meta = getPathwayMeta(course.slug);
+          const enrollment = enrollments.find((e) => e.course.slug === course.slug);
+          const expProg = meta ? exploreProgress(meta.experienceSlug) : undefined;
+
+          return (
+            <div key={course.id} className="relative">
+              {expProg?.completedAt && (
+                <span className="absolute -top-2 right-3 z-10 rounded-full bg-nova-green px-2 py-0.5 text-[10px] font-bold uppercase text-white">
+                  Explore complete
+                </span>
+              )}
+              <CourseCard
+                slug={course.slug}
+                title={course.title}
+                description={course.description}
+                pathway={course.pathway}
+                level={course.level}
+                progress={enrollment?.progress}
+                enrolled={enrolledSlugs.has(course.slug)}
+                mentorName={
+                  course.mentor
+                    ? `${course.mentor.firstName} ${course.mentor.lastName}`
+                    : undefined
+                }
+                experienceSlug={meta?.experienceSlug}
+                experienceTitle={meta?.experienceTitle}
+              />
+              {expProg && !expProg.completedAt && (
+                <p className="mt-1 text-center text-xs text-nova-cyan">
+                  Explore Now in progress — stage {expProg.currentStage + 1}/8
+                </p>
+              )}
+            </div>
+          );
+        })}
+      </div>
     </DashboardShell>
   );
 }

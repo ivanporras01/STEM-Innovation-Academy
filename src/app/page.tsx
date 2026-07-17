@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { PathwayIcon, type PathwayKey } from "@/components/ui/pathway-icon";
+import { ExploreNowButton } from "@/components/courses/explore-now-button";
+import { NovaStarfield, NovaOrbitRings } from "@/components/ui/nova-universe";
 
 const NOVA_PILLARS = [
   {
@@ -61,6 +63,8 @@ const FOUNDING_PATHWAYS = [
     grades: "Middle & High School",
     desc: "Programming fundamentals, Python, AI concepts, and computational thinking through real projects.",
     href: "/courses/intro-python-ai",
+    experienceSlug: "restore-nova-signal",
+    experienceTitle: "Restore the NOVA Signal",
     gradient: "from-nova-cyan/20 to-nova-blue/10",
   },
   {
@@ -69,6 +73,8 @@ const FOUNDING_PATHWAYS = [
     grades: "Middle & High School",
     desc: "Engineering design process, electronics, microcontrollers, and robotics challenges.",
     href: "/courses/robotics-engineering",
+    experienceSlug: "rescue-rover",
+    experienceTitle: "Guide the Rescue Rover",
     gradient: "from-nova-orange/20 to-nova-deep-blue/10",
   },
   {
@@ -77,27 +83,29 @@ const FOUNDING_PATHWAYS = [
     grades: "Middle & High School",
     desc: "Smart devices, sensors, wireless systems, cloud integration, and emerging tech.",
     href: "/courses/iot-smart-systems",
+    experienceSlug: "smart-greenhouse",
+    experienceTitle: "Protect the Smart Greenhouse",
     gradient: "from-nova-green/20 to-nova-cyan/10",
   },
 ] as const;
 
 export default function HomePage() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="nova-universe-nebula relative flex min-h-screen flex-col">
+      <NovaStarfield dense />
       <Navbar />
 
-      <main className="flex-1">
-        {/* Hero */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-nova-deep-blue via-nova-blue to-nova-deep-blue py-20 text-white sm:py-28">
-          <div className="pointer-events-none absolute inset-0">
-            <div className="absolute -left-20 top-10 h-72 w-72 rounded-full bg-nova-cyan/20 blur-3xl" />
-            <div className="absolute -right-20 bottom-10 h-96 w-96 rounded-full bg-nova-orange/10 blur-3xl" />
-          </div>
+      <main className="relative flex-1">
+        {/* Hero — deep space entry */}
+        <section className="nova-section-cosmic relative overflow-hidden py-20 text-white sm:py-28">
+          <div className="nova-nebula-glow absolute -left-32 top-0 h-96 w-96 bg-nova-cyan/25" />
+          <div className="nova-nebula-glow absolute -right-32 bottom-0 h-[28rem] w-[28rem] bg-nova-orange/15" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-deep-blue/90 via-[#0a1628]/80 to-nova-deep-blue/95" />
 
           <div className="nova-container relative grid items-center gap-12 lg:grid-cols-2">
             <div>
               <p className="mb-4 text-sm font-semibold uppercase tracking-widest text-nova-cyan-light">
-                Practical STEM Education for Future Innovators
+                ✦ Navigate the NOVA Universe · Practical STEM for Future Innovators
               </p>
               <h1 className="text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
                 Every learner is a{" "}
@@ -114,15 +122,15 @@ export default function HomePage() {
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link
                   href="/courses"
-                  className="nova-btn-primary bg-nova-cyan hover:bg-nova-cyan-light"
+                  className="nova-btn-primary nova-btn-glow bg-nova-cyan hover:bg-nova-cyan-light"
                 >
                   Explore Mission Paths
                 </Link>
                 <Link
-                  href="/experiences"
+                  href="/#discover"
                   className="nova-btn-secondary border-white/20 bg-white/10 text-white hover:border-white hover:bg-white/20 hover:text-white"
                 >
-                  Launch a Mission
+                  Discover NOVA
                 </Link>
               </div>
               <div className="mt-10 flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold text-nova-cyan-light">
@@ -136,11 +144,9 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="relative mx-auto flex h-72 w-72 items-center justify-center sm:h-80 sm:w-80">
-              <div className="absolute inset-0 rounded-full border border-nova-cyan/20" />
-              <div className="absolute inset-8 rounded-full border border-nova-cyan/30" />
-              <div className="absolute inset-16 rounded-full border border-dashed border-nova-cyan/40" />
-              <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-nova-cyan to-nova-blue text-lg font-bold shadow-nova-lg">
+            <div className="relative mx-auto flex items-center justify-center">
+              <NovaOrbitRings size="md" />
+              <div className="absolute flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-nova-cyan to-nova-blue text-lg font-bold shadow-[0_0_40px_rgba(0,180,216,0.5)]">
                 NOVA
               </div>
               {(["Learn", "Build", "Innovate", "Inspire"] as const).map((label, i) => {
@@ -153,7 +159,7 @@ export default function HomePage() {
                 return (
                   <span
                     key={label}
-                    className={`absolute ${positions[i]} rounded-full bg-white/10 px-3 py-1 text-xs font-medium backdrop-blur`}
+                    className={`absolute ${positions[i]} rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-medium backdrop-blur-md`}
                   >
                     {label}
                   </span>
@@ -164,7 +170,7 @@ export default function HomePage() {
         </section>
 
         {/* Discover NOVA */}
-        <section id="discover" className="py-20">
+        <section id="discover" className="relative bg-white/95 py-20 backdrop-blur-sm">
           <div className="nova-container">
             <div className="mx-auto max-w-3xl text-center">
               <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-nova-cyan">
@@ -198,7 +204,7 @@ export default function HomePage() {
                   desc: "Coding & AI, Robotics, and IoT — structured paths with immersive missions and mentor support.",
                 },
               ].map((item) => (
-                <div key={item.title} className="nova-card text-center">
+                <div key={item.title} className="nova-card-float text-center">
                   <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-nova-cyan/10 text-sm font-bold text-nova-cyan">
                     {item.num}
                   </div>
@@ -211,7 +217,7 @@ export default function HomePage() {
         </section>
 
         {/* The NOVA Experience */}
-        <section id="experience" className="bg-white py-20">
+        <section id="experience" className="relative bg-gradient-to-b from-white to-nova-off-white py-20">
           <div className="nova-container">
             <div className="mx-auto mb-12 max-w-3xl text-center">
               <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-nova-cyan">
@@ -228,7 +234,7 @@ export default function HomePage() {
 
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {NOVA_PILLARS.map((pillar) => (
-                <div key={pillar.title} className="nova-card border-t-4 border-t-nova-cyan">
+                <div key={pillar.title} className="nova-card-float border-t-4 border-t-nova-cyan">
                   <span className="mb-3 block text-xs font-bold uppercase tracking-widest text-nova-cyan">
                     {pillar.num}
                   </span>
@@ -241,7 +247,7 @@ export default function HomePage() {
         </section>
 
         {/* Mission Paths overview */}
-        <section id="pathways" className="py-20">
+        <section id="pathways" className="relative bg-nova-off-white/95 py-20 backdrop-blur-sm">
           <div className="nova-container">
             <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
               <div>
@@ -263,10 +269,9 @@ export default function HomePage() {
 
             <div className="grid gap-6 md:grid-cols-3">
               {FOUNDING_PATHWAYS.map((pathway) => (
-                <Link
+                <div
                   key={pathway.title}
-                  href={pathway.href}
-                  className={`nova-card bg-gradient-to-br ${pathway.gradient} transition hover:shadow-nova`}
+                  className={`nova-card-float flex flex-col bg-gradient-to-br ${pathway.gradient}`}
                 >
                   <PathwayIcon
                     pathway={pathway.id}
@@ -277,19 +282,25 @@ export default function HomePage() {
                     {pathway.grades}
                   </p>
                   <h3 className="mb-2 text-lg font-bold text-nova-deep-blue">{pathway.title}</h3>
-                  <p className="mb-4 text-sm text-nova-gray">{pathway.desc}</p>
-                  <span className="text-sm font-semibold text-nova-cyan">
-                    Explore Mission Path →
-                  </span>
-                </Link>
+                  <p className="mb-4 flex-1 text-sm text-nova-gray">{pathway.desc}</p>
+                  <Link href={pathway.href} className="nova-btn-primary w-full text-center">
+                    Explore Mission Path
+                  </Link>
+                  <ExploreNowButton
+                    experienceSlug={pathway.experienceSlug}
+                    experienceTitle={pathway.experienceTitle}
+                  />
+                </div>
               ))}
             </div>
           </div>
         </section>
 
         {/* How NOVA Works */}
-        <section id="how-it-works" className="bg-nova-deep-blue py-20 text-white">
-          <div className="nova-container">
+        <section id="how-it-works" className="nova-section-cosmic relative overflow-hidden bg-nova-deep-blue py-20 text-white">
+          <NovaStarfield dense />
+          <div className="pointer-events-none absolute inset-0 bg-nova-deep-blue/85" />
+          <div className="nova-container relative">
             <div className="mx-auto mb-12 max-w-3xl text-center">
               <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-nova-cyan-light">
                 How NOVA Works

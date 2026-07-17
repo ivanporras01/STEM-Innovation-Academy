@@ -7,7 +7,6 @@ import { cn, getInitials, roleLabels } from "@/lib/utils";
 import {
   BookOpen,
   LayoutDashboard,
-  Rocket,
   Settings,
   Users,
 } from "lucide-react";
@@ -15,7 +14,6 @@ import {
 const studentLinks = [
   { href: "/dashboard/student", label: "Overview", icon: LayoutDashboard },
   { href: "/courses", label: "Mission Paths", icon: BookOpen },
-  { href: "/experiences", label: "Missions", icon: Rocket },
 ];
 
 const mentorLinks = [
@@ -54,10 +52,11 @@ export function DashboardShell({
   const links = linksByRole[user.role];
 
   return (
-    <div className="min-h-screen bg-nova-off-white">
+    <div className="relative min-h-screen bg-gradient-to-b from-[#eef2f8] via-nova-off-white to-[#e8edf5]">
+      <div className="nova-starfield pointer-events-none fixed inset-0 -z-10 opacity-40" aria-hidden />
       <div className="nova-container flex gap-8 py-8">
         <aside className="hidden w-64 shrink-0 lg:block">
-          <div className="nova-card sticky top-24">
+          <div className="nova-card sticky top-24 border-nova-cyan/10 bg-white/90 backdrop-blur-md">
             <div className="mb-6 flex items-center gap-3 border-b border-nova-light-gray pb-4">
               <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-nova-cyan to-nova-blue text-sm font-bold text-white">
                 {getInitials(user.firstName, user.lastName)}

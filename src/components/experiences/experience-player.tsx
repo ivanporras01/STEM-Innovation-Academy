@@ -173,10 +173,10 @@ export function ExperiencePlayer({
               ● Mission Live
             </span>
             <Link
-              href="/experiences"
+              href={`/courses/${experience.courseSlug}`}
               className="rounded-full border border-white/20 px-3 py-1.5 text-xs font-semibold text-white/80 transition hover:bg-white/10"
             >
-              Exit
+              ← Mission Path
             </Link>
           </div>
         </header>
@@ -203,65 +203,120 @@ export function ExperiencePlayer({
           )}
         >
           {stage === "launch" && (
-            <div className="grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr]">
-              <div>
-                <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--exp-accent)]">
-                  {experience.labCode}
-                </p>
-                <h1 className="mt-2 text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">
-                  {experience.headline}
-                </h1>
-                <p className="mt-4 text-lg leading-relaxed text-nova-gray">
-                  {experience.missionLead}
-                </p>
-                <div className="mt-6 grid grid-cols-3 gap-3">
-                  {[
-                    ["Mission", "Interactive"],
-                    ["Level", "Explorer"],
-                    ["Outcome", "Build & Discover"],
-                  ].map(([k, v]) => (
-                    <div
-                      key={k}
-                      className="rounded-xl border border-nova-light-gray bg-nova-off-white p-3"
-                    >
-                      <span className="block text-[0.65rem] font-black uppercase text-nova-gray">
-                        {k}
+            <div className="relative overflow-hidden rounded-[28px]">
+              <div
+                className="pointer-events-none absolute inset-0 opacity-40"
+                style={{
+                  background: `radial-gradient(ellipse at 20% 20%, ${experience.accent}55, transparent 50%), radial-gradient(ellipse at 80% 80%, ${experience.accentSecondary}44, transparent 55%)`,
+                }}
+              />
+              <div className="relative grid items-center gap-10 p-6 sm:p-10 lg:grid-cols-[1.15fr_0.85fr] lg:p-14">
+                <div>
+                  <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[var(--exp-accent)]/40 bg-[var(--exp-accent)]/10 px-4 py-1.5">
+                    <span className="h-2 w-2 animate-pulse rounded-full bg-[var(--exp-accent)]" />
+                    <span className="text-xs font-black uppercase tracking-[0.14em] text-[var(--exp-accent-2)]">
+                      Explore Now · {experience.labCode}
+                    </span>
+                  </div>
+                  <h1 className="text-4xl font-black leading-[1.05] tracking-tight text-nova-deep-blue sm:text-5xl lg:text-6xl">
+                    {experience.headline}
+                  </h1>
+                  <p className="mt-4 text-lg leading-relaxed text-nova-gray">
+                    {experience.missionLead}
+                  </p>
+
+                  <div className="mt-6 flex flex-wrap gap-2">
+                    {experience.skills.map((skill) => (
+                      <span
+                        key={skill}
+                        className="rounded-full border border-nova-light-gray bg-white px-3 py-1 text-xs font-bold text-nova-deep-blue shadow-sm"
+                      >
+                        {skill}
                       </span>
-                      <strong className="text-sm">{v}</strong>
+                    ))}
+                  </div>
+
+                  <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                    {[
+                      ["01", "Choose Buddy"],
+                      ["02", "Briefing"],
+                      ["03", "Interactive LAB"],
+                      ["04", "Earn Badge"],
+                    ].map(([num, label]) => (
+                      <div
+                        key={label}
+                        className="rounded-xl border border-nova-light-gray bg-gradient-to-br from-white to-nova-off-white p-3 text-center shadow-sm"
+                      >
+                        <span className="text-[0.65rem] font-black uppercase text-[var(--exp-accent)]">
+                          {num}
+                        </span>
+                        <p className="mt-1 text-xs font-bold text-nova-deep-blue">{label}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-8 rounded-2xl border border-nova-light-gray bg-gradient-to-br from-nova-off-white to-blue-50/60 p-5">
+                    <p className="text-sm font-bold text-nova-deep-blue">
+                      Your NOVA Buddy stays with you the whole way
+                    </p>
+                    <div className="mt-4 flex flex-wrap items-center gap-2">
+                      {BUDDIES.slice(0, 8).map((b) => (
+                        <BuddyAvatar
+                          key={b.id}
+                          src={b.image}
+                          alt={b.name}
+                          size="sm"
+                          className={cn("ring-2 ring-white shadow-md", b.color)}
+                        />
+                      ))}
+                      <span className="text-xs font-bold text-nova-gray">+12 more</span>
                     </div>
-                  ))}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => goTo(1)}
+                    className="experience-btn-primary mt-8 w-full sm:w-auto"
+                  >
+                    Begin Your Quest →
+                  </button>
                 </div>
-                <p className="mt-6 text-sm italic text-nova-gray">
-                  You are not watching a lesson. You are entering a mission — with a Buddy
-                  who stays by your side until the achievement unlocks.
-                </p>
-                <div className="mt-6 flex flex-wrap items-center gap-2">
-                  {BUDDIES.slice(0, 6).map((b) => (
-                    <BuddyAvatar
-                      key={b.id}
-                      src={b.image}
-                      alt={`${b.name}, NOVA Buddy`}
-                      size="sm"
-                      className={cn("bg-gradient-to-br", b.color)}
-                    />
-                  ))}
-                  <span className="flex h-10 items-center px-2 text-xs font-bold text-nova-gray">
-                    +14 more Buddies
-                  </span>
-                </div>
-                <button type="button" onClick={() => goTo(1)} className="experience-btn-primary mt-8">
-                  Launch Mission →
-                </button>
+
+                <aside className="experience-panel relative overflow-hidden rounded-3xl p-8 text-white">
+                  <div
+                    className="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full blur-3xl"
+                    style={{ background: experience.accent }}
+                  />
+                  <div className="experience-hero relative mb-6">
+                    <PathwayIcon pathway={experience.pathway} variant="hero" />
+                  </div>
+                  <h2 className="relative text-2xl font-bold">{experience.pathwayTitle}</h2>
+                  <p className="relative mt-3 text-white/85">
+                    You are not watching a lesson. You are entering a live quest — build,
+                    test, reflect, and unlock your achievement.
+                  </p>
+                  <div className="relative mt-6 rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-sm">
+                    <p className="text-xs font-black uppercase tracking-wider text-white/70">
+                      Achievement waiting
+                    </p>
+                    <p className="mt-1 text-lg font-black text-[var(--exp-accent-2)]">
+                      {experience.achievementTitle}
+                    </p>
+                  </div>
+                  <div className="relative mt-6 grid grid-cols-3 gap-2 text-center text-xs">
+                    {[
+                      ["Experience", "Interactive"],
+                      ["Level", "Explorer"],
+                      ["Outcome", "Build & Discover"],
+                    ].map(([k, v]) => (
+                      <div key={k} className="rounded-lg bg-white/10 px-2 py-2">
+                        <span className="block text-[0.6rem] uppercase text-white/60">{k}</span>
+                        <strong>{v}</strong>
+                      </div>
+                    ))}
+                  </div>
+                </aside>
               </div>
-              <aside className="experience-panel rounded-3xl p-8 text-white">
-                <div className="experience-hero mb-6">
-                  <PathwayIcon pathway={experience.pathway} variant="hero" />
-                </div>
-                <h2 className="text-2xl font-bold">{experience.pathwayTitle}</h2>
-                <p className="mt-3 text-white/80">
-                  Project-based STEM. Choose your Buddy. Complete the mission. Earn your badge.
-                </p>
-              </aside>
             </div>
           )}
 
@@ -530,8 +585,8 @@ export function ExperiencePlayer({
                 >
                   Launch Mission Again
                 </button>
-                <Link href="/experiences" className="experience-btn-secondary">
-                  All Missions
+                <Link href={`/courses/${experience.courseSlug}`} className="experience-btn-secondary">
+                  Back to Mission Path
                 </Link>
               </div>
               {!isLoggedIn && (

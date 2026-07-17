@@ -8,11 +8,96 @@
   }
 
   body {
-    @apply bg-nova-off-white text-nova-black antialiased;
+    @apply bg-[#050b18] text-nova-black antialiased;
   }
 }
 
 @layer components {
+  /* ── NOVA Universe — Explorers navigate the cosmos ── */
+  .nova-starfield {
+    background-color: #050b18;
+    background-image:
+      radial-gradient(1px 1px at 10% 20%, rgba(255, 255, 255, 0.45), transparent),
+      radial-gradient(1px 1px at 35% 65%, rgba(110, 231, 249, 0.35), transparent),
+      radial-gradient(1.5px 1.5px at 55% 15%, rgba(255, 255, 255, 0.5), transparent),
+      radial-gradient(1px 1px at 72% 48%, rgba(255, 255, 255, 0.3), transparent),
+      radial-gradient(1px 1px at 88% 78%, rgba(0, 180, 216, 0.4), transparent),
+      radial-gradient(ellipse at 50% 0%, rgba(30, 58, 138, 0.35), transparent 55%),
+      radial-gradient(ellipse at 100% 80%, rgba(0, 180, 216, 0.08), transparent 45%);
+    background-size: 420px 420px, 520px 520px, 380px 380px, 440px 440px, 500px 500px, 100% 100%, 100% 100%;
+    animation: nova-star-drift 120s linear infinite;
+  }
+
+  .nova-starfield-dense {
+    background-image:
+      radial-gradient(1px 1px at 5% 10%, rgba(255, 255, 255, 0.55), transparent),
+      radial-gradient(1px 1px at 15% 40%, rgba(255, 255, 255, 0.35), transparent),
+      radial-gradient(1px 1px at 25% 70%, rgba(110, 231, 249, 0.4), transparent),
+      radial-gradient(1.5px 1.5px at 40% 25%, rgba(255, 255, 255, 0.5), transparent),
+      radial-gradient(1px 1px at 50% 55%, rgba(255, 255, 255, 0.3), transparent),
+      radial-gradient(1px 1px at 65% 85%, rgba(0, 180, 216, 0.45), transparent),
+      radial-gradient(1px 1px at 78% 30%, rgba(255, 255, 255, 0.4), transparent),
+      radial-gradient(1px 1px at 92% 60%, rgba(255, 122, 0, 0.25), transparent),
+      radial-gradient(ellipse at 50% 0%, rgba(30, 58, 138, 0.4), transparent 55%),
+      radial-gradient(ellipse at 0% 100%, rgba(0, 180, 216, 0.1), transparent 50%);
+    background-size: 280px 280px, 320px 320px, 360px 360px, 400px 400px, 440px 440px, 480px 480px, 520px 520px, 560px 560px, 100% 100%, 100% 100%;
+  }
+
+  .nova-universe-cosmos {
+    background: linear-gradient(165deg, #050b18 0%, #0a1628 40%, #0d1b3d 100%);
+  }
+
+  .nova-universe-nebula {
+    background: linear-gradient(180deg, #050b18 0%, #0d1b3d 35%, #f7f9fc 35%);
+  }
+
+  .nova-universe-light {
+    background: linear-gradient(180deg, #050b18 0%, #0a1628 8%, #eef2f8 8%);
+  }
+
+  .nova-orbit-ring {
+    animation: nova-orbit-spin 48s linear infinite;
+  }
+
+  .nova-orbit-ring--reverse {
+    animation: nova-orbit-spin 72s linear infinite reverse;
+  }
+
+  .nova-orbit-dot {
+    animation: nova-orbit-pulse 3s ease-in-out infinite;
+  }
+
+  .nova-glass-nav {
+    @apply border-b border-white/10 bg-[#0a1628]/75 backdrop-blur-xl;
+  }
+
+  .nova-glass-nav-light {
+    @apply border-b border-nova-light-gray/60 bg-white/80 backdrop-blur-xl;
+  }
+
+  .nova-card-cosmic {
+    @apply rounded-nova border border-white/10 bg-white/[0.07] p-6 shadow-nova backdrop-blur-md;
+  }
+
+  .nova-card-float {
+    @apply nova-card transition duration-300 hover:-translate-y-1 hover:border-nova-cyan/30 hover:shadow-nova-lg;
+  }
+
+  .nova-section-cosmic {
+    @apply relative overflow-hidden;
+  }
+
+  .nova-nebula-glow {
+    @apply pointer-events-none absolute rounded-full blur-3xl;
+  }
+
+  .nova-btn-glow {
+    box-shadow: 0 0 24px rgba(0, 180, 216, 0.35), 0 4px 14px rgba(13, 27, 61, 0.2);
+  }
+
+  .nova-btn-glow:hover {
+    box-shadow: 0 0 32px rgba(0, 180, 216, 0.5), 0 6px 20px rgba(13, 27, 61, 0.25);
+  }
   .nova-container {
     @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
   }
@@ -232,4 +317,19 @@
 @keyframes experience-confetti-fade {
   0% { opacity: 1; }
   100% { opacity: 0; }
+}
+
+@keyframes nova-star-drift {
+  from { background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
+  to { background-position: 420px 840px, -520px 1040px, 380px 760px, -440px 880px, 500px 1000px, 0 0, 0 0; }
+}
+
+@keyframes nova-orbit-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes nova-orbit-pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.3); }
 }

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { PathwayIcon } from "@/components/ui/pathway-icon";
+import { ExploreNowButton } from "@/components/courses/explore-now-button";
 import type { PathwayMeta } from "@/lib/pathways/meta";
 
 type Props = {
@@ -32,16 +33,21 @@ export function MissionPathHero({
           <h1 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl">{title}</h1>
           <p className="mt-3 max-w-3xl text-base leading-relaxed text-white/80">{description}</p>
           <p className="mt-3 max-w-2xl text-sm italic text-white/65">{meta.hook}</p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Link
-              href={`/experiences/${meta.experienceSlug}`}
-              className="inline-flex items-center rounded-full bg-gradient-to-r from-nova-cyan to-nova-blue px-5 py-2.5 text-sm font-black text-white shadow-lg transition hover:brightness-110"
-            >
-              Launch Immersive Mission ✦
-            </Link>
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <ExploreNowButton
+              experienceSlug={meta.experienceSlug}
+              experienceTitle={meta.experienceTitle}
+              variant="hero"
+            />
             <span className="inline-flex items-center rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs font-bold text-white/90">
               Badge: {meta.badge}
             </span>
+            <Link
+              href="#path-outline"
+              className="inline-flex items-center rounded-full border border-white/20 px-4 py-2 text-xs font-semibold text-white/80 transition hover:border-white/40 hover:text-white"
+            >
+              View full path outline ↓
+            </Link>
           </div>
         </div>
       </div>

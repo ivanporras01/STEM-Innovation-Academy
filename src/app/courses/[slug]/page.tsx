@@ -142,7 +142,7 @@ export default async function CourseDetailPage({
             </div>
           </div>
 
-          <div className="grid gap-8 lg:grid-cols-3">
+          <div id="path-outline" className="grid gap-8 lg:grid-cols-3">
             <div className="lg:col-span-2 space-y-6">
               {course.modules.map((mod) => (
                 <section key={mod.id} className="nova-card">
