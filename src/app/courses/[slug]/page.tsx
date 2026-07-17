@@ -100,25 +100,37 @@ export default async function CourseDetailPage({
           )}
 
           <div className="mb-8">
-            <div className="mb-3 flex flex-wrap gap-2">
-              <Badge variant="cyan">{pathwayLabels[course.pathway]}</Badge>
-              <Badge variant="default">{course.level}</Badge>
-            </div>
+            {!meta && (
+              <>
+                <div className="mb-3 flex flex-wrap gap-2">
+                  <Badge variant="cyan">{pathwayLabels[course.pathway]}</Badge>
+                  <Badge variant="default">{course.level}</Badge>
+                </div>
+                <div className="flex flex-wrap items-center gap-4 text-sm text-nova-gray">
+                  {course.mentor && (
+                    <span>
+                      Mentor:{" "}
+                      <strong className="text-nova-dark-gray">
+                        {course.mentor.firstName} {course.mentor.lastName}
+                      </strong>
+                    </span>
+                  )}
+                  <span>{totalLessons} missions</span>
+                  <span>{course.modules.length} mission phases</span>
+                </div>
+              </>
+            )}
 
-            <div className="flex flex-wrap items-center gap-4 text-sm text-nova-gray">
-              {course.mentor && (
-                <span>
-                  Mentor:{" "}
-                  <strong className="text-nova-dark-gray">
-                    {course.mentor.firstName} {course.mentor.lastName}
-                  </strong>
-                </span>
-              )}
-              <span>{totalLessons} missions</span>
-              <span>{course.modules.length} mission phases</span>
-            </div>
+            {meta && course.mentor && (
+              <p className="mb-3 text-sm text-nova-gray">
+                Innovation Mentor:{" "}
+                <strong className="text-nova-dark-gray">
+                  {course.mentor.firstName} {course.mentor.lastName}
+                </strong>
+              </p>
+            )}
 
-            <div className="mt-6 flex flex-wrap items-center gap-4">
+            <div className="flex flex-wrap items-center gap-4">
               {session ? (
                 <EnrollButton courseId={course.id} enrolled={enrolled} />
               ) : (

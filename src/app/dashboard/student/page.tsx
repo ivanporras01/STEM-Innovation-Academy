@@ -44,7 +44,7 @@ export default async function StudentDashboardPage() {
         <StatCard label="Active Mission Paths" value={enrollments.length} icon="book" />
         <StatCard label="Avg. Progress" value={`${avgProgress}%`} icon="graduation" accent="green" />
         <StatCard
-          label="Missions Completed"
+          label="Lessons Completed"
           value={enrollments.reduce((acc, e) => acc + e.completedLessons, 0)}
           icon="trophy"
           accent="orange"
