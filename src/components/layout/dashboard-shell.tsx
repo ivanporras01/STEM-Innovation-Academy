@@ -6,11 +6,9 @@ import type { Role } from "@prisma/client";
 import { cn, getInitials, roleLabels } from "@/lib/utils";
 import {
   BookOpen,
-  GraduationCap,
   LayoutDashboard,
   Settings,
   Users,
-  ClipboardList,
 } from "lucide-react";
 
 const studentLinks = [
