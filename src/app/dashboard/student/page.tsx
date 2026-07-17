@@ -15,7 +15,7 @@ import { PATHWAY_META, getPathwayMeta } from "@/lib/pathways/meta";
 import { db } from "@/lib/db";
 import { ArrowRight, Compass, Map, Sparkles } from "lucide-react";
 export const metadata: Metadata = {
-  title: "Explorer Portal â€” NOVA",
+  title: "Explorer Portal — NOVA",
 };
 export default async function StudentDashboardPage() {
   const session = await auth();
@@ -60,7 +60,7 @@ export default async function StudentDashboardPage() {
   if (activeEnrollment && continueLessonUrl) {
     nextActions.push({
       title: `Continue ${activeEnrollment.course.title}`,
-      description: `${activeEnrollment.progress}% complete Â· ${activeEnrollment.totalLessons - activeEnrollment.completedLessons} missions left`,
+      description: `${activeEnrollment.progress}% complete · ${activeEnrollment.totalLessons - activeEnrollment.completedLessons} missions left`,
       href: continueLessonUrl,
       cta: "Launch next mission",
       icon: "path",
@@ -69,7 +69,7 @@ export default async function StudentDashboardPage() {
   if (inProgressExperience && inProgressMeta) {
     nextActions.push({
       title: `Resume ${inProgressMeta.experienceTitle}`,
-      description: `Explore Now Â· stage ${inProgressExperience.currentStage + 1} of 8`,
+      description: `Explore Now · stage ${inProgressExperience.currentStage + 1} of 8`,
       href: `/experiences/${inProgressExperience.experienceSlug}`,
       cta: "Resume quest",
       icon: "explore",
@@ -149,9 +149,9 @@ export default async function StudentDashboardPage() {
               <Link
                 key={action.href + action.title}
                 href={action.href}
-                className="nova-card group flex flex-col border-nova-cyan/10 transition hover:border-nova-cyan/30 hover:shadow-nova"
+                className="nova-glass-card group flex flex-col transition hover:border-nova-cyan/40"
               >
-                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-nova-cyan/20 to-nova-blue/10 text-nova-blue">
+                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-nova-cyan/20 to-nova-blue/10 text-nova-cyan">
                   <Icon className="h-5 w-5" />
                 </div>
                 <h3 className="font-semibold text-white group-hover:text-nova-cyan">
@@ -172,14 +172,14 @@ export default async function StudentDashboardPage() {
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-lg font-semibold text-white">Mission Path Progress</h2>
             <Link href="/courses" className="text-sm font-medium text-nova-cyan hover:underline">
-              Find more paths â†’
+              Find more paths →
             </Link>
           </div>
           <div className="space-y-3">
             {enrollments.map((enrollment) => {
               const remaining = enrollment.totalLessons - enrollment.completedLessons;
               return (
-                <div key={enrollment.id} className="nova-card">
+                <div key={enrollment.id} className="nova-glass-card">
                   <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
                     <div>
                       <Link
@@ -190,8 +190,8 @@ export default async function StudentDashboardPage() {
                       </Link>
                       <p className="mt-0.5 text-sm text-nova-cyan-light/80">
                         {enrollment.completedLessons} of {enrollment.totalLessons} missions done
-                        {remaining > 0 && ` Â· ${remaining} remaining`}
-                        {remaining === 0 && " Â· Path complete!"}
+                        {remaining > 0 && ` · ${remaining} remaining`}
+                        {remaining === 0 && " · Path complete!"}
                       </p>
                     </div>
                     <span className="text-lg font-bold text-nova-blue">{enrollment.progress}%</span>
@@ -214,11 +214,11 @@ export default async function StudentDashboardPage() {
               status = "Complete";
               statusClass = "text-nova-green bg-nova-green/10";
             } else if (prog) {
-              status = `In progress Â· stage ${prog.currentStage + 1}/8`;
+              status = `In progress · stage ${prog.currentStage + 1}/8`;
               statusClass = "text-nova-cyan bg-nova-cyan/10";
             }
             return (
-              <div key={meta.experienceSlug} className="nova-card flex items-center justify-between gap-3">
+              <div key={meta.experienceSlug} className="nova-glass-card flex items-center justify-between gap-3">
                 <div className="min-w-0">
                   <p className="truncate font-medium text-white">{meta.experienceTitle}</p>
                   <p className="text-xs text-nova-cyan-light/80">{meta.badge}</p>
@@ -236,7 +236,7 @@ export default async function StudentDashboardPage() {
       <div className="mb-6 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-white">All Mission Paths</h2>
         <Link href="/courses" className="text-sm font-medium text-nova-cyan hover:underline">
-          Browse all paths â†’
+          Browse all paths →
         </Link>
       </div>
       <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
@@ -269,7 +269,7 @@ export default async function StudentDashboardPage() {
               />
               {expProg && !expProg.completedAt && (
                 <p className="mt-1 text-center text-xs text-nova-cyan">
-                  Explore Now in progress â€” stage {expProg.currentStage + 1}/8
+                  Explore Now in progress — stage {expProg.currentStage + 1}/8
                 </p>
               )}
             </div>

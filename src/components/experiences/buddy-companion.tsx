@@ -18,7 +18,7 @@ export function BuddyCompanion({ buddyId, buddyNickname, message, compact }: Pro
 
   if (compact) {
     return (
-      <div className="flex items-start gap-3 rounded-xl border-l-4 border-[var(--exp-accent)] bg-gradient-to-r from-blue-50/90 to-white px-4 py-3">
+      <div className="flex items-start gap-3 rounded-xl border border-white/15 border-l-4 border-l-[var(--exp-accent)] bg-[#0a1628]/80 px-4 py-3 backdrop-blur-sm">
         <BuddyAvatar
           src={buddy.image}
           alt={displayName}
@@ -26,7 +26,7 @@ export function BuddyCompanion({ buddyId, buddyNickname, message, compact }: Pro
           className={cn("bg-gradient-to-br", buddy.color)}
         />
         <div>
-          <p className="text-xs font-black text-nova-deep-blue">
+          <p className="text-xs font-black text-white">
             {displayName}{" "}
             <span
               className={cn(
@@ -37,7 +37,7 @@ export function BuddyCompanion({ buddyId, buddyNickname, message, compact }: Pro
               {buddy.trait}
             </span>
           </p>
-          <p className="mt-0.5 text-sm text-nova-dark-gray">{message}</p>
+          <p className="mt-0.5 text-sm text-white/80">{message}</p>
         </div>
       </div>
     );

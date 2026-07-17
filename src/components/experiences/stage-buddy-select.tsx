@@ -37,10 +37,10 @@ function BuddyCard({
       type="button"
       onClick={onSelect}
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-2xl border-2 bg-white text-left transition-all duration-300",
+        "group relative flex flex-col overflow-hidden rounded-2xl border-2 text-left transition-all duration-300",
         selected
-          ? "border-[var(--exp-accent)] -translate-y-1 scale-[1.02] ring-4 ring-[var(--exp-accent)]/20"
-          : "border-nova-light-gray hover:border-[var(--exp-accent)]/40 hover:shadow-lg"
+          ? "border-[var(--exp-accent)] -translate-y-1 scale-[1.02] bg-[#0d1b3d]/90 ring-4 ring-[var(--exp-accent)]/25"
+          : "border-white/15 bg-[#0a1628]/70 hover:border-[var(--exp-accent)]/40 hover:bg-[#0d1b3d]/80"
       )}
     >
       <div
@@ -62,9 +62,9 @@ function BuddyCard({
         )}
       </div>
       <div className="flex flex-1 flex-col p-3">
-        <strong className="text-sm text-nova-deep-blue">{b.name}</strong>
-        <span className="text-[11px] text-nova-gray">{b.subtitle}</span>
-        <span className="mt-1 text-[9px] font-bold uppercase tracking-wider text-nova-cyan">
+        <strong className="text-sm text-white">{b.name}</strong>
+        <span className="text-[11px] text-white/60">{b.subtitle}</span>
+        <span className="mt-1 text-[9px] font-bold uppercase tracking-wider text-[var(--exp-accent-2)]">
           {b.tierLabel}
         </span>
         <span
@@ -97,13 +97,13 @@ export function StageBuddySelect({
   return (
     <div className="space-y-8">
       <div className="text-center lg:text-left">
-        <p className="text-xs font-black uppercase tracking-[0.18em] text-[var(--exp-accent)]">
+        <p className="text-xs font-black uppercase tracking-[0.18em] text-[var(--exp-accent-2)]">
           Choose Your NOVA Buddy
         </p>
-        <h2 className="mt-2 text-3xl font-black tracking-tight text-nova-deep-blue sm:text-4xl lg:text-5xl">
+        <h2 className="mt-2 text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
           Find the companion who matches your learning style
         </h2>
-        <p className="mx-auto mt-4 max-w-3xl text-base leading-relaxed text-nova-gray lg:mx-0">
+        <p className="mx-auto mt-4 max-w-3xl text-base leading-relaxed text-white/75 lg:mx-0">
           These 20 NOVA Buddies accompany Explorers across every mission — listening,
           encouraging, and guiding you through challenges, discoveries, and breakthroughs.
         </p>
@@ -118,8 +118,8 @@ export function StageBuddySelect({
             className={cn(
               "rounded-full px-4 py-2 text-xs font-black uppercase tracking-wide transition",
               tierFilter === t
-                ? "bg-nova-deep-blue text-white"
-                : "border border-nova-light-gray bg-white text-nova-gray hover:border-[var(--exp-accent)]"
+                ? "bg-[var(--exp-accent)] text-white shadow-[0_0_16px_color-mix(in_srgb,var(--exp-accent)_40%,transparent)]"
+                : "border border-white/20 bg-white/5 text-white/70 hover:border-[var(--exp-accent)]/50 hover:text-white"
             )}
           >
             {t === "all" ? "All 20 Buddies" : t === "friendly" ? "Friendly · Middle School" : "Pro · High School"}
@@ -129,7 +129,7 @@ export function StageBuddySelect({
 
       {(tierFilter === "all" || tierFilter === "friendly") && (
         <section>
-          <h3 className="mb-4 flex items-center gap-2 text-sm font-black uppercase tracking-wider text-nova-deep-blue">
+          <h3 className="mb-4 flex items-center gap-2 text-sm font-black uppercase tracking-wider text-white">
             <span className="h-2 w-2 rounded-full bg-nova-cyan" />
             Friendly Explorers — Middle School
           </h3>
@@ -148,7 +148,7 @@ export function StageBuddySelect({
 
       {(tierFilter === "all" || tierFilter === "pro") && (
         <section>
-          <h3 className="mb-4 flex items-center gap-2 text-sm font-black uppercase tracking-wider text-nova-deep-blue">
+          <h3 className="mb-4 flex items-center gap-2 text-sm font-black uppercase tracking-wider text-white">
             <span className="h-2 w-2 rounded-full bg-nova-green" />
             Pro Explorers — High School
           </h3>
@@ -165,7 +165,7 @@ export function StageBuddySelect({
         </section>
       )}
 
-      <div className="rounded-2xl border border-nova-light-gray bg-gradient-to-br from-nova-off-white to-blue-50/60 p-6">
+      <div className="rounded-2xl border border-white/15 bg-[#0a1628]/80 p-6 backdrop-blur-md">
         <div className="grid gap-6 lg:grid-cols-[auto_1fr] lg:items-center">
           <BuddyAvatar
             src={buddy.image}
@@ -174,13 +174,13 @@ export function StageBuddySelect({
             className={cn("mx-auto bg-gradient-to-br lg:mx-0", buddy.color, buddy.glow)}
           />
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-nova-cyan">
+            <p className="text-xs font-bold uppercase tracking-wider text-[var(--exp-accent-2)]">
               Your Buddy · {buddy.tierLabel}
             </p>
-            <p className="mt-1 text-lg font-bold text-nova-deep-blue">
+            <p className="mt-1 text-lg font-bold text-white">
               {buddy.name} — {buddy.subtitle}
             </p>
-            <p className="mt-2 text-sm italic text-nova-gray">&ldquo;{buddy.intro}&rdquo;</p>
+            <p className="mt-2 text-sm italic text-white/70">&ldquo;{buddy.intro}&rdquo;</p>
           </div>
         </div>
 

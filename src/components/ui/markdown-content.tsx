@@ -11,7 +11,7 @@ function renderInline(text: string): React.ReactNode[] {
     const token = match[0];
     if (token.startsWith("`")) {
       parts.push(
-        <code key={match.index} className="rounded bg-nova-light-gray px-1.5 py-0.5 font-mono text-sm">
+        <code key={match.index} className="rounded bg-white/10 px-1.5 py-0.5 font-mono text-sm text-nova-cyan-light">
           {token.slice(1, -1)}
         </code>
       );

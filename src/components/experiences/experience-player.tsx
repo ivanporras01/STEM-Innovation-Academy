@@ -570,7 +570,7 @@ export function ExperiencePlayer({
                     setQuizFeedback("");
                     setShowConfetti(false);
                   }}
-                  className="experience-btn-secondary experience-btn-secondary-dark"
+                  className="experience-btn-secondary"
                 >
                   Replay Mission
                 </button>

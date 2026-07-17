@@ -330,11 +330,11 @@
   }
 
   .experience-btn-secondary {
-    @apply inline-flex min-h-[47px] items-center justify-center rounded-full border-2 border-nova-light-gray bg-white px-6 py-3 text-sm font-black text-nova-deep-blue transition hover:border-[var(--exp-accent)];
+    @apply inline-flex min-h-[47px] items-center justify-center rounded-full border-2 border-white/25 bg-white/10 px-6 py-3 text-sm font-black text-white transition hover:border-[var(--exp-accent)] hover:bg-white/15;
   }
 
-  .experience-btn-secondary-dark {
-    @apply border-white/25 bg-white/10 text-white hover:border-[var(--exp-accent)] hover:bg-white/15;
+  .experience-btn-secondary-light {
+    @apply inline-flex min-h-[47px] items-center justify-center rounded-full border-2 border-nova-light-gray bg-white px-6 py-3 text-sm font-black text-nova-deep-blue transition hover:border-[var(--exp-accent)];
   }
 
   .experience-lab {
