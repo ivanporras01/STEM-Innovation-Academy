@@ -195,8 +195,14 @@ export function LabRobot({ onComplete }: Props) {
     <LabMissionShell
       labCode="NOVA LAB 002"
       title="ARIA-7 · Rescue Navigation"
-      objective="Program ARIA-7 from Launch Pad to Dr. Vega's Rescue Module. Forward = move. Left/Right = turn in place. Avoid Debris Field."
-      hint="Study the sector map — find a path that goes around debris, not through it."
+      objective="Guide rover ARIA-7 from the Launch Pad (bottom-left) to Dr. Vega’s Rescue Module (top-left). You must go around the Debris Field — never through it."
+      steps={[
+        "Read the sector map: 🤖 starts at Launch Pad · 🛟 is Dr. Vega · 🪨 is debris (do not enter).",
+        "Add commands with the buttons: Forward = move one cell · Left/Right = turn in place (no move).",
+        "Build a safe route around the debris — use Clear Route to start over anytime.",
+        "Press Launch ARIA-7 and watch the rover follow your queue. Reach 🛟 to rescue Dr. Vega.",
+      ]}
+      hint="The arrow on 🤖 shows which way ARIA-7 is facing before each Forward move."
       attempts={attempts}
       success={success}
       status={
@@ -243,6 +249,13 @@ export function LabRobot({ onComplete }: Props) {
       </div>
 
       <div className="lab-sector-map">
+        <div className="mb-3 flex flex-wrap gap-2 rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-[10px] text-white/70">
+          <span><strong className="text-white/90">Legend:</strong></span>
+          <span>🤖 ARIA-7</span>
+          <span>🛟 Rescue Module</span>
+          <span>🪨 Debris — blocked</span>
+          <span>↑→↓← facing</span>
+        </div>
         <div className="mb-2 flex items-center justify-between">
           <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--exp-accent-2)]">
             Sector Map · Top-down view

@@ -106,8 +106,14 @@ export function LabIot({ onComplete }: Props) {
     <LabMissionShell
       labCode="NOVA LAB 003"
       title="Greenhouse Command Center"
-      objective="Save 200 research crops: threshold ≤ 28°C, arm automation, simulate heat spike, run system test."
-      hint="Plant viability drops while temperature stays high. Move fast — configure, arm, test."
+      objective="Protect 200 student crops: set a safe cooling limit, turn automation ON, trigger a heat emergency, then prove the system saves the plants."
+      steps={[
+        "Drag the slider to 28°C or below — stay out of the red danger zone.",
+        "Flip Automatic cooling + alerts to ON until it says ● Systems armed.",
+        "Click Simulate Heat Spike — temperature jumps and crops start losing viability.",
+        "Click Run Emergency Test — cooling should activate and viability recovers.",
+      ]}
+      hint="Order matters: configure → arm → simulate heat → test. Crop viability drops while it stays hot."
       attempts={attempts}
       success={success}
       status={

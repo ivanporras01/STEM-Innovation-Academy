@@ -65,8 +65,14 @@ export function LabCode({ onComplete }: Props) {
     <LabMissionShell
       labCode="NOVA LAB 001"
       title="Relay Theta-9 · Signal Decoder"
-      objective='Two-phase repair: (1) set message to "NOVA READY" + restore print, (2) activate uplink with print("Uplink: ONLINE").'
-      hint="Uncomment the uplink lines at the bottom — or write your own print for Uplink: ONLINE."
+      objective='Restore NOVA’s deep-space relay by fixing two things in the code: the message must say "NOVA READY", then the uplink must confirm "Uplink: ONLINE".'
+      steps={[
+        'In the editor, change message = "NOVA STANDBY" to message = "NOVA READY".',
+        'Click ▶ Transmit Patch — the console should confirm Phase 1 (signal restored).',
+        'Uncomment the two uplink lines at the bottom — or add print("Uplink: ONLINE") yourself.',
+        "Transmit again until Signal strength hits 100% and Relay Theta-9 shows ONLINE.",
+      ]}
+      hint="Watch the Signal strength bar — it climbs as you fix each phase."
       attempts={attempts}
       success={success}
       status={

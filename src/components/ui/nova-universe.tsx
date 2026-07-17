@@ -17,7 +17,7 @@ type Star = {
   prevPy: number;
 };
 
-const STAR_COUNT = 70;
+const STAR_COUNT = 80;
 const TINT_COLORS: Record<StarTint, [number, number, number]> = {
   white: [255, 255, 255],
   cyan: [110, 231, 249],
@@ -69,7 +69,7 @@ export function NovaCosmosBackground() {
         by: (Math.random() - 0.5) * 2,
         z: Math.random() * 0.95 + 0.05,
         radius: Math.random() * 2.4 + 0.5,
-        opacity: Math.random() * 0.25 + 0.2,
+        opacity: Math.random() * 0.29 + 0.23,
         twinkleSpeed: Math.random() * 0.025 + 0.01,
         twinklePhase: Math.random() * Math.PI * 2,
         tint: pickTint(),
@@ -81,8 +81,8 @@ export function NovaCosmosBackground() {
     function projectStar(star: Star, cx: number, cy: number, spread: number) {
       const scale = spread / star.z;
       return {
-        px: cx + star.bx * scale + parallaxX * (1 - star.z) * 1.5,
-        py: cy + star.by * scale + parallaxY * (1 - star.z) * 1.5,
+        px: cx + star.bx * scale + parallaxX * (1 - star.z) * 1.72,
+        py: cy + star.by * scale + parallaxY * (1 - star.z) * 1.72,
         size: star.radius * (1.4 / star.z) * 0.4,
       };
     }
@@ -98,7 +98,7 @@ export function NovaCosmosBackground() {
       parallaxY += (targetParallaxY - parallaxY) * 0.06;
       scrollBoost *= 0.94;
 
-      const speedMult = 1 + scrollBoost * 0.22;
+      const speedMult = 1 + scrollBoost * 0.25;
       root!.style.setProperty("--nova-parallax-x", `${parallaxX}px`);
       root!.style.setProperty("--nova-parallax-y", `${parallaxY}px`);
 
@@ -159,19 +159,19 @@ export function NovaCosmosBackground() {
     }
 
     const onMouseMove = (e: MouseEvent) => {
-      targetParallaxX = (e.clientX / window.innerWidth - 0.5) * 0.35;
-      targetParallaxY = (e.clientY / window.innerHeight - 0.5) * 0.35;
+      targetParallaxX = (e.clientX / window.innerWidth - 0.5) * 0.4;
+      targetParallaxY = (e.clientY / window.innerHeight - 0.5) * 0.4;
     };
 
     let lastScrollY = window.scrollY;
     const onScroll = () => {
       const delta = Math.abs(window.scrollY - lastScrollY);
       lastScrollY = window.scrollY;
-      scrollBoost = Math.min(0.12, scrollBoost + delta * 0.0015);
+      scrollBoost = Math.min(0.14, scrollBoost + delta * 0.0017);
     };
 
     const onWheel = (e: WheelEvent) => {
-      scrollBoost = Math.min(0.12, scrollBoost + Math.abs(e.deltaY) * 0.0001);
+      scrollBoost = Math.min(0.14, scrollBoost + Math.abs(e.deltaY) * 0.00012);
     };
 
     resize();

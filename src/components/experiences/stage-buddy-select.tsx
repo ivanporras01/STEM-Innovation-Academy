@@ -43,9 +43,6 @@ function BuddyCard({
           : "border-nova-light-gray hover:border-[var(--exp-accent)]/40 hover:shadow-lg"
       )}
     >
-      <span className="absolute left-2 top-2 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-nova-deep-blue text-[10px] font-black text-white">
-        {b.number}
-      </span>
       <div
         className={cn(
           "relative overflow-hidden transition-transform duration-300 group-hover:scale-[1.02]",

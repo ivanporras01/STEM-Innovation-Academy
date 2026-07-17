@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Radio, Target } from "lucide-react";
+import { ListChecks, Radio, Target } from "lucide-react";
 
 const PARTICLE_SEEDS = Array.from({ length: 12 }, (_, i) => ({
   id: i,
@@ -15,6 +15,7 @@ export function LabMissionShell({
   labCode,
   title,
   objective,
+  steps,
   hint,
   attempts,
   children,
@@ -24,6 +25,7 @@ export function LabMissionShell({
   labCode: string;
   title: string;
   objective: string;
+  steps?: string[];
   hint?: string;
   attempts?: number;
   children: React.ReactNode;
@@ -102,6 +104,29 @@ export function LabMissionShell({
           </div>
         </div>
       </div>
+
+      {steps && steps.length > 0 && !success && (
+        <div className="relative z-[3] border-b border-white/10 bg-[#0a1a32]/90 px-5 py-4">
+          <div className="flex gap-3">
+            <ListChecks className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" />
+            <div className="flex-1">
+              <p className="text-xs font-bold uppercase tracking-wider text-emerald-400/90">
+                Your mission — follow these steps
+              </p>
+              <ol className="mt-3 space-y-2">
+                {steps.map((step, i) => (
+                  <li key={step} className="flex gap-3 text-sm leading-snug text-white/85">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--exp-accent)]/20 text-xs font-black text-[var(--exp-accent-2)]">
+                      {i + 1}
+                    </span>
+                    <span className="pt-0.5">{step}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="experience-lab relative z-[3] p-5 sm:p-6">{children}</div>
 

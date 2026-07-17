@@ -28,7 +28,7 @@ export function BuddyAvatar({ src, alt, className, size = "md" }: Props) {
       <img
         src={src}
         alt={alt}
-        className="buddy-portrait h-full w-full"
+        className={cn("buddy-portrait h-full w-full", size === "card" && "buddy-portrait--card")}
         draggable={false}
       />
     </div>

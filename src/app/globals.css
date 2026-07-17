@@ -23,12 +23,12 @@
 
   .nova-cosmos-canvas {
     @apply absolute inset-0 h-full w-full;
-    opacity: 0.25;
+    opacity: 0.29;
   }
 
   .nova-cosmos-vignette {
     @apply absolute inset-0;
-    background: radial-gradient(ellipse at center, transparent 55%, rgba(1, 4, 9, 0.35) 100%);
+    background: radial-gradient(ellipse at center, transparent 55%, rgba(1, 4, 9, 0.3) 100%);
   }
 
   .nova-hyperspace .nova-cosmos-canvas {
@@ -44,8 +44,8 @@
   .nova-cosmos-parallax {
     @apply absolute inset-0;
     transform: translate(
-      calc(var(--nova-parallax-x, 0px) * 7),
-      calc(var(--nova-parallax-y, 0px) * 7)
+      calc(var(--nova-parallax-x, 0px) * 8),
+      calc(var(--nova-parallax-y, 0px) * 8)
     );
     will-change: transform;
   }
@@ -61,9 +61,9 @@
     height: min(100vw, 780px);
     top: -14%;
     left: -10%;
-    background: radial-gradient(circle, rgba(0, 180, 216, 0.08) 0%, rgba(0, 180, 216, 0.025) 35%, transparent 68%);
+    background: radial-gradient(circle, rgba(0, 180, 216, 0.092) 0%, rgba(0, 180, 216, 0.029) 35%, transparent 68%);
     animation-duration: 18s;
-    opacity: 0.16;
+    opacity: 0.18;
   }
 
   .nova-nebula--violet {
@@ -71,10 +71,10 @@
     height: min(90vw, 640px);
     top: 28%;
     right: -18%;
-    background: radial-gradient(circle, rgba(118, 87, 232, 0.07) 0%, rgba(118, 87, 232, 0.02) 40%, transparent 68%);
+    background: radial-gradient(circle, rgba(118, 87, 232, 0.08) 0%, rgba(118, 87, 232, 0.023) 40%, transparent 68%);
     animation-duration: 24s;
     animation-delay: -6s;
-    opacity: 0.14;
+    opacity: 0.16;
   }
 
   .nova-nebula--orange {
@@ -82,10 +82,10 @@
     height: min(80vw, 560px);
     bottom: -12%;
     left: 18%;
-    background: radial-gradient(circle, rgba(255, 122, 0, 0.06) 0%, rgba(255, 122, 0, 0.018) 40%, transparent 68%);
+    background: radial-gradient(circle, rgba(255, 122, 0, 0.069) 0%, rgba(255, 122, 0, 0.021) 40%, transparent 68%);
     animation-duration: 22s;
     animation-delay: -12s;
-    opacity: 0.13;
+    opacity: 0.15;
   }
 
   .nova-orbit-satellite {
@@ -312,6 +312,11 @@
     object-fit: cover;
     object-position: center top;
     display: block;
+  }
+
+  .buddy-portrait--card {
+    object-position: center 20%;
+    transform: scale(1.1);
   }
 
   .experience-btn-primary {
