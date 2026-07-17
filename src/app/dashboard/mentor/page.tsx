@@ -28,10 +28,10 @@ export default async function MentorDashboardPage() {
         <p className="mb-1 text-sm font-semibold uppercase tracking-wider text-nova-green">
           Mentor Portal
         </p>
-        <h1 className="text-2xl font-bold text-nova-deep-blue">
+        <h1 className="text-2xl font-bold text-white">
           Welcome, {session.user.firstName}
         </h1>
-        <p className="mt-1 text-nova-gray">
+        <p className="mt-1 text-nova-cyan-light/80">
           Guide your Explorers — review submissions, track enrollments, and manage Mission Paths.
         </p>
       </div>
@@ -43,12 +43,12 @@ export default async function MentorDashboardPage() {
       </div>
 
       <section className="mb-10">
-        <h2 className="mb-4 text-lg font-semibold text-nova-deep-blue">
+        <h2 className="mb-4 text-lg font-semibold text-white">
           Explorers Needing Feedback
         </h2>
 
         {pendingReviews === 0 ? (
-          <div className="nova-card py-8 text-center text-nova-gray">
+          <div className="nova-card py-8 text-center text-nova-cyan-light/80">
             All caught up — no submissions awaiting your review.
           </div>
         ) : (
@@ -62,10 +62,10 @@ export default async function MentorDashboardPage() {
                         <p className="text-xs font-medium uppercase tracking-wide text-nova-cyan">
                           {course.title}
                         </p>
-                        <h3 className="font-semibold text-nova-deep-blue">
+                        <h3 className="font-semibold text-white">
                           {assignment.title}
                         </h3>
-                        <p className="text-sm text-nova-gray">
+                        <p className="text-sm text-nova-cyan-light/80">
                           Explorer: {submission.user.firstName} {submission.user.lastName} ·{" "}
                           {formatDate(submission.submittedAt)}
                         </p>
@@ -87,9 +87,9 @@ export default async function MentorDashboardPage() {
       </section>
 
       <section>
-        <h2 className="mb-4 text-lg font-semibold text-nova-deep-blue">Your Mission Paths</h2>
+        <h2 className="mb-4 text-lg font-semibold text-white">Your Mission Paths</h2>
         {courses.length === 0 ? (
-          <div className="nova-card py-8 text-center text-nova-gray">
+          <div className="nova-card py-8 text-center text-nova-cyan-light/80">
             No paths assigned yet. Contact an administrator to get started.
           </div>
         ) : (
@@ -100,8 +100,8 @@ export default async function MentorDashboardPage() {
                 href={`/courses/${course.slug}`}
                 className="nova-card transition hover:shadow-nova"
               >
-                <h3 className="font-semibold text-nova-deep-blue">{course.title}</h3>
-                <p className="mt-1 text-sm text-nova-gray">
+                <h3 className="font-semibold text-white">{course.title}</h3>
+                <p className="mt-1 text-sm text-nova-cyan-light/80">
                   {course._count.enrollments} Explorer
                   {course._count.enrollments === 1 ? "" : "s"} enrolled
                 </p>
