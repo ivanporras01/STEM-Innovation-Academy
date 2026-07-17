@@ -6,8 +6,10 @@ import { Footer } from "@/components/layout/footer";
 import { Badge } from "@/components/ui/badge";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { EnrollButton } from "@/components/courses/enroll-button";
+import { MissionPathHero } from "@/components/courses/mission-path-hero";
 import { SubmissionForm } from "@/components/courses/submission-form";
 import { getCourseBySlug, getCourseProgress } from "@/lib/courses";
+import { getPathwayMeta } from "@/lib/pathways/meta";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { pathwayLabels, lessonTypeLabels, formatDate } from "@/lib/utils";
@@ -75,21 +77,35 @@ export default async function CourseDetailPage({
   }
 
   const totalLessons = course.modules.reduce((acc, m) => acc + m.lessons.length, 0);
+  const meta = getPathwayMeta(slug);
 
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="flex-1 py-12">
         <div className="nova-container">
+          {meta ? (
+            <MissionPathHero
+              meta={meta}
+              title={course.title}
+              description={course.description}
+              totalMissions={totalLessons}
+              totalPhases={course.modules.length}
+            />
+          ) : (
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold text-nova-deep-blue">{course.title}</h1>
+              <p className="mt-3 max-w-3xl text-lg text-nova-gray">{course.description}</p>
+            </div>
+          )}
+
           <div className="mb-8">
             <div className="mb-3 flex flex-wrap gap-2">
               <Badge variant="cyan">{pathwayLabels[course.pathway]}</Badge>
               <Badge variant="default">{course.level}</Badge>
             </div>
-            <h1 className="text-3xl font-bold text-nova-deep-blue">{course.title}</h1>
-            <p className="mt-3 max-w-3xl text-lg text-nova-gray">{course.description}</p>
 
-            <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-nova-gray">
+            <div className="flex flex-wrap items-center gap-4 text-sm text-nova-gray">
               {course.mentor && (
                 <span>
                   Mentor:{" "}
@@ -98,8 +114,8 @@ export default async function CourseDetailPage({
                   </strong>
                 </span>
               )}
-              <span>{totalLessons} lessons</span>
-              <span>{course.modules.length} modules</span>
+              <span>{totalLessons} missions</span>
+              <span>{course.modules.length} mission phases</span>
             </div>
 
             <div className="mt-6 flex flex-wrap items-center gap-4">
@@ -107,7 +123,7 @@ export default async function CourseDetailPage({
                 <EnrollButton courseId={course.id} enrolled={enrolled} />
               ) : (
                 <Link href="/login" className="nova-btn-primary">
-                  Sign in to Enroll
+                  Sign in to Join Path
                 </Link>
               )}
               {enrolled && <ProgressBar value={progress.percent} className="max-w-xs flex-1" />}
@@ -118,9 +134,12 @@ export default async function CourseDetailPage({
             <div className="lg:col-span-2 space-y-6">
               {course.modules.map((mod) => (
                 <section key={mod.id} className="nova-card">
-                  <h2 className="mb-4 text-lg font-semibold text-nova-deep-blue">
-                    Module {mod.order}: {mod.title}
+                  <h2 className="mb-1 text-lg font-semibold text-nova-deep-blue">
+                    Phase {mod.order}: {mod.title}
                   </h2>
+                  {mod.description && (
+                    <p className="mb-4 text-sm text-nova-gray">{mod.description}</p>
+                  )}
                   <ul className="space-y-2">
                     {mod.lessons.map((lesson) => {
                       const completed = completedLessonIds.has(lesson.id);
@@ -153,7 +172,7 @@ export default async function CourseDetailPage({
                                 <p className="text-sm font-medium text-nova-dark-gray">
                                   {lesson.title}
                                 </p>
-                                <p className="text-xs text-nova-gray">Enroll to access</p>
+                                <p className="text-xs text-nova-gray">Join path to unlock</p>
                               </div>
                             </div>
                           )}

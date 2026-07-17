@@ -7,8 +7,8 @@ import { auth } from "@/lib/auth";
 import { getUserEnrollments } from "@/lib/courses";
 
 export const metadata: Metadata = {
-  title: "Course Catalog",
-  description: "Explore NOVA learning pathways and enroll in STEM courses.",
+  title: "Mission Paths",
+  description: "Explore NOVA Explorer paths and launch your next mission.",
 };
 
 export default async function CoursesPage() {
@@ -28,13 +28,13 @@ export default async function CoursesPage() {
         <div className="nova-container">
           <div className="mb-10 text-center">
             <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-nova-cyan">
-              Learning Pathways
+              Explorer Paths
             </p>
             <h1 className="text-3xl font-bold text-nova-deep-blue sm:text-4xl">
-              NOVA Course Catalog
+              NOVA Mission Board
             </h1>
             <p className="mx-auto mt-3 max-w-2xl text-nova-gray">
-              Project-based STEM courses designed for middle and high school NOVA Explorers.
+              Project-based mission paths designed for middle and high school NOVA Explorers.
             </p>
           </div>
 

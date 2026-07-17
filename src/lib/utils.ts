@@ -33,11 +33,11 @@ export const roleLabels: Record<string, string> = {
 };
 
 export const lessonTypeLabels: Record<string, string> = {
-  VIDEO: "Video",
-  READING: "Reading",
-  LAB: "Hands-on Lab",
-  QUIZ: "Quiz",
-  PROJECT: "Project",
+  VIDEO: "Video Brief",
+  READING: "Discovery",
+  LAB: "Hands-on LAB",
+  QUIZ: "Innovation Check",
+  PROJECT: "Build Challenge",
 };
 
 export function calculateCourseProgress(

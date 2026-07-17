@@ -22,7 +22,7 @@ export function Footer() {
           <div className="flex flex-col gap-2 text-sm text-nova-cyan-light/80">
             <Link href="/#discover" className="hover:text-white">Discover NOVA</Link>
             <Link href="/pathways" className="hover:text-white">Learning Pathways</Link>
-            <Link href="/courses" className="hover:text-white">Course Catalog</Link>
+            <Link href="/courses" className="hover:text-white">Mission Board</Link>
           </div>
         </div>
 

@@ -7,6 +7,8 @@ import { MarkdownContent } from "@/components/ui/markdown-content";
 import { Badge } from "@/components/ui/badge";
 import { CompleteLessonButton } from "@/components/courses/complete-lesson-button";
 import { getLessonWithProgress } from "@/lib/courses";
+import { getPathwayMeta } from "@/lib/pathways/meta";
+import { PathwayIcon } from "@/components/ui/pathway-icon";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { lessonTypeLabels } from "@/lib/utils";
@@ -19,7 +21,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lessonId } = await params;
   const { lesson } = await getLessonWithProgress(lessonId);
-  return { title: lesson?.title ?? "Lesson" };
+  return { title: lesson?.title ?? "Mission" };
 }
 
 export default async function LessonPage({
@@ -51,6 +53,8 @@ export default async function LessonPage({
   const nextLesson =
     currentIndex < allLessons.length - 1 ? allLessons[currentIndex + 1] : null;
 
+  const meta = getPathwayMeta(slug);
+
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
@@ -61,8 +65,22 @@ export default async function LessonPage({
             className="mb-6 inline-flex items-center gap-1 text-sm font-medium text-nova-cyan hover:underline"
           >
             <ChevronLeft className="h-4 w-4" />
-            Back to {lesson.module.course.title}
+            Back to mission path
           </Link>
+
+          {meta && (
+            <div className="mb-6 flex items-center gap-3 rounded-2xl border border-nova-light-gray bg-nova-off-white px-4 py-3">
+              <PathwayIcon pathway={meta.pathway} variant="card" className="h-12 w-12 text-xl" />
+              <div>
+                <p className="text-xs font-black uppercase tracking-wider text-nova-cyan">
+                  {lesson.module.title}
+                </p>
+                <p className="text-sm font-semibold text-nova-deep-blue">
+                  Mission {currentIndex + 1} of {allLessons.length}
+                </p>
+              </div>
+            </div>
+          )}
 
           <div className="mb-6 flex flex-wrap items-center gap-2">
             <Badge variant="cyan">{lessonTypeLabels[lesson.type]}</Badge>
@@ -99,7 +117,7 @@ export default async function LessonPage({
                   className="nova-btn-secondary text-sm"
                 >
                   <ChevronLeft className="mr-1 inline h-4 w-4" />
-                  Previous
+                  Previous Mission
                 </Link>
               )}
               {nextLesson && (
@@ -107,7 +125,7 @@ export default async function LessonPage({
                   href={`/courses/${slug}/lessons/${nextLesson.id}`}
                   className="nova-btn-primary text-sm"
                 >
-                  Next
+                  Next Mission
                   <ChevronRight className="ml-1 inline h-4 w-4" />
                 </Link>
               )}

@@ -12,9 +12,9 @@ type Props = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const exp = getExperience(slug);
-  if (!exp) return { title: "Experience Not Found" };
+  if (!exp) return { title: "Mission Not Found" };
   return {
-    title: `${exp.title} | NOVA Experience`,
+    title: `${exp.title} | NOVA Mission`,
     description: exp.missionLead,
   };
 }

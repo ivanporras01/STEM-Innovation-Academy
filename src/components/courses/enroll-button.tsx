@@ -17,7 +17,7 @@ export function EnrollButton({
   if (enrolled) {
     return (
       <span className="inline-flex items-center rounded-xl bg-nova-green/10 px-4 py-2 text-sm font-semibold text-nova-green">
-        ✓ Enrolled
+        ✓ On Mission Path
       </span>
     );
   }
@@ -56,7 +56,7 @@ export function EnrollButton({
         disabled={loading}
         className="nova-btn-primary disabled:opacity-60"
       >
-        {loading ? "Enrolling..." : "Enroll Now"}
+        {loading ? "Joining..." : "Join Mission Path"}
       </button>
       {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
     </div>

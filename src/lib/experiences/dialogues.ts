@@ -19,9 +19,9 @@ const TRAIT_BRIEFING: Record<BuddyTrait, Record<LabContext, string>> = {
     robot: "Why three forwards? Test and discover the pattern.",
     iot: "What other sensors could protect these plants?",
   },
-  PERSISTENT: {
-    code: "First run might fail. Adjust and run again — I believe in you.",
-    robot: "Route not working? Clear, rethink, relaunch.",
+  THOUGHTFUL: {
+    code: "First run might fail. Think it through, adjust, and run again.",
+    robot: "Route not working? Pause, rethink, relaunch.",
     iot: "Keep testing until automation saves the greenhouse.",
   },
   ADVENTUROUS: {
@@ -69,10 +69,10 @@ const TRAIT_BRIEFING: Record<BuddyTrait, Record<LabContext, string>> = {
     robot: "Precisely three forwards, one right. No shortcuts.",
     iot: "Set threshold below 30°C. Precision matters.",
   },
-  RESILIENT: {
-    code: "Errors are feedback. We adapt and restore the signal.",
-    robot: "Failed launch? Resilience means trying again.",
-    iot: "Systems fail. We rebuild until plants are safe.",
+  OBSERVANT: {
+    code: "Watch the output closely — the clue is in the details.",
+    robot: "Observe how each command changes the rover's path.",
+    iot: "Notice how small temperature shifts trigger big changes.",
   },
   STRATEGIC: {
     code: "Strategy: locate READY, print success, mission done.",
@@ -89,15 +89,20 @@ const TRAIT_BRIEFING: Record<BuddyTrait, Record<LabContext, string>> = {
     robot: "Today a rover. Tomorrow autonomous fleets.",
     iot: "Today one greenhouse. Tomorrow smart agriculture.",
   },
-  DETAILED: {
-    code: "Check every line. Details restore the connection.",
+  RELIABLE: {
+    code: "Check every line. Solid foundations restore the connection.",
     robot: "Review each command before launch.",
     iot: "Every degree on the slider changes outcomes.",
   },
-  ADAPTIVE: {
-    code: "If the first approach fails, we adapt the code.",
-    robot: "Adapt the route until the rover arrives.",
-    iot: "Adapt rules until the system protects the plants.",
+  PRAGMATIC: {
+    code: "Practical fixes beat perfect theory. Ship what works.",
+    robot: "Build the route that reaches the module — reliably.",
+    iot: "Real-world constraints shape smart systems. Plan for them.",
+  },
+  EFFICIENCY: {
+    code: "Clean code, clear logic, fast results.",
+    robot: "Minimum commands, maximum progress.",
+    iot: "Automate once, protect the greenhouse forever.",
   },
 };
 
@@ -105,7 +110,7 @@ const TRAIT_LAB: Record<BuddyTrait, string> = {
   PATIENT: "Take your time. I'm right here with you.",
   LOGICAL: "Run the logic. Check the output.",
   CURIOUS: "What happens if you change one line?",
-  PERSISTENT: "Not yet? Try again — we're closer.",
+  THOUGHTFUL: "Not yet? Think it through — we're closer.",
   ADVENTUROUS: "Push the mission. Learn by doing.",
   DETERMINED: "Keep going. Finish line is ahead.",
   CREATIVE: "Your twist on the solution might surprise us.",
@@ -115,19 +120,20 @@ const TRAIT_LAB: Record<BuddyTrait, string> = {
   INNOVATIVE: "This is where innovators separate themselves.",
   INSIGHTFUL: "What pattern do you see in the results?",
   PRECISE: "Double-check before you continue.",
-  RESILIENT: "Setback? Adjust and retry.",
+  OBSERVANT: "You noticed what mattered. That's how experts work.",
   STRATEGIC: "Stick to the plan — it's sound.",
   FOCUSED: "Eyes on the objective.",
   VISIONARY: "You're building the future, one test at a time.",
-  DETAILED: "Small fixes, big impact.",
-  ADAPTIVE: "Flex when needed. That's smart engineering.",
+  RELIABLE: "Small fixes, big impact.",
+  PRAGMATIC: "Keep it practical — build what works.",
+  EFFICIENCY: "Optimize and execute.",
 };
 
 const TRAIT_DEBRIEF: Record<BuddyTrait, string> = {
   PATIENT: "You stayed calm and solved it. That's real growth.",
   LOGICAL: "Logic won. You should be proud.",
   CURIOUS: "Your questions led to answers. Keep asking.",
-  PERSISTENT: "You never gave up. That's NOVA spirit.",
+  THOUGHTFUL: "You thought it through and solved it. That's NOVA spirit.",
   ADVENTUROUS: "Bold explorer. Mission complete.",
   DETERMINED: "Determination delivered. Outstanding.",
   CREATIVE: "You brought creativity to STEM. Love it.",
@@ -137,12 +143,13 @@ const TRAIT_DEBRIEF: Record<BuddyTrait, string> = {
   INNOVATIVE: "Innovator badge earned in my book.",
   INSIGHTFUL: "Deep understanding. You get the why.",
   PRECISE: "Precision performance. Excellent.",
-  RESILIENT: "You bounced back and finished strong.",
+  OBSERVANT: "You saw what others missed. Outstanding.",
   STRATEGIC: "Strategy executed. Well played.",
   FOCUSED: "Focused effort, focused results.",
   VISIONARY: "You're seeing the bigger picture. Keep climbing.",
-  DETAILED: "Detail master. Thorough work.",
-  ADAPTIVE: "You adapted and conquered. Ready for the next mission.",
+  RELIABLE: "Built on solid foundations. Excellent.",
+  PRAGMATIC: "Practical engineering wins. Well done.",
+  EFFICIENCY: "Efficient execution. Mission optimized.",
 };
 
 function labContextFromSlug(slug: string): LabContext {

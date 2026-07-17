@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import {
+  BUDDIES,
   STAGE_LABELS,
   STAGE_ORDER,
   getBuddy,
@@ -14,6 +15,8 @@ import {
 } from "@/lib/experiences/catalog";
 import { StageBuddySelect } from "./stage-buddy-select";
 import { BuddyCompanion } from "./buddy-companion";
+import { BuddyAvatar } from "./buddy-avatar";
+import { PathwayIcon } from "@/components/ui/pathway-icon";
 import { LabCode } from "./labs/lab-code";
 import { LabRobot } from "./labs/lab-robot";
 import { LabIot } from "./labs/lab-iot";
@@ -155,7 +158,9 @@ export function ExperiencePlayer({
       <div className="relative z-10 mx-auto w-full max-w-[1280px] px-3 py-5 sm:px-4">
         <header className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="experience-mark">{experience.emoji}</div>
+            <div className="experience-mark">
+              <PathwayIcon pathway={experience.pathway} variant="mark" />
+            </div>
             <div>
               <strong className="text-sm tracking-[0.14em]">NOVA</strong>
               <small className="block text-[0.65rem] uppercase tracking-wider text-white/70">
@@ -165,7 +170,7 @@ export function ExperiencePlayer({
           </div>
           <div className="flex items-center gap-3">
             <span className="rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-xs font-bold">
-              ● Experience Online
+              ● Mission Live
             </span>
             <Link
               href="/experiences"
@@ -211,7 +216,7 @@ export function ExperiencePlayer({
                 </p>
                 <div className="mt-6 grid grid-cols-3 gap-3">
                   {[
-                    ["Experience", "Interactive"],
+                    ["Mission", "Interactive"],
                     ["Level", "Explorer"],
                     ["Outcome", "Build & Discover"],
                   ].map(([k, v]) => (
@@ -230,25 +235,28 @@ export function ExperiencePlayer({
                   You are not watching a lesson. You are entering a mission — with a Buddy
                   who stays by your side until the achievement unlocks.
                 </p>
-                <div className="mt-6 flex flex-wrap gap-2">
-                  {["🐼", "🤖", "👩‍🚀", "🐺", "🦉", "🧠"].map((e) => (
-                    <span
-                      key={e}
-                      className="flex h-10 w-10 items-center justify-center rounded-xl bg-nova-off-white text-xl shadow-sm"
-                    >
-                      {e}
-                    </span>
+                <div className="mt-6 flex flex-wrap items-center gap-2">
+                  {BUDDIES.slice(0, 6).map((b) => (
+                    <BuddyAvatar
+                      key={b.id}
+                      src={b.image}
+                      alt={`${b.name}, NOVA Buddy`}
+                      size="sm"
+                      className={cn("bg-gradient-to-br", b.color)}
+                    />
                   ))}
                   <span className="flex h-10 items-center px-2 text-xs font-bold text-nova-gray">
                     +14 more Buddies
                   </span>
                 </div>
                 <button type="button" onClick={() => goTo(1)} className="experience-btn-primary mt-8">
-                  Begin Experience →
+                  Launch Mission →
                 </button>
               </div>
               <aside className="experience-panel rounded-3xl p-8 text-white">
-                <div className="experience-hero mb-6">{experience.emoji}</div>
+                <div className="experience-hero mb-6">
+                  <PathwayIcon pathway={experience.pathway} variant="hero" />
+                </div>
                 <h2 className="text-2xl font-bold">{experience.pathwayTitle}</h2>
                 <p className="mt-3 text-white/80">
                   Project-based STEM. Choose your Buddy. Complete the mission. Earn your badge.
@@ -476,7 +484,9 @@ export function ExperiencePlayer({
 
           {stage === "achievement" && (
             <div className="py-6 text-center">
-              <div className="experience-badge mx-auto">{experience.achievementEmoji}</div>
+              <div className="experience-badge mx-auto">
+                <PathwayIcon pathway={experience.pathway} variant="badge" />
+              </div>
               <p className="mt-8 text-xs font-black uppercase tracking-[0.14em] text-[var(--exp-accent)]">
                 Achievement Unlocked
               </p>
@@ -490,9 +500,12 @@ export function ExperiencePlayer({
                 &ldquo;{getBuddyDialogue(buddyId, experience.slug, "achievement")}&rdquo;
               </p>
               <div className="mx-auto mt-6 flex items-center justify-center gap-3">
-                <div className={cn("flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br text-3xl", buddy.color)}>
-                  {buddy.emoji}
-                </div>
+                <BuddyAvatar
+                  src={buddy.image}
+                  alt={buddyDisplayName}
+                  size="sm"
+                  className={cn("h-16 w-16 rounded-2xl bg-gradient-to-br", buddy.color)}
+                />
                 <div className="text-left">
                   <p className="font-bold text-nova-deep-blue">{buddyDisplayName}</p>
                   <p className="text-xs text-nova-gray">{buddy.subtitle} · {buddy.trait}</p>
@@ -500,7 +513,7 @@ export function ExperiencePlayer({
               </div>
               <div className="mt-10 flex flex-wrap justify-center gap-3">
                 <Link href={`/courses/${experience.courseSlug}`} className="experience-btn-primary">
-                  Explore Full Course →
+                  Continue Mission Path →
                 </Link>
                 <button
                   type="button"
@@ -515,10 +528,10 @@ export function ExperiencePlayer({
                   }}
                   className="experience-btn-secondary"
                 >
-                  Explore Again
+                  Launch Mission Again
                 </button>
                 <Link href="/experiences" className="experience-btn-secondary">
-                  All Experiences
+                  Mission Board
                 </Link>
               </div>
               {!isLoggedIn && (

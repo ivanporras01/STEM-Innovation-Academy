@@ -1,0 +1,123 @@
+---
+description: NOVA Master Philosophy — experience design, language, and buddy standards
+alwaysApply: true
+---
+
+# NOVA Master Philosophy
+
+NOVA is an **EXPERIENCE**, not an LMS. Every screen, label, and interaction must feel like stepping into a living mission — not opening Moodle, Canvas, or a course catalog.
+
+## Core Identity
+
+- NOVA = guided exploration + discovery + building — never passive reading
+- Students are **Explorers** on **Missions**, not pupils in **Lessons**
+- The platform should feel like Pixar storytelling + Apple polish + NASA mission control
+- Interfaces must feel **alive** (motion, warmth, personality) — never static admin panels
+
+## Emotional Goal
+
+Every NOVA experience should evoke **wonder, curiosity, and joy**.
+
+The student should think: *"I don't want to leave."*
+
+Design for delight first. Learning follows engagement.
+
+## The 2-Hour Test
+
+Before shipping any NOVA-facing screen, ask:
+
+> **Would a child voluntarily spend two hours here?**
+
+If the answer is no — redesign before adding features.
+
+## Every Screen Must Answer
+
+1. **Why am I here?** — Clear purpose, not buried in nav
+2. **What's today's mission?** — One exciting objective, not a syllabus
+3. **Why is this exciting?** — Stakes, story, or discovery hook
+
+## Language Rules (User-Facing NOVA Experiences)
+
+**USE:** Mission, Quest, Discovery, Adventure, Explorer, LAB, Achievement, Buddy, Signal, Rover, Breakthrough
+
+**NEVER USE** in NOVA experience UI:
+- Lesson 1 / Lesson 2 / Lesson 3
+- "Start Lesson", "Course module", "Complete the reading"
+- Syllabus-style numbering or academic catalog copy
+
+| BAD | GOOD |
+|-----|------|
+| Lesson 3: Introduction to Variables | Mission: Decode the Signal |
+| Start Lesson | Launch Mission |
+| Course | Mission Path |
+| Quiz | Innovation Check |
+| Enrolled Courses (in experience context) | Active Missions |
+| Browse all courses | Explore Mission Board |
+
+Backend routes (`/courses`, `courseSlug`) may stay internal — **labels** must speak mission universe.
+
+## Buddy Companion Rules
+
+- Buddies are **real characters** with emotional attachment — not emoji placeholders
+- All buddy portraits: **forward-facing**, looking at the Explorer
+- Use `<img>` with `object-fit: cover` and `object-position: center top`
+- Reuse `BuddyAvatar` component — do not render emoji for buddies
+
+```tsx
+// ❌ BAD — emoji buddy
+<div className="text-6xl">{buddy.emoji}</div>
+
+// ✅ GOOD — real portrait
+<BuddyAvatar src={buddy.image} alt={`${buddy.name}, NOVA Buddy`} size="card" />
+```
+
+```css
+.buddy-portrait {
+  object-fit: cover;
+  object-position: center top;
+}
+```
+
+## Learning Model
+
+- **Explore** → poke, try, observe
+- **Discover** → "aha" moments from doing, not reading
+- **Build** → hands-on LABs, not walls of text
+
+Content delivery:
+- Short mission briefings, not lectures
+- Interactive stations, not PDFs
+- Reflection after action, not reading before action
+
+## What Must NEVER Exist (NOVA Experiences)
+
+- PDF downloads as primary content
+- Walls of text / long reading blocks
+- Boring multiple-choice quizzes with no story
+- Dead screens with no next action
+- Generic LMS chrome (module lists, gradebook feel)
+- Emoji avatars for NOVA Buddies
+
+## Design Philosophy
+
+Combine:
+- **Pixar** — character, warmth, narrative arc
+- **Apple** — clarity, polish, intentional whitespace
+- **NASA** — mission briefing, progress, achievement ceremony
+
+Motion and micro-interactions should reinforce progress — not decorate emptiness.
+
+## Developer Checklist (NOVA Experience Work)
+
+When touching `src/components/experiences/*`, `src/app/experiences/*`, or `src/lib/experiences/*`:
+
+- [ ] Copy uses Mission/Quest/Discovery language
+- [ ] Buddy images are real portraits, forward-facing
+- [ ] Screen answers: why here, today's mission, why exciting
+- [ ] No lesson-numbering or course-catalog tone
+- [ ] Passes the 2-hour voluntary engagement test
+- [ ] Interactive element present — not read-only content
+
+## Scope Note
+
+The broader LMS (`/courses`, admin, enrollments) may retain course terminology until migrated. **Prioritize** experience player, catalog, homepage CTA, and student dashboard experience sections for mission language.

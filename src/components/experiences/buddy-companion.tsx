@@ -3,6 +3,7 @@
 import { getBuddy, TRAIT_COLORS, type BuddyId } from "@/lib/experiences/buddies";
 import { getBuddyDisplayName } from "@/lib/experiences/dialogues";
 import { cn } from "@/lib/utils";
+import { BuddyAvatar } from "./buddy-avatar";
 
 type Props = {
   buddyId: BuddyId;
@@ -18,14 +19,12 @@ export function BuddyCompanion({ buddyId, buddyNickname, message, compact }: Pro
   if (compact) {
     return (
       <div className="flex items-start gap-3 rounded-xl border-l-4 border-[var(--exp-accent)] bg-gradient-to-r from-blue-50/90 to-white px-4 py-3">
-        <div
-          className={cn(
-            "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br text-xl",
-            buddy.color
-          )}
-        >
-          {buddy.emoji}
-        </div>
+        <BuddyAvatar
+          src={buddy.image}
+          alt={displayName}
+          size="sm"
+          className={cn("bg-gradient-to-br", buddy.color)}
+        />
         <div>
           <p className="text-xs font-black text-nova-deep-blue">
             {displayName}{" "}
@@ -47,15 +46,12 @@ export function BuddyCompanion({ buddyId, buddyNickname, message, compact }: Pro
   return (
     <aside className="experience-panel relative overflow-hidden rounded-3xl p-8 text-white">
       <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/10 blur-2xl" />
-      <div
-        className={cn(
-          "experience-buddy-avatar mb-4 bg-gradient-to-br text-4xl",
-          buddy.color,
-          buddy.glow
-        )}
-      >
-        {buddy.emoji}
-      </div>
+      <BuddyAvatar
+        src={buddy.image}
+        alt={displayName}
+        size="xl"
+        className={cn("experience-buddy-avatar mb-4 bg-gradient-to-br", buddy.color, buddy.glow)}
+      />
       <p className="text-[10px] font-black uppercase tracking-[0.15em] text-white/60">
         {buddy.tierLabel}
       </p>

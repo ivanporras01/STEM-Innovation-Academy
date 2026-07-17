@@ -35,7 +35,7 @@ export function CompleteLessonButton({
   if (done) {
     return (
       <span className="inline-flex items-center gap-2 rounded-xl bg-nova-green/10 px-4 py-2.5 text-sm font-semibold text-nova-green">
-        ✓ Lesson Completed
+        ✓ Mission Complete
       </span>
     );
   }
@@ -47,7 +47,7 @@ export function CompleteLessonButton({
       disabled={loading}
       className="nova-btn-primary disabled:opacity-60"
     >
-      {loading ? "Saving..." : "Mark as Complete"}
+      {loading ? "Saving..." : "Mark Mission Complete"}
     </button>
   );
 }

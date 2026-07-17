@@ -3,10 +3,11 @@ import Link from "next/link";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { EXPERIENCES } from "@/lib/experiences/catalog";
+import { PathwayIcon } from "@/components/ui/pathway-icon";
 
 export const metadata: Metadata = {
-  title: "NOVA Experiences",
-  description: "Interactive mission-based STEM experiences with your NOVA Buddy.",
+  title: "NOVA Mission Board",
+  description: "Interactive mission-based STEM adventures with your NOVA Buddy.",
 };
 
 export default function ExperiencesPage() {
@@ -21,15 +22,15 @@ export default function ExperiencesPage() {
           </div>
           <div className="nova-container relative text-center">
             <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-nova-cyan">
-              NOVA Experiences
+              NOVA Mission Board
             </p>
             <h1 className="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">
-              Enter the Mission
+              Choose Your Next Mission
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-white/75">
               Choose from <strong className="text-white">20 NOVA Buddies</strong> — Friendly
               Explorers for middle school and Pro Explorers for high school. Your companion
-              guides every mission, lab, and breakthrough.
+              guides every quest, discovery, and breakthrough.
             </p>
           </div>
         </section>
@@ -47,7 +48,7 @@ export default function ExperiencesPage() {
                     background: `linear-gradient(135deg, ${exp.accent}, ${exp.accentSecondary})`,
                   }}
                 >
-                  <span className="text-5xl">{exp.emoji}</span>
+                  <PathwayIcon pathway={exp.pathway} variant="card" />
                   <p className="mt-4 text-xs font-black uppercase tracking-wider opacity-90">
                     {exp.labCode}
                   </p>
@@ -71,14 +72,14 @@ export default function ExperiencesPage() {
                     ))}
                   </div>
                   <p className="mb-4 text-xs text-nova-gray">
-                    8 stages · Buddy-guided · Badge:{" "}
+                    8 stages · Buddy-guided quest · Badge:{" "}
                     <strong className="text-nova-deep-blue">{exp.achievementTitle}</strong>
                   </p>
                   <Link
                     href={`/experiences/${exp.slug}`}
                     className="nova-btn-primary w-full text-center"
                   >
-                    Begin Experience →
+                    Launch Mission →
                   </Link>
                 </div>
               </article>

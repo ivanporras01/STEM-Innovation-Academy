@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { PathwayIcon, type PathwayKey } from "@/components/ui/pathway-icon";
 
 export default function HomePage() {
   return (
@@ -32,7 +33,10 @@ export default function HomePage() {
                 explore technology, build meaningful projects, and become confident innovators.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
-                <Link href="/pathways" className="nova-btn-primary bg-nova-cyan hover:bg-nova-cyan-light">
+                <Link href="/experiences" className="nova-btn-primary bg-nova-cyan hover:bg-nova-cyan-light">
+                  Launch a Mission ✦
+                </Link>
+                <Link href="/pathways" className="nova-btn-secondary border-white/20 bg-white/10 text-white hover:border-white hover:bg-white/20 hover:text-white">
                   Explore Learning Pathways
                 </Link>
                 <Link href="/login" className="nova-btn-secondary border-white/20 bg-white/10 text-white hover:border-white hover:bg-white/20 hover:text-white">
@@ -87,8 +91,8 @@ export default function HomePage() {
             <div className="mt-12 grid gap-6 sm:grid-cols-3">
               {[
                 {
-                  title: "Project-Based Learning",
-                  desc: "Every lesson connects to a real project you can showcase in your NOVA portfolio.",
+                  title: "Project-Based Discovery",
+                  desc: "Every quest connects to a real project you can showcase in your NOVA portfolio.",
                 },
                 {
                   title: "Innovation Mentors",
@@ -123,37 +127,43 @@ export default function HomePage() {
                   Choose your innovation journey
                 </h2>
               </div>
-              <Link href="/courses" className="nova-btn-secondary">
-                View All Courses
+              <Link href="/pathways" className="nova-btn-secondary">
+                Explore Mission Paths
               </Link>
             </div>
 
             <div className="grid gap-6 md:grid-cols-3">
-              {[
-                {
-                  title: "Coding & AI",
-                  desc: "Python, machine learning, and AI ethics through real projects.",
-                  href: "/courses/intro-python-ai",
-                  gradient: "from-nova-cyan/20 to-nova-blue/10",
-                },
-                {
-                  title: "Robotics & Engineering",
-                  desc: "Design and program robots using the engineering design process.",
-                  href: "/courses/robotics-engineering",
-                  gradient: "from-nova-orange/20 to-nova-deep-blue/10",
-                },
-                {
-                  title: "IoT & Smart Systems",
-                  desc: "Connect sensors and cloud services to build intelligent systems.",
-                  href: "/courses/iot-smart-systems",
-                  gradient: "from-nova-green/20 to-nova-cyan/10",
-                },
-              ].map((pathway) => (
+              {(
+                [
+                  {
+                    id: "CODING_AI" as PathwayKey,
+                    title: "Coding & AI",
+                    desc: "Python, machine learning, and AI ethics through real projects.",
+                    href: "/courses/intro-python-ai",
+                    gradient: "from-nova-cyan/20 to-nova-blue/10",
+                  },
+                  {
+                    id: "ROBOTICS" as PathwayKey,
+                    title: "Robotics & Engineering",
+                    desc: "Design and program robots using the engineering design process.",
+                    href: "/courses/robotics-engineering",
+                    gradient: "from-nova-orange/20 to-nova-deep-blue/10",
+                  },
+                  {
+                    id: "IOT" as PathwayKey,
+                    title: "IoT & Smart Systems",
+                    desc: "Connect sensors and cloud services to build intelligent systems.",
+                    href: "/courses/iot-smart-systems",
+                    gradient: "from-nova-green/20 to-nova-cyan/10",
+                  },
+                ] as const
+              ).map((pathway) => (
                 <Link
                   key={pathway.title}
                   href={pathway.href}
                   className={`nova-card bg-gradient-to-br ${pathway.gradient} transition hover:shadow-nova`}
                 >
+                  <PathwayIcon pathway={pathway.id} variant="card" className="mb-4 h-14 w-14 text-2xl" />
                   <h3 className="mb-2 text-lg font-bold text-nova-deep-blue">{pathway.title}</h3>
                   <p className="mb-4 text-sm text-nova-gray">{pathway.desc}</p>
                   <span className="text-sm font-semibold text-nova-cyan">

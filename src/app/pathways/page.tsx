@@ -2,8 +2,17 @@ import Link from "next/link";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { Badge } from "@/components/ui/badge";
+import { PathwayIcon, type PathwayKey } from "@/components/ui/pathway-icon";
 
-const pathways = [
+const pathways: {
+  id: PathwayKey;
+  title: string;
+  description: string;
+  color: string;
+  slug: string;
+  experienceSlug: string;
+  topics: string[];
+}[] = [
   {
     id: "CODING_AI",
     title: "Coding & Artificial Intelligence",
@@ -59,6 +68,11 @@ export default function PathwaysPage() {
             {pathways.map((pathway) => (
               <article key={pathway.id} className="nova-card flex flex-col overflow-hidden p-0">
                 <div className={`bg-gradient-to-br ${pathway.color} p-6 text-white`}>
+                  <PathwayIcon
+                    pathway={pathway.id}
+                    variant="card"
+                    className="mb-4 bg-white/15 text-white backdrop-blur-sm"
+                  />
                   <h2 className="text-xl font-bold">{pathway.title}</h2>
                 </div>
                 <div className="flex flex-1 flex-col p-6">
@@ -77,13 +91,13 @@ export default function PathwaysPage() {
                       href={`/experiences/${pathway.experienceSlug}`}
                       className="nova-btn-primary w-full text-center"
                     >
-                      Start NOVA Experience ✦
+                      Start NOVA Mission ✦
                     </Link>
                     <Link
                       href={`/courses/${pathway.slug}`}
                       className="nova-btn-secondary w-full text-center"
                     >
-                      View Full Course →
+                      Explore Mission Path →
                     </Link>
                   </div>
                 </div>

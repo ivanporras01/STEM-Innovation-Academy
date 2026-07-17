@@ -5,10 +5,12 @@ import {
   FRIENDLY_BUDDIES,
   PRO_BUDDIES,
   TRAIT_COLORS,
+  traitColor,
   getBuddy,
   type BuddyId,
 } from "@/lib/experiences/buddies";
 import { cn } from "@/lib/utils";
+import { BuddyAvatar } from "./buddy-avatar";
 
 type Props = {
   buddyId: BuddyId;
@@ -47,14 +49,18 @@ function BuddyCard({
       </span>
       <div
         className={cn(
-          "relative flex aspect-square items-center justify-center bg-gradient-to-br text-6xl transition-transform duration-300 group-hover:scale-105",
-          b.color,
+          "relative overflow-hidden transition-transform duration-300 group-hover:scale-[1.02]",
           selected && b.glow
         )}
       >
-        <span className="drop-shadow-md">{b.emoji}</span>
+        <BuddyAvatar
+          src={b.image}
+          alt={`${b.name}, ${b.subtitle}`}
+          size="card"
+          className={cn("bg-gradient-to-br", b.color)}
+        />
         {selected && (
-          <span className="absolute bottom-2 right-2 rounded-full bg-[var(--exp-accent)] px-2 py-0.5 text-[10px] font-black uppercase text-white">
+          <span className="absolute bottom-2 right-2 z-10 rounded-full bg-[var(--exp-accent)] px-2 py-0.5 text-[10px] font-black uppercase text-white">
             Selected
           </span>
         )}
@@ -68,7 +74,7 @@ function BuddyCard({
         <span
           className={cn(
             "mt-2 inline-block self-start rounded-full border px-2 py-0.5 text-[9px] font-black tracking-wide",
-            TRAIT_COLORS[b.trait]
+            traitColor(b.trait, b.tier)
           )}
         >
           {b.trait}
@@ -147,7 +153,7 @@ export function StageBuddySelect({
       {(tierFilter === "all" || tierFilter === "pro") && (
         <section>
           <h3 className="mb-4 flex items-center gap-2 text-sm font-black uppercase tracking-wider text-nova-deep-blue">
-            <span className="h-2 w-2 rounded-full bg-nova-orange" />
+            <span className="h-2 w-2 rounded-full bg-nova-green" />
             Pro Explorers — High School
           </h3>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
@@ -165,15 +171,12 @@ export function StageBuddySelect({
 
       <div className="rounded-2xl border border-nova-light-gray bg-gradient-to-br from-nova-off-white to-blue-50/60 p-6">
         <div className="grid gap-6 lg:grid-cols-[auto_1fr] lg:items-center">
-          <div
-            className={cn(
-              "mx-auto flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br text-5xl lg:mx-0",
-              buddy.color,
-              buddy.glow
-            )}
-          >
-            {buddy.emoji}
-          </div>
+          <BuddyAvatar
+            src={buddy.image}
+            alt={`${buddy.name}, ${buddy.subtitle}`}
+            size="lg"
+            className={cn("mx-auto bg-gradient-to-br lg:mx-0", buddy.color, buddy.glow)}
+          />
           <div>
             <p className="text-xs font-bold uppercase tracking-wider text-nova-cyan">
               Your Buddy · {buddy.tierLabel}
@@ -214,7 +217,7 @@ export function StageBuddySelect({
           onClick={onConfirm}
           className="experience-btn-primary min-w-[220px] disabled:opacity-40"
         >
-          Continue with {buddyNickname.trim() || buddy.name} →
+          Continue with My Buddy →
         </button>
         <button type="button" onClick={onBack} className="experience-btn-secondary">
           Back

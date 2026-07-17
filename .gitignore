@@ -40,3 +40,6 @@ next-env.d.ts
 
 # Testing
 coverage/
+
+# Generated buddy metadata (contains base64 — use public/buddies/*.jpg instead)
+src/data/buddies-from-html.json

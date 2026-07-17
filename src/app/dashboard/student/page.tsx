@@ -8,6 +8,7 @@ import { CourseCard } from "@/components/courses/course-card";
 import { getUserEnrollments } from "@/lib/courses";
 import { db } from "@/lib/db";
 import { EXPERIENCES } from "@/lib/experiences/catalog";
+import { PathwayIcon } from "@/components/ui/pathway-icon";
 
 export const metadata: Metadata = {
   title: "Student Dashboard",
@@ -40,10 +41,10 @@ export default async function StudentDashboardPage() {
       </div>
 
       <div className="mb-8 grid gap-4 sm:grid-cols-3">
-        <StatCard label="Enrolled Courses" value={enrollments.length} icon="book" />
+        <StatCard label="Active Mission Paths" value={enrollments.length} icon="book" />
         <StatCard label="Avg. Progress" value={`${avgProgress}%`} icon="graduation" accent="green" />
         <StatCard
-          label="Lessons Completed"
+          label="Missions Completed"
           value={enrollments.reduce((acc, e) => acc + e.completedLessons, 0)}
           icon="trophy"
           accent="orange"
@@ -52,9 +53,9 @@ export default async function StudentDashboardPage() {
 
       <div className="mb-8">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-nova-deep-blue">NOVA Experiences</h2>
+          <h2 className="text-lg font-semibold text-nova-deep-blue">Active Missions</h2>
           <Link href="/experiences" className="text-sm font-medium text-nova-cyan hover:underline">
-            All experiences →
+            Mission Board →
           </Link>
         </div>
         <div className="grid gap-4 sm:grid-cols-3">
@@ -67,15 +68,15 @@ export default async function StudentDashboardPage() {
                 href={`/experiences/${exp.slug}`}
                 className="nova-card transition hover:shadow-nova"
               >
-                <div className="mb-2 text-3xl">{exp.emoji}</div>
+                <PathwayIcon pathway={exp.pathway} variant="card" className="mb-2 h-12 w-12 text-xl" />
                 <h3 className="font-semibold text-nova-deep-blue">{exp.title}</h3>
                 <p className="mt-1 text-xs text-nova-gray">
                   {done ? (
                     <span className="font-bold text-nova-green">✓ {exp.achievementTitle}</span>
                   ) : prog ? (
-                    `In progress — stage ${prog.currentStage + 1}/8`
+                    `In progress — quest stage ${prog.currentStage + 1}/8`
                   ) : (
-                    "Not started"
+                    "Mission awaiting"
                   )}
                 </p>
               </Link>
@@ -85,17 +86,17 @@ export default async function StudentDashboardPage() {
       </div>
 
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-nova-deep-blue">My Courses</h2>
+        <h2 className="text-lg font-semibold text-nova-deep-blue">My Mission Paths</h2>
         <Link href="/courses" className="text-sm font-medium text-nova-cyan hover:underline">
-          Browse all courses →
+          Explore mission board →
         </Link>
       </div>
 
       {enrollments.length === 0 ? (
         <div className="nova-card text-center py-12">
-          <p className="mb-4 text-nova-gray">You haven&apos;t enrolled in any courses yet.</p>
+          <p className="mb-4 text-nova-gray">You haven&apos;t joined any mission paths yet.</p>
           <Link href="/courses" className="nova-btn-primary">
-            Explore Courses
+            Explore Mission Paths
           </Link>
         </div>
       ) : (

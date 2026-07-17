@@ -6,6 +6,8 @@ export {
   getBuddy,
   isValidBuddyId,
   TRAIT_COLORS,
+  traitColor,
+  PRO_TRAIT_COLORS,
 } from "./buddies";
 export { getBuddyDialogue, getBuddyDisplayName } from "./dialogues";
 
@@ -22,14 +24,14 @@ export type ExperienceStageId =
   | "achievement";
 
 export const STAGE_LABELS: Record<ExperienceStageId, string> = {
-  launch: "Launch Briefing",
+  launch: "Mission Launch",
   buddy: "Choose Your Buddy",
   briefing: "Mission Briefing",
   lab: "Interactive LAB",
   quiz: "Innovation Check",
-  reflection: "Reflection",
-  debrief: "Debrief",
-  achievement: "Achievement",
+  reflection: "Explorer Reflection",
+  debrief: "Mission Debrief",
+  achievement: "Achievement Unlocked",
 };
 
 export const STAGE_ORDER: ExperienceStageId[] = [
@@ -45,19 +47,19 @@ export const STAGE_ORDER: ExperienceStageId[] = [
 
 export type QuizOption = { text: string; correct: boolean };
 
+export type PathwayKey = "CODING_AI" | "ROBOTICS" | "IOT";
+
 export type NovaExperience = {
   slug: string;
   labCode: string;
   title: string;
   headline: string;
-  pathway: string;
+  pathway: PathwayKey;
   pathwayTitle: string;
   labType: LabType;
-  emoji: string;
   accent: string;
   accentSecondary: string;
   achievementTitle: string;
-  achievementEmoji: string;
   missionObjective: string;
   missionLead: string;
   skills: string[];
@@ -78,11 +80,9 @@ export const EXPERIENCES: NovaExperience[] = [
     pathway: "CODING_AI",
     pathwayTitle: "Coding & Artificial Intelligence",
     labType: "code",
-    emoji: "💻",
     accent: "#00b4d8",
     accentSecondary: "#7657e8",
     achievementTitle: "Signal Coder",
-    achievementEmoji: "💻",
     missionObjective: "Edit the message, keep READY, and run the mission.",
     missionLead:
       "A communication beacon has gone silent. Build a smart message analyzer that recognizes the signal and restores the connection.",
@@ -107,11 +107,9 @@ export const EXPERIENCES: NovaExperience[] = [
     pathway: "ROBOTICS",
     pathwayTitle: "Robotics & Engineering Design",
     labType: "robot",
-    emoji: "🤖",
     accent: "#ff7a00",
     accentSecondary: "#ffd166",
     achievementTitle: "Rover Engineer",
-    achievementEmoji: "🤖",
     missionObjective: "Create a route with three Forward commands and one Right turn.",
     missionLead:
       "A rover must reach a stranded research module. Build a command sequence, test it, and improve the route.",
@@ -136,11 +134,9 @@ export const EXPERIENCES: NovaExperience[] = [
     pathway: "IOT",
     pathwayTitle: "IoT & Smart Systems",
     labType: "iot",
-    emoji: "🌐",
     accent: "#12a66a",
     accentSecondary: "#6ee7b7",
     achievementTitle: "Smart Systems Builder",
-    achievementEmoji: "🌐",
     missionObjective: "Set the cooling threshold below 30°C and activate automation.",
     missionLead:
       "A greenhouse is overheating. Connect its sensor to automatic cooling and return the plants to a safe temperature.",
