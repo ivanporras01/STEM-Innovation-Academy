@@ -1,18 +1,20 @@
-/** Single source of truth for public NOVA navigation — keep navbar + footer in sync. */
+/**
+ * Single source of truth for public NOVA navigation — keep navbar + footer in sync.
+ * Explorer-facing labels: Mission Paths (/courses) + Missions (/experiences).
+ * Do NOT add For Parents / For Schools — excluded from this version.
+ */
 
 export const NOVA_PUBLIC_NAV = [
   { href: "/#discover", label: "Discover NOVA" },
-  { href: "/courses", label: "Learning Pathways" },
-  { href: "/#parents", label: "For Families" },
-  { href: "/#schools", label: "For Schools" },
+  { href: "/courses", label: "Mission Paths" },
+  { href: "/experiences", label: "Missions" },
   { href: "/#contact", label: "Contact" },
 ] as const;
 
 export const NOVA_FOOTER_EXPLORE = [
   { href: "/#discover", label: "Discover NOVA" },
-  { href: "/courses", label: "Learning Pathways" },
-  { href: "/#parents", label: "For Parents" },
-  { href: "/#schools", label: "For Schools" },
+  { href: "/courses", label: "Mission Paths" },
+  { href: "/experiences", label: "Missions" },
   { href: "/#contact", label: "Contact" },
 ] as const;
 
