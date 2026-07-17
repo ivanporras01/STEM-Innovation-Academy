@@ -26,13 +26,10 @@ export function Footer() {
               Discover NOVA
             </Link>
             <Link href="/courses" className="hover:text-white">
-              Learning Pathways
+              Mission Paths
             </Link>
-            <Link href="/#parents" className="hover:text-white">
-              For Parents
-            </Link>
-            <Link href="/#schools" className="hover:text-white">
-              For Schools
+            <Link href="/experiences" className="hover:text-white">
+              Missions
             </Link>
             <Link href="/#contact" className="hover:text-white">
               Contact
