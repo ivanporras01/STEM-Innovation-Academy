@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-nova-off-white text-nova-black antialiased;
+  }
+}
+
+@layer components {
+  .nova-container {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .nova-card {
+    @apply rounded-nova border border-nova-light-gray bg-white p-6 shadow-sm;
+  }
+
+  .nova-btn-primary {
+    @apply inline-flex items-center justify-center rounded-xl bg-nova-cyan px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-nova-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nova-cyan;
+  }
+
+  .nova-btn-secondary {
+    @apply inline-flex items-center justify-center rounded-xl border border-nova-light-gray bg-white px-5 py-2.5 text-sm font-semibold text-nova-deep-blue transition hover:border-nova-cyan hover:text-nova-cyan;
+  }
+
+  .nova-input {
+    @apply w-full rounded-xl border border-nova-light-gray bg-white px-4 py-2.5 text-sm text-nova-black placeholder:text-nova-gray focus:border-nova-cyan focus:outline-none focus:ring-2 focus:ring-nova-cyan/20;
+  }
+
+  .nova-label {
+    @apply mb-1.5 block text-sm font-medium text-nova-dark-gray;
+  }
+
+  .nova-badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+
+  .prose-nova h1 {
+    @apply mb-4 text-2xl font-bold text-nova-deep-blue;
+  }
+
+  .prose-nova h2 {
+    @apply mb-3 mt-6 text-xl font-semibold text-nova-deep-blue;
+  }
+
+  .prose-nova h3 {
+    @apply mb-2 mt-4 text-lg font-semibold text-nova-blue;
+  }
+
+  .prose-nova p {
+    @apply mb-3 leading-relaxed text-nova-dark-gray;
+  }
+
+  .prose-nova ul {
+    @apply mb-3 list-disc space-y-1 pl-5 text-nova-dark-gray;
+  }
+
+  .prose-nova ol {
+    @apply mb-3 list-decimal space-y-1 pl-5 text-nova-dark-gray;
+  }
+
+  .prose-nova code {
+    @apply rounded bg-nova-light-gray px-1.5 py-0.5 font-mono text-sm text-nova-deep-blue;
+  }
+
+  .prose-nova pre {
+    @apply mb-4 overflow-x-auto rounded-xl bg-nova-deep-blue p-4;
+  }
+
+  .prose-nova pre code {
+    @apply bg-transparent p-0 text-nova-cyan-light;
+  }
+
+  .prose-nova strong {
+    @apply font-semibold text-nova-deep-blue;
+  }
+}

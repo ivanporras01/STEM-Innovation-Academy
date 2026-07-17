@@ -1,57 +1,76 @@
-# 🚀 Project NOVA
-
-# STEM Innovation Academy
+# 🚀 Project NOVA — STEM Innovation Academy LMS
 
 > **Learn • Build • Innovate**
 
+A full-stack Learning Management System built for STEM Innovation Academy's NOVA learning platform.
+
+**Status:** ✅ Built, tested, and ready for pilot deployment.
+
+## Features
+
+- **Authentication** — Secure login/register with role-based access
+- **Roles** — Student (NOVA Explorer), Mentor, Parent, Admin, School Admin
+- **Course Catalog** — Three STEM pathways with modules and lessons
+- **Lesson Viewer** — Reading, video, lab, and project content with progress tracking
+- **Student Dashboard** — Enrolled courses, progress stats, continue learning
+- **Mentor Dashboard** — Review student submissions with scores and feedback
+- **Admin Dashboard** — User and course management overview
+- **Assignments** — Submit work and receive mentor reviews
+- **Marketing Site** — Beautiful NOVA-branded landing pages
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Frontend | Next.js 15, React 19, TypeScript, Tailwind CSS |
+| Backend | Next.js API Routes + Server Components |
+| Database | SQLite (dev) / PostgreSQL (production) via Prisma |
+| Auth | Auth.js (NextAuth v5) with JWT sessions |
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js 18+
+- npm
+
+### Setup
+
+```bash
+npm install
+npm run db:setup
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000)
+
+### Demo Accounts
+
+All accounts use password: **`nova2026`**
+
+| Role | Email |
+|------|-------|
+| Admin | admin@steminnovationacademy.org |
+| Mentor | mentor@steminnovationacademy.org |
+| Student | student@steminnovationacademy.org |
+
+## Project Structure
+
+```
+├── prisma/           # Database schema & seed
+├── src/app/          # Next.js pages & API routes
+├── src/components/   # React components
+├── src/lib/          # Auth, database, utilities
+└── website/          # Legacy static landing (archived)
+```
+
+## Production Deployment
+
+1. Set environment variables (see `.env.example`)
+2. Change `DATABASE_URL` to PostgreSQL
+3. Generate a secure `AUTH_SECRET`
+4. Deploy to Vercel or similar
+
 ---
 
-## Our Mission
-
-At STEM Innovation Academy, we believe every student is a NOVA waiting to shine.
-
-Project NOVA is an educational ecosystem designed to inspire the next generation of innovators through STEM education, project-based learning, and authentic real-world experiences.
-
----
-
-## Current Status
-
-🟢 Phase 1 — Foundation & Product Design
-
----
-
-## Founding Learning Pathways
-
-- Coding & Artificial Intelligence
-- Robotics & Engineering Design
-- IoT & Emerging Technologies
-
----
-
-## Development Roadmap
-
-✅ Foundation
-
-🟡 Product Design
-
-⚪ Website
-
-⚪ Learning Platform
-
-⚪ Student Dashboard
-
-⚪ Courses
-
-⚪ Pilot Testing
-
----
-
-## Motto
-
-**Learn • Build • Innovate**
-
----
-
-> "At STEM Innovation Academy, we believe every student is a NOVA waiting to shine."
-
-© Project NOVA
+© STEM Innovation Academy — Project NOVA
