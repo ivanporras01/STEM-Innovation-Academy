@@ -35,6 +35,19 @@ const TONE_FILL: Record<NonNullable<LabMeter["tone"]>, string> = {
   violet: "from-violet-400 via-fuchsia-400 to-cyan-300",
 };
 
+/** Full class strings so Tailwind keeps themed arena CSS in production. */
+const THEME_CLASS: Record<LabArenaTheme, string> = {
+  pixel: "lab-arena--pixel",
+  viral: "lab-arena--viral",
+  pitch: "lab-arena--pitch",
+  story: "lab-arena--story",
+  cyber: "lab-arena--cyber",
+  impact: "lab-arena--impact",
+  code: "lab-arena--code",
+  robot: "lab-arena--robot",
+  iot: "lab-arena--iot",
+};
+
 /** Shared cinematic play-field used by every Explore Now LAB. */
 export function LabArena({
   theme,
@@ -47,9 +60,10 @@ export function LabArena({
 }: Props) {
   return (
     <div
+      data-theme={theme}
       className={cn(
         "lab-arena relative overflow-hidden rounded-3xl border p-4 sm:p-5",
-        `lab-arena--${theme}`,
+        THEME_CLASS[theme],
         failFlash && "lab-arena--fail",
         success && "lab-arena--win",
         className,

@@ -930,46 +930,55 @@
   .lab-arena--pixel {
     --lab-arena-accent: #a855f7;
     --lab-arena-accent-2: #22d3ee;
+    border-color: color-mix(in srgb, #a855f7 45%, transparent);
   }
 
   .lab-arena--viral {
     --lab-arena-accent: #f472b6;
     --lab-arena-accent-2: #fb923c;
+    border-color: color-mix(in srgb, #f472b6 45%, transparent);
   }
 
   .lab-arena--pitch {
     --lab-arena-accent: #fbbf24;
     --lab-arena-accent-2: #38bdf8;
+    border-color: color-mix(in srgb, #fbbf24 45%, transparent);
   }
 
   .lab-arena--story {
     --lab-arena-accent: #c084fc;
     --lab-arena-accent-2: #f472b6;
+    border-color: color-mix(in srgb, #c084fc 45%, transparent);
   }
 
   .lab-arena--cyber {
     --lab-arena-accent: #34d399;
     --lab-arena-accent-2: #f43f5e;
+    border-color: color-mix(in srgb, #34d399 45%, transparent);
   }
 
   .lab-arena--impact {
     --lab-arena-accent: #4ade80;
     --lab-arena-accent-2: #22d3ee;
+    border-color: color-mix(in srgb, #4ade80 45%, transparent);
   }
 
   .lab-arena--code {
     --lab-arena-accent: #22d3ee;
     --lab-arena-accent-2: #818cf8;
+    border-color: color-mix(in srgb, #22d3ee 45%, transparent);
   }
 
   .lab-arena--robot {
     --lab-arena-accent: #38bdf8;
     --lab-arena-accent-2: #fbbf24;
+    border-color: color-mix(in srgb, #38bdf8 45%, transparent);
   }
 
   .lab-arena--iot {
     --lab-arena-accent: #34d399;
     --lab-arena-accent-2: #a3e635;
+    border-color: color-mix(in srgb, #34d399 45%, transparent);
   }
 
   .lab-arena--fail {
