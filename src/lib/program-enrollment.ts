@@ -3,9 +3,10 @@ import { getProgramBySlug, NOVA_PROGRAM_CATALOG } from "@/data/courses";
 import type { NovaProgram, ProgramVertical } from "@/data/courses/types";
 import { db } from "@/lib/db";
 import { ensureCourseProduct } from "@/lib/course-products";
+import { localizeProgram } from "@/lib/program-locale-copy";
 
 /** School catalog slug → live LMS mission path slug (when content exists). */
-const SCHOOL_LMS_SLUG: Record<string, string> = {
+export const SCHOOL_LMS_SLUG: Record<string, string> = {
   "coding-ai": "intro-python-ai",
   "robotics-engineering": "robotics-engineering",
   "iot-smart-systems": "iot-smart-systems",
@@ -33,18 +34,21 @@ function pathwayForProgram(program: NovaProgram): Pathway {
 export async function ensureProgramCourse(program: NovaProgram) {
   const slug = courseSlugForProgram(program);
   const priceCents = program.tuitionUsd * 100;
+  // Persist English marketing titles for the default (EN) product surface.
+  // Spanish curriculum remains on /es/*; PT falls back to EN copy.
+  const enCopy = localizeProgram(program, "en");
 
   const course = await db.course.upsert({
     where: { slug },
     update: {
-      title: program.title,
-      description: program.description,
+      title: enCopy.title,
+      description: enCopy.description,
       published: true,
     },
     create: {
       slug,
-      title: program.title,
-      description: program.description,
+      title: enCopy.title,
+      description: enCopy.description,
       pathway: pathwayForProgram(program),
       level: program.vertical === "college" ? "Career Track" : "Explorer",
       published: true,

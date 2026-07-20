@@ -11,6 +11,7 @@ import {
   novaCollegeCourses,
 } from "@/lib/novahub";
 import { getCollegeTrackEn, NOVA_COLLEGE_PAGE_EN } from "@/data/nova-college/catalog-en";
+import { getCollegeTrackCopy } from "@/lib/program-locale-copy";
 import { NOVAHUB_IMPACT } from "@/lib/novahub-impact";
 import { CertificatePreviewPromo } from "@/components/certificates/certificate-preview-promo";
 
@@ -39,9 +40,11 @@ export default async function CollegeTrackPage({ params }: Props) {
   const course = getNovaCollegeCourseBySlug(slug);
   if (!course) notFound();
 
-  const en = getCollegeTrackEn(slug);
+  const copy = getCollegeTrackCopy(slug, "en");
   const isAdvanced = course.tier === "advanced";
   const qwaDelivery = course.contentDelivery;
+  const outcomes = copy.highlights?.length ? copy.highlights : [];
+  const prerequisites = copy.prerequisites?.length ? copy.prerequisites : [];
 
   return (
     <div className="relative flex min-h-screen flex-col">
@@ -75,9 +78,9 @@ export default async function CollegeTrackPage({ params }: Props) {
               {course.verifyCertificatePrefix}
             </span>
           </div>
-          <h1 className="text-3xl font-black sm:text-4xl lg:text-5xl">{en?.title ?? course.title}</h1>
-          <p className="mt-3 max-w-2xl text-lg text-nova-cyan-light/90">{en?.tagline ?? course.tagline}</p>
-          <p className="mt-4 max-w-3xl text-sm text-white/75">{en?.description ?? course.description}</p>
+          <h1 className="text-3xl font-black sm:text-4xl lg:text-5xl">{copy.title}</h1>
+          <p className="mt-3 max-w-2xl text-lg text-nova-cyan-light/90">{copy.tagline}</p>
+          <p className="mt-4 max-w-3xl text-sm text-white/75">{copy.description}</p>
           <Link
             href={`/es/college/${slug}`}
             className="mt-4 inline-block text-sm text-nova-cyan-light/60 hover:text-nova-cyan"
@@ -91,9 +94,11 @@ export default async function CollegeTrackPage({ params }: Props) {
         <div className="nova-container space-y-12">
           <div className="grid gap-6 lg:grid-cols-3">
             <section className="nova-glass-island lg:col-span-2">
-              <h2 className="text-lg font-bold text-white">Learning outcomes</h2>
+              <h2 className="text-lg font-bold text-white">
+                {NOVA_COLLEGE_PAGE_EN.learningOutcomesTitle}
+              </h2>
               <ul className="mt-4 space-y-2 text-sm text-nova-cyan-light/85">
-                {course.learningOutcomes.slice(0, 8).map((outcome) => (
+                {outcomes.slice(0, 8).map((outcome) => (
                   <li key={outcome} className="flex gap-2">
                     <span className="text-nova-cyan">✓</span>
                     <span>{outcome}</span>
@@ -105,7 +110,7 @@ export default async function CollegeTrackPage({ params }: Props) {
             <aside className="space-y-4">
               <div className="nova-glass-island">
                 <h2 className="text-sm font-semibold uppercase tracking-wider text-nova-cyan">
-                  Certifications
+                  {NOVA_COLLEGE_PAGE_EN.certificationsTitle}
                 </h2>
                 <ul className="mt-3 space-y-1 text-sm text-nova-cyan-light/80">
                   {course.certificationAlignment.primary.map((cert) => (
@@ -113,13 +118,13 @@ export default async function CollegeTrackPage({ params }: Props) {
                   ))}
                 </ul>
               </div>
-              {course.prerequisites.length > 0 && (
+              {prerequisites.length > 0 && (
                 <div className="nova-glass-island">
                   <h2 className="text-sm font-semibold uppercase tracking-wider text-nova-cyan">
-                    Prerequisites
+                    {NOVA_COLLEGE_PAGE_EN.prerequisitesTitle}
                   </h2>
                   <ul className="mt-3 space-y-1 text-sm text-nova-cyan-light/80">
-                    {course.prerequisites.map((req) => (
+                    {prerequisites.map((req) => (
                       <li key={req}>{req}</li>
                     ))}
                   </ul>
@@ -212,7 +217,7 @@ export default async function CollegeTrackPage({ params }: Props) {
 
           <section className="mb-12">
             <CertificatePreviewPromo
-              programTitle={en?.title ?? course.title}
+              programTitle={copy.title}
               locale="en"
             />
           </section>

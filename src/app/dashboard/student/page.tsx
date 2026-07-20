@@ -12,6 +12,8 @@ import {
   getFirstIncompleteLessonUrl,
 } from "@/lib/courses";
 import { PATHWAY_META, getPathwayMeta } from "@/lib/pathways/meta";
+import { getLmsCoursePublicPresentation } from "@/lib/program-locale-copy";
+import { pathwayLabels } from "@/lib/utils";
 import { db } from "@/lib/db";
 import { ArrowRight, Compass, Map, Sparkles } from "lucide-react";
 import { NovaLogoIcon } from "@/components/ui/nova-logo-mark";
@@ -59,8 +61,14 @@ export default async function StudentDashboardPage() {
   };
   const nextActions: NextAction[] = [];
   if (activeEnrollment && continueLessonUrl) {
+    const activeCopy = getLmsCoursePublicPresentation(activeEnrollment.course.slug, {
+      title: activeEnrollment.course.title,
+      description: activeEnrollment.course.description,
+      level: activeEnrollment.course.level,
+      pathwayLabel: pathwayLabels[activeEnrollment.course.pathway] ?? activeEnrollment.course.pathway,
+    });
     nextActions.push({
-      title: `Continue ${activeEnrollment.course.title}`,
+      title: `Continue ${activeCopy.title}`,
       description: `${activeEnrollment.progress}% complete · ${activeEnrollment.totalLessons - activeEnrollment.completedLessons} missions left`,
       href: continueLessonUrl,
       cta: "Launch next mission",
@@ -90,8 +98,14 @@ export default async function StudentDashboardPage() {
     }
   }
   if (unenrolledCourse && nextActions.length < 3) {
+    const unenrolledCopy = getLmsCoursePublicPresentation(unenrolledCourse.slug, {
+      title: unenrolledCourse.title,
+      description: unenrolledCourse.description,
+      level: unenrolledCourse.level,
+      pathwayLabel: pathwayLabels[unenrolledCourse.pathway] ?? unenrolledCourse.pathway,
+    });
     nextActions.push({
-      title: `Enroll in ${unenrolledCourse.title}`,
+      title: `Enroll in ${unenrolledCopy.title}`,
       description: "Begin a new Mission Path adventure",
       href: `/courses/${unenrolledCourse.slug}`,
       cta: "View path",
@@ -180,6 +194,13 @@ export default async function StudentDashboardPage() {
           <div className="space-y-3">
             {enrollments.map((enrollment) => {
               const remaining = enrollment.totalLessons - enrollment.completedLessons;
+              const enrollmentCopy = getLmsCoursePublicPresentation(enrollment.course.slug, {
+                title: enrollment.course.title,
+                description: enrollment.course.description,
+                level: enrollment.course.level,
+                pathwayLabel:
+                  pathwayLabels[enrollment.course.pathway] ?? enrollment.course.pathway,
+              });
               return (
                 <div key={enrollment.id} className="nova-glass-card">
                   <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
@@ -188,7 +209,7 @@ export default async function StudentDashboardPage() {
                         href={`/courses/${enrollment.course.slug}`}
                         className="font-semibold text-white hover:text-nova-cyan"
                       >
-                        {enrollment.course.title}
+                        {enrollmentCopy.title}
                       </Link>
                       <p className="mt-0.5 text-sm text-nova-cyan-light/80">
                         {enrollment.completedLessons} of {enrollment.totalLessons} missions done
@@ -246,14 +267,23 @@ export default async function StudentDashboardPage() {
           const meta = getPathwayMeta(course.slug);
           const enrollment = enrollments.find((e) => e.course.slug === course.slug);
           const expProg = meta ? exploreProgress(meta.experienceSlug) : undefined;
+          const presentation = getLmsCoursePublicPresentation(course.slug, {
+            title: course.title,
+            description: course.description,
+            level: course.level,
+            pathwayLabel: pathwayLabels[course.pathway] ?? course.pathway,
+          });
           return (
             <CourseCard
               key={course.id}
               slug={course.slug}
-              title={course.title}
-              description={course.description}
+              title={presentation.title}
+              description={presentation.description}
               pathway={course.pathway}
-              level={course.level}
+              level={presentation.levelLabel}
+              pathwayDisplayLabel={presentation.pathwayLabel}
+              pathwayHref={presentation.pathwayHref}
+              levelHref={presentation.levelHref}
               progress={enrollment?.progress}
               enrolled={enrolledSlugs.has(course.slug)}
               mentorName={

@@ -7,6 +7,7 @@ import { formatPrice, hasCourseAccess } from "@/lib/enrollment-access";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import type { NovaProgram } from "@/data/courses/types";
+import { localizeProgram } from "@/lib/program-locale-copy";
 
 type Props = {
   program: NovaProgram;
@@ -40,6 +41,7 @@ export async function ProgramEnrollSection({
   const registerHref = `/register?callbackUrl=${encodeURIComponent(`/enroll/${program.slug}`)}`;
   const loginHref = `/login?callbackUrl=${encodeURIComponent(`/enroll/${program.slug}`)}`;
   const certLocale = resolveCertificateLocale(courseSlug, program.slug);
+  const copy = localizeProgram(program, "en");
 
   return (
     <section className="nova-glass-island border-2 border-nova-cyan/25 p-6 sm:p-8">
@@ -52,7 +54,7 @@ export async function ProgramEnrollSection({
       <p className="text-xs font-bold uppercase tracking-[0.2em] text-nova-cyan">
         Enroll &amp; pay
       </p>
-      <h2 className="mt-2 text-xl font-black text-white">{program.title}</h2>
+      <h2 className="mt-2 text-xl font-black text-white">{copy.title}</h2>
       <p className="mt-2 text-sm text-nova-cyan-light/85">
         Tuition:{" "}
         <strong className="text-white">{program.tuitionLabel}</strong> — pay by credit/debit
@@ -81,7 +83,7 @@ export async function ProgramEnrollSection({
           <EnrollButton
             courseId={courseId}
             courseSlug={courseSlug}
-            courseTitle={program.title}
+            courseTitle={copy.title}
             enrolled={enrolled}
             pendingPayment={pendingPayment}
             priceCents={priceCents}
@@ -101,7 +103,7 @@ export async function ProgramEnrollSection({
 
       {!enrolled && (
         <div className="mt-8 border-t border-white/10 pt-8">
-          <CertificatePreviewPromo programTitle={program.title} locale={certLocale} compact />
+          <CertificatePreviewPromo programTitle={copy.title} locale={certLocale} compact />
         </div>
       )}
 
@@ -118,7 +120,7 @@ export async function ProgramEnrollSection({
         <div className="mt-8 border-t border-white/10 pt-8">
           <FinalAssessmentPanel
             courseId={courseId}
-            courseTitle={program.title}
+            courseTitle={copy.title}
             courseSlug={courseSlug}
             locale={certLocale}
           />

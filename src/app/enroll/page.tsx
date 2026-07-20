@@ -6,6 +6,7 @@ import { NOVA_PROGRAM_CATALOG } from "@/data/courses";
 import { PARTNERSHIP_APPLY_PATH } from "@/data/novahub/partnerships";
 import { buildPageMetadata } from "@/lib/seo";
 import { enrollPathForProgram } from "@/lib/program-enrollment";
+import { localizeProgram } from "@/lib/program-locale-copy";
 import { CertificatePreviewPromo } from "@/components/certificates/certificate-preview-promo";
 import { ArrowRight, Building2, GraduationCap, UserPlus } from "lucide-react";
 
@@ -122,19 +123,22 @@ async function EnrollHubContent({
               Venmo, or other (no wire transfer for individual students).
             </p>
             <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {NOVA_PROGRAM_CATALOG.map((program) => (
+              {NOVA_PROGRAM_CATALOG.map((program) => {
+                const copy = localizeProgram(program, "en");
+                return (
                 <Link
                   key={program.slug}
                   href={enrollPathForProgram(program.slug)}
                   className="nova-glass-card flex items-center justify-between gap-3 transition hover:border-nova-cyan/40"
                 >
                   <div className="min-w-0">
-                    <p className="truncate font-semibold text-white">{program.title}</p>
+                    <p className="truncate font-semibold text-white">{copy.title}</p>
                     <p className="text-xs text-nova-cyan-light/70">{program.tuitionLabel}</p>
                   </div>
                   <ArrowRight className="h-4 w-4 shrink-0 text-nova-cyan" />
                 </Link>
-              ))}
+              );
+              })}
             </div>
           </section>
         </div>

@@ -12,6 +12,9 @@ type CourseCardProps = {
   description: string;
   pathway: string;
   level: string;
+  pathwayDisplayLabel?: string;
+  pathwayHref?: string;
+  levelHref?: string | null;
   progress?: number;
   enrolled?: boolean;
   mentorName?: string;
@@ -28,6 +31,9 @@ export function CourseCard({
   description,
   pathway,
   level,
+  pathwayDisplayLabel,
+  pathwayHref,
+  levelHref,
   progress,
   enrolled,
   mentorName,
@@ -43,6 +49,8 @@ export function CourseCard({
         ? `Explore Now in progress — stage ${exploreStage}/8`
         : null;
 
+  const pathwayText = pathwayDisplayLabel ?? pathwayLabels[pathway] ?? pathway;
+
   return (
     <article className="nova-glass-card group flex h-full min-h-0 flex-col">
       {exploreComplete && (
@@ -54,8 +62,26 @@ export function CourseCard({
       <div className="mb-4 flex items-start justify-between gap-3">
         <PathwayIcon pathway={pathway as PathwayKey} variant="card" className="h-14 w-14 shrink-0" />
         <div className="flex flex-wrap justify-end gap-2">
-          <Badge variant="cyan">{pathwayLabels[pathway] ?? pathway}</Badge>
-          <Badge variant="default">{level}</Badge>
+          {pathwayHref ? (
+            <Link
+              href={pathwayHref}
+              className="nova-badge bg-nova-cyan/10 text-nova-blue transition hover:bg-nova-cyan/20"
+            >
+              {pathwayText}
+            </Link>
+          ) : (
+            <Badge variant="cyan">{pathwayText}</Badge>
+          )}
+          {levelHref ? (
+            <Link
+              href={levelHref}
+              className="nova-badge bg-nova-light-gray text-nova-dark-gray transition hover:bg-white"
+            >
+              {level}
+            </Link>
+          ) : (
+            <Badge variant="default">{level}</Badge>
+          )}
         </div>
       </div>
 

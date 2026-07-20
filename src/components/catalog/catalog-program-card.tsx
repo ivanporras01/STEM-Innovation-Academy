@@ -3,6 +3,7 @@ import { ArrowRight, BadgeCheck, Clock, Sparkles, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { NovaProgram, ProgramVertical } from "@/data/courses";
 import { enrollPathForProgram } from "@/lib/program-enrollment";
+import { localizeProgram } from "@/lib/program-locale-copy";
 
 const VERTICAL_STYLE: Record<
   ProgramVertical,
@@ -34,6 +35,9 @@ type Props = {
 
 export function CatalogProgramCard({ program }: Props) {
   const style = VERTICAL_STYLE[program.vertical];
+  // Catalog is the EN product surface — never show Spanish curriculum titles here.
+  const copy = localizeProgram(program, "en");
+  const highlights = (copy.highlights?.length ? copy.highlights : program.highlights).slice(0, 3);
 
   return (
     <article
@@ -59,12 +63,12 @@ export function CatalogProgramCard({ program }: Props) {
         )}
       </div>
 
-      <h3 className="text-lg font-black text-white">{program.title}</h3>
-      <p className="mt-1 text-sm font-medium text-nova-cyan-light/90">{program.tagline}</p>
-      <p className="mt-3 flex-1 text-sm leading-relaxed text-white/70">{program.description}</p>
+      <h3 className="text-lg font-black text-white">{copy.title}</h3>
+      <p className="mt-1 text-sm font-medium text-nova-cyan-light/90">{copy.tagline}</p>
+      <p className="mt-3 flex-1 text-sm leading-relaxed text-white/70">{copy.description}</p>
 
       <ul className="mt-4 space-y-1.5">
-        {program.highlights.slice(0, 3).map((h) => (
+        {highlights.map((h) => (
           <li key={h} className="flex gap-2 text-xs text-white/65">
             <Sparkles className="mt-0.5 h-3 w-3 shrink-0 text-nova-cyan" aria-hidden />
             {h}

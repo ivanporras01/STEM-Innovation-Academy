@@ -5,6 +5,7 @@ import {
   type NovaProgram,
   type ProgramVertical,
 } from "@/data/courses";
+import { localizeProgram } from "@/lib/program-locale-copy";
 
 const VERTICAL_LABELS: Record<ProgramVertical, string> = {
   school: "NOVA School — Youth Electives (9)",
@@ -34,6 +35,7 @@ function groupByVertical(programs: readonly NovaProgram[]) {
 
 function ProgramBlock({ program }: { program: NovaProgram }) {
   const isQuantum = program.slug === "quantum-workforce";
+  const copy = localizeProgram(program, "en");
 
   return (
     <article
@@ -42,13 +44,13 @@ function ProgramBlock({ program }: { program: NovaProgram }) {
     >
       <header className="catalog-program-header">
         <div>
-          <h3>{program.title}</h3>
-          <p className="tagline">{program.tagline}</p>
+          <h3>{copy.title}</h3>
+          <p className="tagline">{copy.tagline}</p>
         </div>
         <div className="tuition-badge">{program.tuitionLabel}</div>
       </header>
 
-      <p className="description">{program.description.replace(/\*\*/g, "")}</p>
+      <p className="description">{copy.description.replace(/\*\*/g, "")}</p>
 
       <dl className="meta-grid">
         <div>
@@ -89,9 +91,9 @@ function ProgramBlock({ program }: { program: NovaProgram }) {
         ) : null}
       </dl>
 
-      {program.highlights?.length ? (
+      {(copy.highlights?.length ? copy.highlights : program.highlights)?.length ? (
         <ul className="highlights">
-          {program.highlights.map((h) => (
+          {(copy.highlights?.length ? copy.highlights : program.highlights)!.map((h) => (
             <li key={h}>{h}</li>
           ))}
         </ul>

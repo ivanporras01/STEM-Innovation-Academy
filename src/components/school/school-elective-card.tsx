@@ -19,6 +19,8 @@ export function SchoolElectiveCard({ elective, locale = "en" }: Props) {
   const en = locale === "en" || locale === "pt" ? getSchoolElectiveEn(elective.slug) : undefined;
   const title = es?.title ?? en?.title ?? elective.title;
   const tagline = es?.tagline ?? en?.tagline ?? elective.tagline;
+  const electiveLabel =
+    locale === "es" ? "Electiva" : locale === "pt" ? "Eletiva" : "Elective";
   const cta =
     locale === "es" ? "Ver electiva →" : locale === "pt" ? "Ver eletiva →" : "View elective →";
   const agesLabel = locale === "es" ? "edades" : locale === "pt" ? "idades" : "ages";
@@ -28,7 +30,7 @@ export function SchoolElectiveCard({ elective, locale = "en" }: Props) {
       <article className="nova-glass-card flex h-full flex-col p-6 transition group-hover:border-nova-cyan/30">
         <div className="mb-3 flex flex-wrap items-center gap-2">
           <span className="rounded-full border border-nova-cyan/30 bg-nova-cyan/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-nova-cyan-light">
-            Elective
+            {electiveLabel}
           </span>
           <span className="text-xs text-nova-cyan-light/60">
             {agesLabel} {elective.ageRange}

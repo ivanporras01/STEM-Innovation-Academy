@@ -4,6 +4,8 @@ import { Footer } from "@/components/layout/footer";
 import { CourseCard } from "@/components/courses/course-card";
 import { getPublishedCourses, getUserEnrollments } from "@/lib/courses";
 import { getPathwayMeta } from "@/lib/pathways/meta";
+import { getLmsCoursePublicPresentation } from "@/lib/program-locale-copy";
+import { pathwayLabels } from "@/lib/utils";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 
@@ -55,14 +57,23 @@ export default async function CoursesPage() {
             {courses.map((course) => {
               const meta = getPathwayMeta(course.slug);
               const expProg = meta ? exploreProgress(meta.experienceSlug) : undefined;
+              const presentation = getLmsCoursePublicPresentation(course.slug, {
+                title: course.title,
+                description: course.description,
+                level: course.level,
+                pathwayLabel: pathwayLabels[course.pathway] ?? course.pathway,
+              });
               return (
                 <CourseCard
                   key={course.id}
                   slug={course.slug}
-                  title={course.title}
-                  description={course.description}
+                  title={presentation.title}
+                  description={presentation.description}
                   pathway={course.pathway}
-                  level={course.level}
+                  level={presentation.levelLabel}
+                  pathwayDisplayLabel={presentation.pathwayLabel}
+                  pathwayHref={presentation.pathwayHref}
+                  levelHref={presentation.levelHref}
                   enrolled={enrolledSlugs.has(course.slug)}
                   mentorName={
                     course.mentor

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { getNovaSchoolElectiveBySlug, novaSchoolElectives } from "@/data/nova-school";
+import { getSchoolElectiveCopy } from "@/lib/program-locale-copy";
 import { NOVA_COLLEGE, NOVA_SCHOOL, NOVA_STEM_HUB } from "@/lib/novahub-brand";
 
 type Props = {
@@ -18,9 +19,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const elective = getNovaSchoolElectiveBySlug(slug);
   if (!elective) return { title: "Elective not found" };
+  const copy = getSchoolElectiveCopy(slug, "en");
   return {
-    title: `${elective.title} | ${NOVA_SCHOOL.name}`,
-    description: elective.description,
+    title: `${copy.title} | ${NOVA_SCHOOL.name}`,
+    description: copy.description,
   };
 }
 
@@ -28,6 +30,7 @@ export default async function SchoolElectivePage({ params }: Props) {
   const { slug } = await params;
   const elective = getNovaSchoolElectiveBySlug(slug);
   if (!elective) notFound();
+  const copy = getSchoolElectiveCopy(slug, "en");
 
   return (
     <div className="relative flex min-h-screen flex-col">
@@ -38,8 +41,8 @@ export default async function SchoolElectivePage({ params }: Props) {
           <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-nova-cyan">
             ✦ {NOVA_STEM_HUB.name} · {NOVA_SCHOOL.name}
           </p>
-          <h1 className="text-3xl font-black sm:text-4xl">{elective.title}</h1>
-          <p className="mt-4 max-w-2xl text-lg text-white/80">{elective.tagline}</p>
+          <h1 className="text-3xl font-black sm:text-4xl">{copy.title}</h1>
+          <p className="mt-4 max-w-2xl text-lg text-white/80">{copy.tagline}</p>
           <p className="mt-3 text-sm text-nova-cyan-light/70">
             {elective.durationWeeks} weeks · Ages {elective.ageRange} · {elective.grades}
           </p>
@@ -50,7 +53,7 @@ export default async function SchoolElectivePage({ params }: Props) {
         <div className="nova-container max-w-3xl space-y-10">
           <section className="nova-glass-island p-6 sm:p-8">
             <h2 className="text-lg font-bold text-white">About this elective</h2>
-            <p className="mt-3 text-sm leading-relaxed text-nova-cyan-light/85">{elective.description}</p>
+            <p className="mt-3 text-sm leading-relaxed text-nova-cyan-light/85">{copy.description}</p>
           </section>
 
           <section>

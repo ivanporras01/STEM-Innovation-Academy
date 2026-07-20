@@ -8,6 +8,7 @@ import {
   getAllEnrollableProgramSlugs,
   getProgramEnrollmentContext,
 } from "@/lib/program-enrollment";
+import { localizeProgram } from "@/lib/program-locale-copy";
 import { ensureCourseProduct } from "@/lib/course-products";
 
 type Props = { params: Promise<{ slug: string }>; searchParams: Promise<{ registered?: string }> };
@@ -20,9 +21,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const ctx = await getProgramEnrollmentContext(slug);
   if (!ctx) return { title: "Program not found" };
+  const copy = localizeProgram(ctx.program, "en");
   return {
-    title: `Enroll — ${ctx.program.title}`,
-    description: `Register and pay for ${ctx.program.title}. ${ctx.program.tuitionLabel}.`,
+    title: `Enroll — ${copy.title}`,
+    description: `Register and pay for ${copy.title}. ${ctx.program.tuitionLabel}.`,
   };
 }
 
