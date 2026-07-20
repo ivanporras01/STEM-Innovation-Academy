@@ -1,0 +1,61 @@
+---
+description: Verificación de estructura, simetría y profesionalismo en cambios de UI
+globs: src/**/*.{tsx,css}
+alwaysApply: true
+---
+
+# Integridad Visual de la Página
+
+**Cualquier cambio que afecte la UI debe verificar que no se rompe la estructura, simetría ni profesionalismo de la página.**
+
+Complementa [nova-philosophy.mdc](./nova-philosophy.mdc) (tono NOVA, Pixar + Apple + NASA). Esta regla cubre **integridad visual y layout** — no duplica filosofía de copy ni experiencia.
+
+## Antes y después de cada cambio de UI
+
+1. **Estructura** — Layout intacto: sin overflow, truncado, solapamiento, saltos de grid/flex, o secciones colapsadas.
+2. **Simetría** — Espaciado, alineación y balance visual coherentes en nav, hero, secciones y cards; mismos ritmos en breakpoints.
+3. **Profesionalismo** — Pulido tipo Apple/NASA/Pixar: whitespace intencional, tipografía consistente, jerarquía clara; nada apretado ni amateur.
+
+Si algo falla, corrígelo antes de dar por terminado el cambio.
+
+## Checklist — componentes compartidos
+
+Al tocar `navbar`, `footer`, `hero`, `locale-switcher`, o layouts globales (`src/components/layout/*`, `src/app/layout.tsx`, `globals.css`):
+
+- [ ] **Navbar** — Links legibles, sin labels cortados; menú móvil usable; sin nav abarrotada
+- [ ] **Hero** — Título, CTA y subtítulo alineados; sin texto fuera de contenedor
+- [ ] **Footer** — Columnas balanceadas; links y copyright alineados en desktop y móvil
+- [ ] **Multilingüe (EN / ES / PT)** — Mismas longitudes razonables; traducciones no rompen layout (probar `/`, `/es`, `/pt` si aplica)
+
+## Verificación visual obligatoria
+
+Al cambiar componentes de layout o estilos globales, revisar al menos:
+
+| Viewport | Ancho aprox. |
+|----------|--------------|
+| Desktop  | ≥ 1280px     |
+| Mobile   | ~375px       |
+
+Usar preview del dev server, MCP browser, o inspección manual. Confirmar: sin scroll horizontal no deseado, CTAs visibles, imágenes sin distorsión.
+
+## Ejemplos rápidos
+
+```tsx
+// ❌ BAD — label truncado, nav apretada
+<nav className="flex gap-0.5 text-[10px] truncate">{links}</nav>
+
+// ✅ GOOD — espacio legible, wrap en móvil
+<nav className="flex flex-wrap items-center gap-3 text-sm">{links}</nav>
+```
+
+```css
+/* ❌ BAD — hero desbalanceado, sin padding en móvil */
+.hero { padding: 0; text-align: left; }
+
+/* ✅ GOOD — simetría y respiración */
+.hero { padding: clamp(1.5rem, 5vw, 4rem); text-align: center; }
+```
+
+## Alcance
+
+Aplica a páginas marketing, dashboard shell, catálogo y experiencias NOVA. Cambios solo de backend/API no requieren esta verificación salvo que alteren strings o rutas visibles en UI compartida.
