@@ -13,6 +13,7 @@ type Props = { onComplete: (msg: string) => void };
 const SIZE = 5;
 const START = "0,4";
 const EXIT = "4,0";
+const VOID_PROPS = ["🪨", "☄️", "🛸", "✦", "🌑", "🛰️", "💫", "👾"] as const;
 
 function neighbors(cell: string) {
   const [x, y] = cell.split(",").map(Number);
@@ -177,30 +178,27 @@ export function LabLevelForge({ onComplete }: Props) {
         ]}
       >
         {/* Legend */}
-        <div className="mb-4 flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-wide">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-500/15 px-2.5 py-1 text-emerald-200">
-            <span className="pixel-legend-dot bg-emerald-400" /> Start pad
+        <div className="lab-mission-legend mb-4 text-[9px] font-bold uppercase tracking-wide">
+          <span className="lab-mission-legend-item border-emerald-400/40 bg-emerald-500/15 text-emerald-200">
+            <span className="pixel-legend-dot bg-emerald-400" /> Start
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-400/40 bg-cyan-500/15 px-2.5 py-1 text-cyan-200">
-            <span className="pixel-legend-dot bg-cyan-400" /> Neon floor
+          <span className="lab-mission-legend-item border-cyan-400/40 bg-cyan-500/15 text-cyan-200">
+            <span className="pixel-legend-dot bg-cyan-400" /> Floor
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-fuchsia-400/40 bg-fuchsia-500/15 px-2.5 py-1 text-fuchsia-200">
+          <span className="lab-mission-legend-item border-fuchsia-400/40 bg-fuchsia-500/15 text-fuchsia-200">
             <span className="pixel-legend-dot bg-fuchsia-400 animate-pulse" /> Glitch
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-500/15 px-2.5 py-1 text-amber-200">
-            <span className="pixel-legend-dot bg-amber-400" /> Portal exit
+          <span className="lab-mission-legend-item border-amber-400/40 bg-amber-500/15 text-amber-200">
+            <span className="pixel-legend-dot bg-amber-400" /> Exit
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/30 px-2.5 py-1 text-white/80">
+          <span className="lab-mission-legend-item">
             <LabBuddyToken className="scale-[0.55]" />
             {buddyName}
           </span>
         </div>
 
-        {/* Game grid */}
-        <div
-          className="pixel-grid relative z-[2] mx-auto grid w-full max-w-lg gap-2.5 p-4 sm:gap-3 sm:p-5"
-          style={{ gridTemplateColumns: `repeat(${SIZE}, minmax(0, 1fr))` }}
-        >
+        {/* Game grid — shared --lab-cell system */}
+        <div className="pixel-grid relative z-[2]" style={{ ["--lab-cols" as string]: SIZE }}>
           {Array.from({ length: SIZE * SIZE }, (_, i) => {
             const x = i % SIZE;
             const y = Math.floor(i / SIZE);
@@ -211,6 +209,7 @@ export function LabLevelForge({ onComplete }: Props) {
             const isPath = path.has(cell) || isStart || isExit;
             const isTrail = trail.has(cell);
             const isRunner = runner === cell;
+            const voidProp = !isStart && !isExit && !isHazard && !isPath ? VOID_PROPS[i % VOID_PROPS.length] : null;
 
             return (
               <button
@@ -233,7 +232,7 @@ export function LabLevelForge({ onComplete }: Props) {
                   toggle(cell);
                 }}
                 className={cn(
-                  "pixel-tile group relative aspect-square overflow-hidden rounded-2xl border transition duration-200",
+                  "pixel-tile group relative aspect-square overflow-hidden border transition duration-200",
                   isStart && "pixel-tile--start",
                   isExit && "pixel-tile--exit",
                   isHazard && "pixel-tile--glitch",
@@ -247,8 +246,8 @@ export function LabLevelForge({ onComplete }: Props) {
                 <span className="pixel-tile-sheen" aria-hidden />
                 {isStart && !isRunner && (
                   <span className="relative z-[1] flex flex-col items-center justify-center gap-0.5">
-                    <span className="text-xl leading-none sm:text-2xl">🚀</span>
-                    <span className="text-[8px] font-black tracking-wider text-emerald-100 sm:text-[9px]">
+                    <span className="text-base leading-none sm:text-lg">🚀</span>
+                    <span className="text-[7px] font-black tracking-wider text-emerald-100 sm:text-[8px]">
                       START
                     </span>
                   </span>
@@ -256,27 +255,30 @@ export function LabLevelForge({ onComplete }: Props) {
                 {isExit && !isRunner && (
                   <span className="relative z-[1] flex flex-col items-center justify-center">
                     <span className={cn("pixel-portal-vortex", success && "pixel-portal-vortex--open")} aria-hidden />
-                    <span className="relative text-[8px] font-black tracking-wider text-amber-100 sm:text-[9px]">
+                    <span className="relative text-[7px] font-black tracking-wider text-amber-100 sm:text-[8px]">
                       EXIT
                     </span>
                   </span>
                 )}
                 {isHazard && (
                   <span className="relative z-[1] flex flex-col items-center justify-center gap-0.5">
-                    <span className="text-xl leading-none sm:text-2xl">👾</span>
-                    <span className="text-[8px] font-black tracking-wider text-fuchsia-100 sm:text-[9px]">
+                    <span className="text-base leading-none sm:text-lg">👾</span>
+                    <span className="text-[7px] font-black tracking-wider text-fuchsia-100 sm:text-[8px]">
                       GLITCH
                     </span>
                   </span>
                 )}
                 {!isStart && !isExit && !isHazard && isPath && !isRunner && (
-                  <span className="relative z-[1] text-base text-cyan-100/90 sm:text-lg">
+                  <span className="relative z-[1] text-sm text-cyan-100/90 sm:text-base">
                     {isTrail ? "✦" : "◈"}
                   </span>
                 )}
                 {!isStart && !isExit && !isHazard && !isPath && (
-                  <span className="relative z-[1] text-sm text-white/20 transition group-hover:text-white/45 group-hover:scale-110">
-                    ＋
+                  <span className="relative z-[1] flex flex-col items-center justify-center gap-0.5 opacity-55 transition group-hover:opacity-90 group-hover:scale-105">
+                    <span className="text-sm leading-none" aria-hidden>
+                      {voidProp}
+                    </span>
+                    <span className="text-[7px] font-black uppercase tracking-wide text-white/35">void</span>
                   </span>
                 )}
                 {isRunner && (

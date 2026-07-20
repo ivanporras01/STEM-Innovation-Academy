@@ -9,7 +9,7 @@ import { useLabBuddy } from "./lab-buddy-context";
 import { getBuddyDisplayName } from "@/lib/experiences/catalog";
 
 type Dir = "N" | "E" | "S" | "W";
-type Cell = "empty" | "rock" | "goal" | "launch";
+type Cell = "empty" | "rock" | "wreck" | "goal" | "launch";
 
 const DELTA: Record<Dir, [number, number]> = {
   N: [-1, 0],
@@ -22,10 +22,9 @@ const TURN_RIGHT: Record<Dir, Dir> = { N: "E", E: "S", S: "W", W: "N" };
 const TURN_LEFT: Record<Dir, Dir> = { N: "W", W: "S", S: "E", E: "N" };
 const ARROW: Record<Dir, string> = { N: "↑", E: "→", S: "↓", W: "←" };
 
-const SECTOR_META: Record<
-  string,
-  { title: string; terrain: "dust" | "crater" | "ridge" | "beacon" | "launch" | "debris" | "pod" }
-> = {
+type Terrain = "dust" | "crater" | "ridge" | "beacon" | "launch" | "debris" | "pod" | "wreck";
+
+const SECTOR_META: Record<string, { title: string; terrain: Terrain }> = {
   "3-0": { title: "Launch Pad", terrain: "launch" },
   "3-1": { title: "Dust Flats", terrain: "dust" },
   "3-2": { title: "Dust Flats", terrain: "dust" },
@@ -36,12 +35,28 @@ const SECTOR_META: Record<
   "2-3": { title: "East Slope", terrain: "ridge" },
   "1-0": { title: "Beacon Lane", terrain: "beacon" },
   "1-1": { title: "Crater Floor", terrain: "crater" },
-  "1-2": { title: "Dust Flats", terrain: "dust" },
+  "1-2": { title: "Ship Wreck", terrain: "wreck" },
   "1-3": { title: "Signal Spur", terrain: "beacon" },
   "0-0": { title: "Rescue Module", terrain: "pod" },
   "0-1": { title: "North Spur", terrain: "ridge" },
   "0-2": { title: "Ice Dust", terrain: "dust" },
   "0-3": { title: "Horizon", terrain: "ridge" },
+};
+
+/** Decorative props for empty sectors — richness without blocking the north rescue path. */
+const SECTOR_PROPS: Record<string, { icons: string[]; label: string }> = {
+  "3-1": { icons: ["🪨"], label: "Rocks" },
+  "3-2": { icons: ["🌑", "✨"], label: "Crater" },
+  "3-3": { icons: ["📡"], label: "Relay" },
+  "2-0": { icons: ["☄️"], label: "Ash" },
+  "2-2": { icons: ["🪨", "🌑"], label: "Rim" },
+  "2-3": { icons: ["🧊"], label: "Ice" },
+  "1-0": { icons: ["📶"], label: "Beacon" },
+  "1-1": { icons: ["🌑", "🪨"], label: "Pit" },
+  "1-3": { icons: ["🛰️"], label: "Sat" },
+  "0-1": { icons: ["❄️"], label: "Frost" },
+  "0-2": { icons: ["🧊", "✨"], label: "Ice" },
+  "0-3": { icons: ["🌌"], label: "Horizon" },
 };
 
 type RoverState = { r: number; c: number; dir: Dir };
@@ -51,9 +66,16 @@ const COLS = 4;
 const START: RoverState = { r: 3, c: 0, dir: "E" };
 const GOAL = { r: 0, c: 0 };
 const ROCK = { r: 2, c: 1 };
+/** Blocked wreck — north lane (col 0) stays clear so the puzzle stays solvable. */
+const WRECK = { r: 1, c: 2 };
+
+function isBlocked(r: number, c: number) {
+  return (r === ROCK.r && c === ROCK.c) || (r === WRECK.r && c === WRECK.c);
+}
 
 function cellAt(r: number, c: number): Cell {
   if (r === ROCK.r && c === ROCK.c) return "rock";
+  if (r === WRECK.r && c === WRECK.c) return "wreck";
   if (r === GOAL.r && c === GOAL.c) return "goal";
   if (r === START.r && c === START.c) return "launch";
   return "empty";
@@ -142,7 +164,7 @@ export function LabRobot({ onComplete }: Props) {
           return;
         }
 
-        if (nr === ROCK.r && nc === ROCK.c) {
+        if (isBlocked(nr, nc)) {
           state = { r: nr, c: nc, dir: state.dir };
           path.push({ r: nr, c: nc });
           setRover({ ...state });
@@ -179,6 +201,8 @@ export function LabRobot({ onComplete }: Props) {
     const onTrail = trail.some((t) => t.r === r && t.c === c);
     const type = cellAt(r, c);
     const meta = SECTOR_META[`${r}-${c}`]!;
+    const prop = SECTOR_PROPS[`${r}-${c}`];
+    const blocked = type === "rock" || type === "wreck";
 
     return (
       <div
@@ -186,7 +210,7 @@ export function LabRobot({ onComplete }: Props) {
         className={cn(
           "lab-sector-cell",
           `lab-sector-cell--${meta.terrain}`,
-          onTrail && type !== "rock" && "lab-sector-cell--trail",
+          onTrail && !blocked && "lab-sector-cell--trail",
           isRover && crashed && "lab-sector-cell--crash",
           isRover && success && "lab-sector-cell--win",
           running && isRover && "lab-sector-cell--live",
@@ -196,24 +220,46 @@ export function LabRobot({ onComplete }: Props) {
         <span className="lab-sector-cell-texture" aria-hidden />
 
         {type === "rock" && !isRover && (
-          <span className="lab-sector-marker">
-            <span className="lab-sector-icon">🪨</span>
+          <span className="lab-sector-prop">
+            <span className="lab-sector-prop-stack" aria-hidden>
+              <span>🪨</span>
+              <span>🪨</span>
+              <span>☄️</span>
+            </span>
             <span className="lab-sector-title">Debris</span>
+          </span>
+        )}
+        {type === "wreck" && !isRover && (
+          <span className="lab-sector-prop">
+            <span className="lab-sector-icon" aria-hidden>
+              🚀
+            </span>
+            <span className="lab-sector-title text-rose-200">Wreck</span>
           </span>
         )}
         {type === "goal" && !isRover && (
           <span className="lab-sector-marker">
             <span className="lab-sector-icon lab-sector-icon--pulse">🛟</span>
-            <span className="lab-sector-title text-emerald-200">Dr. Vega</span>
+            <span className="lab-sector-title text-emerald-200">Vega</span>
           </span>
         )}
         {type === "launch" && !isRover && (
           <span className="lab-sector-marker">
-            <span className="lab-sector-icon">🚀</span>
-            <span className="lab-sector-title">Launch</span>
+            <span className="lab-sector-icon">🛸</span>
+            <span className="lab-sector-title">Pad</span>
           </span>
         )}
-        {!isRover && type === "empty" && (
+        {!isRover && type === "empty" && prop && (
+          <span className="lab-sector-prop lab-sector-marker--subtle">
+            <span className="lab-sector-prop-stack" aria-hidden>
+              {prop.icons.map((icon, i) => (
+                <span key={`${icon}-${i}`}>{icon}</span>
+              ))}
+            </span>
+            <span className="lab-sector-title">{prop.label}</span>
+          </span>
+        )}
+        {!isRover && type === "empty" && !prop && (
           <span className="lab-sector-marker lab-sector-marker--subtle">
             <span className="lab-sector-title">{meta.title}</span>
           </span>
@@ -232,11 +278,11 @@ export function LabRobot({ onComplete }: Props) {
     <LabMissionShell
       labCode="NOVA LAB 002"
       title={`${buddyName} · Rescue Navigation`}
-      objective={`Guide ${buddyName} from the Launch Pad (bottom-left) to Dr. Vega’s Rescue Module (top-left). You must go around the Debris Field — never through it.`}
+      objective={`Guide ${buddyName} from the Launch Pad (bottom-left) to Dr. Vega’s Rescue Module (top-left). Steer around debris and the ship wreck — never through them.`}
       steps={[
-        `Read the sector map: ${buddyName} starts at Launch Pad · 🛟 is Dr. Vega · 🪨 is debris (do not enter).`,
+        `Read the sector map: ${buddyName} starts at Launch Pad · 🛟 is Dr. Vega · 🪨 debris and 🚀 wreck are blocked.`,
         "Add commands with the buttons: Forward = move one cell · Left/Right = turn in place (no move).",
-        "Build a safe route around the debris — use Clear Route to start over anytime.",
+        "Build a safe route around obstacles — use Clear Route to start over anytime.",
         `Press Launch and watch ${buddyName} follow your queue. Reach 🛟 to rescue Dr. Vega.`,
       ]}
       hint={`The arrow on ${buddyName} shows which way they are facing before each Forward move.`}
@@ -277,20 +323,24 @@ export function LabRobot({ onComplete }: Props) {
         </div>
 
         <div className="lab-sector-map">
-          <div className="lab-sector-legend">
-            <span className="lab-sector-legend-item">
+          <div className="lab-sector-legend lab-mission-legend">
+            <span className="lab-sector-legend-item lab-mission-legend-item">
               <LabBuddyToken className="scale-75" />
               <span>{buddyName}</span>
             </span>
-            <span className="lab-sector-legend-item">
+            <span className="lab-sector-legend-item lab-mission-legend-item">
               <span>🛟</span>
-              <span>Rescue Module</span>
+              <span>Rescue</span>
             </span>
-            <span className="lab-sector-legend-item">
+            <span className="lab-sector-legend-item lab-mission-legend-item">
               <span>🪨</span>
-              <span>Debris — blocked</span>
+              <span>Debris</span>
             </span>
-            <span className="lab-sector-legend-item">
+            <span className="lab-sector-legend-item lab-mission-legend-item">
+              <span>🚀</span>
+              <span>Wreck</span>
+            </span>
+            <span className="lab-sector-legend-item lab-mission-legend-item">
               <span className="text-[var(--exp-accent-2)]">↑→↓←</span>
               <span>Facing</span>
             </span>
@@ -305,10 +355,7 @@ export function LabRobot({ onComplete }: Props) {
             </span>
           </div>
 
-          <div
-            className="lab-sector-board"
-            style={{ gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))` }}
-          >
+          <div className="lab-sector-board" style={{ ["--lab-cols" as string]: COLS }}>
             {Array.from({ length: ROWS * COLS }, (_, i) => {
               const r = Math.floor(i / COLS);
               const c = i % COLS;

@@ -943,8 +943,50 @@
     animation: lab-console-flash 0.6s ease-out;
   }
 
+  /*
+   * Shared mission tile system (homogeneous across Rescue Rover, Pixel Portal, Greenhouse).
+   * Buddy tile is 2.5rem / 3rem — cells are only slightly larger for a compact game feel.
+   */
+  :where(.lab-sector-board, .pixel-grid, .lab-greenhouse-grid) {
+    --lab-cell: 3.4rem;
+    --lab-cell-gap: 0.35rem;
+    --lab-cell-radius: 0.75rem;
+    --lab-grid-pad: 0.75rem;
+    --lab-cols: 4;
+    display: grid;
+    gap: var(--lab-cell-gap);
+    width: max-content;
+    max-width: 100%;
+    margin-inline: auto;
+    padding: var(--lab-grid-pad);
+    grid-template-columns: repeat(var(--lab-cols), var(--lab-cell));
+  }
+
+  @media (min-width: 640px) {
+    :where(.lab-sector-board, .pixel-grid, .lab-greenhouse-grid) {
+      --lab-cell: 3.85rem;
+      --lab-cell-gap: 0.4rem;
+      --lab-grid-pad: 0.9rem;
+    }
+  }
+
+  :where(.lab-sector-cell, .pixel-tile, .lab-greenhouse-plant) {
+    width: var(--lab-cell);
+    height: var(--lab-cell);
+    min-height: 0;
+    border-radius: var(--lab-cell-radius);
+  }
+
+  .lab-mission-legend {
+    @apply mb-3 flex flex-wrap items-center gap-1.5;
+  }
+
+  .lab-mission-legend-item {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-black/35 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-white/75 backdrop-blur-sm;
+  }
+
   .lab-sector-map {
-    @apply relative overflow-hidden rounded-2xl border p-3 sm:p-5;
+    @apply relative overflow-hidden rounded-2xl border p-3 sm:p-4;
     border-color: color-mix(in srgb, var(--lab-arena-accent, #38bdf8) 28%, transparent);
     background:
       radial-gradient(ellipse at 20% 0%, color-mix(in srgb, var(--lab-arena-accent, #38bdf8) 16%, transparent), transparent 55%),
@@ -956,34 +998,16 @@
   }
 
   .lab-sector-legend {
-    @apply mb-4 flex flex-wrap items-center gap-2;
+    @apply mb-3 flex flex-wrap items-center gap-1.5;
   }
 
   .lab-sector-legend-item {
-    @apply inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-black/35 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white/75 backdrop-blur-sm;
-  }
-
-  .lab-sector-board {
-    display: grid;
-    gap: 0.65rem;
-  }
-
-  @media (min-width: 640px) {
-    .lab-sector-board {
-      gap: 0.85rem;
-    }
+    @apply inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-black/35 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-white/75 backdrop-blur-sm;
   }
 
   .lab-sector-cell {
-    @apply relative flex aspect-square flex-col items-center justify-center overflow-hidden rounded-2xl border text-center transition-all duration-300;
-    min-height: 4.75rem;
+    @apply relative flex aspect-square flex-col items-center justify-center overflow-hidden border text-center transition-all duration-300;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  }
-
-  @media (min-width: 640px) {
-    .lab-sector-cell {
-      min-height: 6rem;
-    }
   }
 
   .lab-sector-cell-glow {
@@ -1002,6 +1026,32 @@
       radial-gradient(1px 1px at 70% 60%, rgba(255, 255, 255, 0.2), transparent),
       radial-gradient(1.5px 1.5px at 40% 80%, rgba(255, 255, 255, 0.18), transparent);
     pointer-events: none;
+  }
+
+  .lab-sector-prop {
+    @apply relative z-[1] flex flex-col items-center justify-center gap-0.5 px-0.5;
+  }
+
+  .lab-sector-prop-stack {
+    @apply flex items-end justify-center gap-px leading-none;
+  }
+
+  .lab-sector-prop-stack > span {
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.55));
+  }
+
+  .lab-sector-prop-stack > span:nth-child(1) {
+    font-size: 0.7rem;
+    transform: translateY(1px);
+  }
+
+  .lab-sector-prop-stack > span:nth-child(2) {
+    font-size: 0.95rem;
+  }
+
+  .lab-sector-prop-stack > span:nth-child(3) {
+    font-size: 0.7rem;
+    transform: translateY(1px);
   }
 
   .lab-sector-cell--dust {
@@ -1049,6 +1099,14 @@
     box-shadow: inset 0 0 30px rgba(239, 68, 68, 0.15);
   }
 
+  .lab-sector-cell--wreck {
+    border-color: rgba(251, 113, 133, 0.55);
+    background:
+      radial-gradient(circle at 55% 40%, rgba(190, 24, 93, 0.45), transparent 55%),
+      linear-gradient(165deg, #2a1020, #120810);
+    box-shadow: inset 0 0 28px rgba(244, 63, 94, 0.18);
+  }
+
   .lab-sector-cell--pod {
     border-color: rgba(52, 211, 153, 0.55);
     background:
@@ -1081,16 +1139,17 @@
   }
 
   .lab-sector-marker {
-    @apply relative z-[1] flex flex-col items-center justify-center gap-1 px-1;
+    @apply relative z-[1] flex flex-col items-center justify-center gap-0.5 px-0.5;
   }
 
   .lab-sector-marker--subtle .lab-sector-title {
-    @apply text-white/45;
-    font-size: 0.62rem;
+    @apply text-white/50;
+    font-size: 0.5rem;
+    letter-spacing: 0.04em;
   }
 
   .lab-sector-icon {
-    @apply text-2xl leading-none drop-shadow-lg sm:text-3xl;
+    @apply text-base leading-none drop-shadow-md sm:text-lg;
   }
 
   .lab-sector-icon--pulse {
@@ -1098,15 +1157,19 @@
   }
 
   .lab-sector-title {
-    @apply text-[9px] font-black uppercase tracking-wider text-white/70 sm:text-[10px];
+    @apply text-[7px] font-black uppercase tracking-wider text-white/70 sm:text-[8px];
   }
 
   .lab-sector-rover {
-    @apply relative z-[2] flex flex-col items-center justify-center gap-1;
+    @apply relative z-[2] flex flex-col items-center justify-center gap-0;
+  }
+
+  .lab-sector-rover .lab-buddy-token {
+    transform: scale(0.92);
   }
 
   .lab-sector-rover-name {
-    @apply max-w-[90%] truncate text-[8px] font-black uppercase tracking-wide text-[var(--exp-accent-2)] sm:text-[9px];
+    @apply max-w-[95%] truncate text-[7px] font-black uppercase tracking-wide text-[var(--exp-accent-2)] sm:text-[8px];
     text-shadow: 0 0 10px color-mix(in srgb, var(--exp-accent) 50%, transparent);
   }
 
@@ -1147,8 +1210,9 @@
   }
 
   .lab-greenhouse-grid {
-    @apply grid grid-cols-5 gap-2 rounded-2xl border p-4 sm:gap-2.5 sm:p-5;
-    border-color: rgba(52, 211, 153, 0.28);
+    --lab-cols: 5;
+    border-radius: 1rem;
+    border: 1px solid rgba(52, 211, 153, 0.28);
     background:
       radial-gradient(ellipse at 50% 0%, rgba(52, 211, 153, 0.18), transparent 55%),
       linear-gradient(180deg, rgba(6, 78, 59, 0.4) 0%, rgba(0, 0, 0, 0.5) 100%);
@@ -1158,7 +1222,7 @@
   }
 
   .lab-greenhouse-plant {
-    @apply flex aspect-square items-center justify-center rounded-xl text-2xl transition-all duration-500 sm:text-3xl;
+    @apply flex aspect-square items-center justify-center text-lg transition-all duration-500 sm:text-xl;
     background:
       radial-gradient(circle at 50% 30%, rgba(16, 185, 129, 0.18), transparent 60%),
       rgba(16, 185, 129, 0.08);
@@ -1508,7 +1572,8 @@
   }
 
   .pixel-grid {
-    border-radius: 1.5rem;
+    --lab-cols: 5;
+    border-radius: 1rem;
     border: 1px solid color-mix(in srgb, #67e8f9 32%, transparent);
     background:
       radial-gradient(circle at 50% 40%, rgba(103, 232, 249, 0.16), transparent 58%),
@@ -1523,13 +1588,6 @@
   .pixel-tile {
     display: grid;
     place-items: center;
-    min-height: 3.75rem;
-  }
-
-  @media (min-width: 640px) {
-    .pixel-tile {
-      min-height: 4.75rem;
-    }
   }
 
   .pixel-tile-glow {
