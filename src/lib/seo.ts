@@ -40,11 +40,12 @@ export function absoluteUrl(path: string): string {
   return `${SITE_URL}${normalized}`;
 }
 
-/** hreflang alternates for a path (English-relative). */
+/** hreflang alternates for a path (locale-aware self-canonical). */
 export function buildLanguageAlternates(relativePath: string) {
   const base = stripLocalePrefix(relativePath);
+  const selfPath = relativePath.startsWith("/") ? relativePath : `/${relativePath}`;
   return {
-    canonical: absoluteUrl(switchLocalePath(base, "en")),
+    canonical: absoluteUrl(selfPath),
     languages: {
       en: absoluteUrl(switchLocalePath(base, "en")),
       es: absoluteUrl(switchLocalePath(base, "es")),

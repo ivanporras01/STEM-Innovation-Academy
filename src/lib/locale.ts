@@ -43,7 +43,7 @@ export const LOCALE_PATHS = {
     partnership: "/es/partnership",
     catalog: "/catalog",
     internships: "/es/internships",
-    partnerScholarships: "/es/scholarships/partners",
+    partnerScholarships: "/scholarships/partners",
     news: "/es/news",
     home: "/es",
   },

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { dashboardRoutes } from "@/lib/auth.config";
 import { getNovaHeaderNav, getNovaStemHubNav } from "@/lib/nova-nav";
@@ -39,6 +39,15 @@ export function Navbar() {
   const onPortal = pathname.startsWith("/dashboard");
 
   const closeMobile = () => setMenuOpen(false);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
 
   return (
     <header className="nova-glass-nav sticky top-0 z-50 transition-colors">
@@ -165,6 +174,14 @@ export function Navbar() {
       </div>
 
       {/* Mobile / tablet drawer — below lg */}
+      {menuOpen && (
+        <button
+          type="button"
+          className="fixed inset-0 z-30 bg-black/50 lg:hidden"
+          aria-label="Close menu"
+          onClick={closeMobile}
+        />
+      )}
       <nav
         className={cn(
           "absolute left-0 right-0 z-40 flex flex-col gap-3 border-b border-white/10 bg-[#0a1628] p-4 shadow-nova backdrop-blur-xl lg:hidden",

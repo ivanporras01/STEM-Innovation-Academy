@@ -2,16 +2,19 @@ import type { Metadata } from "next";
 import { Atom, Orbit, Sparkles } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { Navbar } from "@/components/layout/navbar";
+import { buildPageMetadata } from "@/lib/seo";
 import { isNovaAiTutoringEnabled } from "@/lib/nova-ai-tutoring";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: isNovaAiTutoringEnabled
     ? "NOVA AI Tutoring — Órbita"
     : "NOVA AI Tutoring — Coming Soon",
   description: isNovaAiTutoringEnabled
     ? "Private Math & Science discovery sessions with Órbita for Middle and High School (grades 6–12)."
     : "NOVA AI Tutoring for Middle and High School Math and Science is coming soon.",
-};
+  path: "/ai-tutoring",
+  noIndex: true,
+});
 
 export default async function AiTutoringPage() {
   if (!isNovaAiTutoringEnabled) {

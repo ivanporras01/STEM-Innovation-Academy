@@ -11,6 +11,7 @@ export const metadata: Metadata = buildPageMetadata({
   description:
     "Sinais do mercado STEM, tendências de carreira e briefings de habilidades alinhados a NOVA School, College e Language.",
   path: "/pt/news",
+  locale: "pt",
 });
 
 export default function NovaNewsPtPage() {
@@ -29,13 +30,16 @@ export default function NovaNewsPtPage() {
             Briefings do mercado STEM ligados aos nossos cursos—IA &amp; coding, robótica, IoT, quantum,
             idiomas, habilidades digitais e carreira. Alto fluxo de informação. Volte sempre.
           </p>
-          <div className="mt-6 flex flex-wrap gap-3 text-xs font-semibold text-white/60">
+          <div className="mt-6 flex flex-wrap gap-3 text-xs font-semibold text-white/70">
             <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1">
               {NOVA_NEWS_ITEMS.length}+ histórias
             </span>
             <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1">Market pulse</span>
             <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1">Alinhado aos tracks NOVA</span>
           </div>
+          <p className="mt-4 max-w-2xl text-xs leading-relaxed text-white/55">
+            Briefings editoriais em inglês para audiência global — a moldura do site está em português.
+          </p>
         </div>
       </section>
 

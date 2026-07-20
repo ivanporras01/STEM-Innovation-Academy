@@ -28,9 +28,16 @@ export default function RootLayout({
           <link key={href} rel="preload" as="image" href={href} fetchPriority="high" />
         ))}
       </head>
-      <body className={inter.className}>        <GoogleAnalytics />
+      <body className={inter.className}>
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[300] focus:rounded-lg focus:bg-nova-cyan focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-[#061321]"
+        >
+          Skip to main content
+        </a>
+        <GoogleAnalytics />
         <NovaCosmosBackground />
-        <div className="relative z-[1]">
+        <div id="main-content" className="relative z-[1]">
           <Providers>{children}</Providers>
         </div>
       </body>

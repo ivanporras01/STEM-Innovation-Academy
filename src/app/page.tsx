@@ -7,7 +7,7 @@ import { NovaHeroLogoMark } from "@/components/ui/nova-logo-mark";
 import { JsonLd, organizationJsonLd, webSiteJsonLd } from "@/components/seo/json-ld";
 import { NOVA_COLLEGE, NOVA_LANGUAGE, NOVA_SCHOOL, NOVA_SHOP, NOVA_STEM_HUB } from "@/lib/novahub-brand";
 import { PARTNERSHIP_APPLY_PATH } from "@/data/novahub/partnerships";
-import { buildPageMetadata, PRODUCT_SEO_SNIPPETS, SEO_DEFAULT_DESCRIPTION } from "@/lib/seo";
+import { buildPageMetadata, SEO_DEFAULT_DESCRIPTION } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
   title: NOVA_STEM_HUB.metadataTitle,
@@ -92,9 +92,27 @@ export default function StemHubLandingPage() {
             <h1 className="mx-auto max-w-4xl text-3xl font-bold leading-tight text-white/95 sm:text-4xl lg:text-5xl">
               {NOVA_STEM_HUB.heroHeadline}
             </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-nova-cyan-light/80 sm:text-lg">
+            <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-nova-cyan-light/85 sm:text-lg">
               {NOVA_STEM_HUB.heroSubhead}
             </p>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              <Link href="/catalog" className="nova-btn-primary nova-btn-glow inline-flex">
+                Explore programs
+              </Link>
+              <Link href="/enroll" className="nova-btn-secondary inline-flex border-white/25 text-white">
+                Enroll &amp; pay
+              </Link>
+              <Link href="/news" className="nova-btn-secondary inline-flex border-nova-cyan/40 text-nova-cyan-light">
+                NOVA News
+              </Link>
+            </div>
+            <div className="mx-auto mt-8 flex max-w-3xl flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-semibold text-white/70">
+              <Link href="/verify" className="hover:text-nova-cyan-light">Verifiable certificates</Link>
+              <span className="text-white/30" aria-hidden>·</span>
+              <span>EN · ES · PT</span>
+              <span className="text-white/30" aria-hidden>·</span>
+              <Link href="/partnership" className="hover:text-nova-cyan-light">Institutional partnership</Link>
+            </div>
             <div className="relative mx-auto mt-12 flex max-w-md items-center justify-center">
               <NovaOrbitRings size="sm" />
               <div className="absolute flex items-center justify-center">
@@ -107,8 +125,8 @@ export default function StemHubLandingPage() {
         <section className="nova-space-section pb-24">
           <div className="nova-container">
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <h2 className="text-2xl font-bold text-white sm:text-3xl">Choose your mission</h2>
-              <p className="mt-3 text-nova-cyan-light/80">
+              <h2 className="text-2xl font-bold text-white sm:text-3xl">Choose your path</h2>
+              <p className="mt-3 text-nova-cyan-light/85">
                 Pick the product that fits your journey — all three live inside {NOVA_STEM_HUB.name}.
               </p>
             </div>
@@ -143,13 +161,28 @@ export default function StemHubLandingPage() {
             </div>
 
             <section className="mx-auto mt-16 max-w-5xl">
+              <div className="nova-glass-island flex flex-col items-start gap-6 border border-nova-cyan/25 p-8 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-nova-cyan">NOVA News</p>
+                  <h2 className="mt-2 text-2xl font-bold text-white">STEM market briefings</h2>
+                  <p className="mt-3 max-w-xl text-sm text-nova-cyan-light/85">
+                    Stay current on AI, robotics, IoT, quantum, languages, and careers—signals tied to the programs we teach.
+                  </p>
+                </div>
+                <Link href="/news" className="nova-btn-primary nova-btn-glow inline-flex shrink-0">
+                  Read NOVA News
+                </Link>
+              </div>
+            </section>
+
+            <section className="mx-auto mt-16 max-w-5xl">
               <div className="nova-glass-island flex flex-col items-start gap-6 border border-nova-cyan/20 p-8 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wider text-nova-cyan">
                     For schools & colleges
                   </p>
                   <h2 className="mt-2 text-2xl font-bold text-white">NOVA Partnership</h2>
-                  <p className="mt-3 max-w-xl text-sm text-nova-cyan-light/80">
+                  <p className="mt-3 max-w-xl text-sm text-nova-cyan-light/85">
                     License {NOVA_SCHOOL.name}, {NOVA_COLLEGE.name}, and {NOVA_LANGUAGE.name} for your
                     institution — curriculum, platform, facilitator guides, and verifiable certificates.
                     No in-house STEM experts required.
@@ -169,37 +202,20 @@ export default function StemHubLandingPage() {
               </div>
             </section>
 
-            <section className="mx-auto mt-12 max-w-5xl">
-              <Link
-                href={NOVA_SHOP.path}
-                className="nova-glass-island group flex flex-col items-start gap-4 border border-nova-orange/25 p-8 transition hover:border-nova-orange/45 sm:flex-row sm:items-center sm:justify-between"
-              >
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wider text-nova-orange">
-                    {NOVA_SHOP.name}
-                  </p>
-                  <h2 className="mt-2 text-2xl font-bold text-white group-hover:text-nova-orange">
-                    {NOVA_SHOP.tagline}
-                  </h2>
-                  <p className="mt-2 max-w-xl text-sm text-nova-cyan-light/80">
-                    {PRODUCT_SEO_SNIPPETS.shop} — for Explorers, mentors, and STEM fans everywhere.
-                  </p>
-                </div>
-                <span className="nova-btn-primary nova-btn-glow inline-flex shrink-0 bg-nova-orange hover:bg-nova-orange/90">
-                  Shop the collection →
-                </span>
-              </Link>
-            </section>
-
-            <p className="mt-12 text-center text-sm text-nova-cyan-light/60">
-              Edición en español:{" "}
-              <Link href="/es" className="text-nova-cyan underline-offset-2 hover:underline">
-                {NOVA_STEM_HUB.name} en Español
+            <p className="mx-auto mt-12 max-w-3xl text-center text-sm text-nova-cyan-light/75">
+              Official merchandise is available in{" "}
+              <Link href={NOVA_SHOP.path} className="font-semibold text-nova-cyan underline-offset-2 hover:underline">
+                {NOVA_SHOP.name}
               </Link>
               {" · "}
-              Edição em português:{" "}
+              Edición en español:{" "}
+              <Link href="/es" className="text-nova-cyan underline-offset-2 hover:underline">
+                Español
+              </Link>
+              {" · "}
+              Português:{" "}
               <Link href="/pt" className="text-nova-cyan underline-offset-2 hover:underline">
-                {NOVA_STEM_HUB.name} em Português
+                Português
               </Link>
             </p>
           </div>

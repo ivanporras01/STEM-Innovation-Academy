@@ -18,7 +18,7 @@ export type NovaCertificateTemplateProps = {
   sampleMode?: boolean;
 };
 
-const CERT_VERIFY_DISPLAY = "verify.novastemhub.org";
+const CERT_VERIFY_DISPLAY = "verify.novastemhub.education";
 
 function NovaCertCorner({ className }: { className?: string }) {
   return (

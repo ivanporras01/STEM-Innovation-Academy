@@ -30,7 +30,7 @@ export default function VerifyPage() {
           <h1 className="text-3xl font-black sm:text-4xl">Verify certificate</h1>
           <p className="mx-auto mt-4 max-w-2xl text-nova-cyan-light/85">
             Confirm that a {NOVA_COLLEGE.name} graduate completed their program and earned
-            verifiable credentials. Future domain: verify.novastemhub.education
+            verifiable credentials. Employers and partners can verify certificates here anytime.
           </p>
         </div>
       </section>

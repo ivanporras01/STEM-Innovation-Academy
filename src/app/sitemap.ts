@@ -54,8 +54,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     entry("/enroll", 0.9, "weekly"),
     entry("/catalog", 0.9, "weekly"),
     entry("/partnership/apply", 0.85, "monthly"),
-    entry("/register", 0.7, "monthly"),
-    entry("/login", 0.6, "monthly"),
   ];
 
   for (const program of NOVA_PROGRAM_CATALOG) {
