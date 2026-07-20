@@ -69,7 +69,7 @@ export default async function SpanishSchoolElectivePage({ params }: Props) {
               href={`/experiences/${elective.experienceSlug}`}
               accent={getExperience(elective.experienceSlug)?.accent}
               accentSecondary={getExperience(elective.experienceSlug)?.accentSecondary}
-              ctaLabel="Start Explore Now mission →"
+              ctaLabel="Activar la misión →"
             />
           )}
 

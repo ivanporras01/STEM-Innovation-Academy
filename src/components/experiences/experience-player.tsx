@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import {
-  STAGE_LABELS,
   STAGE_ORDER,
   getBuddy,
   getBuddyDialogue,
@@ -12,6 +11,11 @@ import {
   type BuddyId,
   type NovaExperience,
 } from "@/lib/experiences/catalog";
+import {
+  EXPERIENCE_STAGE_LABELS,
+  EXPERIENCE_UI,
+} from "@/lib/experiences/ui-copy";
+import type { AppLocale } from "@/lib/locale";
 import { StageBuddySelect } from "./stage-buddy-select";
 import { BuddyCompanion } from "./buddy-companion";
 import { BuddyAvatar } from "./buddy-avatar";
@@ -48,6 +52,8 @@ type Props = {
     completedAt: Date | null;
   } | null;
   isLoggedIn: boolean;
+  /** From Accept-Language so ES/PT users get native CTAs (avoids Chrome Translate breaking React). */
+  locale?: AppLocale;
 };
 
 export function ExperiencePlayer({
@@ -55,6 +61,7 @@ export function ExperiencePlayer({
   explorerName,
   initialProgress,
   isLoggedIn,
+  locale = "en",
 }: Props) {
   const defaultBuddy: BuddyId =
     initialProgress?.buddyId && isValidBuddyId(initialProgress.buddyId)
@@ -75,6 +82,8 @@ export function ExperiencePlayer({
   const [animating, setAnimating] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
 
+  const ui = EXPERIENCE_UI[locale];
+  const stageLabels = EXPERIENCE_STAGE_LABELS[locale];
   const stage = STAGE_ORDER[stageIndex];
   const buddy = getBuddy(buddyId);
   const progressPct = ((stageIndex + 1) / STAGE_ORDER.length) * 100;
@@ -82,11 +91,15 @@ export function ExperiencePlayer({
   const saveProgress = useCallback(
     async (payload: ProgressPayload) => {
       if (!isLoggedIn) return;
-      await fetch(`/api/experiences/${experience.slug}/progress`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      try {
+        await fetch(`/api/experiences/${experience.slug}/progress`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+      } catch {
+        // Progress sync is best-effort — never block stage navigation.
+      }
     },
     [experience.slug, isLoggedIn]
   );
@@ -94,13 +107,22 @@ export function ExperiencePlayer({
   const goTo = useCallback(
     (index: number) => {
       const next = Math.max(0, Math.min(STAGE_ORDER.length - 1, index));
+      // Advance stage immediately so CTA clicks never depend on a delayed timeout
+      // (remounts / translate DOM mutations could otherwise leave the user stuck).
+      setStageIndex(next);
       setAnimating(true);
-      setTimeout(() => {
-        setStageIndex(next);
-        setAnimating(false);
+      window.setTimeout(() => setAnimating(false), 180);
+      if (typeof window !== "undefined") {
         window.scrollTo({ top: 0, behavior: "smooth" });
-      }, 180);
-      saveProgress({ buddyId, buddyNickname, currentStage: next, labComplete, quizComplete, reflection });
+      }
+      void saveProgress({
+        buddyId,
+        buddyNickname,
+        currentStage: next,
+        labComplete,
+        quizComplete,
+        reflection,
+      });
     },
     [buddyId, buddyNickname, labComplete, quizComplete, reflection, saveProgress]
   );
@@ -147,6 +169,9 @@ export function ExperiencePlayer({
   return (
     <div
       className="experience-shell min-h-screen text-white"
+      // Prevent browser auto-translate from rewriting CTA text nodes (breaks React onClick).
+      translate="no"
+      lang={locale === "es" ? "es" : locale === "pt" ? "pt" : "en"}
       style={
         {
           "--exp-accent": experience.accent,
@@ -173,7 +198,7 @@ export function ExperiencePlayer({
           </div>
           <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <span className="rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-xs font-bold">
-              ● Mission Live
+              {ui.missionLive}
             </span>
             <ExperienceExitNav
               homeHref={experience.homeHref}
@@ -184,9 +209,9 @@ export function ExperiencePlayer({
 
         <div className="mb-5 rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-sm">
           <div className="mb-2 flex justify-between text-xs">
-            <strong>{STAGE_LABELS[stage]}</strong>
+            <strong>{stageLabels[stage]}</strong>
             <span className="font-bold text-[var(--exp-accent-2)]">
-              {stageIndex + 1} of {STAGE_ORDER.length}
+              {stageIndex + 1} {ui.of} {STAGE_ORDER.length}
             </span>
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-white/20">
@@ -248,7 +273,7 @@ export function ExperiencePlayer({
                         <span className="text-[0.65rem] font-black uppercase text-[var(--exp-accent)]">
                           {String(i + 1).padStart(2, "0")}
                         </span>
-                        <p className="mt-1 text-xs font-bold text-white/90">{STAGE_LABELS[sid]}</p>
+                        <p className="mt-1 text-xs font-bold text-white/90">{stageLabels[sid]}</p>
                       </div>
                     ))}
                   </div>
@@ -256,9 +281,10 @@ export function ExperiencePlayer({
                   <button
                     type="button"
                     onClick={() => goTo(1)}
-                    className="experience-btn-primary mission-invite-cta mt-8 w-full sm:w-auto"
+                    className="experience-btn-primary mission-invite-cta relative z-20 mt-8 w-full sm:w-auto"
+                    data-mission-cta="accept"
                   >
-                    Accept Mission →
+                    {ui.acceptMission}
                   </button>
                 </div>
 
@@ -280,6 +306,7 @@ export function ExperiencePlayer({
               buddyId={buddyId}
               buddyNickname={buddyNickname}
               explorerName={displayName}
+              locale={locale}
               onSelectBuddy={(id) => {
                 setBuddyId(id);
                 if (!buddyNickname) setBuddyNickname(getBuddy(id).name);
@@ -333,19 +360,19 @@ export function ExperiencePlayer({
                   {stage === "briefing" ? (
                     <>
                       <button type="button" onClick={() => goTo(3)} className="experience-btn-primary">
-                        Enter the LAB →
+                        {ui.enterLab}
                       </button>
                       <button type="button" onClick={() => goTo(1)} className="experience-btn-secondary">
-                        Back
+                        {ui.back}
                       </button>
                     </>
                   ) : (
                     <>
                       <button type="button" onClick={() => goTo(7)} className="experience-btn-primary">
-                        Claim Achievement ✦
+                        {ui.claimAchievement}
                       </button>
                       <button type="button" onClick={() => goTo(5)} className="experience-btn-secondary">
-                        Back
+                        {ui.back}
                       </button>
                     </>
                   )}
@@ -367,14 +394,17 @@ export function ExperiencePlayer({
           )}
 
           {stage === "lab" && (
-            <div className="overflow-hidden rounded-[28px] border border-white/10 bg-[#0a1628]/95 shadow-2xl">
-              <div className="border-b border-white/10 px-6 py-5 sm:px-10">
-                <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--exp-accent)]">
+            <div className="lab-stage-chrome">
+              <div className="lab-stage-chrome-aurora" aria-hidden />
+              <div className="lab-stage-chrome-header px-6 py-5 sm:px-10">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--exp-accent-2)]">
                   Interactive LAB · Live Mission
                 </p>
-                <h2 className="mt-2 text-2xl font-black text-white sm:text-3xl">{experience.title}</h2>
+                <h2 className="mt-2 text-2xl font-black tracking-tight text-white sm:text-3xl">
+                  {experience.title}
+                </h2>
               </div>
-              <div className="px-4 py-6 sm:px-8 sm:py-8">
+              <div className="relative z-[1] px-4 py-6 sm:px-8 sm:py-8">
                 <BuddyCompanion
                   buddyId={buddyId}
                   buddyNickname={buddyNickname}
@@ -399,7 +429,7 @@ export function ExperiencePlayer({
                   )}
                 </div>
               </div>
-              <div className="flex flex-wrap gap-3 border-t border-white/10 bg-[#071225] px-6 py-5 sm:px-10">
+              <div className="lab-stage-chrome-footer flex flex-wrap gap-3 px-6 py-5 sm:px-10">
                 <button
                   type="button"
                   disabled={!labComplete}

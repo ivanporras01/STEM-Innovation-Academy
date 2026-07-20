@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { getExperience } from "@/lib/experiences/catalog";
+import { localeFromAcceptLanguage } from "@/lib/experiences/ui-copy";
 import { ExperiencePlayer } from "@/components/experiences/experience-player";
 import type { BuddyId } from "@/lib/experiences/buddies";
 import { isValidBuddyId } from "@/lib/experiences/buddies";
@@ -25,6 +27,8 @@ export default async function ExperiencePage({ params }: Props) {
   if (!experience) notFound();
 
   const session = await auth();
+  const headerList = await headers();
+  const locale = localeFromAcceptLanguage(headerList.get("accept-language"));
   let initialProgress = null;
 
   if (session?.user) {
@@ -55,6 +59,7 @@ export default async function ExperiencePage({ params }: Props) {
       explorerName={session?.user?.firstName ?? "Explorer"}
       initialProgress={initialProgress}
       isLoggedIn={!!session?.user}
+      locale={locale}
     />
   );
 }

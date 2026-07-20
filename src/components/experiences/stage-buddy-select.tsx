@@ -8,6 +8,8 @@ import {
   getBuddy,
   type BuddyId,
 } from "@/lib/experiences/buddies";
+import { EXPERIENCE_UI } from "@/lib/experiences/ui-copy";
+import type { AppLocale } from "@/lib/locale";
 import { cn } from "@/lib/utils";
 import { BuddyAvatar } from "./buddy-avatar";
 
@@ -15,6 +17,7 @@ type Props = {
   buddyId: BuddyId;
   buddyNickname: string;
   explorerName: string;
+  locale?: AppLocale;
   onSelectBuddy: (id: BuddyId) => void;
   onNicknameChange: (name: string) => void;
   onExplorerNameChange: (name: string) => void;
@@ -26,10 +29,12 @@ function BuddyCard({
   id,
   selected,
   onSelect,
+  selectedLabel,
 }: {
   id: BuddyId;
   selected: boolean;
   onSelect: () => void;
+  selectedLabel: string;
 }) {
   const b = getBuddy(id);
   return (
@@ -57,7 +62,7 @@ function BuddyCard({
         />
         {selected && (
           <span className="absolute bottom-2 right-2 z-10 rounded-full bg-[var(--exp-accent)] px-2 py-0.5 text-[10px] font-black uppercase text-white">
-            Selected
+            {selectedLabel}
           </span>
         )}
       </div>
@@ -84,6 +89,7 @@ export function StageBuddySelect({
   buddyId,
   buddyNickname,
   explorerName,
+  locale = "en",
   onSelectBuddy,
   onNicknameChange,
   onExplorerNameChange,
@@ -93,6 +99,7 @@ export function StageBuddySelect({
   const [tierFilter, setTierFilter] = useState<"all" | "friendly" | "pro">("all");
   const buddy = getBuddy(buddyId);
   const canContinue = explorerName.trim().length >= 2;
+  const ui = EXPERIENCE_UI[locale];
 
   return (
     <div className="space-y-8">
@@ -139,6 +146,7 @@ export function StageBuddySelect({
                 key={b.id}
                 id={b.id}
                 selected={buddyId === b.id}
+                selectedLabel={ui.selected}
                 onSelect={() => onSelectBuddy(b.id)}
               />
             ))}
@@ -158,6 +166,7 @@ export function StageBuddySelect({
                 key={b.id}
                 id={b.id}
                 selected={buddyId === b.id}
+                selectedLabel={ui.selected}
                 onSelect={() => onSelectBuddy(b.id)}
               />
             ))}
@@ -213,10 +222,10 @@ export function StageBuddySelect({
           onClick={onConfirm}
           className="experience-btn-primary min-w-[220px] disabled:opacity-40"
         >
-          Continue with My Buddy →
+          {ui.continueWithBuddy}
         </button>
         <button type="button" onClick={onBack} className="experience-btn-secondary">
-          Back
+          {ui.back}
         </button>
       </div>
     </div>

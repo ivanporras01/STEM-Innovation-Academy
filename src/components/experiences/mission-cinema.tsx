@@ -128,7 +128,11 @@ export function MissionInviteCard({
         <span className="rounded-full border border-white/15 bg-black/30 px-3 py-1">Earn a badge</span>
       </div>
 
-      <Link href={href} className="experience-btn-primary mission-invite-cta relative mt-8 inline-flex">
+      <Link
+        href={href}
+        translate="no"
+        className="experience-btn-primary mission-invite-cta relative mt-8 inline-flex"
+      >
         {ctaLabel}
       </Link>
       <p className="relative mt-3 text-xs text-white/45">No pressure — play, explore, fall in love with STEM.</p>
