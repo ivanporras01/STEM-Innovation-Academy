@@ -13,7 +13,7 @@ type Props = { onComplete: (msg: string) => void };
 const SIZE = 5;
 const START = "0,4";
 const EXIT = "4,0";
-const VOID_PROPS = ["🪨", "☄️", "🛸", "✦", "🌑", "🛰️", "💫", "👾"] as const;
+const VOID_PROPS = ["🪨", "☄️", "🛸", "🚀", "🌑", "🛰️", "💫", "👾", "🪨", "💥"] as const;
 
 function neighbors(cell: string) {
   const [x, y] = cell.split(",").map(Number);
@@ -232,7 +232,7 @@ export function LabLevelForge({ onComplete }: Props) {
                   toggle(cell);
                 }}
                 className={cn(
-                  "pixel-tile group relative aspect-square overflow-hidden border transition duration-200",
+                  "pixel-tile group relative overflow-hidden border transition duration-200",
                   isStart && "pixel-tile--start",
                   isExit && "pixel-tile--exit",
                   isHazard && "pixel-tile--glitch",

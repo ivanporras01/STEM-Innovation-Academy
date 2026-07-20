@@ -27,14 +27,14 @@ type Terrain = "dust" | "crater" | "ridge" | "beacon" | "launch" | "debris" | "p
 const SECTOR_META: Record<string, { title: string; terrain: Terrain }> = {
   "3-0": { title: "Launch Pad", terrain: "launch" },
   "3-1": { title: "Dust Flats", terrain: "dust" },
-  "3-2": { title: "Dust Flats", terrain: "dust" },
+  "3-2": { title: "Boulder Field", terrain: "debris" },
   "3-3": { title: "South Ridge", terrain: "ridge" },
   "2-0": { title: "Ash Trail", terrain: "dust" },
   "2-1": { title: "Debris Field", terrain: "debris" },
   "2-2": { title: "Crater Rim", terrain: "crater" },
   "2-3": { title: "East Slope", terrain: "ridge" },
   "1-0": { title: "Beacon Lane", terrain: "beacon" },
-  "1-1": { title: "Crater Floor", terrain: "crater" },
+  "1-1": { title: "Rock Pit", terrain: "debris" },
   "1-2": { title: "Ship Wreck", terrain: "wreck" },
   "1-3": { title: "Signal Spur", terrain: "beacon" },
   "0-0": { title: "Rescue Module", terrain: "pod" },
@@ -43,20 +43,18 @@ const SECTOR_META: Record<string, { title: string; terrain: Terrain }> = {
   "0-3": { title: "Horizon", terrain: "ridge" },
 };
 
-/** Decorative props for empty sectors — richness without blocking the north rescue path. */
+/** Decorative props for open sectors — cinematic lunar clutter (non-blocking). */
 const SECTOR_PROPS: Record<string, { icons: string[]; label: string }> = {
-  "3-1": { icons: ["🪨"], label: "Rocks" },
-  "3-2": { icons: ["🌑", "✨"], label: "Crater" },
-  "3-3": { icons: ["📡"], label: "Relay" },
+  "3-1": { icons: ["🪨", "✨"], label: "Scree" },
+  "3-3": { icons: ["📡", "🛰️"], label: "Relay" },
   "2-0": { icons: ["☄️"], label: "Ash" },
-  "2-2": { icons: ["🪨", "🌑"], label: "Rim" },
-  "2-3": { icons: ["🧊"], label: "Ice" },
+  "2-2": { icons: ["🌑", "🪨"], label: "Rim" },
+  "2-3": { icons: ["🧊", "❄️"], label: "Ice" },
   "1-0": { icons: ["📶"], label: "Beacon" },
-  "1-1": { icons: ["🌑", "🪨"], label: "Pit" },
-  "1-3": { icons: ["🛰️"], label: "Sat" },
-  "0-1": { icons: ["❄️"], label: "Frost" },
-  "0-2": { icons: ["🧊", "✨"], label: "Ice" },
-  "0-3": { icons: ["🌌"], label: "Horizon" },
+  "1-3": { icons: ["🛰️", "✨"], label: "Sat" },
+  "0-1": { icons: ["❄️", "✨"], label: "Frost" },
+  "0-2": { icons: ["🧊", "🌑"], label: "Ice" },
+  "0-3": { icons: ["🌌", "🛸"], label: "Horizon" },
 };
 
 type RoverState = { r: number; c: number; dir: Dir };
@@ -65,16 +63,24 @@ const ROWS = 4;
 const COLS = 4;
 const START: RoverState = { r: 3, c: 0, dir: "E" };
 const GOAL = { r: 0, c: 0 };
-const ROCK = { r: 2, c: 1 };
-/** Blocked wreck — north lane (col 0) stays clear so the puzzle stays solvable. */
+/** Blocking hazards — north lane (col 0) stays clear so the rescue route stays solvable. */
+const ROCKS: { r: number; c: number }[] = [
+  { r: 2, c: 1 },
+  { r: 3, c: 2 },
+  { r: 1, c: 1 },
+];
 const WRECK = { r: 1, c: 2 };
 
+function isRock(r: number, c: number) {
+  return ROCKS.some((rock) => rock.r === r && rock.c === c);
+}
+
 function isBlocked(r: number, c: number) {
-  return (r === ROCK.r && c === ROCK.c) || (r === WRECK.r && c === WRECK.c);
+  return isRock(r, c) || (r === WRECK.r && c === WRECK.c);
 }
 
 function cellAt(r: number, c: number): Cell {
-  if (r === ROCK.r && c === ROCK.c) return "rock";
+  if (isRock(r, c)) return "rock";
   if (r === WRECK.r && c === WRECK.c) return "wreck";
   if (r === GOAL.r && c === GOAL.c) return "goal";
   if (r === START.r && c === START.c) return "launch";
@@ -231,8 +237,10 @@ export function LabRobot({ onComplete }: Props) {
         )}
         {type === "wreck" && !isRover && (
           <span className="lab-sector-prop">
-            <span className="lab-sector-icon" aria-hidden>
-              🚀
+            <span className="lab-sector-prop-stack" aria-hidden>
+              <span>💥</span>
+              <span>🚀</span>
+              <span>🔥</span>
             </span>
             <span className="lab-sector-title text-rose-200">Wreck</span>
           </span>
@@ -278,7 +286,7 @@ export function LabRobot({ onComplete }: Props) {
     <LabMissionShell
       labCode="NOVA LAB 002"
       title={`${buddyName} · Rescue Navigation`}
-      objective={`Guide ${buddyName} from the Launch Pad (bottom-left) to Dr. Vega’s Rescue Module (top-left). Steer around debris and the ship wreck — never through them.`}
+      objective={`Guide ${buddyName} from the Launch Pad (bottom-left) to Dr. Vega’s Rescue Module (top-left). Steer around rock debris and the crashed spaceship — never through them.`}
       steps={[
         `Read the sector map: ${buddyName} starts at Launch Pad · 🛟 is Dr. Vega · 🪨 debris and 🚀 wreck are blocked.`,
         "Add commands with the buttons: Forward = move one cell · Left/Right = turn in place (no move).",

@@ -169,7 +169,7 @@ export function LabIot({ onComplete }: Props) {
             <div
               key={i}
               className={cn(
-                "lab-greenhouse-plant aspect-square",
+                "lab-greenhouse-plant",
                 success || viability > 75
                   ? "lab-greenhouse-plant--healthy"
                   : viability < 60

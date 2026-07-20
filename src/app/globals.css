@@ -944,14 +944,14 @@
   }
 
   /*
-   * Shared mission tile system (homogeneous across Rescue Rover, Pixel Portal, Greenhouse).
-   * Buddy tile is 2.5rem / 3rem — cells are only slightly larger for a compact game feel.
+   * Shared mission tile system — identical cell geometry on Rescue Rover, Pixel Portal, Greenhouse.
+   * Buddy portrait (tile): 2.5rem / 3rem → cells are only ~20–28% larger for a tight game board.
    */
   :where(.lab-sector-board, .pixel-grid, .lab-greenhouse-grid) {
-    --lab-cell: 3.4rem;
-    --lab-cell-gap: 0.35rem;
-    --lab-cell-radius: 0.75rem;
-    --lab-grid-pad: 0.75rem;
+    --lab-cell: 3.15rem;
+    --lab-cell-gap: 0.32rem;
+    --lab-cell-radius: 0.7rem;
+    --lab-grid-pad: 0.7rem;
     --lab-cols: 4;
     display: grid;
     gap: var(--lab-cell-gap);
@@ -960,20 +960,27 @@
     margin-inline: auto;
     padding: var(--lab-grid-pad);
     grid-template-columns: repeat(var(--lab-cols), var(--lab-cell));
+    box-sizing: border-box;
   }
 
   @media (min-width: 640px) {
     :where(.lab-sector-board, .pixel-grid, .lab-greenhouse-grid) {
-      --lab-cell: 3.85rem;
-      --lab-cell-gap: 0.4rem;
-      --lab-grid-pad: 0.9rem;
+      --lab-cell: 3.65rem;
+      --lab-cell-gap: 0.38rem;
+      --lab-grid-pad: 0.85rem;
     }
   }
 
   :where(.lab-sector-cell, .pixel-tile, .lab-greenhouse-plant) {
+    box-sizing: border-box;
     width: var(--lab-cell);
     height: var(--lab-cell);
-    min-height: 0;
+    min-width: var(--lab-cell);
+    min-height: var(--lab-cell);
+    max-width: var(--lab-cell);
+    max-height: var(--lab-cell);
+    flex-shrink: 0;
+    aspect-ratio: 1 / 1;
     border-radius: var(--lab-cell-radius);
   }
 
@@ -1006,7 +1013,7 @@
   }
 
   .lab-sector-cell {
-    @apply relative flex aspect-square flex-col items-center justify-center overflow-hidden border text-center transition-all duration-300;
+    @apply relative flex flex-col items-center justify-center overflow-hidden border text-center transition-all duration-300;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
   }
 
@@ -1165,7 +1172,7 @@
   }
 
   .lab-sector-rover .lab-buddy-token {
-    transform: scale(0.92);
+    transform: scale(0.88);
   }
 
   .lab-sector-rover-name {
@@ -1222,7 +1229,7 @@
   }
 
   .lab-greenhouse-plant {
-    @apply flex aspect-square items-center justify-center text-lg transition-all duration-500 sm:text-xl;
+    @apply flex items-center justify-center text-base transition-all duration-500 sm:text-lg;
     background:
       radial-gradient(circle at 50% 30%, rgba(16, 185, 129, 0.18), transparent 60%),
       rgba(16, 185, 129, 0.08);
