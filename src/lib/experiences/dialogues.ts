@@ -11,24 +11,54 @@ const SLUG_BRIEFING: Record<string, string> = {
     "Dr. Vega is counting on us. Plan each move on the grid before you launch ARIA-7.",
   "smart-greenhouse":
     "Those plants are someone's semester of work. Let's arm the automation before it's too late.",
+  "pixel-portal-escape":
+    "The Arcade Nebula needs a fair level. Paint the path, dodge the glitch, playtest like a pro.",
+  "viral-signal-brief":
+    "No spam. No fear hooks. We'll craft a brief that Explorers actually want to share.",
+  "founder-orbit-pitch":
+    "Demo Day is live. Specific problem, clear solution, real customer — let's score this pitch.",
+  "story-beacon-reel":
+    "Five beats, one trailer. Sequence the arc until the premiere feels inevitable.",
+  "phish-shadow-ops":
+    "Stay sharp. Urgency and fake domains are bait — classify, then seal the vault.",
+  "community-spark-lab":
+    "People first. Pick a need, choose a creative tool, write a promise you can keep.",
 };
 
 const SLUG_LAB: Record<string, string> = {
   "restore-nova-signal": "Watch the signal meter — every edit you make moves the needle.",
   "rescue-rover": "Build your queue, launch, watch ARIA-7 move. Iterate until the module is reached.",
   "smart-greenhouse": "Plant viability is dropping. Configure fast, test smart, protect the crop.",
+  "pixel-portal-escape": "Tap tiles to forge the path. Playtest until EXIT lights up.",
+  "viral-signal-brief": "Audience + hook + channel. Watch Signal Strength climb past 80.",
+  "founder-orbit-pitch": "Write sharp. Score again. Mentors reward clarity.",
+  "story-beacon-reel": "▲ / ▼ until Hook → Problem → Hero → Twist → Win. Then preview.",
+  "phish-shadow-ops": "Mark every lure. Forge a vault password with real strength.",
+  "community-spark-lab": "Assemble need + tool + promise. Impact over flashy tech.",
 };
 
 const SLUG_QUIZ: Record<string, string> = {
   "restore-nova-signal": "Think like a coder — why did the logic work?",
   "rescue-rover": "Engineers learn from failure. Which mindset matches NOVA?",
   "smart-greenhouse": "IoT is about connected action. Pick the answer that proves you get it.",
+  "pixel-portal-escape": "Why do designers playtest before shipping?",
+  "viral-signal-brief": "What makes a campaign ethical and effective?",
+  "founder-orbit-pitch": "What makes a youth pitch strong?",
+  "story-beacon-reel": "Why does story order matter in a short trailer?",
+  "phish-shadow-ops": "Which clue often marks phishing?",
+  "community-spark-lab": "What should lead a social-impact tech project?",
 };
 
 const SLUG_REFLECTION: Record<string, string> = {
   "restore-nova-signal": "Dream bigger — what would YOUR beacon detect next?",
   "rescue-rover": "You're the engineer now. What upgrade would you ship on ARIA-8?",
   "smart-greenhouse": "Imagine the whole campus connected. What would you automate first?",
+  "pixel-portal-escape": "What power-up would make your portal escape even more fun?",
+  "viral-signal-brief": "What story from your life would make a powerful campaign next?",
+  "founder-orbit-pitch": "If Mentors funded one prototype tomorrow, what would you build?",
+  "story-beacon-reel": "What real NOVA moment would you storyboard next?",
+  "phish-shadow-ops": "What safety habit will you teach a friend this week?",
+  "community-spark-lab": "Whose life gets easier if your prototype works next month?",
 };
 
 const TRAIT_BRIEFING: Record<BuddyTrait, Record<LabContext, string>> = {

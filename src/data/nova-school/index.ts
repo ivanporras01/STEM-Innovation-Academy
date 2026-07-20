@@ -9,13 +9,6 @@ export { NOVA_SCHOOL_PAGE_ES, NOVA_SCHOOL_ELECTIVES_ES, getSchoolElectiveEs } fr
 
 import type { NovaSchoolElective, NovaSchoolElectiveSummary } from "./types";
 
-const PLACEHOLDER_MODULES: NovaSchoolElective["modules"] = [
-  { order: 1, title: "Discovery Launch", description: "Mission briefing, buddy intro, and first hands-on station." },
-  { order: 2, title: "Core Skills Lab", description: "Guided practice with interactive stations and knowledge checks." },
-  { order: 3, title: "Build Sprint", description: "Project-based build connecting concepts to a real deliverable." },
-  { order: 4, title: "Innovation Showcase", description: "Mentor review, iteration, and portfolio presentation." },
-];
-
 export const novaSchoolElectives: NovaSchoolElective[] = [
   {
     slug: "gaming-game-design",
@@ -33,7 +26,14 @@ export const novaSchoolElectives: NovaSchoolElective[] = [
       "Apply basic scripting logic to game behavior",
       "Present a game project to peers and mentors",
     ],
-    modules: PLACEHOLDER_MODULES,
+    modules: [
+      { order: 1, title: "Player Mindset", description: "Break down a favorite game: rules, feedback loops, and what makes challenge fun." },
+      { order: 2, title: "Level Forge Lab", description: "Sketch maps, place hazards, and playtest fairness with peers." },
+      { order: 3, title: "Mechanics Sprint", description: "Prototype interactions in Scratch or a simple engine — iterate fast." },
+      { order: 4, title: "Arcade Showcase", description: "Ship a playable demo and present design decisions to mentors." },
+    ],
+    experienceSlug: "pixel-portal-escape",
+    experienceTitle: "Pixel Portal Escape",
   },
   {
     slug: "digital-marketing",
@@ -51,7 +51,14 @@ export const novaSchoolElectives: NovaSchoolElective[] = [
       "Read basic engagement metrics and iterate",
       "Apply ethical guidelines for online presence",
     ],
-    modules: PLACEHOLDER_MODULES,
+    modules: [
+      { order: 1, title: "Brand Spark", description: "Define audience, voice, and a promise you can keep online." },
+      { order: 2, title: "Hook Studio", description: "Craft curiosity-driven messages — no fear tactics, no spam." },
+      { order: 3, title: "Campaign Sprint", description: "Ship a mini campaign across one channel and track Signal Strength." },
+      { order: 4, title: "Ethics Review", description: "Critique campaigns for integrity and present improvements." },
+    ],
+    experienceSlug: "viral-signal-brief",
+    experienceTitle: "Viral Signal Brief",
   },
   {
     slug: "startup-business",
@@ -69,7 +76,14 @@ export const novaSchoolElectives: NovaSchoolElective[] = [
       "Craft a compelling pitch deck",
       "Present to mentors in a celebration session",
     ],
-    modules: PLACEHOLDER_MODULES,
+    modules: [
+      { order: 1, title: "Problem Hunt", description: "Interview peers, spot friction, and frame a problem worth solving." },
+      { order: 2, title: "Lean Orbit Canvas", description: "Map customer, value, and first experiment on a youth lean canvas." },
+      { order: 3, title: "Prototype Sprint", description: "Build a no-code or low-fi MVP and gather feedback fast." },
+      { order: 4, title: "Demo Day Pitch", description: "Score your pitch and present to the Founders Circle." },
+    ],
+    experienceSlug: "founder-orbit-pitch",
+    experienceTitle: "Demo Day: Orbit Pitch",
   },
   {
     slug: "coding-ai",
@@ -87,7 +101,12 @@ export const novaSchoolElectives: NovaSchoolElective[] = [
       "Explain basic AI/ML concepts through hands-on demos",
       "Complete an Explore Now mission and portfolio artifact",
     ],
-    modules: PLACEHOLDER_MODULES,
+    modules: [
+      { order: 1, title: "Signal Decoder Launch", description: "First commands, variables, and restoring a broken uplink story." },
+      { order: 2, title: "Logic Circuits", description: "Conditionals, loops, and pattern matching under mission pressure." },
+      { order: 3, title: "AI Discovery Lab", description: "Explore how models decide — demos, ethics, and simple automations." },
+      { order: 4, title: "Innovation Showcase", description: "Ship a personal coding/AI artifact with mentor review." },
+    ],
     missionPathHref: "/courses/intro-python-ai",
     pathwaySlug: "coding-ai",
     experienceSlug: "restore-nova-signal",
@@ -109,7 +128,12 @@ export const novaSchoolElectives: NovaSchoolElective[] = [
       "Debug hardware with mentor support or Wokwi simulation",
       "Complete a robotics mission showcase project",
     ],
-    modules: PLACEHOLDER_MODULES,
+    modules: [
+      { order: 1, title: "Rescue Briefing", description: "Mission stakes, engineering notebook, and first command sequences." },
+      { order: 2, title: "Grid Navigation Lab", description: "Spatial logic, turns, and iterating routes around obstacles." },
+      { order: 3, title: "Hardware / Wokwi Sprint", description: "Wire or simulate sensors and actuators; debug like an engineer." },
+      { order: 4, title: "Sector Showcase", description: "Demonstrate an autonomous or semi-autonomous rescue routine." },
+    ],
     missionPathHref: "/courses/robotics-engineering",
     pathwaySlug: "robotics",
     experienceSlug: "rescue-rover",
@@ -131,7 +155,12 @@ export const novaSchoolElectives: NovaSchoolElective[] = [
       "Design a smart system for a real-world scenario",
       "Complete an IoT mission with mentor celebration review",
     ],
-    modules: PLACEHOLDER_MODULES,
+    modules: [
+      { order: 1, title: "Greenhouse Alert", description: "Sense → decide → act: the IoT loop that protects living systems." },
+      { order: 2, title: "Threshold Lab", description: "Tune automation rules and prove cooling responds to heat spikes." },
+      { order: 3, title: "Dashboard Sprint", description: "Visualize live data and fire alerts stakeholders can trust." },
+      { order: 4, title: "Campus Systems Showcase", description: "Present a smart system idea for school or community." },
+    ],
     missionPathHref: "/courses/iot-smart-systems",
     pathwaySlug: "iot",
     experienceSlug: "smart-greenhouse",
@@ -153,7 +182,14 @@ export const novaSchoolElectives: NovaSchoolElective[] = [
       "Apply visual design principles to a portfolio piece",
       "Publish work in a digital STEM portfolio",
     ],
-    modules: PLACEHOLDER_MODULES,
+    modules: [
+      { order: 1, title: "Story Beacon", description: "Hook, problem, hero, twist, win — map emotional arcs for short media." },
+      { order: 2, title: "Reel Lab", description: "Capture, cut, and pace a 15–30 second trailer." },
+      { order: 3, title: "Visual Polish", description: "Typography, color, and composition for thumb-stopping frames." },
+      { order: 4, title: "Premiere Night", description: "Publish and present your media piece to mentors and peers." },
+    ],
+    experienceSlug: "story-beacon-reel",
+    experienceTitle: "Story Beacon Reel",
   },
   {
     slug: "cybersecurity-basics",
@@ -171,7 +207,14 @@ export const novaSchoolElectives: NovaSchoolElective[] = [
       "Explain basic network and privacy concepts",
       "Discuss ethical boundaries in security exploration",
     ],
-    modules: PLACEHOLDER_MODULES,
+    modules: [
+      { order: 1, title: "Shadow Ops Brief", description: "How attackers think — and how defenders stay calm under pressure." },
+      { order: 2, title: "Phish Lab", description: "Spot lures: urgency, fake domains, and password traps." },
+      { order: 3, title: "Vault Forge", description: "Build strong credentials and privacy habits that stick." },
+      { order: 4, title: "Ethics Council", description: "Debate boundaries: curiosity vs. harm in digital exploration." },
+    ],
+    experienceSlug: "phish-shadow-ops",
+    experienceTitle: "Inbox Under Siege",
   },
   {
     slug: "creative-tech-social-impact-teens",
@@ -195,7 +238,14 @@ export const novaSchoolElectives: NovaSchoolElective[] = [
       "Identify STEM career paths beyond traditional engineering",
       "Present a social-impact prototype to mentors and peers",
     ],
-    modules: PLACEHOLDER_MODULES,
+    modules: [
+      { order: 1, title: "Empathy Orbit", description: "Listen to a community need and map who is affected." },
+      { order: 2, title: "Creative Toolbelt", description: "Scratch stories, media, or simple sensor ideas — pick with purpose." },
+      { order: 3, title: "Spark Prototype", description: "Assemble a tiny intervention with a clear impact promise." },
+      { order: 4, title: "Impact Showcase", description: "Present to mentors, partners, and peers — celebrate purpose." },
+    ],
+    experienceSlug: "community-spark-lab",
+    experienceTitle: "Ignite a Community Spark",
   },
 ];
 

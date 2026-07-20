@@ -60,6 +60,21 @@ export default async function SpanishSchoolElectivePage({ params }: Props) {
             <p className="mt-3 text-sm leading-relaxed text-nova-cyan-light/85">{description}</p>
           </section>
 
+          {elective.experienceSlug && (
+            <section className="nova-glass-island p-6 text-center">
+              <p className="text-sm text-nova-cyan-light/80">
+                Misión interactiva:{" "}
+                <strong className="text-white">{elective.experienceTitle}</strong>
+              </p>
+              <Link
+                href={`/experiences/${elective.experienceSlug}`}
+                className="nova-btn-primary nova-btn-glow mt-4 inline-flex"
+              >
+                Start Explore Now mission →
+              </Link>
+            </section>
+          )}
+
           <section className="flex flex-wrap gap-3">
             <Link href="/es/school" className="nova-btn-secondary border-white/20 text-white">
               ← Todas las electivas

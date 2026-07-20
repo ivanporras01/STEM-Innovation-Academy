@@ -19,6 +19,7 @@ import { PathwayIcon } from "@/components/ui/pathway-icon";
 import { LabCode } from "./labs/lab-code";
 import { LabRobot } from "./labs/lab-robot";
 import { LabIot } from "./labs/lab-iot";
+import { LabQuest } from "./labs/lab-quest";
 import { ExperienceExitNav } from "./experience-exit-nav";
 import { NOVA_SCHOOL } from "@/lib/nova-brand";
 import { cn } from "@/lib/utils";
@@ -174,7 +175,7 @@ export function ExperiencePlayer({
               ● Mission Live
             </span>
             <ExperienceExitNav
-              courseSlug={experience.courseSlug}
+              homeHref={experience.homeHref}
               isLoggedIn={isLoggedIn}
             />
           </div>
@@ -371,7 +372,7 @@ export function ExperiencePlayer({
                 </div>
                 {stage === "debrief" && (
                   <ExperienceExitNav
-                    courseSlug={experience.courseSlug}
+                    homeHref={experience.homeHref}
                     isLoggedIn={isLoggedIn}
                     variant="footer"
                   />
@@ -409,6 +410,12 @@ export function ExperiencePlayer({
                   )}
                   {experience.labType === "iot" && (
                     <LabIot onComplete={handleLabComplete} />
+                  )}
+                  {experience.labType === "quest" && (
+                    <LabQuest
+                      experienceSlug={experience.slug}
+                      onComplete={handleLabComplete}
+                    />
                   )}
                 </div>
               </div>
@@ -563,7 +570,7 @@ export function ExperiencePlayer({
                 </div>
               </div>
               <div className="mt-10 flex flex-wrap justify-center gap-3">
-                <Link href={`/courses/${experience.courseSlug}`} className="experience-btn-primary">
+                <Link href={experience.homeHref} className="experience-btn-primary">
                   Continue Mission Path →
                 </Link>
                 <Link href="/courses" className="experience-btn-secondary">
@@ -589,7 +596,7 @@ export function ExperiencePlayer({
                 </button>
               </div>
               <ExperienceExitNav
-                courseSlug={experience.courseSlug}
+                homeHref={experience.homeHref}
                 isLoggedIn={isLoggedIn}
                 variant="footer"
               />
