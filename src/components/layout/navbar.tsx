@@ -74,7 +74,7 @@ export function Navbar() {
           </Link>
         </div>
 
-        {/* Primary tabs — Resources precedes Shop in every locale. */}
+        {/* Primary tabs — College through Shop; Resources mega-menu before School. */}
         {!isDashboard && (
           <nav
             className={cn(

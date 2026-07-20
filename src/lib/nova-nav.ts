@@ -141,33 +141,33 @@ function getContactPath(locale: AppLocale): string {
   return `${paths.school}#contact`;
 }
 
-/** Primary product tabs — always visible in the header. */
+/** Primary product tabs — footer and ecosystem links (no Resources mega-menu). */
 export function getNovaPrimaryNav(locale: AppLocale): readonly NovaNavItem[] {
   const paths = LOCALE_PATHS[locale];
   return [
-    { href: paths.school, label: NOVA_SCHOOL.name },
     { href: paths.college, label: NOVA_COLLEGE.name },
     { href: paths.language, label: NOVA_LANGUAGE.name },
     { href: "/ai-tutoring", label: "NOVA AI Tutoring" },
+    { href: paths.school, label: NOVA_SCHOOL.name },
     { href: paths.shop, label: NOVA_SHOP.name },
   ];
 }
 
 /**
- * Header-only ordering. NOVA Resources occupies the former Shop tab position,
- * followed by Shop in every locale; the footer retains its product-only list.
+ * Header-only ordering: College → Language → AI Tutoring → NOVA Resources → School → Shop.
+ * School sits before Shop so it stays visible when the centered nav clips overflow at xl widths.
  */
 export function getNovaHeaderNav(locale: AppLocale): readonly NovaHeaderNavItem[] {
-  const primaryNav = getNovaPrimaryNav(locale);
+  const paths = LOCALE_PATHS[locale];
   const hub = getNovaStemHubNav(locale);
-  const shop = primaryNav.at(-1);
-
-  if (!shop) return primaryNav.map((item) => ({ ...item, kind: "product" as const }));
 
   return [
-    ...primaryNav.slice(0, -1).map((item) => ({ ...item, kind: "product" as const })),
+    { href: paths.college, label: NOVA_COLLEGE.name, kind: "product" },
+    { href: paths.language, label: NOVA_LANGUAGE.name, kind: "product" },
+    { href: "/ai-tutoring", label: "NOVA AI Tutoring", kind: "product" },
     { href: hub.homeHref, label: hub.menuLabel, kind: "resources" },
-    { ...shop, kind: "product" as const },
+    { href: paths.school, label: NOVA_SCHOOL.name, kind: "product" },
+    { href: paths.shop, label: NOVA_SHOP.name, kind: "product" },
   ];
 }
 
