@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { CourseCard } from "@/components/courses/course-card";
-import { getPublishedCourses } from "@/lib/courses";
+import { getPublishedCourses, getUserEnrollments } from "@/lib/courses";
 import { getPathwayMeta } from "@/lib/pathways/meta";
 import { auth } from "@/lib/auth";
-import { getUserEnrollments } from "@/lib/courses";
+import { db } from "@/lib/db";
 
 export const metadata: Metadata = {
   title: "Mission Paths",
@@ -18,10 +18,17 @@ export default async function CoursesPage() {
   const courses = await getPublishedCourses();
 
   const enrolledSlugs = new Set<string>();
+  const experienceProgress = session?.user
+    ? await db.experienceProgress.findMany({ where: { userId: session.user.id } })
+    : [];
+
   if (session?.user) {
     const enrollments = await getUserEnrollments(session.user.id);
     enrollments.forEach((e) => enrolledSlugs.add(e.course.slug));
   }
+
+  const exploreProgress = (slug: string) =>
+    experienceProgress.find((p) => p.experienceSlug === slug);
 
   return (
     <div className="relative flex min-h-screen flex-col">
@@ -44,9 +51,10 @@ export default async function CoursesPage() {
 
       <main className="nova-space-section relative flex-1">
         <div className="nova-container">
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid items-stretch gap-6 sm:grid-cols-2 xl:grid-cols-3">
             {courses.map((course) => {
               const meta = getPathwayMeta(course.slug);
+              const expProg = meta ? exploreProgress(meta.experienceSlug) : undefined;
               return (
                 <CourseCard
                   key={course.id}
@@ -63,6 +71,10 @@ export default async function CoursesPage() {
                   }
                   experienceSlug={meta?.experienceSlug}
                   experienceTitle={meta?.experienceTitle}
+                  exploreComplete={Boolean(expProg?.completedAt)}
+                  exploreStage={
+                    expProg && !expProg.completedAt ? expProg.currentStage + 1 : null
+                  }
                 />
               );
             })}

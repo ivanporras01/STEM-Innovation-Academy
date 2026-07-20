@@ -101,7 +101,7 @@ export function ExploreNowButton({
     <Link
       href={href}
       className={cn(
-        "group relative mt-4 block overflow-hidden rounded-2xl border bg-gradient-to-br from-[#0a1628]/95 to-[#0d1b3d]/85 p-4 backdrop-blur-xl transition duration-300",
+        "group relative mt-0 block overflow-hidden rounded-2xl border bg-gradient-to-br from-[#0a1628]/95 to-[#0d1b3d]/85 p-4 backdrop-blur-xl transition duration-300",
         accent,
         glow,
         className

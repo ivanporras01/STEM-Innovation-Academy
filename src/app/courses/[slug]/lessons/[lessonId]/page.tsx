@@ -13,6 +13,7 @@ import { getPathwayMeta } from "@/lib/pathways/meta";
 import { PathwayIcon } from "@/components/ui/pathway-icon";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { hasCourseAccess } from "@/lib/enrollment-access";
 import { lessonTypeLabels } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -43,7 +44,7 @@ export default async function LessonPage({
     },
   });
 
-  if (!enrollment) redirect(`/courses/${slug}`);
+  if (!enrollment || !hasCourseAccess(enrollment)) redirect(`/courses/${slug}`);
 
   const { lesson, completed } = await getLessonWithProgress(lessonId, session.user.id);
 

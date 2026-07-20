@@ -1,3 +1,5 @@
+# Fail fast on build errors before Vercel deploys (Git push → Vercel follows merge).
+# Local equivalent: npm run verify:release
 name: CI
 
 on:
@@ -6,8 +8,13 @@ on:
   pull_request:
     branches: [main]
 
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
+    name: npm ci + build
     runs-on: ubuntu-latest
 
     steps:
@@ -18,13 +25,14 @@ jobs:
           node-version: "20"
           cache: "npm"
 
-      - run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
       - name: Generate Prisma Client
         run: npx prisma generate
 
-      - name: Build Next.js
-        run: npm run build
+      - name: Build Next.js (verify:release)
+        run: npm run verify:release
         env:
           DATABASE_URL: "file:./ci.db"
           AUTH_SECRET: "ci-build-secret-minimum-32-characters"

@@ -39,6 +39,8 @@ Password for all: **`nova2026`**
 
 ## Option B: Vercel CLI
 
+> **Not for routine releases.** Use [deployment-workflow.md](./deployment-workflow.md) (Git push → Preview → merge `main`). CLI `--prod` can hang with 0ms build output.
+
 ```bash
 npx vercel login
 npx vercel --prod

@@ -20,6 +20,7 @@ import { LabCode } from "./labs/lab-code";
 import { LabRobot } from "./labs/lab-robot";
 import { LabIot } from "./labs/lab-iot";
 import { ExperienceExitNav } from "./experience-exit-nav";
+import { NOVA_SCHOOL } from "@/lib/nova-brand";
 import { cn } from "@/lib/utils";
 
 type ProgressPayload = {
@@ -569,7 +570,7 @@ export function ExperiencePlayer({
                   All Mission Paths
                 </Link>
                 <Link href={isLoggedIn ? "/dashboard" : "/"} className="experience-btn-secondary">
-                  {isLoggedIn ? "NOVA Portal" : "NOVA Home"}
+                  {isLoggedIn ? NOVA_SCHOOL.portalName : NOVA_SCHOOL.homeLabel}
                 </Link>
                 <button
                   type="button"
@@ -597,7 +598,7 @@ export function ExperiencePlayer({
                   <Link href="/login" className="font-semibold text-[var(--exp-accent)] hover:underline">
                     Sign in
                   </Link>{" "}
-                  to save your badge to the NOVA Portal.
+                  to save your badge to the {NOVA_SCHOOL.portalName}.
                 </p>
               )}
             </div>

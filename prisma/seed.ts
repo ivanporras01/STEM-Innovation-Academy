@@ -13,7 +13,7 @@ async function main() {
     where: { code: "NOVA-PILOT" },
     update: {},
     create: {
-      name: "STEM Innovation Academy — Pilot School",
+      name: "NOVA School — Pilot Campus",
       code: "NOVA-PILOT",
       city: "San Juan",
       state: "PR",
@@ -133,8 +133,24 @@ async function main() {
       where: {
         userId_courseId: { userId: student.id, courseId: course.id },
       },
-      update: {},
-      create: { userId: student.id, courseId: course.id },
+      update: { status: "ACTIVE" },
+      create: { userId: student.id, courseId: course.id, status: "ACTIVE" },
+    });
+
+    const priceMap: Record<string, number> = {
+      "intro-python-ai": 24900,
+      "robotics-engineering": 24900,
+      "iot-smart-systems": 24900,
+    };
+
+    await prisma.courseProduct.upsert({
+      where: { courseId: course.id },
+      update: { priceCents: priceMap[courseFields.slug] ?? 24900 },
+      create: {
+        courseId: course.id,
+        priceCents: priceMap[courseFields.slug] ?? 24900,
+        currency: "usd",
+      },
     });
 
     const existingAssignment = await prisma.assignment.findFirst({

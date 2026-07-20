@@ -186,6 +186,36 @@ export default async function AdminDashboardPage() {
 
             </Link>
 
+            <Link href="/dashboard/admin/scholarships" className="nova-btn-secondary justify-start">
+
+              Review Scholarship Applications
+
+            </Link>
+
+            <Link href="/dashboard/admin/payments" className="nova-btn-secondary justify-start">
+
+              Pending Payments (Zelle/Venmo)
+
+            </Link>
+
+            <Link href="/dashboard/admin/partnerships" className="nova-btn-secondary justify-start">
+
+              Partnership Contracts
+
+            </Link>
+
+            <Link href="/college" className="nova-btn-secondary justify-start">
+
+              NOVA College Catalog
+
+            </Link>
+
+            <Link href="/verify" className="nova-btn-secondary justify-start">
+
+              Certificate Verify Portal
+
+            </Link>
+
             <Link href="/courses" className="nova-btn-secondary justify-start">
 
               View Path Catalog

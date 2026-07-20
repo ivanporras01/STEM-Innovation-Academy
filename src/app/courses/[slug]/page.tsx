@@ -9,10 +9,14 @@ import { EnrollButton } from "@/components/courses/enroll-button";
 import { MissionPathHero } from "@/components/courses/mission-path-hero";
 import { SubmissionForm } from "@/components/courses/submission-form";
 import { getCourseBySlug, getCourseProgress } from "@/lib/courses";
+import { ensureCourseProduct } from "@/lib/course-products";
+import { formatPrice, hasCourseAccess } from "@/lib/enrollment-access";
 import { getPathwayMeta } from "@/lib/pathways/meta";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { pathwayLabels, lessonTypeLabels, formatDate } from "@/lib/utils";
+import { FinalAssessmentPanel } from "@/components/certificates/final-assessment-panel";
+import { resolveCertificateLocale } from "@/lib/certificates/locale";
 import { CheckCircle2, Circle, Lock } from "lucide-react";
 
 export async function generateMetadata({
@@ -37,9 +41,14 @@ export default async function CourseDetailPage({
 
   const session = await auth();
   let enrolled = false;
+  let pendingPayment = false;
+  let priceCents = 0;
   let progress = { total: 0, completed: 0, percent: 0 };
   let completedLessonIds = new Set<string>();
   let submission: { content: string; status: string } | null = null;
+
+  const product = await ensureCourseProduct(course.id, course.slug);
+  priceCents = product.priceCents;
 
   if (session?.user) {
     const enrollment = await db.enrollment.findUnique({
@@ -50,7 +59,8 @@ export default async function CourseDetailPage({
         },
       },
     });
-    enrolled = !!enrollment;
+    enrolled = hasCourseAccess(enrollment);
+    pendingPayment = enrollment?.status === "PENDING_PAYMENT";
     progress = await getCourseProgress(session.user.id, course.id);
 
     const progressRecords = await db.lessonProgress.findMany({
@@ -78,6 +88,7 @@ export default async function CourseDetailPage({
 
   const totalLessons = course.modules.reduce((acc, m) => acc + m.lessons.length, 0);
   const meta = getPathwayMeta(slug);
+  const certLocale = resolveCertificateLocale(slug);
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -132,11 +143,27 @@ export default async function CourseDetailPage({
 
             <div className="flex flex-wrap items-center gap-4">
               {session ? (
-                <EnrollButton courseId={course.id} enrolled={enrolled} />
+                <EnrollButton
+                  courseId={course.id}
+                  courseSlug={slug}
+                  courseTitle={course.title}
+                  enrolled={enrolled}
+                  pendingPayment={pendingPayment}
+                  priceCents={priceCents}
+                  stripeAvailable={Boolean(process.env.STRIPE_SECRET_KEY?.startsWith("sk_"))}
+                />
               ) : (
-                <Link href="/login" className="nova-btn-primary">
-                  Sign in to Join Path
-                </Link>
+                <div className="flex flex-wrap gap-3">
+                  <Link
+                    href={`/register?callbackUrl=${encodeURIComponent(`/courses/${slug}`)}`}
+                    className="nova-btn-primary nova-btn-glow"
+                  >
+                    Register &amp; enroll — {formatPrice(priceCents)}
+                  </Link>
+                  <Link href={`/login?callbackUrl=${encodeURIComponent(`/courses/${slug}`)}`} className="nova-btn-secondary border-white/20 text-white">
+                    Login
+                  </Link>
+                </div>
               )}
               {enrolled && <ProgressBar value={progress.percent} className="max-w-xs flex-1" />}
             </div>
@@ -197,6 +224,14 @@ export default async function CourseDetailPage({
             </div>
 
             <aside className="space-y-6">
+              {enrolled && (
+                <FinalAssessmentPanel
+                  courseId={course.id}
+                  courseTitle={course.title}
+                  courseSlug={slug}
+                  locale={certLocale}
+                />
+              )}
               {enrolled && course.assignments[0] && (
                 <div className="nova-card">
                   <h3 className="mb-2 font-semibold text-white">

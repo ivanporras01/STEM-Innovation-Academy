@@ -1,64 +1,86 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { CheckoutModal } from "@/components/checkout/checkout-modal";
+import { formatPrice } from "@/lib/enrollment-access";
 
 export function EnrollButton({
   courseId,
+  courseSlug,
+  courseTitle,
   enrolled,
+  pendingPayment,
+  priceCents,
+  stripeAvailable,
 }: {
   courseId: string;
+  courseSlug: string;
+  courseTitle: string;
   enrolled: boolean;
+  pendingPayment?: boolean;
+  priceCents?: number;
+  stripeAvailable?: boolean;
 }) {
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+
+  const priceLabel = priceCents && priceCents > 0 ? formatPrice(priceCents) : null;
 
   if (enrolled) {
     return (
       <span className="inline-flex items-center rounded-xl bg-nova-green/10 px-4 py-2 text-sm font-semibold text-nova-green">
-        ✓ On Mission Path
+        ✓ Mission Path Unlocked — launch your next mission below
       </span>
     );
   }
 
-  async function handleEnroll() {
-    setLoading(true);
-    setError("");
-
-    try {
-      const res = await fetch("/api/enroll", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ courseId }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error ?? "Enrollment failed");
-        return;
-      }
-
-      router.refresh();
-    } catch {
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
   return (
-    <div>
+    <div className="space-y-2">
+      {successMessage && (
+        <div className="rounded-xl border border-nova-green/30 bg-nova-green/10 px-4 py-3 text-sm text-nova-green">
+          {successMessage}
+        </div>
+      )}
+
+      {pendingPayment && (
+        <p className="text-sm text-nova-orange">
+          Payment pending verification — we&apos;ll unlock your path within 24 hours once confirmed.
+          You can also choose another method below.
+        </p>
+      )}
+
       <button
         type="button"
-        onClick={handleEnroll}
-        disabled={loading}
-        className="nova-btn-primary disabled:opacity-60"
+        onClick={() => setShowCheckout(true)}
+        className="nova-btn-primary"
       >
-        {loading ? "Joining..." : "Join Mission Path"}
+        {pendingPayment
+          ? "Complete or update payment"
+          : priceLabel
+            ? `Enroll — ${priceLabel}`
+            : "Enroll in Mission Path"}
       </button>
-      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+
+      {!enrolled && priceLabel && (
+        <p className="text-xs text-nova-cyan-light/60">
+          Play free demo missions first, then enroll for full path access. Pay by card, Zelle, or
+          Venmo.
+        </p>
+      )}
+
+      {showCheckout && (
+        <CheckoutModal
+          courseId={courseId}
+          courseSlug={courseSlug}
+          courseTitle={courseTitle}
+          priceCents={priceCents ?? 0}
+          stripeAvailable={stripeAvailable}
+          onClose={() => setShowCheckout(false)}
+          onSuccess={() =>
+            setSuccessMessage("You're in! Your mission path is unlocked — launch when you're ready.")
+          }
+        />
+      )}
     </div>
   );
 }

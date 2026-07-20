@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>NOVA STEM HUB — Program Catalog</title>
+  <style>.catalog-print-page {
+  min-height: 100vh;
+  background: #f4f6f8;
+  color: #0f172a;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+}
+
+.catalog-print-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1.5rem;
+  background: #0b1f3a;
+  color: #e2e8f0;
+  border-bottom: 2px solid #22d3ee;
+}
+
+.catalog-print-toolbar code {
+  font-size: 0.85em;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+
+.catalog-print-toolbar button {
+  cursor: pointer;
+  border: none;
+  border-radius: 999px;
+  padding: 0.55rem 1.25rem;
+  font-weight: 700;
+  background: #22d3ee;
+  color: #0b1f3a;
+}
+
+.catalog-print-root {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 3rem;
+  background: #fff;
+  box-shadow: 0 0 0 1px #e2e8f0;
+}
+
+.catalog-cover {
+  text-align: center;
+  padding: 2rem 1rem 2.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 3px solid #0b1f3a;
+}
+
+.catalog-cover .eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #0891b2;
+  margin: 0 0 0.75rem;
+}
+
+.catalog-cover h1 {
+  font-size: 2rem;
+  margin: 0 0 0.5rem;
+  color: #0b1f3a;
+}
+
+.catalog-cover .subtitle {
+  font-size: 1.05rem;
+  color: #475569;
+  margin: 0;
+}
+
+.catalog-cover .generated {
+  margin: 1.25rem 0 0;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.catalog-section {
+  margin-bottom: 2.25rem;
+  page-break-inside: avoid;
+}
+
+.catalog-section h2 {
+  font-size: 1.25rem;
+  color: #0b1f3a;
+  border-left: 4px solid #22d3ee;
+  padding-left: 0.75rem;
+  margin: 0 0 1rem;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.stats-row div {
+  text-align: center;
+  padding: 0.75rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.stats-row strong {
+  display: block;
+  font-size: 1.5rem;
+  color: #0891b2;
+}
+
+.stats-row span {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+}
+
+.access-model {
+  font-size: 0.95rem;
+  color: #334155;
+}
+
+.pricing-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.pricing-table th,
+.pricing-table td {
+  border: 1px solid #cbd5e1;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.pricing-table th {
+  background: #0b1f3a;
+  color: #fff;
+}
+
+.pricing-table tr:nth-child(even) td {
+  background: #f8fafc;
+}
+
+.catalog-program {
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  page-break-inside: avoid;
+}
+
+.catalog-program-quantum {
+  border-color: #0891b2;
+  background: linear-gradient(135deg, #f0fdff 0%, #fff 60%);
+}
+
+.catalog-program-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.65rem;
+}
+
+.catalog-program-header h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: #0b1f3a;
+}
+
+.tagline {
+  margin: 0.2rem 0 0;
+  font-size: 0.88rem;
+  color: #64748b;
+  font-style: italic;
+}
+
+.tuition-badge {
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.35rem 0.65rem;
+  background: #0b1f3a;
+  color: #22d3ee;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.description {
+  margin: 0 0 0.75rem;
+  font-size: 0.92rem;
+  color: #334155;
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem 1rem;
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+}
+
+.meta-grid dt {
+  font-weight: 700;
+  color: #475569;
+}
+
+.meta-grid dd {
+  margin: 0.1rem 0 0;
+  color: #0f172a;
+}
+
+.meta-span-2 {
+  grid-column: span 2;
+}
+
+.highlights {
+  margin: 0 0 0.65rem;
+  padding-left: 1.25rem;
+  font-size: 0.88rem;
+  color: #334155;
+}
+
+.highlights li {
+  margin-bottom: 0.2rem;
+}
+
+.delivery-note {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #0891b2;
+  font-weight: 600;
+}
+
+.quantum-extra {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(8, 145, 178, 0.08);
+  border-radius: 8px;
+  font-size: 0.88rem;
+}
+
+.quantum-extra h4 {
+  margin: 0 0 0.4rem;
+  font-size: 0.95rem;
+  color: #0e7490;
+}
+
+.quantum-extra p {
+  margin: 0 0 0.4rem;
+}
+
+.quantum-extra a {
+  color: #0891b2;
+}
+
+.bundle-block {
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  border: 1px dashed #94a3b8;
+  border-radius: 10px;
+}
+
+.bundle-slugs {
+  font-size: 0.78rem;
+  color: #64748b;
+  word-break: break-word;
+}
+
+.catalog-footer {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 2px solid #e2e8f0;
+  font-size: 0.85rem;
+  color: #64748b;
+  text-align: center;
+}
+
+.catalog-footer a {
+  color: #0891b2;
+}
+
+.fine-print {
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .catalog-print-page {
+    background: #fff;
+  }
+
+  .catalog-print-root {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+
+  .catalog-vertical {
+    page-break-before: auto;
+  }
+
+  .catalog-program-quantum {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+@media (max-width: 640px) {
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .catalog-program-header {
+    flex-direction: column;
+  }
+
+  .tuition-badge {
+    align-self: flex-start;
+  }
+}
+
+    body { margin: 0; background: #fff; }
+    .catalog-print-root { box-shadow: none; max-width: none; }
+  </style>
+</head>
+<body>
+  <div class="catalog-print-root">
+    <header class="catalog-cover">
+      <p class="eyebrow">NOVA STEM HUB · Official Program Catalog</p>
+      <h1>Complete Catalog — 21 Programs</h1>
+      <p class="subtitle">NOVA School · NOVA College · NOVA Language · Quantum Workforce (QCW)</p>
+      <p class="generated">Generated July 19, 2026 · stem-innovation-academy.vercel.app/catalog</p>
+    </header>
+    <section class="catalog-section">
+      <h2>Catalog at a glance</h2>
+      <div class="stats-row">
+        <div><strong>21</strong><span>Total programs</span></div>
+        <div><strong>9</strong><span>School electives</span></div>
+        <div><strong>9</strong><span>College tracks</span></div>
+        <div><strong>3</strong><span>Languages</span></div>
+      </div>
+      <p class="access-model"><strong>Access model:</strong> Syllabi, outcomes, and tuition are public. Full course content unlocks after registration and payment. NOVA School offers free demo missions on Coding &amp; AI, Robotics, and IoT electives.</p>
+    </section>
+    <section class="catalog-section">
+      <h2>Suggested tuition fees (USD)</h2>
+      <table class="pricing-table"><thead><tr><th>Category</th><th>Suggested price</th></tr></thead><tbody><tr><td>School standard electives</td><td>$179 / elective</td></tr><tr><td>School premium (Coding, Robotics, IoT + demo missions)</td><td>$249 / elective</td></tr><tr><td>Cybersecurity Teens</td><td>$199 / elective</td></tr><tr><td>School Explorer Pass (all 9 electives)</td><td>$1,299 / year</td></tr><tr><td>College Tier 1 tracks</td><td>$749 – $949 (most $849 – $899)</td></tr><tr><td>Quantum Workforce — Tier 2 Advanced (QCW)</td><td>$1,899 / program</td></tr><tr><td>College Career Starter (any 2 Tier 1 tracks)</td><td>$1,499</td></tr><tr><td>NOVA Language (each)</td><td>$449 / program</td></tr><tr><td>Language Trilingual Pack (EN + ES + PT)</td><td>$999</td></tr></tbody></table>
+    </section>
+    <section class="catalog-section catalog-vertical">
+        <h2>NOVA School — Youth Electives (9)</h2>
+        <article class="catalog-program" id="gaming-game-design">
+    <header class="catalog-program-header">
+      <div>
+        <h3>Gaming &amp; Game Design</h3>
+        <p class="tagline">From player to creator — design levels, characters, and playable worlds.</p>
+      </div>
+      <div class="tuition-badge">$179 / elective</div>
+    </header>
+    <p class="description">Explorers learn game loops, level design, and basic coding through Scratch and Unity-style projects — building portfolio-ready games they can share.</p>
+    <dl class="meta-grid">
+      <div><dt>Duration</dt><dd>12 weeks</dd></div>
+      <div><dt>Age range</dt><dd>8–16</dd></div>
+      <div><dt>Tuition (USD)</dt><dd>$179</dd></div>
+      <div><dt>Access</dt><dd>Paid after registration</dd></div>
+      
+      
+    </dl>
+    <ul class="highlights"><li>Game loops &amp; mechanics</li><li>Level &amp; character design</li><li>Scratch + intro game engines</li><li>Portfolio showcase</li></ul>
+    <p class="delivery-note">Project-based modules + Innovation Mentor check-ins</p>
+    
+  </article>
+<article class="catalog-program" id="digital-marketing">
+    <header class="catalog-program-header">
+      <div>
+        <h3>Digital Marketing &amp; Social Media</h3>
+        <p class="tagline">Tell stories that spread — branding, content, and analytics for young creators.</p>
+      </div>
+      <div class="tuition-badge">$179 / elective</div>
+    </header>
+    <p class="description">Hands-on elective covering personal brand, social campaigns, visual content, and ethical digital citizenship for the next generation of creators.</p>
+    <dl class="meta-grid">
+      <div><dt>Duration</dt><dd>10 weeks</dd></div>
+      <div><dt>Age range</dt><dd>8–16</dd></div>
+      <div><dt>Tuition (USD)</dt><dd>$179</dd></div>
+      <div><dt>Access</dt><dd>Paid after registration</dd></div>
+      
+      
+    </dl>
+    <ul class="highlights"><li>Personal brand basics</li><li>Content planning</li><li>Visual storytelling</li><li>Ethical digital citizenship</li></ul>
+    <p class="delivery-note">Project-based modules + Innovation Mentor check-ins</p>
+    
+  </article>
+<article class="catalog-program" id="startup-business">
+    <header class="catalog-program-header">
+      <div>
+        <h3>Startup &amp; Business Innovation</h3>
+        <p class="tagline">Idea to pitch — entrepreneurship, prototyping, and problem-solving for young founders.</p>
+      </div>
+      <div class="tuition-badge">$179 / elective</div>
+    </header>
+    <p class="description">Explorers develop a real mini-startup: identify a problem, build a prototype, craft a pitch, and present to mentors in a celebration showcase.</p>
+    <dl class="meta-grid">
+      <div><dt>Duration</dt><dd>12 weeks</dd></div>
+      <div><dt>Age range</dt><dd>8–16</dd></div>
+      <div><dt>Tuition (USD)</dt><dd>$179</dd></div>
+      <div><dt>Access</dt><dd>Paid after registration</dd></div>
+      
+      
+    </dl>
+    <ul class="highlights"><li>Problem discovery</li><li>Lean canvas for youth</li><li>Prototype sprint</li><li>Pitch &amp; showcase</li></ul>
+    <p class="delivery-note">Project-based modules + Innovation Mentor check-ins</p>
+    
+  </article>
+<article class="catalog-program" id="coding-ai">
+    <header class="catalog-program-header">
+      <div>
+        <h3>Coding &amp; AI</h3>
+        <p class="tagline">Python, algorithms, and AI concepts — from first script to intelligent projects.</p>
+      </div>
+      <div class="tuition-badge">$249 / elective</div>
+    </header>
+    <p class="description">Aligned with the Coding &amp; AI Mission Path. Programming fundamentals, computational thinking, and AI discovery through guided missions and LAB builds.</p>
+    <dl class="meta-grid">
+      <div><dt>Duration</dt><dd>16 weeks</dd></div>
+      <div><dt>Age range</dt><dd>8–16</dd></div>
+      <div><dt>Tuition (USD)</dt><dd>$249</dd></div>
+      <div><dt>Access</dt><dd>Free demo mission → paid full course</dd></div>
+      
+      <div class="meta-span-2"><dt>Preview</dt><dd>Try mission: The Signal Goes Dark: /experiences/restore-nova-signal</dd></div>
+    </dl>
+    <ul class="highlights"><li>Python fundamentals</li><li>Computational thinking</li><li>AI discovery missions</li><li>ESP32 optional builds</li></ul>
+    <p class="delivery-note">Includes interactive Mission Path + mentor sessions</p>
+    
+  </article>
+<article class="catalog-program" id="robotics-engineering">
+    <header class="catalog-program-header">
+      <div>
+        <h3>Introduction to Robotics</h3>
+        <p class="tagline">Design, wire, and program robots — engineering process from sketch to autonomous bot.</p>
+      </div>
+      <div class="tuition-badge">$249 / elective</div>
+    </header>
+    <p class="description">Aligned with the Robotics Mission Path. Electronics, microcontrollers, ESP32 builds, and engineering design challenges with Wokwi simulation fallback.</p>
+    <dl class="meta-grid">
+      <div><dt>Duration</dt><dd>16 weeks</dd></div>
+      <div><dt>Age range</dt><dd>8–16</dd></div>
+      <div><dt>Tuition (USD)</dt><dd>$249</dd></div>
+      <div><dt>Access</dt><dd>Free demo mission → paid full course</dd></div>
+      
+      <div class="meta-span-2"><dt>Preview</dt><dd>Try mission: Rescue at Sector 7: /experiences/rescue-rover</dd></div>
+    </dl>
+    <ul class="highlights"><li>Engineering design process</li><li>Electronics &amp; wiring</li><li>ESP32 programming</li><li>Wokwi simulation fallback</li></ul>
+    <p class="delivery-note">Includes interactive Mission Path + mentor sessions</p>
+    
+  </article>
+<article class="catalog-program" id="iot-smart-systems">
+    <header class="catalog-program-header">
+      <div>
+        <h3>IoT &amp; Smart Systems</h3>
+        <p class="tagline">Sensors, connectivity, and smart devices — build the connected world.</p>
+      </div>
+      <div class="tuition-badge">$249 / elective</div>
+    </header>
+    <p class="description">Aligned with the IoT Mission Path. Smart sensors, wireless systems, cloud dashboards, and real-world automation projects.</p>
+    <dl class="meta-grid">
+      <div><dt>Duration</dt><dd>16 weeks</dd></div>
+      <div><dt>Age range</dt><dd>8–16</dd></div>
+      <div><dt>Tuition (USD)</dt><dd>$249</dd></div>
+      <div><dt>Access</dt><dd>Free demo mission → paid full course</dd></div>
+      
+      <div class="meta-span-2"><dt>Preview</dt><dd>Try mission: Red Alert Greenhouse: /experiences/smart-greenhouse</dd></div>
+    </dl>
+    <ul class="highlights"><li>Sensors &amp; actuators</li><li>MQTT &amp; connectivity</li><li>Cloud dashboards</li><li>Smart automation projects</li></ul>
+    <p class="delivery-note">Includes interactive Mission Path + mentor sessions</p>
+    
+  </article>
+<article class="catalog-program" id="digital-content-creation">
+    <header class="catalog-program-header">
+      <div>
+        <h3>Digital Content Creation</h3>
+        <p class="tagline">Video, design, and media — craft stories that inspire and inform.</p>
+      </div>
+      <div class="tuition-badge">$179 / elective</div>
+    </header>
+    <p class="description">Explorers produce videos, graphics, and multimedia portfolios using industry-inspired tools — storytelling, editing, and visual design fundamentals.</p>
+    <dl class="meta-grid">
+      <div><dt>Duration</dt><dd>10 weeks</dd></div>
+      <div><dt>Age range</dt><dd>8–16</dd></div>
+      <div><dt>Tuition (USD)</dt><dd>$179</dd></div>
+      <div><dt>Access</dt><dd>Paid after registration</dd></div>
+      
+      
+    </dl>
+    <ul class="highlights"><li>Storyboarding</li><li>Video editing basics</li><li>Graphic design intro</li><li>Multimedia portfolio</li></ul>
+    <p class="delivery-note">Project-based modules + Innovation Mentor check-ins</p>
+    
+  </article>
+<article class="catalog-program" id="cybersecurity-basics">
+    <header class="catalog-program-header">
+      <div>
+        <h3>Cybersecurity Basics for Teens</h3>
+        <p class="tagline">Defend your digital life — passwords, privacy, phishing, and ethical hacking intro.</p>
+      </div>
+      <div class="tuition-badge">$199 / elective</div>
+    </header>
+    <p class="description">Age-appropriate security elective: safe online habits, threat awareness, basic network concepts, and ethical responsibility in the digital world.</p>
+    <dl class="meta-grid">
+      <div><dt>Duration</dt><dd>8 weeks</dd></div>
+      <div><dt>Age range</dt><dd>10–16</dd></div>
+      <div><dt>Tuition (USD)</dt><dd>$199</dd></div>
+      <div><dt>Access</dt><dd>Paid after registration</dd></div>
+      
+      
+    </dl>
+    <ul class="highlights"><li>Password hygiene</li><li>Phishing awareness</li><li>Privacy fundamentals</li><li>Ethical hacking intro</li></ul>
+    <p class="delivery-note">Project-based modules + Innovation Mentor check-ins</p>
+    
+  </article>
+<article class="catalog-program" id="creative-tech-social-impact-teens">
+    <header class="catalog-program-header">
+      <div>
+        <h3>Creative Tech &amp; Social Impact for Teens</h3>
+        <p class="tagline">Design, creativity, and purpose — a welcoming STEAM path for teens exploring STEM beyond wires and code.</p>
+      </div>
+      <div class="tuition-badge">$179 / elective</div>
+    </header>
+    <p class="description">A creative elective for teens: design thinking, creative coding with Scratch, digital storytelling, diverse STEM role models, and team projects that solve real community problems — less hardware-heavy, more human-centered.</p>
+    <dl class="meta-grid">
+      <div><dt>Duration</dt><dd>10 weeks</dd></div>
+      <div><dt>Age range</dt><dd>8–16</dd></div>
+      <div><dt>Tuition (USD)</dt><dd>$179</dd></div>
+      <div><dt>Access</dt><dd>Paid after registration</dd></div>
+      
+      
+    </dl>
+    <ul class="highlights"><li>STEM role models &amp; careers</li><li>Design thinking &amp; empathy</li><li>Creative coding (Scratch)</li><li>Social-impact team projects</li></ul>
+    <p class="delivery-note">Project-based modules + Innovation Mentor check-ins</p>
+    
+  </article>
+      </section>
+<section class="catalog-section catalog-vertical">
+        <h2>NOVA College — Employability Tracks (9)</h2>
+        <article class="catalog-program" id="it-support-cloud-technician">
+    <header class="catalog-program-header">
+      <div>
+        <h3>Técnico en Soporte IT y Cloud</h3>
+        <p class="tagline">De la banca de servicio al cloud — hardware, redes y AWS para el primer empleo tech.</p>
+      </div>
+      <div class="tuition-badge">$899 / track</div>
+    </header>
+    <p class="description">Programa técnico de 120 horas orientado a empleabilidad que prepara a estudiantes para roles de help desk, soporte de TI y operaciones cloud entry-level. Combina fundamentos de hardware y sistemas operativos (CompTIA A+), conectividad de red (Network+), y servicios cloud con enfoque AWS Cloud Practitioner. Diseñado para colegios técnicos y community colleges que licencian currículo NOVA + plataforma NOVA STEM HUB.</p>
+    <dl class="meta-grid">
+      <div><dt>Duration</dt><dd>120 contact hours</dd></div>
+      <div><dt>Age range</dt><dd>16–25+</dd></div>
+      <div><dt>Tuition (USD)</dt><dd>$899</dd></div>
+      <div><dt>Access</dt><dd>Paid after registration</dd></div>
+      <div><dt>Certificate</dt><dd>NOVA-COL-IT</dd></div>
+      
+    </dl>
+    <ul class="highlights"><li>Diagnosticar y resolver fallas comunes de hardware, software y conectividad siguiendo metodología estructurada de troubleshooting.</li><li>Instalar, configurar y mantener sistemas operativos Windows y Linux en entornos de escritorio.</li><li>Explicar modelos TCP/IP, direccionamiento IP, DNS, DHCP y configurar redes locales básicas.</li><li>Aplicar principios de ciberseguridad básica: autenticación, permisos, backups y respuesta a incidentes de nivel 1.</li></ul>
+    <p class="delivery-note">QCW-style lessons · verifiable certificate · exam prep included</p>
+    
+  </article>
+<article class="catalog-program" id="cybersecurity-analyst">
+    <header class="catalog-program-header">
+      <div>
+        <h3>Analista de Ciberseguridad</h3>
+        <p class="tagline">Defiende redes y datos — SOC fundamentals, threat detection y Security+.</p>
+      </div>
+      <div class="tuition-badge">$949 / track</div>
+    </header>
+    <p class="description">Programa técnico de 120 horas que forma analistas de ciberseguridad entry-level capaces de operar en un Security Operations Center (SOC), responder incidentes y aplicar controles alineados a CompTIA Security+. Incluye labs de SIEM, análisis de logs, hardening y simulaciones de ataque/defensa en entorno controlado.</p>
+    <dl class="meta-grid">
+      <div><dt>Duration</dt><dd>120 contact hours</dd></div>
+      <div><dt>Age range</dt><dd>16–25+</dd></div>
+      <div><dt>Tuition (USD)</dt><dd>$949</dd></div>
+      <div><dt>Access</dt><dd>Paid after registration</dd></div>
+      <div><dt>Certificate</dt><dd>NOVA-COL-SEC</dd></div>
+      
+    </dl>
+    <ul class="highlights"><li>Explicar principios de confidencialidad, integridad, disponibilidad y modelos de amenazas (STRIDE intro).</li><li>Implementar controles de identidad: MFA, RBAC, principio de least privilege y gestión de credenciales.</li><li>Analizar tráfico de red y logs de sistema para detectar actividad anómala con Wireshark y SIEM simulado.</li><li>Ejecutar playbooks de respuesta a incidentes: identificar, contener, erradicar, recuperar y documentar.</li></ul>
+    <p class="delivery-note">QCW-style lessons · verifiable certificate · exam prep included</p>
+    
+  </article>
+<article class="catalog-program" id="data-analytics-technician">
+    <header class="catalog-program-header">
+      <div>
+        <h3>Técnico en Análisis de Datos</h3>
+        <p class="tagline">De Excel a SQL, Python y Power BI — el stack completo para tu primer empleo como analista de datos.</p>
+      </div>
+      <div class="tuition-badge">$899 / track</div>
+    </header>
+    <p class="description">Programa técnico de 120 horas orientado a empleabilidad que prepara analistas de datos entry-level con el stack moderno: Excel avanzado y Power Query, SQL intermedio (JOINs, CTEs, window functions), Python/pandas para análisis reproducible, estadística descriptiva aplicada y dashboards Power BI. Alineado a Google Data Analytics Certificate y Microsoft Power BI Data Analyst (PL-300). Diseñado para colegios técnicos, bootcamps y community colleges que licencian currículo NOVA + plataforma NOVA STEM HUB.</p>
+    <dl class="meta-grid">
+      <div><dt>Duration</dt><dd>120 contact hours</dd></div>
+      <div><dt>Age range</dt><dd>16–25+</dd></div>
+      <div><dt>Tuition (USD)</dt><dd>$899</dd></div>
+      <div><dt>Access</dt><dd>Paid after registration</dd></div>
+      <div><dt>Certificate</dt><dd>NOVA-COL-DA</dd></div>
+      
+    </dl>
+    <ul class="highlights"><li>Describir el ecosistema analítico, roles (analyst/scientist/engineer) y ciclo de vida de un proyecto de datos.</li><li>Formular preguntas SMART, definir KPIs y documentar reglas de negocio en un data dictionary.</li><li>Automatizar reportes con Excel (Power Query, pivot tables, INDEX-MATCH) y visualizaciones accesibles.</li><li>Escribir consultas SQL intermedias: JOINs, GROUP BY, subconsultas, CTEs y window functions sobre bases relacionales.</li></ul>
+    <p class="delivery-note">QCW-style lessons · verifiable certificate · exam prep included</p>
+    
+  </article>
+<article class="catalog-program" id="iot-smart-systems-technician">
+    <header class="catalog-program-header">
+      <div>
+        <h3>Técnico en IoT y Sistemas Inteligentes</h3>
+        <p class="tagline">Sensores, MQTT y edge — del prototipo ESP32 al despliegue industrial entry-level.</p>
+      </div>
+      <div class="tuition-badge">$899 / track</div>
+    </header>
+    <p class="description">Programa técnico de 120 horas que eleva las competencias del pathway NOVA IoT a nivel empleabilidad técnica: protocolos industriales, edge computing, dashboards profesionales, seguridad IoT y mantenimiento de sistemas conectados. Ideal para técnicos de facilities, agrotech, smart buildings y manufactura ligera.</p>
+    <dl class="meta-grid">
+      <div><dt>Duration</dt><dd>120 contact hours</dd></div>
+      <div><dt>Age range</dt><dd>16–25+</dd></div>
+      <div><dt>Tuition (USD)</dt><dd>$899</dd></div>
+      <div><dt>Access</dt><dd>Paid after registration</dd></div>
+      <div><dt>Certificate</dt><dd>NOVA-COL-IOT</dd></div>
+      
+    </dl>
+    <ul class="highlights"><li>Describir el mercado IoT, arquitecturas edge-fog-cloud y seleccionar protocolos/conectividad según vertical y restricciones.</li><li>Desarrollar firmware ESP32 con WiFi/BLE, FreeRTOS, deep sleep y buses I2C/SPI para nodos multi-sensor resilientes.</li><li>Implementar mensajería MQTT con topics jerárquicos, QoS apropiado y brokers Mosquitto, HiveMQ o AWS IoT Core.</li><li>Diseñar gateways edge con umbrales, actuadores, store-and-forward y flows Node-RED para integración heterogénea.</li></ul>
+    <p class="delivery-note">QCW-style lessons · verifiable certificate · exam prep included</p>
+    
+  </article>
+<article class="catalog-program" id="robotics-automation-technician">
+    <header class="catalog-program-header">
+      <div>
+        <h3>Técnico en Robótica y Automatización</h3>
+        <p class="tagline">Industria 4.0 en planta — PLC, cobots, ESP32, neumática y robótica de servicio para el técnico entry-level.</p>
+      </div>
+      <div class="tuition-badge">$949 / track</div>
+    </header>
+    <p class="description">Programa técnico de 120 horas que forma técnicos capaces de operar en manufactura y servicios automatizados: leer diagramas eléctricos y neumáticos, programar PLCs en TIA Portal (intro ladder), integrar HMI/SCADA, diagnosticar sensores 24V, configurar cobots colaborativos y AMR logísticos, desplegar gateway ESP32 con Wokwi fallback, y dar primeros pasos en ROS 2. Combina seguridad industrial (LOTO/E-stop), neumática ISO, redes Modbus/Profinet y simulación Factory I/O — empleabilidad entry-level en manufactura global.</p>
+    <dl class="meta-grid">
+      <div><dt>Duration</dt><dd>120 contact hours</dd></div>
+      <div><dt>Age range</dt><dd>16–25+</dd></div>
+      <div><dt>Tuition (USD)</dt><dd>$949</dd></div>
+      <div><dt>Access</dt><dd>Paid after registration</dd></div>
+      <div><dt>Certificate</dt><dd>NOVA-COL-ROBOT</dd></div>
+      
+    </dl>
+    <ul class="highlights"><li>Describir Industria 4.0, roles de automatización y aplicar LOTO/E-stop antes de intervenir en células robotizadas o neumáticas.</li><li>Leer diagramas eléctricos y neumáticos ISO; cablear circuitos 24V DC con sensores PNP/NPN y gateway ESP32 para telemetría.</li><li>Programar ladder logic intro en TIA Portal: marcha/paro, TON/TOF/TP, CTU y secuencias con interlocks.</li><li>Diferenciar robots industriales, cobots colaborativos y AMR de servicio; aplicar awareness ISO 10218 en piso de planta.</li></ul>
+    <p class="delivery-note">QCW-style lessons · verifiable certificate · exam prep included</p>
+    
+  </article>
+<article class="catalog-program" id="intro-telecommunications">
+    <header class="catalog-program-header">
+      <div>
+        <h3>Introducción a las Telecomunicaciones</h3>
+        <p class="tagline">De cobre a fibra y 5G — cableado, wireless, VoIP y field ops para el primer empleo telecom.</p>
+      </div>
+      <div class="tuition-badge">$849 / track</div>
+    </header>
+    <p class="description">Programa técnico de 120 horas que introduce las telecomunicaciones modernas: señales, cableado estructurado, fibra óptica, wireless/celular, VoIP, WAN y operaciones de campo. Alineado a dominios CompTIA Network+, conceptos ETA Fiber Optics Technician (FOT-NP) y BICSI Installer 1. Diferenciador NOVA College: pocos community colleges ofrecen fibra + celular + VoIP integrados en un solo track entry-level.</p>
+    <dl class="meta-grid">
+      <div><dt>Duration</dt><dd>120 contact hours</dd></div>
+      <div><dt>Age range</dt><dd>16–25+</dd></div>
+      <div><dt>Tuition (USD)</dt><dd>$849</dd></div>
+      <div><dt>Access</dt><dd>Paid after registration</dd></div>
+      <div><dt>Certificate</dt><dd>NOVA-COL-TEL</dd></div>
+      
+    </dl>
+    <ul class="highlights"><li>Describir la industria telecom, roles entry-level y marco regulatorio de espectro en USA y.</li><li>Explicar fundamentos de señales, modulación, multiplexación y relación frecuencia/ancho de banda.</li><li>Terminar, probar y certificar cableado de cobre según TIA-568 con documentación TIA-606.</li><li>Realizar empalmes básicos de fibra, medir pérdida con power meter e interpretar trazas OTDR intro.</li></ul>
+    <p class="delivery-note">QCW-style lessons · verifiable certificate · exam prep included</p>
+    
+  </article>
+<article class="catalog-program" id="electronics-technician">
+    <header class="catalog-program-header">
+      <div>
+        <h3>Técnico en Electrónica</h3>
+        <p class="tagline">De Ohm a microcontroladores — DC/AC, soldadura, instrumentos y troubleshooting para manufactura y campo.</p>
+      </div>
+      <div class="tuition-badge">$849 / track</div>
+    </header>
+    <p class="description">Programa técnico de 120 horas que forma técnicos en electrónica capaces de analizar circuitos DC/AC, ensamblar y soldar PCBs, usar instrumentación de banco, leer datasheets y diagnosticar fallas en equipos. Alineado a ETA Associate Certified Electronics Technician (DC/AC) e IPC-A-610 workmanship awareness. Complementa tracks de IoT, Robotics, Telecom e IT — la base hardware que muchos programas software-only omiten.</p>
+    <dl class="meta-grid">
+      <div><dt>Duration</dt><dd>120 contact hours</dd></div>
+      <div><dt>Age range</dt><dd>16–25+</dd></div>
+      <div><dt>Tuition (USD)</dt><dd>$849</dd></div>
+      <div><dt>Access</dt><dd>Paid after registration</dd></div>
+      <div><dt>Certificate</dt><dd>NOVA-COL-ELE</dd></div>
+      
+    </dl>
+    <ul class="highlights"><li>Aplicar Ley de Ohm, Kirchhoff y análisis serie/paralelo para predecir y verificar mediciones DC.</li><li>Explicar comportamiento de capacitores, inductores y transformadores en circuitos AC y filtros pasivos.</li><li>Polarizar diodos, LEDs y transistores; diseñar drivers de conmutación para cargas DC.</li><li>Interpretar tablas de verdad, compuertas lógicas y programar GPIO/ADC básico en Arduino o ESP32.</li></ul>
+    <p class="delivery-note">QCW-style lessons · verifiable certificate · exam prep included</p>
+    
+  </article>
+<article class="catalog-program" id="digital-marketing-business">
+    <header class="catalog-program-header">
+      <div>
+        <h3>Digital Marketing &amp; Business Growth</h3>
+        <p class="tagline">Brand, content, social, and ads — build real campaigns and launch a creative business career.</p>
+      </div>
+      <div class="tuition-badge">$749 / track</div>
+    </header>
+    <p class="description">120-hour employability track for digital marketing, social media, and e-commerce growth — creative and business-focused, with no heavy coding or hardware required. Aligned to Meta Certified Digital Marketing Associate and Google Digital Marketing &amp; E-commerce Certificate domains.</p>
+    <dl class="meta-grid">
+      <div><dt>Duration</dt><dd>120 contact hours</dd></div>
+      <div><dt>Age range</dt><dd>16–25+</dd></div>
+      <div><dt>Tuition (USD)</dt><dd>$749</dd></div>
+      <div><dt>Access</dt><dd>Paid after registration</dd></div>
+      <div><dt>Certificate</dt><dd>NOVA-COL-DMK</dd></div>
+      
+    </dl>
+    <ul class="highlights"><li>Develop brand strategy, personas, and multi-channel content calendars.</li><li>Create visual and video content with industry-standard tools (Canva, etc.).</li><li>Plan and report on social, email, and paid campaigns with ethical data use.</li><li>Apply SEO and content marketing to drive organic growth.</li></ul>
+    <p class="delivery-note">QCW-style lessons · verifiable certificate · exam prep included</p>
+    
+  </article>
+<article class="catalog-program catalog-program-quantum" id="quantum-workforce">
+    <header class="catalog-program-header">
+      <div>
+        <h3>Quantum Workforce — Computación Cuántica</h3>
+        <p class="tagline">Del qubit al empleo — Qiskit, algoritmos NISQ y portafolio industry-ready (Tier 2 Advanced).</p>
+      </div>
+      <div class="tuition-badge">$1899 / Tier 2 program</div>
+    </header>
+    <p class="description">Track avanzado NOVA College powered by Quantum Computing Workforce (QCW) — currículo college/university ya desplegado con simuladores interactivos (Bloch sphere, gate playground, banco óptico, /concepts). 12 módulos desde fundamentos hasta capstone de carrera. Ideal para instituciones que licencian NOVA College y quieren diferenciador cuántico sin montar departamento propio.</p>
+    <dl class="meta-grid">
+      <div><dt>Duration</dt><dd>120 contact hours</dd></div>
+      <div><dt>Age range</dt><dd>16–25+</dd></div>
+      <div><dt>Tuition (USD)</dt><dd>$1,899</dd></div>
+      <div><dt>Access</dt><dd>Paid after registration</dd></div>
+      <div><dt>Certificate</dt><dd>NOVA-COL-QNT</dd></div>
+      <div class="meta-span-2"><dt>Preview</dt><dd>Preview QCW interactive platform: https://quantum-workforce-academy.vercel.app</dd></div>
+    </dl>
+    <ul class="highlights"><li>Explicar qubits, superposición, medición y entrelazamiento sin mitos de paralelismo infinito.</li><li>Aplicar álgebra lineal y productos tensoriales a circuitos multi-qubit.</li><li>Construir y ejecutar circuitos en Qiskit (simulator y hardware cloud intro).</li><li>Implementar Deutsch-Jozsa, Grover y workflows VQE/QAOA introductorios.</li></ul>
+    <p class="delivery-note">Interactive labs in QCW app · Certificate NOVA-COL-QNT</p>
+    <div class="quantum-extra">
+        <h4>Quantum Computing Workforce (QCW) — Tier 2 Advanced</h4>
+        <p>12-module curriculum from qubit fundamentals to industry capstone. Interactive labs: Bloch sphere, gate playground, optical bench, Qiskit projects. Certificate <strong>NOVA-COL-QNT</strong>. Pathway to IBM Quantum Developer Certification.</p>
+        <p>Platform: <a href="https://quantum-workforce-academy.vercel.app">quantum-workforce-academy.vercel.app</a> · Course: quantum-computing-workforce-development</p>
+      </div>
+  </article>
+      </section>
+<section class="catalog-section catalog-vertical">
+        <h2>NOVA Language — CEFR Programs (3)</h2>
+        <article class="catalog-program" id="english">
+    <header class="catalog-program-header">
+      <div>
+        <h3>Learn English</h3>
+        <p class="tagline">From first conversation to professional fluency — grammar, speaking, and real-world confidence.</p>
+      </div>
+      <div class="tuition-badge">$449 / program</div>
+    </header>
+    <p class="description">Structured English program with listening, speaking, reading, and writing — CEFR A1→B2 path for learners worldwide.</p>
+    <dl class="meta-grid">
+      <div><dt>Duration</dt><dd>80 hours · A1 → B2</dd></div>
+      <div><dt>Age range</dt><dd>All ages</dd></div>
+      <div><dt>Tuition (USD)</dt><dd>$449</dd></div>
+      <div><dt>Access</dt><dd>Paid after registration</dd></div>
+      
+      
+    </dl>
+    <ul class="highlights"><li>CEFR-aligned path</li><li>Speaking labs</li><li>Professional basics</li><li>Verifiable certificate</li></ul>
+    <p class="delivery-note">CEFR-aligned path · speaking labs · verifiable completion</p>
+    
+  </article>
+<article class="catalog-program" id="spanish">
+    <header class="catalog-program-header">
+      <div>
+        <h3>Learn Spanish</h3>
+        <p class="tagline">Speak, read, and connect — practical Spanish for travel, work, and everyday life.</p>
+      </div>
+      <div class="tuition-badge">$449 / program</div>
+    </header>
+    <p class="description">Comprehensive Spanish program with conversation labs, grammar in context, and cultural communication skills.</p>
+    <dl class="meta-grid">
+      <div><dt>Duration</dt><dd>80 hours · A1 → B2</dd></div>
+      <div><dt>Age range</dt><dd>All ages</dd></div>
+      <div><dt>Tuition (USD)</dt><dd>$449</dd></div>
+      <div><dt>Access</dt><dd>Paid after registration</dd></div>
+      
+      
+    </dl>
+    <ul class="highlights"><li>Conversation-first</li><li>Grammar in context</li><li>Cultural communication</li><li>Verifiable certificate</li></ul>
+    <p class="delivery-note">CEFR-aligned path · speaking labs · verifiable completion</p>
+    
+  </article>
+<article class="catalog-program" id="portuguese">
+    <header class="catalog-program-header">
+      <div>
+        <h3>Learn Portuguese</h3>
+        <p class="tagline">Brazilian and European foundations — pronunciation, conversation, and professional basics.</p>
+      </div>
+      <div class="tuition-badge">$449 / program</div>
+    </header>
+    <p class="description">Portuguese program covering core grammar, speaking practice, and cultural nuance for global learners.</p>
+    <dl class="meta-grid">
+      <div><dt>Duration</dt><dd>80 hours · A1 → B2</dd></div>
+      <div><dt>Age range</dt><dd>All ages</dd></div>
+      <div><dt>Tuition (USD)</dt><dd>$449</dd></div>
+      <div><dt>Access</dt><dd>Paid after registration</dd></div>
+      
+      
+    </dl>
+    <ul class="highlights"><li>BR + EU foundations</li><li>Pronunciation labs</li><li>Professional basics</li><li>Verifiable certificate</li></ul>
+    <p class="delivery-note">CEFR-aligned path · speaking labs · verifiable completion</p>
+    
+  </article>
+      </section>
+    <section class="catalog-section">
+      <h2>Bundle packages</h2>
+      <article class="bundle-block">
+      <header class="catalog-program-header">
+        <div><h3>NOVA School Explorer Pass</h3><p class="tagline">All 9 youth electives for one Explorer — best value for homeschool &amp; gifted programs.</p></div>
+        <div class="tuition-badge">$1,299 / year · save ~$500 vs individual</div>
+      </header>
+      <p><strong>$1,299</strong> · save ~$500 vs individual</p>
+      <p class="bundle-slugs">Includes: gaming-game-design, digital-marketing, startup-business, coding-ai, robotics-engineering, iot-smart-systems, digital-content-creation, cybersecurity-basics, creative-tech-social-impact-teens</p>
+    </article>
+<article class="bundle-block">
+      <header class="catalog-program-header">
+        <div><h3>College Career Starter (pick 2)</h3><p class="tagline">Choose any two Tier 1 employability tracks — stack skills for your first tech role.</p></div>
+        <div class="tuition-badge">$1,499 · any 2 Tier 1 tracks</div>
+      </header>
+      <p><strong>$1,499</strong> · save ~$300 vs individual</p>
+      <p class="bundle-slugs">Includes: it-support-cloud-technician, cybersecurity-analyst, data-analytics-technician, iot-smart-systems-technician, robotics-automation-technician, intro-telecommunications, electronics-technician, digital-marketing-business</p>
+    </article>
+<article class="bundle-block">
+      <header class="catalog-program-header">
+        <div><h3>NOVA Language Trilingual Pack</h3><p class="tagline">English, Spanish, and Portuguese — full CEFR paths for global learners.</p></div>
+        <div class="tuition-badge">$999 · all 3 languages</div>
+      </header>
+      <p><strong>$999</strong> · save ~$348 vs individual</p>
+      <p class="bundle-slugs">Includes: english, spanish, portuguese</p>
+    </article>
+    </section>
+    <footer class="catalog-footer">
+      <p>NOVA STEM HUB · <a href="https://stem-innovation-academy.vercel.app">stem-innovation-academy.vercel.app</a></p>
+      <p>Live catalog: <a href="https://stem-innovation-academy.vercel.app/catalog">/catalog</a> · Quantum: <a href="https://quantum-workforce-academy.vercel.app">quantum-workforce-academy.vercel.app</a></p>
+      <p class="fine-print">Tuition shown are suggested list prices. Scholarships and B2B licensing available. Prices subject to change.</p>
+    </footer>
+  </div>
+</body>
+</html>

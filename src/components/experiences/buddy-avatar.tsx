@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -16,6 +19,24 @@ const sizeClasses = {
 };
 
 export function BuddyAvatar({ src, alt, className, size = "md" }: Props) {
+  const [failed, setFailed] = useState(false);
+  const initial = (alt.match(/[A-Za-z]/)?.[0] ?? "N").toUpperCase();
+
+  if (failed) {
+    return (
+      <div
+        className={cn(
+          "flex shrink-0 items-center justify-center bg-gradient-to-br from-nova-cyan/40 to-nova-blue/50 text-sm font-bold text-white",
+          sizeClasses[size],
+          className,
+        )}
+        aria-hidden={alt === ""}
+      >
+        {initial}
+      </div>
+    );
+  }
+
   return (
     <div
       className={cn(
@@ -30,6 +51,7 @@ export function BuddyAvatar({ src, alt, className, size = "md" }: Props) {
         alt={alt}
         className={cn("buddy-portrait h-full w-full", size === "card" && "buddy-portrait--card")}
         draggable={false}
+        onError={() => setFailed(true)}
       />
     </div>
   );

@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
+import { NOVA_SCHOOL } from "@/lib/nova-brand";
 
 export function LoginForm({ callbackUrl }: { callbackUrl?: string }) {
   const router = useRouter();
@@ -70,7 +71,7 @@ export function LoginForm({ callbackUrl }: { callbackUrl?: string }) {
       </div>
 
       <button type="submit" disabled={loading} className="nova-btn-primary w-full disabled:opacity-60">
-        {loading ? "Signing in..." : "Sign In to NOVA Portal"}
+        {loading ? "Signing in..." : `Sign In to ${NOVA_SCHOOL.portalName}`}
       </button>
     </form>
   );

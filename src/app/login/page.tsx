@@ -1,12 +1,17 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { LoginForm } from "@/components/auth/login-form";
+import { NovaHeroLogoMark } from "@/components/ui/nova-logo-mark";
+import { NOVA_SCHOOL } from "@/lib/nova-brand";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Login — NOVA Portal",
-};
+export const metadata = buildPageMetadata({
+  title: `Login — ${NOVA_SCHOOL.portalName}`,
+  description: `Sign in to ${NOVA_SCHOOL.portalName} — Mission Paths, progress tracking, and STEM missions.`,
+  path: "/login",
+  noIndex: true,
+});
 
 export default async function LoginPage({
   searchParams,
@@ -22,10 +27,10 @@ export default async function LoginPage({
         <div className="nova-container max-w-md">
           <div className="nova-glass-island shadow-nova">
             <div className="mb-6 text-center">
-              <span className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nova-cyan to-nova-blue text-xl text-white">
-                ✦
+              <span className="mb-3 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-nova-cyan/20 to-nova-blue/10 ring-1 ring-nova-cyan/30">
+                <NovaHeroLogoMark className="h-10 w-10 min-h-10 min-w-10 sm:h-11 sm:w-11 sm:min-h-11 sm:min-w-11" />
               </span>
-              <h1 className="text-2xl font-bold text-white">NOVA Portal</h1>
+              <h1 className="text-2xl font-bold text-white">{NOVA_SCHOOL.portalName}</h1>
               <p className="mt-1 text-sm text-nova-cyan-light/80">
                 Enter your mission command center — Explorers, Mentors, and administrators welcome.
               </p>
@@ -47,7 +52,7 @@ export default async function LoginPage({
             </div>
 
             <p className="mt-4 text-center text-sm text-nova-cyan-light/80">
-              New to NOVA?{" "}
+              New to {NOVA_SCHOOL.name}?{" "}
               <Link href="/register" className="font-semibold text-nova-cyan hover:underline">
                 Create an account
               </Link>

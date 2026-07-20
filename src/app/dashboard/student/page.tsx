@@ -14,6 +14,7 @@ import {
 import { PATHWAY_META, getPathwayMeta } from "@/lib/pathways/meta";
 import { db } from "@/lib/db";
 import { ArrowRight, Compass, Map, Sparkles } from "lucide-react";
+import { NovaLogoIcon } from "@/components/ui/nova-logo-mark";
 export const metadata: Metadata = {
   title: "Explorer Portal — NOVA",
 };
@@ -117,8 +118,9 @@ export default async function StudentDashboardPage() {
         <p className="mb-1 text-sm font-semibold uppercase tracking-wider text-nova-cyan">
           Explorer Portal
         </p>
-        <h1 className="text-2xl font-bold text-white">
-          Welcome back, {session.user.firstName}! ✦
+        <h1 className="flex flex-wrap items-center gap-2 text-2xl font-bold text-white">
+          <span>Welcome back, {session.user.firstName}!</span>
+          <NovaLogoIcon size="sm" className="h-6 w-6 min-h-6 min-w-6 opacity-90" />
         </h1>
         <p className="mt-1 text-nova-cyan-light/80">
           Your mission command center — you belong here. Pick up where you left off and launch
@@ -142,14 +144,14 @@ export default async function StudentDashboardPage() {
       </div>
       <section className="mb-10">
         <h2 className="mb-4 text-lg font-semibold text-white">What&apos;s Next</h2>
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {nextActions.slice(0, 3).map((action) => {
             const Icon = actionIcons[action.icon];
             return (
               <Link
                 key={action.href + action.title}
                 href={action.href}
-                className="nova-glass-card group flex flex-col transition hover:border-nova-cyan/40"
+                className="nova-glass-card group flex h-full min-h-[11rem] flex-col transition hover:border-nova-cyan/40"
               >
                 <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-nova-cyan/20 to-nova-blue/10 text-nova-cyan">
                   <Icon className="h-5 w-5" />
@@ -239,40 +241,33 @@ export default async function StudentDashboardPage() {
           Browse all paths →
         </Link>
       </div>
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+      <div className="mb-6 grid items-stretch gap-6 sm:grid-cols-2 xl:grid-cols-3">
         {publishedCourses.map((course) => {
           const meta = getPathwayMeta(course.slug);
           const enrollment = enrollments.find((e) => e.course.slug === course.slug);
           const expProg = meta ? exploreProgress(meta.experienceSlug) : undefined;
           return (
-            <div key={course.id} className="relative">
-              {expProg?.completedAt && (
-                <span className="absolute -top-2 right-3 z-10 rounded-full bg-nova-green px-2 py-0.5 text-[10px] font-bold uppercase text-white">
-                  Explore complete
-                </span>
-              )}
-              <CourseCard
-                slug={course.slug}
-                title={course.title}
-                description={course.description}
-                pathway={course.pathway}
-                level={course.level}
-                progress={enrollment?.progress}
-                enrolled={enrolledSlugs.has(course.slug)}
-                mentorName={
-                  course.mentor
-                    ? `${course.mentor.firstName} ${course.mentor.lastName}`
-                    : undefined
-                }
-                experienceSlug={meta?.experienceSlug}
-                experienceTitle={meta?.experienceTitle}
-              />
-              {expProg && !expProg.completedAt && (
-                <p className="mt-1 text-center text-xs text-nova-cyan">
-                  Explore Now in progress — stage {expProg.currentStage + 1}/8
-                </p>
-              )}
-            </div>
+            <CourseCard
+              key={course.id}
+              slug={course.slug}
+              title={course.title}
+              description={course.description}
+              pathway={course.pathway}
+              level={course.level}
+              progress={enrollment?.progress}
+              enrolled={enrolledSlugs.has(course.slug)}
+              mentorName={
+                course.mentor
+                  ? `${course.mentor.firstName} ${course.mentor.lastName}`
+                  : undefined
+              }
+              experienceSlug={meta?.experienceSlug}
+              experienceTitle={meta?.experienceTitle}
+              exploreComplete={Boolean(expProg?.completedAt)}
+              exploreStage={
+                expProg && !expProg.completedAt ? expProg.currentStage + 1 : null
+              }
+            />
           );
         })}
       </div>

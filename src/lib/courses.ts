@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { calculateCourseProgress } from "@/lib/utils";
+import { hasCourseAccess } from "@/lib/enrollment-access";
 
 export async function getPublishedCourses() {
   return db.course.findMany({
@@ -56,17 +57,19 @@ export async function getUserEnrollments(userId: string) {
 
   const completedSet = new Set(progressRecords.map((p) => p.lessonId));
 
-  return enrollments.map((enrollment) => {
-    const allLessons = enrollment.course.modules.flatMap((m) => m.lessons);
-    const completed = allLessons.filter((l) => completedSet.has(l.id)).length;
+  return enrollments
+    .filter((e) => hasCourseAccess(e))
+    .map((enrollment) => {
+      const allLessons = enrollment.course.modules.flatMap((m) => m.lessons);
+      const completed = allLessons.filter((l) => completedSet.has(l.id)).length;
 
-    return {
-      ...enrollment,
-      progress: calculateCourseProgress(allLessons.length, completed),
-      totalLessons: allLessons.length,
-      completedLessons: completed,
-    };
-  });
+      return {
+        ...enrollment,
+        progress: calculateCourseProgress(allLessons.length, completed),
+        totalLessons: allLessons.length,
+        completedLessons: completed,
+      };
+    });
 }
 
 export async function getCourseProgress(userId: string, courseId: string) {

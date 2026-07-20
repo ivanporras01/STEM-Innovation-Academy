@@ -43,3 +43,8 @@ coverage/
 
 # Generated buddy metadata (contains base64 — use public/buddies/*.jpg instead)
 src/data/buddies-from-html.json
+
+# Scholarship applications (runtime JSONL log)
+data/scholarship-applications/
+data/partnership-applications/
+.vercel

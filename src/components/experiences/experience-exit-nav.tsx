@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { NOVA_SCHOOL } from "@/lib/nova-brand";
 
 type Props = {
   courseSlug: string;
@@ -21,8 +22,8 @@ export function ExperienceExitNav({ courseSlug, isLoggedIn, variant = "inline" }
       }
       aria-label="Leave mission"
     >
-      <Link href="/" className={linkClass}>
-        NOVA Home
+      <Link href={NOVA_SCHOOL.path} className={linkClass}>
+        {NOVA_SCHOOL.homeLabel}
       </Link>
       <Link href="/courses" className={linkClass}>
         Mission Paths
@@ -32,7 +33,7 @@ export function ExperienceExitNav({ courseSlug, isLoggedIn, variant = "inline" }
       </Link>
       {isLoggedIn ? (
         <Link href="/dashboard/student" className={linkClass}>
-          NOVA Portal
+          {NOVA_SCHOOL.portalName}
         </Link>
       ) : (
         <Link href="/login" className={linkClass}>
