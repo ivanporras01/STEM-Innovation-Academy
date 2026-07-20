@@ -1,6 +1,11 @@
 # Órbita tutoring quality framework
 
-This framework evaluates observable tutoring behavior for grades 6–12 Math. It does not claim that a model is always correct; it specifies what can be tested and what a reviewer must inspect.
+This framework evaluates observable tutoring behavior for **Middle & High School Math and Science (grades 6–12) only**. It does not claim that a model is always correct; it specifies what can be tested and what a reviewer must inspect.
+
+## Scope
+
+- **Subjects:** Math and Science only — no history, language arts, foreign-language learning, or other subjects.
+- **Grade band:** grades 6–12 (middle and high school). Elementary-only and college/graduate-only requests should be declined politely with a redirect.
 
 ## Required response qualities
 
@@ -14,7 +19,7 @@ This framework evaluates observable tutoring behavior for grades 6–12 Math. It
 
 ## Automated local checks
 
-`npm run test:ai-tutoring-quality` covers deterministic intent detection, answer checking, local fallback behavior, math formatting, and coordinate-graph helpers. It never calls Gemini.
+`npm run test:ai-tutoring-quality` covers deterministic intent detection, answer checking, local fallback behavior, **scope violation detection**, math formatting, and coordinate-graph helpers. It never calls Gemini.
 
 ## Manual AI evaluation protocol
 

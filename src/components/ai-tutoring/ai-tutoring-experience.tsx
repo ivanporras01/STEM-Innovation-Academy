@@ -1,41 +1,33 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { Dispatch, PointerEvent, SetStateAction } from "react";
 import {
   ArrowRight,
   Calculator,
-  Camera,
   Check,
-  ChevronRight,
-  CircleHelp,
   Eraser,
   FlaskConical,
   Lock,
-  Maximize2,
-} from "lucide-react";
-import {
-  BookOpen,
-  Clock3,
   MessageCircle,
   Mic,
-  MicOff,
   Pencil,
-  Send,
-  ShieldCheck,
-  Sparkles,
   StopCircle,
   Volume2,
-  Wifi,
+  Wrench,
 } from "lucide-react";
-import { NovaLogoIcon } from "@/components/ui/nova-logo-mark";
 import { OrbitoRealGuide } from "@/components/orbit/orbito-real-guide";
 import { worldToSvg } from "@/lib/ai-tutoring-graph";
+import {
+  mergeSuggestedActions,
+  type LearnerAction,
+  type SuggestedAction,
+} from "@/lib/ai-tutoring-pedagogy";
+import { ensureOrbitaVoicesLoaded, getOrbitaVoice, speakWithOrbitaVoice } from "@/lib/orbita-voice";
 import { cn } from "@/lib/utils";
 
 type Subject = "Math" | "Science";
-type Room = "waiting" | "classroom" | "report";
+type Room = "classroom" | "report";
 type Message = { from: "explorer" | "tutor"; text: string };
 type SessionActivity = { chatMessages: number; whiteboardStrokes: number; hasNotes: boolean };
 type BoardColor = "navy" | "cyan" | "green" | "orange" | "purple";
@@ -48,7 +40,7 @@ type BoardCommand =
   | { type: "drawArrow"; x1: number; y1: number; x2: number; y2: number; label?: string; color?: BoardColor }
   | { type: "drawTriangle"; points: Array<{ x: number; y: number; label?: string }>; color?: BoardColor; labels?: string[] }
   | { type: "highlight"; x: number; y: number; width: number; height: number; color?: Exclude<BoardColor, "navy"> };
-type LearnerAction = "message" | "continue" | "understood" | "hint" | "different-explanation" | "slower";
+type OrbitaStatus = "ready" | "thinking" | "celebrating";
 type TeachingState = { objective: string; currentConcept: string; currentStep: number; studentUnderstanding: "starting" | "thinking" | "confident" | "needs-support"; hintsCount: number; nextGuidingQuestion: string; priorTutorBlock: string; lastLearnerMessage: string; selectedLearnerAction: LearnerAction };
 type TeachingBlock = { explanation: string; boardCommands: BoardCommand[]; guidingQuestion: string; suggestedActions: string[] };
 type TutorResponse = { reply: string; teachingBlock: TeachingBlock; lessonState?: TeachingState; providerStatus?: string; providerMessage?: string };
@@ -128,7 +120,7 @@ declare global {
 }
 
 const TOPICS: Record<Subject, string[]> = {
-  Math: ["Algebra & equations", "Geometry", "Pre-algebra", "Statistics", "Calculus readiness"],
+  Math: ["Algebra & equations", "Geometry", "Pre-algebra", "Statistics & probability", "Functions & advanced algebra"],
   Science: ["Biology", "Chemistry", "Physics", "Earth & space science", "Scientific investigation"],
 };
 
@@ -170,15 +162,22 @@ function TeachingBoard({ commands }: { commands: BoardCommand[] }) {
     range,
   };
   const scale = (x: number, y: number) => worldToSvg({ x, y }, plane);
-  const percentX = (value: number) => value * 10;
-  const percentY = (value: number) => value * 6.2;
+  const percentX = (value: number) => (value / 100) * BOARD_WIDTH;
+  const percentY = (value: number) => (value / 100) * BOARD_HEIGHT;
   const graphCommandsPresent = commands.some((command) => ["drawAxes", "plotPoint", "drawLine"].includes(command.type));
   const axisCommands = commands.filter((command): command is Extract<BoardCommand, { type: "drawAxes" }> => command.type === "drawAxes");
   const visibleAxes = axisCommands.length ? axisCommands : graphCommandsPresent ? [axes] : [];
+  const textCommands = commands.filter(isTextCommand);
+  const hasVisual = textCommands.length > 0 || graphCommandsPresent || commands.some((command) => command.type === "drawTriangle" || command.type === "drawArrow" || command.type === "highlight");
 
   return (
-    <svg viewBox={`0 0 ${BOARD_WIDTH} ${BOARD_HEIGHT}`} preserveAspectRatio="xMidYMid meet" className="pointer-events-none absolute inset-0 h-full w-full" aria-label="Órbita's structured teaching board">
+    <svg viewBox={`0 0 ${BOARD_WIDTH} ${BOARD_HEIGHT}`} preserveAspectRatio="xMidYMid meet" className="pointer-events-none absolute inset-0 z-10 h-full w-full" aria-label="Órbita's structured teaching board">
       <defs><marker id="board-arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#07836b" /></marker></defs>
+      {!hasVisual && (
+        <text x={BOARD_WIDTH / 2} y={BOARD_HEIGHT / 2} fill="#7a92a8" fontSize="22" textAnchor="middle">
+          Órbita will write the problem here as you chat
+        </text>
+      )}
       {commands.filter((command) => command.type === "highlight").map((command, index) => (
         <rect key={`highlight-${index}`} x={percentX(command.x)} y={percentY(command.y)} width={percentX(command.width)} height={percentY(command.height)} rx="12" fill={BOARD_COLORS[command.color ?? "cyan"]} opacity="0.13" />
       ))}
@@ -218,7 +217,22 @@ function TeachingBoard({ commands }: { commands: BoardCommand[] }) {
         return <g key={`point-${index}`}><circle cx={point.x} cy={point.y} r="7" fill={BOARD_COLORS[command.color ?? "orange"]} /><text x={point.x + 10} y={point.y - 10} fill="#0b1d3a" fontSize="16" fontWeight="700">{command.label}</text></g>;
       })}
       {commands.filter((command) => command.type === "drawArrow").map((command, index) => <g key={`arrow-${index}`}><line x1={percentX(command.x1)} y1={percentY(command.y1)} x2={percentX(command.x2)} y2={percentY(command.y2)} stroke={BOARD_COLORS[command.color ?? "green"]} strokeWidth="4" markerEnd="url(#board-arrow)" /><text x={(percentX(command.x1) + percentX(command.x2)) / 2} y={(percentY(command.y1) + percentY(command.y2)) / 2 - 10} fill={BOARD_COLORS[command.color ?? "green"]} fontSize="17" textAnchor="middle" fontWeight="700">{command.label}</text></g>)}
-      {commands.filter(isTextCommand).map((command, index) => <text key={`text-${index}`} x={percentX(command.x)} y={percentY(command.y)} fill={BOARD_COLORS[command.color ?? "navy"]} fontSize={command.size ?? (command.type === "formula" ? 24 : 18)} fontWeight={command.type === "formula" ? "700" : "600"} textAnchor={command.align === "left" ? "start" : command.align === "right" ? "end" : "middle"}>{command.text}</text>)}
+      {textCommands.map((command, index) => {
+        const x = percentX(command.x);
+        const y = percentY(command.y);
+        const fontSize = Math.max(command.size ?? (command.type === "formula" ? 34 : 22), command.type === "formula" ? 30 : 20);
+        const anchor = command.align === "left" ? "start" : command.align === "right" ? "end" : "middle";
+        const approxWidth = Math.min(BOARD_WIDTH - 80, Math.max(180, command.text.length * fontSize * 0.55));
+        const boxX = anchor === "middle" ? x - approxWidth / 2 : anchor === "end" ? x - approxWidth : x;
+        return (
+          <g key={`text-${index}`}>
+            <rect x={boxX - 12} y={y - fontSize} width={approxWidth + 24} height={fontSize + 18} rx="12" fill="#ffffff" opacity="0.92" />
+            <text x={x} y={y} fill={BOARD_COLORS[command.color ?? "navy"]} fontSize={fontSize} fontWeight={command.type === "formula" ? 800 : 650} textAnchor={anchor}>
+              {command.text}
+            </text>
+          </g>
+        );
+      })}
     </svg>
   );
 }
@@ -230,7 +244,10 @@ export function AiTutoringExperience({
   initialRoom?: "landing" | Room;
   studentName?: string;
 }) {
-  const [room, setRoom] = useState<"landing" | Room>(initialRoom);
+  // Never accept the removed waiting-room state — always open the live classroom.
+  const [room, setRoom] = useState<"landing" | Room>(
+    initialRoom === "classroom" || initialRoom === "report" ? initialRoom : initialRoom === "landing" ? "landing" : "classroom",
+  );
   const [name, setName] = useState(studentName);
   const [subject, setSubject] = useState<Subject>("Math");
   const [topic, setTopic] = useState(TOPICS.Math[0]);
@@ -244,10 +261,9 @@ export function AiTutoringExperience({
     setTopic(saved.topic || TOPICS[saved.subject || "Math"][0]);
   }, [studentName]);
 
-  const enterWaitingRoom = () => {
+  const startTutoringSession = () => {
     window.sessionStorage.setItem("nova-ai-tutoring", JSON.stringify({ name, subject, topic }));
-    setRoom("waiting");
-    window.history.replaceState(null, "", "/ai-tutoring/session");
+    window.location.assign("/ai-tutoring/session");
   };
 
   if (room === "landing") {
@@ -259,18 +275,7 @@ export function AiTutoringExperience({
         setSubject={setSubject}
         topic={topic}
         setTopic={setTopic}
-        onEnter={enterWaitingRoom}
-      />
-    );
-  }
-
-  if (room === "waiting") {
-    return (
-      <WaitingRoom
-        name={name || "Explorer"}
-        subject={subject}
-        topic={topic}
-        onJoin={() => setRoom("classroom")}
+        onEnter={startTutoringSession}
       />
     );
   }
@@ -300,62 +305,23 @@ function TutoringLanding({
   onEnter: () => void;
 }) {
   return (
-    <main className="nova-container py-8 sm:py-12">
-      <Link href="/" className="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-nova-cyan hover:text-white">
-        <NovaLogoIcon size="sm" /> NOVA AI Tutoring
-      </Link>
-      <section className="relative overflow-hidden rounded-[2rem] border border-nova-cyan/25 bg-[#071a31]/85 px-6 py-10 shadow-[0_0_80px_rgba(0,212,255,0.1)] sm:px-10 lg:px-14">
-        <div className="absolute -right-20 -top-32 h-96 w-96 rounded-full bg-nova-cyan/10 blur-3xl" />
-        <div className="relative grid items-center gap-10 lg:grid-cols-[1.1fr_.9fr]">
+    <main className="nova-container py-10 sm:py-14">
+      <p className="mb-6 text-sm font-semibold text-nova-cyan">NOVA AI Tutoring · Órbita</p>
+      <section className="mx-auto max-w-xl rounded-3xl border border-white/10 bg-[#071426]/90 p-6 sm:p-8">
+        <div className="mb-6 flex items-center gap-4">
+          <OrbitoRealGuide variantId="orbita" size="md" animate={false} className="h-20 w-20 shrink-0" />
           <div>
-            <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-nova-cyan/30 bg-nova-cyan/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-nova-cyan">
-              <Sparkles className="h-3.5 w-3.5" /> Grades 6–12 · Math & Science
-            </p>
-            <h1 className="max-w-2xl text-4xl font-bold tracking-tight text-white sm:text-5xl">
-              Your next breakthrough starts with a question.
-            </h1>
-            <p className="mt-5 max-w-xl text-lg leading-relaxed text-nova-cyan-light/85">
-              Step into a focused 60-minute discovery session. Bring a tricky problem, an idea, or a “how does this work?”—NOVA helps you explore it one step at a time.
-            </p>
-            <div className="mt-7 grid gap-3 sm:grid-cols-3">
-              {[
-                ["One-on-one space", "Your pace, your questions"],
-                ["Math + Science", "Built for grades 6–12"],
-                ["Private by design", "No recording enabled"],
-              ].map(([title, detail]) => (
-                <div key={title} className="rounded-2xl border border-white/10 bg-white/5 p-3">
-                  <p className="text-sm font-semibold text-white">{title}</p>
-                  <p className="mt-1 text-xs text-nova-cyan-light/70">{detail}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="relative mx-auto flex w-full max-w-sm items-end justify-center rounded-[2rem] border border-nova-cyan/25 bg-gradient-to-b from-[#123b5d] to-[#071426] p-6">
-            <div className="absolute inset-x-10 bottom-4 h-12 rounded-full bg-nova-cyan/30 blur-2xl" />
-            <OrbitoRealGuide variantId="orbita" size="hero" animate={false} className="relative h-72 w-72" />
-            <div className="absolute bottom-6 left-6 rounded-xl border border-nova-cyan/30 bg-[#071a31]/90 px-3 py-2">
-              <p className="text-xs font-bold text-white">NOVA AI Tutor</p>
-              <p className="text-[11px] text-nova-cyan">Ready for your mission</p>
-            </div>
+            <h1 className="text-2xl font-bold text-white">Quiet tutoring space</h1>
+            <p className="mt-1 text-sm text-nova-cyan-light/80">Math &amp; Science · grades 6–12. One question, one step.</p>
           </div>
         </div>
-      </section>
-
-      <section className="mx-auto mt-8 max-w-4xl rounded-3xl border border-white/10 bg-[#071426]/80 p-6 sm:p-8">
-        <div className="mb-6 flex items-start gap-3">
-          <span className="mt-0.5 rounded-xl bg-nova-cyan/15 p-2 text-nova-cyan"><CircleHelp className="h-5 w-5" /></span>
-          <div>
-            <h2 className="text-xl font-bold text-white">Set your discovery focus</h2>
-            <p className="mt-1 text-sm text-nova-cyan-light/75">This setup stays in your browser for this session only.</p>
-          </div>
-        </div>
-        <div className="grid gap-5 sm:grid-cols-2">
+        <div className="grid gap-4">
           <label className="block text-sm font-semibold text-white">
-            Explorer name
-            <input value={name} onChange={(event) => setName(event.target.value)} placeholder="What should NOVA call you?" className="mt-2 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-white outline-none placeholder:text-white/35 focus:border-nova-cyan" />
+            Your name
+            <input value={name} onChange={(event) => setName(event.target.value)} placeholder="First name" className="mt-2 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-white outline-none placeholder:text-white/35 focus:border-nova-cyan" />
           </label>
           <div>
-            <p className="text-sm font-semibold text-white">Choose a realm</p>
+            <p className="text-sm font-semibold text-white">Subject</p>
             <div className="mt-2 grid grid-cols-2 gap-2">
               {(["Math", "Science"] as Subject[]).map((item) => (
                 <button key={item} type="button" onClick={() => { setSubject(item); setTopic(TOPICS[item][0]); }} className={cn("rounded-xl border px-4 py-3 text-sm font-bold transition", subject === item ? "border-nova-cyan bg-nova-cyan/15 text-nova-cyan" : "border-white/15 bg-white/5 text-white/75 hover:border-white/35")}>
@@ -364,74 +330,17 @@ function TutoringLanding({
               ))}
             </div>
           </div>
-          <label className="block text-sm font-semibold text-white sm:col-span-2">
-            What are you exploring?
+          <label className="block text-sm font-semibold text-white">
+            Topic
             <select value={topic} onChange={(event) => setTopic(event.target.value)} className="mt-2 w-full rounded-xl border border-white/15 bg-[#0b1d32] px-4 py-3 text-white outline-none focus:border-nova-cyan">
               {TOPICS[subject].map((item) => <option key={item}>{item}</option>)}
             </select>
           </label>
         </div>
-        <div className="mt-7 flex flex-col gap-4 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <p className="flex items-center gap-2 text-sm text-nova-cyan-light/75"><Clock3 className="h-4 w-4 text-nova-cyan" /> 60-minute virtual discovery session</p>
-          <button type="button" onClick={onEnter} className="nova-btn-primary nova-btn-glow inline-flex items-center justify-center gap-2">
-            Enter waiting room <ArrowRight className="h-4 w-4" />
-          </button>
-        </div>
+        <button type="button" onClick={onEnter} className="nova-btn-primary nova-btn-glow mt-6 inline-flex w-full items-center justify-center gap-2">
+          Start tutoring <ArrowRight className="h-4 w-4" />
+        </button>
       </section>
-    </main>
-  );
-}
-
-function WaitingRoom({ name, subject, topic, onJoin }: { name: string; subject: Subject; topic: string; onJoin: () => void }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const streamRef = useRef<MediaStream | null>(null);
-  const [camera, setCamera] = useState<"idle" | "on" | "blocked">("idle");
-  const [mic, setMic] = useState(false);
-
-  useEffect(() => () => streamRef.current?.getTracks().forEach((track) => track.stop()), []);
-  const requestCamera = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-      streamRef.current = stream;
-      if (videoRef.current) videoRef.current.srcObject = stream;
-      setCamera("on");
-    } catch {
-      setCamera("blocked");
-    }
-  };
-
-  return (
-    <main className="nova-container py-8 sm:py-12">
-      <div className="mx-auto max-w-4xl">
-        <Link href="/ai-tutoring" className="inline-flex items-center gap-2 text-sm font-medium text-nova-cyan hover:text-white">← Edit session focus</Link>
-        <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_.85fr]">
-          <section className="rounded-3xl border border-white/10 bg-[#071426]/85 p-6 sm:p-8">
-            <p className="text-sm font-bold uppercase tracking-wider text-nova-cyan">Mission launchpad</p>
-            <h1 className="mt-2 text-3xl font-bold text-white">You&apos;re almost in, {name}.</h1>
-            <p className="mt-3 text-nova-cyan-light/80">Check your setup, then join your private discovery space when you&apos;re ready.</p>
-            <div className="mt-7 overflow-hidden rounded-2xl border border-white/10 bg-[#030b16]">
-              {camera === "on" ? <video ref={videoRef} autoPlay muted playsInline className="aspect-video w-full object-cover" /> : <div className="flex aspect-video flex-col items-center justify-center p-6 text-center"><Camera className="mb-3 h-8 w-8 text-nova-cyan" /><p className="font-semibold text-white">Camera preview is optional</p><p className="mt-1 text-sm text-white/55">Turn it on only if you&apos;d like a browser preview.</p></div>}
-            </div>
-            <div className="mt-4 grid gap-2 sm:grid-cols-3">
-              <button type="button" onClick={() => setMic(!mic)} className={cn("rounded-xl border p-3 text-left text-sm", mic ? "border-nova-green/50 bg-nova-green/10 text-nova-green" : "border-white/10 bg-white/5 text-white/75")}><span className="mb-1 block">{mic ? <Mic className="h-4 w-4" /> : <MicOff className="h-4 w-4" />}</span>Mic {mic ? "ready" : "muted"}</button>
-              <button type="button" onClick={requestCamera} className={cn("rounded-xl border p-3 text-left text-sm", camera === "on" ? "border-nova-green/50 bg-nova-green/10 text-nova-green" : "border-white/10 bg-white/5 text-white/75")}><Camera className="mb-1 h-4 w-4" />{camera === "blocked" ? "Camera blocked" : camera === "on" ? "Camera ready" : "Preview camera"}</button>
-              <div className="rounded-xl border border-nova-green/30 bg-nova-green/10 p-3 text-sm text-nova-green"><Volume2 className="mb-1 h-4 w-4" />Speaker ready</div>
-            </div>
-          </section>
-          <aside className="rounded-3xl border border-nova-cyan/20 bg-gradient-to-b from-[#0c2946] to-[#071426] p-6">
-            <div className="flex items-center gap-2 text-sm font-bold text-nova-green"><Wifi className="h-4 w-4" /> Connection ready</div>
-            <h2 className="mt-5 text-xl font-bold text-white">{subject} discovery session</h2>
-            <p className="mt-1 text-sm text-nova-cyan">{topic}</p>
-            <dl className="mt-6 space-y-3 text-sm">
-              <div className="flex justify-between border-b border-white/10 pb-3"><dt className="text-white/60">Explorer</dt><dd className="font-medium text-white">{name}</dd></div>
-              <div className="flex justify-between border-b border-white/10 pb-3"><dt className="text-white/60">Duration</dt><dd className="font-medium text-white">60 minutes</dd></div>
-              <div className="flex justify-between pb-1"><dt className="text-white/60">Session mode</dt><dd className="font-medium text-white">Browser-based</dd></div>
-            </dl>
-            <div className="mt-6 rounded-xl border border-white/10 bg-black/15 p-3 text-xs leading-relaxed text-white/65"><ShieldCheck className="mr-1 inline h-4 w-4 text-nova-cyan" /> Be kind, protect personal information, and ask for help when you need it. Optional test voice uses your browser only; NOVA does not record it.</div>
-            <button type="button" onClick={onJoin} className="nova-btn-primary nova-btn-glow mt-6 flex w-full items-center justify-center gap-2">Join session <ChevronRight className="h-4 w-4" /></button>
-          </aside>
-        </div>
-      </div>
     </main>
   );
 }
@@ -440,17 +349,18 @@ function VirtualClassroom({ name, subject, topic, onActivity, onEnd }: { name: s
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const drawing = useRef(false);
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
+  const replyInputRef = useRef<HTMLInputElement>(null);
   const [seconds, setSeconds] = useState(60 * 60);
-  const [chat, setChat] = useState<Message[]>([{ from: "tutor", text: `Welcome, ${name}. I’m Órbita. What would you like to investigate about ${topic}?` }]);
+  const [chat, setChat] = useState<Message[]>([{ from: "tutor", text: `Hi ${name}—I’m Órbita. Paste your ${subject} problem and we’ll take one step at a time.` }]);
   const [message, setMessage] = useState("");
-  const [note, setNote] = useState("");
   const [expression, setExpression] = useState("");
   const [result, setResult] = useState("");
+  const [showTools, setShowTools] = useState(false);
   const [teachingBlock, setTeachingBlock] = useState<TeachingBlock>({
-    explanation: `Welcome, ${name}. Tell me what you would like to explore, and we’ll take it one small step at a time.`,
+    explanation: `Hi ${name}—I’m Órbita. Share your Math or Science problem and we’ll take one clear step together.`,
     boardCommands: [],
-    guidingQuestion: `What would you like to investigate about ${topic}?`,
-    suggestedActions: ["I have a question"],
+    guidingQuestion: `What ${topic} question should we tackle first?`,
+    suggestedActions: ["I have a question", "I'm stuck on a problem", "Show me a hint"],
   });
   const [lessonState, setLessonState] = useState<TeachingState>({
     objective: `Explore ${topic}`,
@@ -466,8 +376,29 @@ function VirtualClassroom({ name, subject, topic, onActivity, onEnd }: { name: s
   const [isResponding, setIsResponding] = useState(false);
   const [chatError, setChatError] = useState("");
   const [voiceSupported, setVoiceSupported] = useState(false);
+  const [orbitaVolume, setOrbitaVolume] = useState(0.9);
   const [isListening, setIsListening] = useState(false);
   const [isAwaitingResponse, setIsAwaitingResponse] = useState(true);
+  const [orbitaStatus, setOrbitaStatus] = useState<OrbitaStatus>("ready");
+  const [showBreakthrough, setShowBreakthrough] = useState(false);
+  const suggestedActions = mergeSuggestedActions(teachingBlock.suggestedActions).slice(0, 3);
+
+  const triggerBreakthrough = () => {
+    setShowBreakthrough(true);
+    setOrbitaStatus("celebrating");
+    window.setTimeout(() => {
+      setShowBreakthrough(false);
+      setOrbitaStatus("ready");
+    }, 3200);
+  };
+
+  const orbitaStatusLabel = orbitaStatus === "thinking"
+    ? "Órbita is thinking…"
+    : orbitaStatus === "celebrating"
+      ? "Breakthrough!"
+      : isListening || isAwaitingResponse
+        ? "Órbita is listening for your thinking…"
+        : "Órbita is ready for your next move";
 
   useEffect(() => {
     const timer = window.setInterval(() => setSeconds((time) => Math.max(0, time - 1)), 1000);
@@ -475,7 +406,19 @@ function VirtualClassroom({ name, subject, topic, onActivity, onEnd }: { name: s
   }, []);
   useEffect(() => {
     setVoiceSupported(Boolean(window.SpeechRecognition || window.webkitSpeechRecognition));
+    const unloadOrbitaVoices = ensureOrbitaVoicesLoaded(() => {
+      getOrbitaVoice();
+    });
+    try {
+      const savedVolume = Number(window.sessionStorage.getItem("nova-orbita-volume"));
+      if (Number.isFinite(savedVolume) && savedVolume >= 0 && savedVolume <= 1) {
+        setOrbitaVolume(savedVolume);
+      }
+    } catch {
+      // ignore storage errors
+    }
     return () => {
+      unloadOrbitaVoices();
       recognitionRef.current?.stop();
       window.speechSynthesis.cancel();
     };
@@ -532,12 +475,16 @@ function VirtualClassroom({ name, subject, topic, onActivity, onEnd }: { name: s
     setChatError("");
     setIsResponding(true);
     setIsAwaitingResponse(false);
+    setOrbitaStatus("thinking");
+
+    const wasNeedsSupport = lessonState.studentUnderstanding === "needs-support" || lessonState.studentUnderstanding === "thinking";
+    let celebrate = false;
 
     try {
       const response = await fetch("/api/ai-tutoring/respond", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text, subject, topic, context: history, lessonState: requestLessonState }),
+        body: JSON.stringify({ message: text, subject, topic, explorerName: name, context: history, lessonState: requestLessonState }),
       });
       const rawData: unknown = await response.json();
       const responseError = rawData && typeof rawData === "object" ? rawData as { error?: unknown; code?: unknown } : {};
@@ -549,29 +496,85 @@ function VirtualClassroom({ name, subject, topic, onActivity, onEnd }: { name: s
         throw new Error(typeof responseError.error === "string" ? responseError.error : "Órbita could not respond right now.");
       }
       setChat((items) => [...items, { from: "tutor", text: data.reply }]);
-      setTeachingBlock(data.teachingBlock);
+      const nextBlock = data.teachingBlock.boardCommands.some((command) => command.type === "write" || command.type === "formula")
+        ? data.teachingBlock
+        : {
+            ...data.teachingBlock,
+            boardCommands: [
+              { type: "clear" as const },
+              {
+                type: "formula" as const,
+                text: (data.teachingBlock.explanation.match(/[0-9a-zA-Z(][^=≤≥<>]{0,40}[=≤≥<>]{1,2}[^.]{0,40}/)?.[0] || data.reply).slice(0, 80),
+                x: 50,
+                y: 36,
+                color: "navy" as const,
+                size: 34,
+              },
+            ],
+          };
+      setTeachingBlock(nextBlock);
       if (data.providerMessage) setChatError(data.providerMessage);
       setIsAwaitingResponse(true);
-      setLessonState(data.lessonState ?? {
+
+      const nextLessonState = data.lessonState ?? {
         ...requestLessonState,
         currentStep: requestLessonState.currentStep + 1,
         currentConcept: data.teachingBlock.guidingQuestion,
         nextGuidingQuestion: data.teachingBlock.guidingQuestion,
         priorTutorBlock: data.teachingBlock.explanation,
-      });
+      };
+      setLessonState(nextLessonState);
+
+      // Keep the conversation feeling live: speak the step, then focus the reply box.
+      const speech = `${plainTutorText(data.teachingBlock.explanation)} ${plainTutorText(data.teachingBlock.guidingQuestion)}`.trim();
+      if (speech) {
+        speakWithOrbitaVoice(speech, {
+          volume: orbitaVolume,
+          onEnd: () => {
+            setIsAwaitingResponse(true);
+            replyInputRef.current?.focus();
+          },
+        });
+      } else {
+        window.setTimeout(() => replyInputRef.current?.focus(), 50);
+      }
+
+      const replyLooksCorrect = /\b(yes|correct|nice|breakthrough|exactly|right|well done|great job|good start)\b/i.test(data.reply);
+      const becameConfident = nextLessonState.studentUnderstanding === "confident" && wasNeedsSupport;
+      if (replyLooksCorrect || becameConfident) {
+        celebrate = true;
+        triggerBreakthrough();
+      }
     } catch (error) {
       setChatError(error instanceof Error ? error.message : "Órbita could not respond right now.");
     } finally {
       setIsResponding(false);
+      if (!celebrate) setOrbitaStatus("ready");
     }
+  };
+  const handleSuggestedAction = (action: SuggestedAction) => {
+    if (action.action === "message" && !action.message?.includes("question")) {
+      void sendMessage(action.message ?? action.label, "message");
+      return;
+    }
+    if (action.action === "message") {
+      setMessage("I have a question: ");
+      return;
+    }
+    void sendMessage(action.message ?? action.label, action.action);
   };
   const speakWithOrbita = () => {
     if (!teachingBlock.explanation || !("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(plainTutorText(teachingBlock.explanation));
-    utterance.rate = 0.95;
-    utterance.onend = () => { setIsListening(false); setIsAwaitingResponse(true); };
-    window.speechSynthesis.speak(utterance);
+    const explanation = plainTutorText(teachingBlock.explanation);
+    const question = plainTutorText(teachingBlock.guidingQuestion);
+    const speech = question ? `${explanation} ${question}` : explanation;
+    speakWithOrbitaVoice(speech, {
+      volume: orbitaVolume,
+      onEnd: () => {
+        setIsListening(false);
+        setIsAwaitingResponse(true);
+      },
+    });
   };
   const stopSpeaking = () => window.speechSynthesis.cancel();
   const toggleListening = () => {
@@ -608,65 +611,232 @@ function VirtualClassroom({ name, subject, topic, onActivity, onEnd }: { name: s
     recognitionRef.current.start();
   };
   const calculate = () => {
-    if (!/^[0-9+\-*/().\s]+$/.test(expression)) { setResult("Use numbers and + − × ÷ ( ) only."); return; }
-    try { setResult(String(Function(`"use strict"; return (${expression})`)())); } catch { setResult("Check that expression and try again."); }
+    const raw = expression.trim();
+    if (!raw) {
+      setResult("");
+      return;
+    }
+    const normalized = raw
+      .replace(/×/g, "*")
+      .replace(/÷/g, "/")
+      .replace(/√\s*\(/g, "Math.sqrt(")
+      .replace(/√\s*(-?\d+(?:\.\d+)?)/g, "Math.sqrt($1)")
+      .replace(/(\d+(?:\.\d+)?)\s*\^\s*(\d+(?:\.\d+)?)/g, "Math.pow($1,$2)")
+      .replace(/\^/g, "**");
+    if (!/^[0-9+\-*/().\sMathpowsqrt,]+$/.test(normalized)) {
+      setResult("Use numbers, + − × ÷ ( ), ^, or √");
+      return;
+    }
+    try {
+      // eslint-disable-next-line no-new-func
+      const value = Function(`"use strict"; return (${normalized})`)();
+      if (typeof value !== "number" || !Number.isFinite(value)) {
+        setResult("Check that expression and try again.");
+        return;
+      }
+      setResult(Number.isInteger(value) ? String(value) : String(Math.round(value * 1_000_000) / 1_000_000));
+    } catch {
+      setResult("Check that expression and try again.");
+    }
+  };
+  const insertCalc = (snippet: string) => {
+    setExpression((current) => `${current}${snippet}`);
   };
   return (
     <main className="min-h-screen bg-[#030b16]">
-      <header className="sticky top-0 z-20 border-b border-white/10 bg-[#071426]/95 px-4 py-3 backdrop-blur sm:px-6">
-        <div className="mx-auto flex max-w-[1600px] flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-3"><NovaLogoIcon size="sm" /><div><p className="font-bold text-white">NOVA AI Tutoring</p><p className="text-xs text-nova-cyan">{subject} · {topic}</p></div></div>
-          <div className="rounded-full border border-nova-cyan/30 bg-nova-cyan/10 px-4 py-2 font-mono text-sm font-bold text-nova-cyan"><Clock3 className="mr-2 inline h-4 w-4" />{formatTime(seconds)} remaining</div>
-          <button type="button" onClick={onEnd} className="rounded-lg border border-white/20 px-3 py-2 text-sm font-semibold text-white hover:border-nova-cyan hover:text-nova-cyan">End session</button>
+      <header className="sticky top-0 z-20 border-b border-white/10 bg-[#071426]/95 px-4 py-2.5 backdrop-blur sm:px-6">
+        <div className="mx-auto flex max-w-4xl items-center justify-between gap-3">
+          <div className="min-w-0">
+            <p className="truncate text-sm font-bold text-white">Órbita · {subject}</p>
+            <p className="truncate text-[11px] text-white/50">{topic}</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <button type="button" onClick={speakWithOrbita} aria-label="Speak" className="rounded-lg border border-white/15 p-2 text-nova-cyan hover:bg-white/5" title="Speak">
+              <Volume2 className="h-4 w-4" />
+            </button>
+            <button type="button" onClick={stopSpeaking} aria-label="Stop speaking" className="rounded-lg border border-white/15 p-2 text-white/70 hover:bg-white/5" title="Stop">
+              <StopCircle className="h-4 w-4" />
+            </button>
+            {voiceSupported && (
+              <button
+                type="button"
+                onClick={toggleListening}
+                aria-label={isListening ? "Stop listening" : "Listen"}
+                className={cn("rounded-lg border p-2", isListening ? "border-nova-orange/50 text-nova-orange" : "border-white/15 text-white/70 hover:bg-white/5")}
+                title={isListening ? "Stop mic" : "Mic"}
+              >
+                <Mic className="h-4 w-4" />
+              </button>
+            )}
+            <span className="hidden rounded-full border border-white/10 px-3 py-1 font-mono text-xs text-white/70 sm:inline">{formatTime(seconds)}</span>
+            <button type="button" onClick={onEnd} className="rounded-lg border border-white/20 px-3 py-1.5 text-xs font-semibold text-white/80 hover:border-nova-cyan hover:text-nova-cyan">
+              End
+            </button>
+          </div>
         </div>
       </header>
-      <div className="mx-auto grid max-w-[1600px] gap-4 p-4 lg:grid-cols-[250px_minmax(0,1fr)_290px]">
-        <aside className="rounded-2xl border border-white/10 bg-[#071426] p-4">
-          <div className="flex items-start gap-3"><OrbitoRealGuide variantId="orbita" size="md" animate={false} className="h-24 w-24" /><div><p className="font-bold text-white">Órbita</p><p className="mt-1 text-xs font-semibold text-nova-green">● Ready to guide</p></div></div>
-          <div className="mt-4 rounded-xl border border-nova-cyan/30 bg-nova-cyan/10 p-3 text-xs leading-relaxed text-nova-cyan"><Sparkles className="mr-1 inline h-4 w-4" /> One idea at a time. Browser voice is optional and nothing is recorded by NOVA.</div>
-          <div className="mt-4 border-t border-white/10 pt-4"><p className="text-xs font-bold uppercase tracking-wider text-white/50">Your mission</p><p className="mt-2 text-sm font-semibold text-white">{lessonState.objective}</p><p className="mt-1 text-xs text-white/60">Step {lessonState.currentStep + 1} · {lessonState.currentConcept}</p></div>
-        </aside>
-        <section className="min-w-0 rounded-2xl border border-white/10 bg-[#f8fcff] p-3 shadow-inner">
-          <div className="mb-3 flex items-center justify-between text-[#0b1d3a]"><div className="flex items-center gap-2 font-bold"><Pencil className="h-4 w-4 text-[#007da0]" /> Interactive whiteboard</div><button type="button" onClick={() => { const canvas = canvasRef.current; if (canvas) canvas.getContext("2d")?.clearRect(0, 0, canvas.width, canvas.height); }} className="rounded-lg border border-[#0b1d3a]/20 px-2 py-1 text-xs font-semibold hover:bg-[#dff8ff]"><Eraser className="mr-1 inline h-3.5 w-3.5" />Clear</button></div>
+
+      <div className="mx-auto flex max-w-4xl flex-col gap-3 p-3 sm:p-4">
+        <section className="rounded-2xl border border-white/10 bg-[#f8fcff] p-3 shadow-inner">
+          {showBreakthrough && (
+            <p className="mb-2 text-center text-sm font-semibold text-[#07836b]">Nice work — keep going.</p>
+          )}
+          <div className="mb-2 flex items-center justify-between text-[#0b1d3a]">
+            <p className="text-sm font-bold">Board</p>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setShowTools((open) => !open)}
+                className={cn("rounded-lg border px-2 py-1 text-xs font-semibold", showTools ? "border-[#007da0] bg-[#eaf8fc] text-[#007da0]" : "border-[#0b1d3a]/20 hover:bg-[#dff8ff]")}
+              >
+                <Wrench className="mr-1 inline h-3.5 w-3.5" />
+                Calc
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const canvas = canvasRef.current;
+                  if (canvas) canvas.getContext("2d")?.clearRect(0, 0, canvas.width, canvas.height);
+                }}
+                className="rounded-lg border border-[#0b1d3a]/20 px-2 py-1 text-xs font-semibold hover:bg-[#dff8ff]"
+              >
+                <Eraser className="mr-1 inline h-3.5 w-3.5" />
+                Clear
+              </button>
+            </div>
+          </div>
           <div className="relative overflow-hidden rounded-xl">
-            <canvas ref={canvasRef} onPointerDown={startDraw} onPointerMove={draw} onPointerUp={() => { drawing.current = false; }} onPointerLeave={() => { drawing.current = false; }} className="h-[350px] w-full touch-none rounded-xl bg-[linear-gradient(#dcecf5_1px,transparent_1px),linear-gradient(90deg,#dcecf5_1px,transparent_1px)] bg-[size:24px_24px] cursor-crosshair sm:h-[510px]" aria-label="Interactive whiteboard. Draw using a pointer or mouse." />
+            <canvas
+              ref={canvasRef}
+              onPointerDown={startDraw}
+              onPointerMove={draw}
+              onPointerUp={() => { drawing.current = false; }}
+              onPointerLeave={() => { drawing.current = false; }}
+              className="h-[280px] w-full touch-none rounded-xl bg-[linear-gradient(#dcecf5_1px,transparent_1px),linear-gradient(90deg,#dcecf5_1px,transparent_1px)] bg-[size:24px_24px] cursor-crosshair sm:h-[420px]"
+              aria-label="Interactive whiteboard"
+            />
             <TeachingBoard commands={teachingBlock.boardCommands} />
           </div>
-          <div className="mt-3 rounded-xl border border-[#007da0]/20 bg-[#eaf8fc] p-3 text-sm text-[#0b1d3a]"><p className="font-bold text-[#007da0]">Órbita&apos;s current idea</p><p className="mt-1 leading-relaxed">{teachingBlock.explanation}</p><p className="mt-2 font-semibold">{teachingBlock.guidingQuestion}</p></div>
-        </section>
-        <aside className="space-y-4">
-          <div className="rounded-2xl border border-white/10 bg-[#071426] p-4">
-            <p className="mb-3 flex items-center gap-2 font-bold text-white"><MessageCircle className="h-4 w-4 text-nova-cyan" /> Chat with Órbita</p>
-            <div className="h-40 space-y-2 overflow-y-auto pr-1">
-              {chat.map((item, index) => <div key={`${item.text}-${index}`} className={cn("rounded-xl px-3 py-2 text-xs leading-relaxed", item.from === "explorer" ? "ml-5 bg-nova-cyan/15 text-white" : "mr-4 bg-white/10 text-white/75")}>{item.text}</div>)}
-              {isResponding && <div className="mr-4 rounded-xl bg-white/10 px-3 py-2 text-xs text-white/75">Órbita is thinking…</div>}
-            </div>
-            {chatError && <p role="alert" className="mt-2 text-xs text-nova-orange">{chatError}</p>}
-            <div className="mt-3 grid grid-cols-2 gap-2">
-              <button type="button" onClick={() => void sendMessage("Continue to the next small step.", "continue")} disabled={isResponding} className="col-span-2 rounded-lg bg-nova-green/20 px-2 py-2 text-xs font-bold text-nova-green hover:bg-nova-green/30 disabled:opacity-60">I got it — continue</button>
-              <button type="button" onClick={() => void sendMessage("Please give one hint for this exact step.", "hint")} disabled={isResponding} className="rounded-lg border border-nova-cyan/40 px-2 py-2 text-xs font-semibold text-nova-cyan disabled:opacity-60">Show me a hint</button>
-              <button type="button" onClick={() => void sendMessage("Please explain this same step in a different way.", "different-explanation")} disabled={isResponding} className="rounded-lg border border-white/20 px-2 py-2 text-xs font-semibold text-white disabled:opacity-60">Explain differently</button>
-              <button type="button" onClick={() => { setMessage("I have a question: "); }} className="rounded-lg border border-white/20 px-2 py-2 text-xs font-semibold text-white">I have a question</button>
-              <button type="button" onClick={() => void sendMessage("Please slow down and restate this step in smaller pieces.", "slower")} disabled={isResponding} className="rounded-lg border border-white/20 px-2 py-2 text-xs font-semibold text-white disabled:opacity-60">Slow down</button>
-            </div>
-            <div className="mt-3 flex gap-2">
-              <input value={message} onChange={(event) => setMessage(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") void sendMessage(); }} disabled={isResponding} placeholder="Ask or share an idea…" className="min-w-0 flex-1 rounded-lg border border-white/15 bg-white/5 px-2 py-2 text-xs text-white outline-none placeholder:text-white/35 focus:border-nova-cyan disabled:opacity-60" />
-              <button type="button" onClick={() => void sendMessage()} disabled={isResponding} aria-label="Send message" className="rounded-lg bg-nova-cyan p-2 text-[#061321] disabled:opacity-60"><Send className="h-4 w-4" /></button>
-            </div>
-            <div className="mt-3 border-t border-white/10 pt-3">
-              <p className="text-[11px] font-semibold text-nova-cyan">Test voice (browser) {voiceSupported ? "· Ready" : "· Unsupported"}</p>
-              <div className="mt-2 grid grid-cols-2 gap-2">
-                <button type="button" onClick={speakWithOrbita} className="rounded-lg border border-nova-cyan/40 px-2 py-2 text-xs font-semibold text-nova-cyan hover:bg-nova-cyan/10"><Volume2 className="mr-1 inline h-3.5 w-3.5" />Speak with Órbita</button>
-                <button type="button" onClick={stopSpeaking} className="rounded-lg border border-white/20 px-2 py-2 text-xs font-semibold text-white/80 hover:border-white/50"><StopCircle className="mr-1 inline h-3.5 w-3.5" />Stop speaking</button>
-                <button type="button" onClick={toggleListening} className={cn("col-span-2 rounded-lg border px-2 py-2 text-xs font-semibold", isListening ? "border-nova-orange/60 bg-nova-orange/10 text-nova-orange" : "border-white/20 text-white/80 hover:border-nova-cyan")}><Mic className="mr-1 inline h-3.5 w-3.5" />{isListening ? "Stop listening" : "Listen"} {isListening ? "— recording your voice…" : "— tap to start"}</button>
+
+          {showTools && (
+            <div className="mt-3 rounded-xl border border-[#007da0]/20 bg-white p-3">
+              <p className="text-xs font-semibold text-[#007da0]">Quick calculator</p>
+              <div className="mt-2 flex gap-2">
+                <input
+                  value={expression}
+                  onChange={(event) => setExpression(event.target.value)}
+                  onKeyDown={(event) => { if (event.key === "Enter") calculate(); }}
+                  placeholder="e.g. 46 - 7 or √39"
+                  className="min-w-0 flex-1 rounded-lg border border-[#007da0]/20 px-3 py-2 text-sm text-[#0b1d3a] outline-none focus:border-[#007da0]"
+                />
+                <button type="button" onClick={calculate} className="rounded-lg bg-[#007da0] px-3 text-sm font-bold text-white">=</button>
               </div>
-              <p className="mt-2 text-[11px] leading-relaxed text-white/50">{isListening || isAwaitingResponse ? "Órbita is listening for your thinking…" : "After Órbita speaks, share your thinking by voice or chat. Your transcript appears for review before sending."}</p>
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {[
+                  { label: "−", insert: "-" },
+                  { label: "+", insert: "+" },
+                  { label: "×", insert: "×" },
+                  { label: "÷", insert: "÷" },
+                  { label: "^2", insert: "^2" },
+                  { label: "√", insert: "√(" },
+                ].map((button) => (
+                  <button
+                    key={button.label}
+                    type="button"
+                    onClick={() => insertCalc(button.insert)}
+                    className="rounded-md border border-[#0b1d3a]/15 px-2 py-1 text-xs font-semibold text-[#0b1d3a]/80 hover:border-[#007da0]"
+                  >
+                    {button.label}
+                  </button>
+                ))}
+              </div>
+              {result && <p className="mt-2 text-sm font-semibold text-[#007da0]">= {result}</p>}
             </div>
+          )}
+        </section>
+
+        <section className="rounded-2xl border border-white/10 bg-[#071426] p-4">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-xs font-semibold uppercase tracking-wider text-nova-cyan">Órbita</p>
+              <p className="mt-1 text-sm leading-relaxed text-white/90">{teachingBlock.explanation}</p>
+              <p className="mt-2 text-sm font-semibold text-white">{teachingBlock.guidingQuestion}</p>
+            </div>
+            {orbitaStatus === "thinking" && <p className="shrink-0 text-xs text-nova-cyan">Thinking…</p>}
           </div>
-          <div className="rounded-2xl border border-white/10 bg-[#071426] p-4"><p className="flex items-center gap-2 font-bold text-white"><BookOpen className="h-4 w-4 text-nova-cyan" /> Explorer notes</p><textarea value={note} onChange={(event) => { setNote(event.target.value); onActivity((activity) => ({ ...activity, hasNotes: event.target.value.trim().length > 0 })); }} placeholder="Capture an idea, a question, or your next step…" className="mt-3 h-20 w-full resize-none rounded-lg border border-white/15 bg-white/5 p-2 text-xs text-white outline-none placeholder:text-white/35 focus:border-nova-cyan" /></div>
-          <div className="rounded-2xl border border-white/10 bg-[#071426] p-4"><p className="flex items-center gap-2 font-bold text-white"><Calculator className="h-4 w-4 text-nova-cyan" /> Quick calculator</p><div className="mt-3 flex gap-2"><input value={expression} onChange={(event) => setExpression(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") calculate(); }} placeholder="e.g. (12 + 8) / 2" className="min-w-0 flex-1 rounded-lg border border-white/15 bg-white/5 px-2 py-2 text-xs text-white outline-none focus:border-nova-cyan" /><button type="button" onClick={calculate} className="rounded-lg border border-nova-cyan/50 px-2 text-xs font-bold text-nova-cyan">=</button></div>{result && <p className="mt-2 text-xs text-nova-cyan-light">{result}</p>}</div>
-          <div className="rounded-2xl border border-white/10 bg-[#071426] p-4 text-xs text-white/65"><Maximize2 className="mr-1 inline h-4 w-4 text-nova-cyan" /> Formula and science reference packs will connect here when curriculum resources are configured.</div>
-        </aside>
+
+          <div className="mt-4 flex gap-2">
+            <input
+              ref={replyInputRef}
+              value={message}
+              onChange={(event) => setMessage(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") void sendMessage();
+              }}
+              disabled={isResponding}
+              placeholder="Your next step…"
+              className="min-w-0 flex-1 rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white outline-none placeholder:text-white/35 focus:border-nova-cyan disabled:opacity-60"
+            />
+            <button
+              type="button"
+              onClick={() => void sendMessage()}
+              disabled={isResponding || !message.trim()}
+              className="rounded-xl bg-nova-cyan px-4 py-3 text-sm font-bold text-[#061321] disabled:opacity-60"
+            >
+              Send
+            </button>
+          </div>
+
+          {suggestedActions.length > 0 && (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {suggestedActions.map((action) => (
+                <button
+                  key={`${action.action}-${action.label}`}
+                  type="button"
+                  onClick={() => handleSuggestedAction(action)}
+                  disabled={isResponding}
+                  className="rounded-full border border-white/20 px-3 py-1.5 text-xs font-semibold text-white/80 hover:border-nova-cyan hover:text-nova-cyan disabled:opacity-60"
+                >
+                  {action.label}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {chatError && <p role="alert" className="mt-3 text-xs text-nova-orange">{chatError}</p>}
+          <p className="mt-3 text-[11px] text-white/40">{orbitaStatusLabel}</p>
+
+          <details className="mt-3 border-t border-white/10 pt-3">
+            <summary className="cursor-pointer text-xs font-semibold text-white/50 hover:text-white/70">Recent messages</summary>
+            <div className="mt-2 max-h-32 space-y-2 overflow-y-auto">
+              {chat.slice(-6).map((item, index) => (
+                <p key={`${item.text}-${index}`} className={cn("rounded-lg px-2 py-1.5 text-xs leading-relaxed", item.from === "explorer" ? "bg-nova-cyan/15 text-white" : "bg-white/5 text-white/70")}>
+                  {item.text}
+                </p>
+              ))}
+            </div>
+            <label className="mt-3 flex items-center gap-2 text-[11px] text-white/50">
+              <span>Vol</span>
+              <input
+                type="range"
+                min={0}
+                max={100}
+                value={Math.round(orbitaVolume * 100)}
+                onChange={(event) => {
+                  const next = Number(event.target.value) / 100;
+                  setOrbitaVolume(next);
+                  try {
+                    window.sessionStorage.setItem("nova-orbita-volume", String(next));
+                  } catch {
+                    // ignore
+                  }
+                }}
+                className="h-1.5 w-28 accent-nova-cyan"
+                aria-label="Volume"
+              />
+            </label>
+          </details>
+        </section>
       </div>
     </main>
   );
@@ -678,11 +848,11 @@ function SessionReport({ name, subject, topic, activity, onReturn }: { name: str
       <section className="mx-auto max-w-2xl rounded-3xl border border-nova-cyan/20 bg-[#071426]/90 p-8 text-center sm:p-12">
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-nova-cyan/15 text-nova-cyan"><Check className="h-8 w-8" /></div>
         <p className="mt-6 text-sm font-bold uppercase tracking-wider text-nova-cyan">Session complete</p>
-        <h1 className="mt-2 text-3xl font-bold text-white">Nice exploration, {name}.</h1>
-        <p className="mx-auto mt-3 max-w-lg text-nova-cyan-light/80">Your {subject.toLowerCase()} discovery focused on <strong className="text-white">{topic}</strong>. This is a local session recap, not an assessment or a record of mastery.</p>
-        <div className="mt-8 grid gap-3 text-left sm:grid-cols-3"><div className="rounded-xl bg-white/5 p-4"><Clock3 className="h-5 w-5 text-nova-cyan" /><p className="mt-2 text-sm font-semibold text-white">Session timer</p><p className="text-xs text-white/60">Tracked in this browser</p></div><div className="rounded-xl bg-white/5 p-4"><Pencil className="h-5 w-5 text-nova-cyan" /><p className="mt-2 text-sm font-semibold text-white">Whiteboard</p><p className="text-xs text-white/60">{activity.whiteboardStrokes ? `${activity.whiteboardStrokes} drawing ${activity.whiteboardStrokes === 1 ? "start" : "starts"}` : "No marks captured"}</p></div><div className="rounded-xl bg-white/5 p-4"><MessageCircle className="h-5 w-5 text-nova-cyan" /><p className="mt-2 text-sm font-semibold text-white">Your activity</p><p className="text-xs text-white/60">{activity.chatMessages} chat {activity.chatMessages === 1 ? "message" : "messages"}{activity.hasNotes ? " · notes added" : ""}</p></div></div>
-        <p className="mt-6 text-xs text-white/50"><Lock className="mr-1 inline h-3.5 w-3.5" /> This foundation does not save recordings, voice, or session data to NOVA.</p>
-        <button type="button" onClick={onReturn} className="nova-btn-primary nova-btn-glow mt-7">Plan another discovery</button>
+        <h1 className="mt-2 text-3xl font-bold text-white">Nice work, {name}.</h1>
+        <p className="mx-auto mt-3 max-w-lg text-nova-cyan-light/80">Your {subject.toLowerCase()} session focused on <strong className="text-white">{topic}</strong> (grades 6–12). This is a local recap only—not a grade or mastery record.</p>
+        <div className="mt-8 grid gap-3 text-left sm:grid-cols-2"><div className="rounded-xl bg-white/5 p-4"><Pencil className="h-5 w-5 text-nova-cyan" /><p className="mt-2 text-sm font-semibold text-white">Whiteboard</p><p className="text-xs text-white/60">{activity.whiteboardStrokes ? `${activity.whiteboardStrokes} drawing ${activity.whiteboardStrokes === 1 ? "start" : "starts"}` : "No marks captured"}</p></div><div className="rounded-xl bg-white/5 p-4"><MessageCircle className="h-5 w-5 text-nova-cyan" /><p className="mt-2 text-sm font-semibold text-white">Your replies</p><p className="text-xs text-white/60">{activity.chatMessages} {activity.chatMessages === 1 ? "message" : "messages"}</p></div></div>
+        <p className="mt-6 text-xs text-white/50"><Lock className="mr-1 inline h-3.5 w-3.5" /> This session does not save recordings, voice, or data to NOVA.</p>
+        <button type="button" onClick={onReturn} className="nova-btn-primary nova-btn-glow mt-7">Start another session</button>
       </section>
     </main>
   );

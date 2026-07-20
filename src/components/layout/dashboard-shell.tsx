@@ -9,8 +9,8 @@ import {
   BookOpen,
   GraduationCap,
   LayoutDashboard,
+  Newspaper,
   Settings,
-  Sparkles,
   Users,
 } from "lucide-react";
 import { NOVA_SCHOOL } from "@/lib/nova-brand";
@@ -19,15 +19,14 @@ import { NovaLogoIcon } from "@/components/ui/nova-logo-mark";
 const studentLinks = [
   { href: "/dashboard/student", label: "Overview", icon: LayoutDashboard },
   { href: "/courses", label: "Mission Paths", icon: BookOpen },
-  { href: "/ai-tutoring", label: "NOVA AI Tutoring", icon: Sparkles },
+  { href: "/news", label: "NOVA News", icon: Newspaper },
   { href: "/dashboard/student/certificates", label: "Certificates", icon: Award },
 ];
-const AI_TUTORING_PATH = "/ai-tutoring";
 
 const mentorLinks = [
   { href: "/dashboard/mentor", label: "Overview", icon: LayoutDashboard },
   { href: "/courses", label: "Mission Paths", icon: BookOpen },
-  { href: "/ai-tutoring", label: "NOVA AI Tutoring", icon: Sparkles },
+  { href: "/news", label: "NOVA News", icon: Newspaper },
 ];
 
 const adminLinks = [
@@ -123,11 +122,6 @@ export function DashboardShell({
                   >
                     <Icon className="h-4 w-4" />
                     <span>{link.label}</span>
-                    {link.href === AI_TUTORING_PATH && (
-                      <span className="ml-auto rounded-full border border-nova-orange/40 bg-nova-orange/10 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wide text-nova-orange">
-                        Coming Soon
-                      </span>
-                    )}
                   </Link>
                 );
               })}
@@ -154,11 +148,6 @@ export function DashboardShell({
                 >
                   <Icon className="h-3.5 w-3.5" />
                   <span>{link.label}</span>
-                  {link.href === AI_TUTORING_PATH && (
-                    <span className="rounded-full border border-nova-orange/40 bg-nova-orange/10 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wide text-nova-orange">
-                      Coming Soon
-                    </span>
-                  )}
                 </Link>
               );
             })}

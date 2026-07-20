@@ -1,15 +1,13 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { detectLearnerIntent, localCoach, plainMath, verifySimpleAnswer } from "@/lib/ai-tutoring-quality";
+import { detectLearnerIntent, detectScopeViolation, extractLinearRelation, extractSquareRelation, localCoach, parseLinearRelation, plainMath, scienceCoach, scopeViolationCoach, verifySimpleAnswer, wantsGraph } from "@/lib/ai-tutoring-quality";
 import { isNovaAiTutoringEnabled } from "@/lib/nova-ai-tutoring";
 
 export const runtime = "nodejs";
 
-// ListModels confirms generateContent support. Gemini rejects the listed 2.5
-// Flash variants for new keys and directs callers to a newer model, so use the
-// current non-preview Flash model from that response. Do not add speculative
-// fallbacks: ListModels can include models unavailable to new keys.
-const GEMINI_MODELS = ["gemini-3.5-flash"] as const;
+// Prefer models confirmed available for this key via ListModels + live generate.
+// gemini-3.5-flash is often rate-limited/unavailable; keep it as a last try only.
+const GEMINI_MODELS = ["gemini-3.1-flash-lite", "gemini-flash-lite-latest", "gemini-3.5-flash"] as const;
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX_REQUESTS = 10;
 const requestWindows = new Map<string, { count: number; resetAt: number }>();
@@ -18,6 +16,7 @@ const requestSchema = z.object({
   message: z.string().trim().min(1).max(2_000),
   subject: z.enum(["Math", "Science"]),
   topic: z.string().trim().min(1).max(120),
+  explorerName: z.string().trim().min(1).max(60).optional(),
   lessonState: z.object({
     objective: z.string().trim().min(1).max(180),
     currentConcept: z.string().trim().min(1).max(180),
@@ -86,15 +85,59 @@ const geminiResponseSchema = {
   additionalProperties: false,
 };
 
-const SYSTEM_INSTRUCTION = `You are Órbita, NOVA's browser-based expert Mathematics tutoring guide for grades 6–12, with Science help available only when selected.
-Handle unfamiliar middle and high school Math questions broadly: arithmetic fluency, fractions and ratios, pre-algebra, Algebra I/II, expressions, variables, linear equations and inequalities, functions, systems, factoring, exponents, polynomials, coordinate geometry, Euclidean geometry, trigonometry, statistics/probability, precalculus foundations, and word problems. Reason through the full problem internally before responding. Verify arithmetic and intermediate reasoning; state a necessary assumption when one is needed. If a problem is incomplete or genuinely ambiguous, do not guess: ask exactly one precise clarification question. If uncertain, say so plainly and show a checkable line of reasoning instead of pretending certainty.
-Teach Socratically and adapt to the Explorer. Diagnose likely misconceptions from their attempt, offer a hint first, and teach exactly ONE small next step. Then STOP and wait. Use 1–3 concise explanation sentences and a single guiding question that asks the Explorer to explain, predict, calculate, or justify. If the Explorer supplies an answer, check it against the current problem; affirm a correct idea or give a brief, specific correction/hint without restarting. Treat continue, understood, hint, different explanation, and slower as learner actions, not new problems. Do not dump a full solution unless the Explorer has attempted the problem and explicitly asks for it. Use age-appropriate language and keep the complete response under 180 words.
-Stay within Math and Science. For non-Math/Science requests, warmly explain that you can help with grades 6–12 Math or Science and invite a related question.
+const SYSTEM_INSTRUCTION = `You are Órbita, a professional Middle & High School Math and Science tutor for NOVA (grades 6–12). You show up like an expert human tutor sitting beside the Explorer: calm, prepared, encouraging, and ready for whatever Math or Science question they bring next—homework help, confusion on a concept, checking an answer, or “I don’t know where to start.” You are not a textbook, a quiz bot, or a cold answer machine.
+
+Full coverage mandate (critical):
+- You are fully trained and ready for ANY in-scope Middle & High School Math or Science question (grades 6–12). Never refuse, stall, or say you only handle a short list of topics when the request is clearly 6–12 Math/Science.
+- If the Explorer asks something new within scope, pivot smoothly and tutor it with the same professional care—algebra today, cells tomorrow, slope next, then unbalanced equations, then a word problem.
+- Do not ask them to restate a problem that is already visible. Do not shrink your capability to a few canned examples. Reason from first principles for unfamiliar but in-scope prompts.
+- Local coaching fallbacks exist for common patterns; you (the live tutor) are the primary brain for the full curriculum band.
+
+Math & Science brain (always on):
+- Think like a subject-matter expert first, then teach like a patient tutor. Internally solve the full problem correctly before you speak; never invent arithmetic, signs, units, formulas, or science facts.
+- Math expertise: arithmetic fluency, fractions/ratios/percents, integers, pre-algebra, Algebra I/II, linear equations & inequalities (solve AND graph on a number line/coordinate plane), systems, functions, graphing, slope/intercept, factoring, exponents, polynomials, radicals, geometry (angles, triangles, Pythagorean theorem, similarity, area/volume), trigonometry foundations, probability/statistics, and precalculus-ready reasoning. Prefer exact values and checkable steps.
+- Science expertise: biology (cells, genetics basics, ecology), chemistry (atoms, bonding basics, balancing simple equations, states of matter), physics (motion, forces, energy, simple circuits), earth & space science, weather/climate basics, and scientific investigation/method. Use correct units and name the governing idea (e.g., conservation, force pair, photosynthesis).
+- For equations/inequalities: identify the structure (linear, two-step, square/radical, etc.), preserve balance/inequality direction, and watch special cases (multiply/divide by a negative flips the inequality; square roots give ± solutions).
+- For “solve & graph” inequalities (e.g. 8x + 7 ≥ 11): guide solving step by step, then graph with a closed/open circle at the boundary and shade the correct side of a number line (or show the ray on axes). Put the original inequality AND the simplified solution (like x ≥ 1/2) on the board when graphing.
+- For square equations like x² + 7 = 46: isolate x² first, then take ±√. Invite the Explorer to use the on-screen calculator for arithmetic or √ estimates when helpful—without doing every button press for them.
+- Keep the session natural and conversational: short turns, react to what they just said, reference the board, and sound like a real tutor in a live session—not a script.
+- For word problems: define variables, translate to an equation/model, then guide the first algebraic/scientific move.
+- For graphs: connect equation ↔ points ↔ slope/rise-run ↔ inequality rays with visually true board commands.
+- For science “why” questions: give the core mechanism in plain language, then ask one check question that reveals understanding.
+- If the Explorer pastes a full problem, tutor THAT problem immediately—do not ask them to restate it if the math/science is already visible.
+- Double-check every number you put on the board. If you cannot verify, say so and ask one precise clarifying question.
+
+Professional tutor presence:
+- Be immediately helpful and confident: every turn should feel like “I’ve got you—let’s work this out together.”
+- Meet the Explorer where they are. If they dump a full problem, start tutoring it. If they only share a feeling (“I’m stuck”), diagnose gently and propose the first useful move.
+- Celebrate effort and curiosity before correctness (“nice thinking,” “good start”) when an attempt shows partial understanding.
+- Name confusion gently (“I notice the sign tripped us up”)—never judgmental, never condescending, never rushed.
+- If explorerName is provided, use their first name naturally once per turn (not every sentence).
+- Speak like a skilled tutor: clear, warm, precise, human. Avoid robotic phrasing, walls of text, or lecturing past their question.
+- One small step at a time. Teach exactly ONE next move, then STOP and wait for the Explorer.
+- When they get something right, briefly celebrate (“Breakthrough!” energy) before the next step.
+- Stay ready: after each exchange, leave the door open for the next question, hint, or similar practice—never make the Explorer feel stuck or alone.
+
+Teaching loop (required):
+1. Guide the current problem step by step—never dump the full solution unless the Explorer explicitly asks for a worked example.
+2. After each correct micro-step, invite the next move with one guiding question.
+3. When the Explorer reaches a correct final answer (or clearly understands the finished solution), briefly celebrate, then immediately give ONE new practice exercise of the same type/skill (same structure, different numbers or a close variant).
+4. Put that new practice exercise on the board and make the guiding question ask them to try the first step themselves. Wait for their attempt—do not solve the practice exercise for them unless they ask for a hint or a worked example.
+5. Repeat: coach → confirm → new same-type practice. Keep difficulty at Middle & High School (grades 6–12).
+6. If they change topics or ask something new within Math/Science grades 6–12, pivot smoothly and tutor that request with the same professional care.
+
+Your scope is fixed: Math (arithmetic fluency, fractions and ratios, pre-algebra, Algebra I/II, expressions, variables, linear equations and inequalities, functions, systems, factoring, exponents, polynomials, coordinate geometry, Euclidean geometry, trigonometry, statistics/probability, precalculus foundations, and word problems) and Science (biology, chemistry, physics, earth & space science, scientific investigation) at a middle or high school level.
+Handle unfamiliar middle and high school questions broadly within that scope. Reason through the full problem internally before responding. Verify arithmetic and intermediate reasoning; state a necessary assumption when one is needed. If a problem is incomplete or genuinely ambiguous, do not guess: ask exactly one precise clarification question. If uncertain, say so plainly and show a checkable line of reasoning instead of pretending certainty.
+Teach Socratically and adapt to the Explorer. Diagnose likely misconceptions from their attempt, offer a hint first, and teach exactly ONE small next step. Then STOP and wait. Use 1–3 concise explanation sentences and a single guiding question that asks the Explorer to explain, predict, calculate, or justify. If the Explorer supplies an answer, check it against the current problem; affirm a correct idea or give a brief, specific correction/hint without restarting. Treat continue, understood, hint, different explanation, and slower as learner actions, not new problems. Do not dump a full solution unless the Explorer has attempted the problem and explicitly asks for it. Use age-appropriate language for grades 6–12 and keep the complete response under 180 words.
+Scope enforcement — refuse politely and redirect:
+- Non-Math/Science topics (history, English/language arts, foreign-language learning, social studies, arts, etc.): warmly explain that Órbita only tutors Middle & High School Math and Science (grades 6–12) and invite a related question.
+- Elementary-only requests (grades K–5 content such as basic counting or primary arithmetic): explain that Órbita supports grades 6–12 and invite a middle or high school Math or Science question.
+- College-level-only or graduate topics (e.g., multivariable calculus, differential equations, graduate chemistry): explain the grades 6–12 focus and offer to help with the closest middle or high school version or prerequisite.
 Never claim to be human, live, recording, watching, or able to access anything beyond this chat. Do not ask for, repeat, or process sensitive personal information (full names, contact details, addresses, passwords, health, legal, financial, or school account details). If such information appears, ask the Explorer to remove it and refocus on the academic question.
 Do not provide medical, legal, or safety-critical instructions. For those topics, encourage the Explorer to ask a trusted adult or qualified professional.
 Return valid JSON only, matching exactly this shape:
-{"reply":"short conversational version of the block","teachingBlock":{"explanation":"1–3 sentences","boardCommands":[{"type":"formula","text":"centered equation or formula","x":50,"y":32,"color":"navy","size":28}],"guidingQuestion":"one question","suggestedActions":["I got it — continue","Show me a hint"]},"lessonState":{"objective":"short objective","currentConcept":"short concept","currentStep":1,"studentUnderstanding":"thinking","hintsCount":0,"nextGuidingQuestion":"same guiding question","priorTutorBlock":"concise previous explanation","lastLearnerMessage":"concise learner message","selectedLearnerAction":"message"}}
-For every Math request, include at least one centered write or formula command that shows the relevant equation, expression, formula, or theorem. Use clean visual commands for equations, formulas, geometry figures, and coordinate graphs. boardCommands may only use: clear; write/formula with text,x,y,align,color,size; drawAxes with x,y,width,height,ticks; plotPoint with x,y,label,color; drawLine with x1,y1,x2,y2,color; drawArrow with x1,y1,x2,y2,label,color; highlight with x,y,width,height,color. Positions must be normalized 0–100, centered in the board, and coordinate values must stay within -10..10. For slope, use valid dynamic axes, two points, a line, rise/run arrows, and a slope formula.`;
+{"reply":"short conversational version of the block","teachingBlock":{"explanation":"1–3 sentences","boardCommands":[{"type":"formula","text":"centered equation or formula","x":50,"y":32,"color":"navy","size":28}],"guidingQuestion":"one question","suggestedActions":["I got it — continue","Show me a hint","Try a similar problem"]},"lessonState":{"objective":"short objective","currentConcept":"short concept","currentStep":1,"studentUnderstanding":"thinking","hintsCount":0,"nextGuidingQuestion":"same guiding question","priorTutorBlock":"concise previous explanation","lastLearnerMessage":"concise learner message","selectedLearnerAction":"message"}}
+When the current problem is complete, preferred suggestedActions include a practice invite such as "Try a similar problem" plus continue/hint options. For every Math request, include at least one centered write or formula command that shows ONLY the equation/expression (e.g. "3x + 5 = 20", "6x + 7 ≥ 3", or "x² + 7 = 46"), never chat phrasing like "I have a question". When guiding a calculation step, you may add a short write line such as "46 − 7 = ?" so the whiteboard feels alive. For Science, include a formula, process label, or labeled diagram command when helpful. Use clean visual commands for equations, formulas, geometry figures, and coordinate graphs. boardCommands may only use: clear; write/formula with text,x,y,align,color,size; drawAxes with x,y,width,height,ticks; plotPoint with x,y,label,color; drawLine with x1,y1,x2,y2,color; drawArrow with x1,y1,x2,y2,label,color; highlight with x,y,width,height,color. Positions must be normalized 0–100, centered in the board, and coordinate values must stay within -10..10. For slope, use valid dynamic axes, two points, a line, rise/run arrows, and a slope formula. For inequality graphs, show axes, a boundary point on the x-axis, a horizontal ray/shade direction, and the solution inequality text.`;
 
 function jsonError(error: string, status: number, code?: string) {
   return NextResponse.json({ error, ...(code ? { code } : {}) }, { status });
@@ -227,7 +270,25 @@ function needsSlopeSupport(message: string) {
   return /\b(i (do not|don't) understand|i (do not|don't) know|not sure|confused|help me)\b/i.test(message);
 }
 
-function fallbackTeachingBlock(message: string, state?: TeachingState) {
+function scopeRedirectTeachingBlock(message: string) {
+  const violation = detectScopeViolation(message);
+  if (!violation) return null;
+  const coach = scopeViolationCoach(violation);
+  return {
+    explanation: coach.explanation,
+    boardCommands: [
+      { type: "clear" as const },
+      { type: "formula" as const, text: coach.formula, x: 50, y: 32, color: "navy" as const, size: 24 },
+    ],
+    guidingQuestion: coach.guidingQuestion,
+    suggestedActions: coach.suggestedActions,
+  };
+}
+
+function fallbackTeachingBlock(message: string, subject: string, state?: TeachingState) {
+  const scopeBlock = scopeRedirectTeachingBlock(message);
+  if (scopeBlock) return scopeBlock;
+
   const intent = detectLearnerIntent(message, state?.selectedLearnerAction);
   const verified = intent === "answer-attempt" ? verifySimpleAnswer(message, state?.nextGuidingQuestion ?? "") : null;
   if (verified) {
@@ -238,6 +299,19 @@ function fallbackTeachingBlock(message: string, state?: TeachingState) {
       suggestedActions: verified.suggestedActions,
     };
   }
+
+  if (subject === "Science") {
+    const science = scienceCoach(message, intent, state?.nextGuidingQuestion ?? "");
+    if (science) {
+      return {
+        explanation: science.explanation,
+        boardCommands: [{ type: "clear" as const }, { type: "formula" as const, text: science.formula, x: 50, y: 32, color: "navy" as const, size: 26 }],
+        guidingQuestion: science.guidingQuestion,
+        suggestedActions: science.suggestedActions,
+      };
+    }
+  }
+
   if (isSlopeRequest(message, "", state)) {
     if (needsSlopeSupport(message)) {
       return {
@@ -286,28 +360,137 @@ function fallbackTeachingBlock(message: string, state?: TeachingState) {
       suggestedActions: ["I know two angles", "Show me a hint", "Explain differently"],
     };
   }
-  const local = localCoach(message, intent, state?.nextGuidingQuestion);
-  const hasMath = /[0-9xxy=+\-*/^²()]/i.test(message);
+  const local = localCoach(message, intent, state?.nextGuidingQuestion, subject as "Math" | "Science");
+  const hasMath = /[0-9xxy=+\-*/^²()≤≥<>]/i.test(message) || Boolean(extractLinearRelation(message) || extractSquareRelation(message) || extractLinearRelation(local.formula) || extractSquareRelation(local.formula));
+  const problemText = plainMath(boardFormulaText(local.formula || message, state));
+  const parsedLinear = parseLinearRelation(local.formula || message);
+  const graphReady =
+    Boolean(parsedLinear?.isInequality) &&
+    (/\bx\s*[<>≤≥]=?\s*-?\d/i.test(message) || intent === "worked-example" || /\b(final answer|solution is|we got)\b/i.test(message));
+
+  if ((local.visual === "inequality-graph" || (wantsGraph(message) && parsedLinear?.isInequality)) && parsedLinear) {
+    if (graphReady) {
+      const boundary = Math.max(-9.5, Math.min(9.5, parsedLinear.solutionValue));
+      const shadesRight = parsedLinear.solutionOperator === ">" || parsedLinear.solutionOperator === "≥";
+      const rayEnd = shadesRight ? 9 : -9;
+      return {
+        explanation: local.explanation,
+        boardCommands: [
+          { type: "clear" as const },
+          { type: "formula" as const, text: problemText || local.formula, x: 50, y: 10, color: "navy" as const, size: 28 },
+          { type: "formula" as const, text: parsedLinear.solutionText, x: 50, y: 22, color: "cyan" as const, size: 24 },
+          { type: "drawAxes" as const, x: 50, y: 58, width: 78, height: 48, ticks: 5 },
+          { type: "drawLine" as const, x1: boundary, y1: 0, x2: rayEnd, y2: 0, color: "cyan" as const },
+          { type: "plotPoint" as const, x: boundary, y: 0, label: formatBoardBoundary(parsedLinear.solutionValue), color: "orange" as const },
+          { type: "drawArrow" as const, x1: shadesRight ? 62 : 38, y1: 72, x2: shadesRight ? 78 : 22, y2: 72, label: shadesRight ? "shade →" : "← shade", color: "green" as const },
+          { type: "write" as const, text: local.guidingQuestion.slice(0, 70), x: 50, y: 92, align: "center" as const, color: "navy" as const, size: 16 },
+        ],
+        guidingQuestion: local.guidingQuestion,
+        suggestedActions: local.suggestedActions,
+      };
+    }
+    return {
+      explanation: local.explanation,
+      boardCommands: [
+        { type: "clear" as const },
+        { type: "formula" as const, text: problemText || local.formula, x: 50, y: 12, color: "navy" as const, size: 30 },
+        { type: "drawAxes" as const, x: 50, y: 58, width: 72, height: 46, ticks: 5 },
+        { type: "write" as const, text: "Solve first → then shade on this number line", x: 50, y: 88, align: "center" as const, color: "cyan" as const, size: 16 },
+      ],
+      guidingQuestion: local.guidingQuestion,
+      suggestedActions: local.suggestedActions,
+    };
+  }
+  if (local.visual === "linear" || local.visual === "square" || extractLinearRelation(local.formula || message) || extractSquareRelation(local.formula || message)) {
+    return {
+      explanation: local.explanation,
+      boardCommands: [
+        { type: "clear" as const },
+        { type: "formula" as const, text: problemText || local.formula, x: 50, y: 28, color: "navy" as const, size: 36 },
+        { type: "write" as const, text: local.guidingQuestion.slice(0, 70), x: 50, y: 48, align: "center" as const, color: "cyan" as const, size: 20 },
+        { type: "highlight" as const, x: 18, y: 18, width: 64, height: 20, color: "cyan" as const },
+      ],
+      guidingQuestion: local.guidingQuestion,
+      suggestedActions: local.suggestedActions,
+    };
+  }
+  if (local.visual === "triangle") {
+    return {
+      explanation: local.explanation,
+      boardCommands: [
+        { type: "clear" as const },
+        { type: "drawTriangle" as const, points: [{ x: 50, y: 18, label: "A" }, { x: 25, y: 78, label: "B" }, { x: 75, y: 78, label: "C" }], labels: [local.formula.slice(0, 48)], color: "cyan" as const },
+        { type: "formula" as const, text: local.formula.slice(0, 48), x: 50, y: 92, color: "navy" as const, size: 22 },
+      ],
+      guidingQuestion: local.guidingQuestion,
+      suggestedActions: local.suggestedActions,
+    };
+  }
   return {
     explanation: local.explanation,
-    boardCommands: [{ type: "clear" as const }, { type: "formula" as const, text: hasMath ? plainMath(local.formula || message) : local.formula || state?.currentConcept || "Your Algebra problem", x: 50, y: 32, color: "navy" as const, size: 26 }],
+    boardCommands: [{ type: "clear" as const }, { type: "formula" as const, text: hasMath ? problemText : local.formula || state?.currentConcept || "Your Algebra problem", x: 50, y: 36, color: "navy" as const, size: 32 }],
     guidingQuestion: local.guidingQuestion,
     suggestedActions: local.suggestedActions,
   };
 }
 
+function formatBoardBoundary(value: number) {
+  if (Number.isInteger(value)) return String(value);
+  if (Math.abs(Math.abs(value) * 2 - Math.round(Math.abs(value) * 2)) < 1e-9) {
+    const num = Math.round(value * 2);
+    const sign = num < 0 ? "-" : "";
+    const n = Math.abs(num);
+    return n === 1 ? `${sign}1/2` : `${sign}${n}/2`;
+  }
+  return String(Math.round(value * 100) / 100);
+}
+
+function boardFormulaText(message: string, state?: TeachingState) {
+  const cleaned = normalizeText(
+    message
+      .replace(/^\s*i have a question:\s*/i, "")
+      .replace(/^\s*(please\s+)?(help me\s+)?(solve|simplify|factor|evaluate)\s*:?\s*/i, "")
+      .replace(/x²/gi, "x^2")
+      .trim(),
+    100,
+  );
+  // Never put tutoring instructions on the board as if they were the problem.
+  if (/^(subtract|add|divide|multiply|move|isolate|undo|take the square root)\b/i.test(cleaned)) {
+    const fromState = state?.currentConcept || state?.objective || "";
+    const stateEquation = fromState.match(
+      /[0-9a-zA-Z(][0-9a-zA-Z\s+\-*/^=().²]{0,80}(?:<=|>=|=|<|>|≤|≥|≠|≈)[0-9a-zA-Z\s+\-*/^=().]{0,80}/,
+    )?.[0];
+    if (stateEquation) return normalizeText(plainMath(stateEquation.replace(/x\^2/gi, "x²")), 100);
+  }
+  const square = cleaned.match(/(-?\d*)x\^2([+-]\d+)?=(-?\d+)/i)?.[0];
+  if (square) return normalizeText(plainMath(square.replace(/x\^2/gi, "x²")), 100);
+  const equation = cleaned.match(
+    /[0-9a-zA-Z(][0-9a-zA-Z\s+\-*/^=().]{0,80}(?:<=|>=|=|<|>|≤|≥|≠|≈)[0-9a-zA-Z\s+\-*/^=().]{0,80}/,
+  )?.[0];
+  return normalizeText(plainMath(equation || cleaned || state?.currentConcept || "Algebra"), 100);
+}
+
 function ensureMathVisual(commands: z.infer<typeof boardCommandSchema>[], subject: string, message: string, state?: TeachingState) {
-  if (subject !== "Math" || commands.some((command) => command.type === "write" || command.type === "formula")) return commands;
+  const sanitized = commands.map((command) => {
+    if (command.type !== "write" && command.type !== "formula") return command;
+    return {
+      ...command,
+      text: boardFormulaText(command.text, state),
+    };
+  });
+  if (subject !== "Math" || sanitized.some((command) => command.type === "write" || command.type === "formula")) {
+    return sanitized;
+  }
   return [
-    ...commands,
-    { type: "formula" as const, text: normalizeText(message, 100) || state?.currentConcept || "Algebra", x: 50, y: 32, color: "navy" as const, size: 26 },
+    ...sanitized,
+    { type: "formula" as const, text: boardFormulaText(message, state), x: 50, y: 32, color: "navy" as const, size: 26 },
   ];
 }
 
 function coerceTutorResponse(value: unknown, fallbackText: string, message: string, subject: string, state?: TeachingState) {
   const candidate = extractObject(value);
   const reply = extractPlainText(candidate.reply, 1_500);
-  const fallback = fallbackTeachingBlock(message, state);
+  const fallback = fallbackTeachingBlock(message, subject, state);
   const textExplanation = extractPlainText(fallbackText, 600) || fallback.explanation;
   const rawBlock = extractObject(candidate.teachingBlock);
   const parsedCommands = Array.isArray(rawBlock.boardCommands)
@@ -330,6 +513,12 @@ function coerceTutorResponse(value: unknown, fallbackText: string, message: stri
   };
   if (safeBlock.suggestedActions.length === 0) safeBlock.suggestedActions = fallback.suggestedActions;
 
+  const intent = detectLearnerIntent(message, state?.selectedLearnerAction);
+  const verified = intent === "answer-attempt" ? verifySimpleAnswer(message, state?.nextGuidingQuestion ?? "") : null;
+  const studentUnderstanding = verified?.correctness === "correct"
+    ? "confident"
+    : state?.studentUnderstanding || "thinking";
+
   return tutorResponseSchema.safeParse({
     reply: reply || safeBlock.explanation,
     teachingBlock: safeBlock,
@@ -338,7 +527,7 @@ function coerceTutorResponse(value: unknown, fallbackText: string, message: stri
       objective: state?.objective || `Explore ${subject}`,
       currentConcept: state?.currentConcept || "Algebra",
       currentStep: state?.currentStep ?? 0,
-      studentUnderstanding: state?.studentUnderstanding || "thinking",
+      studentUnderstanding,
       hintsCount: state?.hintsCount ?? 0,
       nextGuidingQuestion: safeBlock.guidingQuestion,
       priorTutorBlock: safeBlock.explanation,
@@ -375,12 +564,24 @@ export async function POST(request: Request) {
     return jsonError("Please provide a valid Math or Science tutoring message.", 400);
   }
 
-  const { message, subject, topic, context, lessonState } = parsed.data;
+  const { message, subject, topic, context, lessonState, explorerName } = parsed.data;
   if ([message, topic, ...context.map((item) => item.text)].some(containsSensitivePersonalData)) {
     return jsonError("Please remove personal contact information before asking Órbita for help.", 400, "PERSONAL_DATA_NOT_ALLOWED");
   }
   if (isRateLimited(request)) {
     return jsonError("Órbita's test session is receiving messages quickly. Please wait a minute and try again.", 429, "RATE_LIMITED");
+  }
+
+  const scopeViolation = detectScopeViolation(message);
+  if (scopeViolation) {
+    const scopeResponse = coerceTutorResponse({}, scopeViolation.explanation, message, subject, lessonState);
+    if (scopeResponse.success) {
+      return NextResponse.json({
+        ...scopeResponse.data,
+        providerStatus: "scope-redirect",
+        providerMessage: "This question is outside Órbita’s Middle & High School Math and Science scope.",
+      });
+    }
   }
 
   const slopeState: TeachingState = {
@@ -417,7 +618,7 @@ export async function POST(request: Request) {
     })),
     {
       role: "user",
-      parts: [{ text: `Subject: ${subject}\nTopic: ${topic}\nGuided session state: ${lessonState ? JSON.stringify(lessonState) : "new session"}\nExplorer's response: ${message}` }],
+      parts: [{ text: `Subject: ${subject}\nTopic: ${topic}${explorerName ? `\nExplorer first name: ${explorerName.split(/\s+/)[0]}` : ""}\nGuided session state: ${lessonState ? JSON.stringify(lessonState) : "new session"}\nExplorer's response: ${message}` }],
     },
   ];
 
@@ -438,21 +639,27 @@ export async function POST(request: Request) {
           generationConfig: {
             responseMimeType: "application/json",
             responseJsonSchema: geminiResponseSchema,
-            temperature: 0.4,
-            maxOutputTokens: 700,
+            temperature: 0.35,
+            maxOutputTokens: 900,
           },
         }),
-        signal: AbortSignal.timeout(20_000),
+        signal: AbortSignal.timeout(30_000),
       });
 
       if (response.ok) break;
 
       providerError = await readGeminiError(response, apiKey);
       const hasFallback = index < GEMINI_MODELS.length - 1;
-      if (response.status === 404 && hasFallback) {
+      const canRetry =
+        response.status === 404 ||
+        response.status === 503 ||
+        /(?:not found|unavailable|high demand|try again later)/i.test(providerError.message);
+      if (canRetry && hasFallback) {
         console.warn("Gemini tutoring model unavailable; trying compatible fallback", {
           unavailableModel: model,
           fallbackModel: GEMINI_MODELS[index + 1],
+          upstreamStatus: response.status,
+          upstreamCode: providerError.errorCode,
         });
         continue;
       }
@@ -521,16 +728,36 @@ export async function POST(request: Request) {
     if (validatedResponse.success) {
       const normalizedResponse = coerceTutorResponse(tutorResponse, "", message, subject, lessonState);
       if (normalizedResponse.success) {
+        // Prefer a concrete linear coaching step over a vague model reply that ignored the equation.
+        const concrete = fallbackTeachingBlock(message, subject, lessonState);
+        const modelIgnoredEquation =
+          Boolean(extractLinearRelation(message)) &&
+          /local coaching mode|share the full equation|what is the exact math/i.test(
+            `${normalizedResponse.data.reply} ${normalizedResponse.data.teachingBlock.explanation}`,
+          );
+        const payload = modelIgnoredEquation
+          ? {
+              ...normalizedResponse.data,
+              reply: concrete.explanation,
+              teachingBlock: concrete,
+              lessonState: {
+                ...normalizedResponse.data.lessonState,
+                nextGuidingQuestion: concrete.guidingQuestion,
+                priorTutorBlock: concrete.explanation,
+              },
+            }
+          : normalizedResponse.data;
         console.info("Gemini tutoring response metadata", {
           candidateCount: Array.isArray((data as GeminiResponse).candidates) ? (data as GeminiResponse).candidates?.length : 0,
           responseLength: responseText.length,
           topLevelKeys: Object.keys(tutorResponse as Record<string, unknown>).sort(),
-          boardCommandCount: normalizedResponse.data.teachingBlock.boardCommands.length,
-          hasCenteredMathVisual: subject === "Math" && normalizedResponse.data.teachingBlock.boardCommands.some(
+          boardCommandCount: payload.teachingBlock.boardCommands.length,
+          replacedVagueModelReply: modelIgnoredEquation,
+          hasCenteredMathVisual: subject === "Math" && payload.teachingBlock.boardCommands.some(
             (command) => (command.type === "write" || command.type === "formula") && command.x === 50
           ),
         });
-        return NextResponse.json(normalizedResponse.data);
+        return NextResponse.json(payload);
       }
     }
 

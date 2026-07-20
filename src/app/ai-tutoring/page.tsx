@@ -5,8 +5,12 @@ import { Navbar } from "@/components/layout/navbar";
 import { isNovaAiTutoringEnabled } from "@/lib/nova-ai-tutoring";
 
 export const metadata: Metadata = {
-  title: "NOVA AI Tutoring — Coming Soon",
-  description: "NOVA AI Tutoring for Middle and High School Math and Science is coming soon.",
+  title: isNovaAiTutoringEnabled
+    ? "NOVA AI Tutoring — Órbita"
+    : "NOVA AI Tutoring — Coming Soon",
+  description: isNovaAiTutoringEnabled
+    ? "Private Math & Science discovery sessions with Órbita for Middle and High School (grades 6–12)."
+    : "NOVA AI Tutoring for Middle and High School Math and Science is coming soon.",
 };
 
 export default async function AiTutoringPage() {
@@ -26,15 +30,15 @@ export default async function AiTutoringPage() {
                 NOVA AI Tutoring is on its way.
               </h1>
               <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-nova-cyan-light/85 sm:text-xl">
-                A future discovery space for Middle and High School Math &amp; Science—designed to help Explorers think through problems, test ideas, and celebrate each breakthrough.
+                A quiet Math &amp; Science tutoring space for Middle &amp; High School (grades 6–12)—designed to help Explorers think through problems, one step at a time.
               </p>
             </div>
 
             <div className="mt-12 grid gap-4 sm:grid-cols-3">
               {[
-                { icon: Orbit, title: "Guided discovery", text: "Thoughtful prompts that make each next step feel possible." },
-                { icon: Atom, title: "Math & Science", text: "Support being shaped for the questions Explorers meet most." },
-                { icon: Sparkles, title: "Built for breakthroughs", text: "A warm NOVA experience made for curiosity—not pressure." },
+                { icon: Orbit, title: "Guided steps", text: "Thoughtful prompts that make each next step feel possible." },
+                { icon: Atom, title: "Math & Science", text: "Middle & High School only—grades 6–12, no other subjects." },
+                { icon: Sparkles, title: "Built for focus", text: "A calm NOVA experience made for learning—not pressure." },
               ].map(({ icon: Icon, title, text }) => (
                 <article key={title} className="nova-glass-card p-6 text-left">
                   <Icon className="h-6 w-6 text-nova-cyan" aria-hidden />
@@ -45,7 +49,7 @@ export default async function AiTutoringPage() {
             </div>
 
             <p className="mx-auto mt-10 max-w-2xl text-center text-sm leading-relaxed text-white/60">
-              The tutoring classroom is still being prepared. Check back soon for launch updates.
+              The tutoring classroom is still being prepared. Check back soon.
             </p>
           </div>
         </main>
@@ -53,13 +57,9 @@ export default async function AiTutoringPage() {
     );
   }
 
+  // Isolated local/preview classroom — no HUB navbar or site chrome.
   const session = await auth();
   const { AiTutoringExperience } = await import("@/components/ai-tutoring/ai-tutoring-experience");
 
-  return (
-    <>
-      <Navbar />
-      <AiTutoringExperience studentName={session?.user?.firstName ?? ""} />
-    </>
-  );
+  return <AiTutoringExperience studentName={session?.user?.firstName ?? ""} />;
 }

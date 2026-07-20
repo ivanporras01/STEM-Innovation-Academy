@@ -5,6 +5,7 @@
   "description": "NOVA Academy — STEM Innovation Academy LMS (NOVA STEM HUB K-12)",
   "scripts": {
     "dev": "next dev",
+    "dev:orbita": "next dev -p 3015",
     "dev:clean": "node -e \"require('fs').rmSync('.next',{recursive:true,force:true})\" && next dev",
     "build": "next build",
     "verify:release": "npm run build",

@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { getLocaleFromPath } from "@/lib/locale";
 import { OrbitWelcome } from "@/components/orbit/orbit-welcome";
 
-const LEARNING_PREFIXES = ["/dashboard", "/courses", "/login", "/register", "/orbito"];
+const LEARNING_PREFIXES = ["/dashboard", "/courses", "/login", "/register", "/orbito", "/ai-tutoring"];
 
 function isLearningRoute(pathname: string): boolean {
   if (LEARNING_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`))) {

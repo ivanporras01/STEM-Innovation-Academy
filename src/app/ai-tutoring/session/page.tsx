@@ -12,5 +12,5 @@ export default async function AiTutoringSessionPage() {
   }
 
   const { AiTutoringExperience } = await import("@/components/ai-tutoring/ai-tutoring-experience");
-  return <AiTutoringExperience initialRoom="waiting" />;
+  return <AiTutoringExperience initialRoom="classroom" />;
 }

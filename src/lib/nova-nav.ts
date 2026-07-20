@@ -152,13 +152,13 @@ export function getNovaPrimaryNav(locale: AppLocale): readonly NovaNavItem[] {
     { href: paths.school, label: NOVA_SCHOOL.name },
     { href: paths.college, label: NOVA_COLLEGE.name },
     { href: paths.language, label: NOVA_LANGUAGE.name },
-    { href: "/ai-tutoring", label: "NOVA AI Tutoring" },
     { href: hub.homeHref, label: hub.menuLabel },
+    { href: paths.news, label: "NOVA News" },
   ];
 }
 
 /**
- * Header ordering: School → College → Language → AI Tutoring → NOVA Resources.
+ * Header ordering: School → College → Language → NOVA Resources → NOVA News (last).
  * Shop omitted until NOVA_SHOP_HEADER_ENABLED.
  */
 export function getNovaHeaderNav(locale: AppLocale): readonly NovaHeaderNavItem[] {
@@ -169,8 +169,8 @@ export function getNovaHeaderNav(locale: AppLocale): readonly NovaHeaderNavItem[
     { href: paths.school, label: NOVA_SCHOOL.name, kind: "product" },
     { href: paths.college, label: NOVA_COLLEGE.name, kind: "product" },
     { href: paths.language, label: NOVA_LANGUAGE.name, kind: "product" },
-    { href: "/ai-tutoring", label: "NOVA AI Tutoring", kind: "product" },
     { href: hub.homeHref, label: hub.menuLabel, kind: "resources" },
+    { href: paths.news, label: "NOVA News", kind: "product" },
   ];
 
   if (NOVA_SHOP_HEADER_ENABLED) {

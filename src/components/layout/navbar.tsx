@@ -18,10 +18,6 @@ const MOBILE_NAV_TOP = "top-[88px]";
 
 /** Horizontal nav from lg+ — header container is wider so all tabs fit at ~1280px */
 const DESKTOP_NAV = "hidden lg:flex";
-const AI_TUTORING_PATH = "/ai-tutoring";
-
-const COMING_SOON_BADGE =
-  "rounded-full border border-nova-orange/40 bg-nova-orange/10 px-1.5 py-0.5 font-bold uppercase tracking-wide text-nova-orange";
 
 function isActiveNav(pathname: string, href: string): boolean {
   if (href === "/") return pathname === "/";
@@ -73,7 +69,7 @@ export function Navbar() {
           </Link>
         </div>
 
-        {/* Primary tabs — School → College → Language → AI Tutoring → NOVA Resources. */}
+        {/* Primary tabs — School → College → Language → NOVA Resources → NOVA News. */}
         {!isDashboard && (
           <nav
             className={cn(
@@ -89,28 +85,19 @@ export function Navbar() {
                 }
 
                 const active = isActiveNav(pathname, link.href);
-                const isAiTutoring = link.href === AI_TUTORING_PATH;
                 return (
                   <Link
                     key={link.href}
                     href={link.href}
                     aria-current={active ? "page" : undefined}
                     className={cn(
-                      "inline-flex shrink-0 rounded-lg px-2.5 text-xs font-medium transition 2xl:px-3 2xl:text-sm",
-                      isAiTutoring
-                        ? "flex-col items-center gap-0.5 py-1.5"
-                        : "items-center whitespace-nowrap py-2",
+                      "inline-flex shrink-0 items-center whitespace-nowrap rounded-lg px-2.5 py-2 text-xs font-medium transition 2xl:px-3 2xl:text-sm",
                       active
                         ? "bg-nova-cyan/15 text-nova-cyan-light shadow-[inset_0_0_0_1px_rgba(0,180,216,0.35)]"
                         : "text-white/85 hover:bg-white/10 hover:text-nova-cyan-light",
                     )}
                   >
-                    <span className={isAiTutoring ? "whitespace-nowrap leading-tight" : undefined}>
-                      {link.label}
-                    </span>
-                    {isAiTutoring && (
-                      <span className={cn(COMING_SOON_BADGE, "text-[8px] leading-none")}>Coming Soon</span>
-                    )}
+                    {link.label}
                   </Link>
                 );
               })}
@@ -194,25 +181,20 @@ export function Navbar() {
                 }
 
                 const active = isActiveNav(pathname, link.href);
-                const isAiTutoring = link.href === AI_TUTORING_PATH;
                 return (
                   <Link
                     key={link.href}
                     href={link.href}
                     aria-current={active ? "page" : undefined}
                     className={cn(
-                      "rounded-lg px-3 py-2.5 text-sm font-medium transition",
-                      isAiTutoring ? "inline-flex flex-col items-start gap-1" : "flex items-center gap-1",
+                      "flex items-center gap-1 rounded-lg px-3 py-2.5 text-sm font-medium transition",
                       active
                         ? "bg-nova-cyan/15 text-nova-cyan-light"
                         : "text-white/90 hover:bg-white/10 hover:text-nova-cyan-light",
                     )}
                     onClick={closeMobile}
                   >
-                    <span>{link.label}</span>
-                    {isAiTutoring && (
-                      <span className={cn(COMING_SOON_BADGE, "text-[9px] leading-none")}>Coming Soon</span>
-                    )}
+                    {link.label}
                   </Link>
                 );
               })}

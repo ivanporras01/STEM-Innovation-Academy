@@ -27,6 +27,7 @@ export const LOCALE_PATHS = {
     catalog: "/catalog",
     internships: "/internships",
     partnerScholarships: "/scholarships/partners",
+    news: "/news",
     home: "/",
   },
   es: {
@@ -43,6 +44,7 @@ export const LOCALE_PATHS = {
     catalog: "/catalog",
     internships: "/es/internships",
     partnerScholarships: "/es/scholarships/partners",
+    news: "/es/news",
     home: "/es",
   },
   pt: {
@@ -59,6 +61,7 @@ export const LOCALE_PATHS = {
     catalog: "/catalog",
     internships: "/internships",
     partnerScholarships: "/scholarships/partners",
+    news: "/pt/news",
     home: "/pt",
   },
 } as const;
@@ -125,7 +128,8 @@ export function switchLocalePath(pathname: string, target: AppLocale): string {
     if (
       base.startsWith("/language") ||
       base.startsWith("/school") ||
-      base.startsWith("/college")
+      base.startsWith("/college") ||
+      base.startsWith("/news")
     ) {
       return `${prefix}${base}`;
     }
