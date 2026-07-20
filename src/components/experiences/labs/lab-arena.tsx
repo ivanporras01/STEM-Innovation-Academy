@@ -62,28 +62,31 @@ export function LabArena({
     <div
       data-theme={theme}
       className={cn(
-        "lab-arena relative overflow-hidden rounded-3xl border p-4 sm:p-5",
+        "lab-arena relative overflow-hidden rounded-[28px] border p-4 sm:p-6",
         THEME_CLASS[theme],
         failFlash && "lab-arena--fail",
         success && "lab-arena--win",
         className,
       )}
     >
+      <div className="lab-arena-aurora" aria-hidden />
+      <div className="lab-arena-grid" aria-hidden />
       <div className="lab-arena-scan" aria-hidden />
       <div className="lab-arena-stars" aria-hidden />
+      <div className="lab-arena-rim" aria-hidden />
 
-      <div className="relative z-[2] mb-4 grid gap-2 sm:grid-cols-[1fr_auto]">
-        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="relative z-[2] mb-5 grid gap-3 sm:grid-cols-[1fr_auto] sm:items-stretch">
+        <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
           {meters.map((m) => (
-            <div key={m.label} className="pixel-meter">
-              <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider">
-                <span className="text-white/70">{m.label}</span>
-                <span className="text-white/90">{Math.round(m.value)}%</span>
+            <div key={m.label} className="lab-meter">
+              <div className="flex items-center justify-between gap-2 text-[10px] font-black uppercase tracking-[0.14em]">
+                <span className="text-white/65">{m.label}</span>
+                <span className="tabular-nums text-white/95">{Math.round(m.value)}%</span>
               </div>
-              <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-black/40">
+              <div className="lab-meter-track mt-2">
                 <div
                   className={cn(
-                    "h-full rounded-full bg-gradient-to-r transition-all duration-500",
+                    "lab-meter-fill h-full rounded-full bg-gradient-to-r transition-all duration-500",
                     TONE_FILL[m.tone ?? "cyan"],
                   )}
                   style={{ width: `${Math.max(0, Math.min(100, m.value))}%` }}
@@ -92,15 +95,18 @@ export function LabArena({
             </div>
           ))}
         </div>
-        <div className="pixel-meter flex min-w-[7.5rem] items-center justify-center sm:justify-end">
+        <div className="lab-mode-badge flex min-w-[8.5rem] items-center justify-center sm:justify-end">
           <div className="text-center sm:text-right">
-            <p className="text-[10px] font-black uppercase tracking-wider text-white/45">Mode</p>
-            <p className="text-xs font-black uppercase tracking-wide text-emerald-300">{mode}</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-white/45">Mode</p>
+            <p className="mt-0.5 flex items-center justify-center gap-1.5 text-xs font-black uppercase tracking-[0.12em] text-[var(--lab-arena-accent-2,#67e8f9)] sm:justify-end">
+              <span className="lab-mode-led" aria-hidden />
+              {mode}
+            </p>
           </div>
         </div>
       </div>
 
-      <div className="relative z-[2]">{children}</div>
+      <div className="lab-arena-playfield relative z-[2]">{children}</div>
     </div>
   );
 }
@@ -126,18 +132,21 @@ export function LabChoiceCard({
       disabled={disabled}
       onClick={onClick}
       className={cn(
-        "lab-choice relative overflow-hidden rounded-2xl border px-3 py-3 text-left transition",
+        "lab-choice relative overflow-hidden rounded-2xl border px-3.5 py-3.5 text-left transition duration-300",
         active
-          ? "border-[var(--exp-accent)]/55 bg-[var(--exp-accent)]/15 text-white shadow-[0_0_24px_color-mix(in_srgb,var(--exp-accent)_25%,transparent)]"
-          : "border-white/10 bg-white/5 text-white/75 hover:border-white/25 hover:bg-white/10",
+          ? "lab-choice--active border-[var(--exp-accent)]/55 bg-[var(--exp-accent)]/15 text-white"
+          : "border-white/12 bg-black/25 text-white/75 hover:border-white/28 hover:bg-white/[0.08]",
         disabled && "opacity-50",
       )}
     >
-      <div className="flex items-start gap-2.5">
-        {icon && <span className="text-xl leading-none">{icon}</span>}
+      {active && <span className="lab-choice-glow" aria-hidden />}
+      <div className="relative flex items-start gap-2.5">
+        {icon && (
+          <span className="text-xl leading-none drop-shadow-[0_0_10px_rgba(255,255,255,0.25)]">{icon}</span>
+        )}
         <div>
           <p className="text-sm font-bold text-white">{title}</p>
-          {subtitle && <p className="mt-0.5 text-xs text-white/55">{subtitle}</p>}
+          {subtitle && <p className="mt-0.5 text-xs leading-snug text-white/55">{subtitle}</p>}
         </div>
       </div>
     </button>

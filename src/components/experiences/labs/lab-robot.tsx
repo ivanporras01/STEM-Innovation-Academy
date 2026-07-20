@@ -4,9 +4,12 @@ import { useCallback, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { LabMissionShell } from "./lab-mission-shell";
 import { LabArena } from "./lab-arena";
+import { LabBuddyToken } from "./lab-buddy-token";
+import { useLabBuddy } from "./lab-buddy-context";
+import { getBuddyDisplayName } from "@/lib/experiences/catalog";
 
 type Dir = "N" | "E" | "S" | "W";
-type Cell = "empty" | "rock" | "goal";
+type Cell = "empty" | "rock" | "goal" | "launch";
 
 const DELTA: Record<Dir, [number, number]> = {
   N: [-1, 0],
@@ -19,10 +22,26 @@ const TURN_RIGHT: Record<Dir, Dir> = { N: "E", E: "S", S: "W", W: "N" };
 const TURN_LEFT: Record<Dir, Dir> = { N: "W", W: "S", S: "E", E: "N" };
 const ARROW: Record<Dir, string> = { N: "↑", E: "→", S: "↓", W: "←" };
 
-const SECTOR_LABELS: Record<string, string> = {
-  "3-0": "Launch Pad",
-  "2-1": "Debris Field",
-  "0-0": "Rescue Module",
+const SECTOR_META: Record<
+  string,
+  { title: string; terrain: "dust" | "crater" | "ridge" | "beacon" | "launch" | "debris" | "pod" }
+> = {
+  "3-0": { title: "Launch Pad", terrain: "launch" },
+  "3-1": { title: "Dust Flats", terrain: "dust" },
+  "3-2": { title: "Dust Flats", terrain: "dust" },
+  "3-3": { title: "South Ridge", terrain: "ridge" },
+  "2-0": { title: "Ash Trail", terrain: "dust" },
+  "2-1": { title: "Debris Field", terrain: "debris" },
+  "2-2": { title: "Crater Rim", terrain: "crater" },
+  "2-3": { title: "East Slope", terrain: "ridge" },
+  "1-0": { title: "Beacon Lane", terrain: "beacon" },
+  "1-1": { title: "Crater Floor", terrain: "crater" },
+  "1-2": { title: "Dust Flats", terrain: "dust" },
+  "1-3": { title: "Signal Spur", terrain: "beacon" },
+  "0-0": { title: "Rescue Module", terrain: "pod" },
+  "0-1": { title: "North Spur", terrain: "ridge" },
+  "0-2": { title: "Ice Dust", terrain: "dust" },
+  "0-3": { title: "Horizon", terrain: "ridge" },
 };
 
 type RoverState = { r: number; c: number; dir: Dir };
@@ -36,12 +55,18 @@ const ROCK = { r: 2, c: 1 };
 function cellAt(r: number, c: number): Cell {
   if (r === ROCK.r && c === ROCK.c) return "rock";
   if (r === GOAL.r && c === GOAL.c) return "goal";
+  if (r === START.r && c === START.c) return "launch";
   return "empty";
 }
 
 type Props = { onComplete: (msg: string) => void };
 
 export function LabRobot({ onComplete }: Props) {
+  const labBuddy = useLabBuddy();
+  const buddyName = labBuddy
+    ? getBuddyDisplayName(labBuddy.buddyId, labBuddy.buddyNickname)
+    : "ARIA-7";
+
   const [cmds, setCmds] = useState<string[]>([]);
   const [rover, setRover] = useState<RoverState>(START);
   const [trail, setTrail] = useState<{ r: number; c: number }[]>([{ r: START.r, c: START.c }]);
@@ -50,7 +75,7 @@ export function LabRobot({ onComplete }: Props) {
   const [attempts, setAttempts] = useState(0);
   const [crashed, setCrashed] = useState(false);
   const [commsLog, setCommsLog] = useState<string[]>([
-    "Mission Control: ARIA-7 online. Dr. Vega pod at Sector [1,1]. Awaiting route.",
+    `Mission Control: ${buddyName} online. Dr. Vega pod at Rescue Module. Awaiting route.`,
   ]);
   const [podLife, setPodLife] = useState(78);
 
@@ -78,7 +103,7 @@ export function LabRobot({ onComplete }: Props) {
     setTrail([{ r: START.r, c: START.c }]);
     setSuccess(false);
     setCrashed(false);
-    log("Route cleared. Reprogram ARIA-7.");
+    log(`Route cleared. Reprogram ${buddyName}.`);
   }
 
   async function launch() {
@@ -108,6 +133,7 @@ export function LabRobot({ onComplete }: Props) {
         const [dr, dc] = DELTA[state.dir];
         const nr = state.r + dr;
         const nc = state.c + dc;
+        const sectorTitle = SECTOR_META[`${nr}-${nc}`]?.title ?? "Unknown";
 
         if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) {
           setCrashed(true);
@@ -122,14 +148,14 @@ export function LabRobot({ onComplete }: Props) {
           setRover({ ...state });
           setTrail([...path]);
           setCrashed(true);
-          log(`CMD ${i + 1}: COLLISION at Debris Field [${nr + 1},${nc + 1}]`);
+          log(`CMD ${i + 1}: COLLISION at ${sectorTitle}`);
           setRunning(false);
           return;
         }
 
         state = { r: nr, c: nc, dir: state.dir };
         path.push({ r: nr, c: nc });
-        log(`CMD ${i + 1}: Forward → Sector [${nr + 1},${nc + 1}]`);
+        log(`CMD ${i + 1}: Forward → ${sectorTitle}`);
       }
 
       setRover({ ...state });
@@ -140,10 +166,11 @@ export function LabRobot({ onComplete }: Props) {
 
     if (state.r === GOAL.r && state.c === GOAL.c) {
       setSuccess(true);
-      log("ARIA-7 at Rescue Module. Dr. Vega: 'Thank you, Explorer!'");
+      log(`${buddyName} at Rescue Module. Dr. Vega: 'Thank you, Explorer!'`);
       onComplete("Route confirmed. Dr. Vega is safe.");
     } else {
-      log(`Route ended at [${state.r + 1},${state.c + 1}] — not the Rescue Module.`);
+      const endTitle = SECTOR_META[`${state.r}-${state.c}`]?.title ?? "open sector";
+      log(`Route ended at ${endTitle} — not the Rescue Module.`);
     }
   }
 
@@ -151,41 +178,50 @@ export function LabRobot({ onComplete }: Props) {
     const isRover = rover.r === r && rover.c === c;
     const onTrail = trail.some((t) => t.r === r && t.c === c);
     const type = cellAt(r, c);
-    const label = SECTOR_LABELS[`${r}-${c}`];
+    const meta = SECTOR_META[`${r}-${c}`]!;
 
     return (
       <div
         key={`${r}-${c}`}
         className={cn(
           "lab-sector-cell",
-          type === "rock" && "border-red-500/50 bg-red-950/60",
-          type === "goal" && "border-emerald-400/50 bg-emerald-950/50",
-          type === "empty" && onTrail && "border-[var(--exp-accent)]/40 bg-[var(--exp-accent)]/15",
-          type === "empty" && !onTrail && "border-white/10 bg-white/[0.03]",
-          isRover && crashed && "ring-2 ring-red-500 animate-pulse",
-          isRover && success && "ring-2 ring-emerald-400",
-          running && isRover && "shadow-[0_0_20px_var(--exp-accent)]"
+          `lab-sector-cell--${meta.terrain}`,
+          onTrail && type !== "rock" && "lab-sector-cell--trail",
+          isRover && crashed && "lab-sector-cell--crash",
+          isRover && success && "lab-sector-cell--win",
+          running && isRover && "lab-sector-cell--live",
         )}
       >
-        {type === "rock" && !isRover && <span className="text-2xl drop-shadow-lg">🪨</span>}
+        <span className="lab-sector-cell-glow" aria-hidden />
+        <span className="lab-sector-cell-texture" aria-hidden />
+
+        {type === "rock" && !isRover && (
+          <span className="lab-sector-marker">
+            <span className="lab-sector-icon">🪨</span>
+            <span className="lab-sector-title">Debris</span>
+          </span>
+        )}
         {type === "goal" && !isRover && (
-          <>
-            <span className="text-2xl">🛟</span>
-            <span className="mt-0.5 text-[8px] font-bold uppercase text-emerald-400/80">Dr. Vega</span>
-          </>
+          <span className="lab-sector-marker">
+            <span className="lab-sector-icon lab-sector-icon--pulse">🛟</span>
+            <span className="lab-sector-title text-emerald-200">Dr. Vega</span>
+          </span>
+        )}
+        {type === "launch" && !isRover && (
+          <span className="lab-sector-marker">
+            <span className="lab-sector-icon">🚀</span>
+            <span className="lab-sector-title">Launch</span>
+          </span>
+        )}
+        {!isRover && type === "empty" && (
+          <span className="lab-sector-marker lab-sector-marker--subtle">
+            <span className="lab-sector-title">{meta.title}</span>
+          </span>
         )}
         {isRover && (
-          <>
-            <span className="text-2xl">🤖</span>
-            <span className="text-sm font-black text-[var(--exp-accent-2)]">{ARROW[rover.dir]}</span>
-          </>
-        )}
-        {label && !isRover && type !== "goal" && type !== "rock" && (
-          <span className="text-[8px] font-bold uppercase tracking-wide text-white/50">{label}</span>
-        )}
-        {!isRover && !label && type === "empty" && (
-          <span className="text-[9px] font-mono text-white/20">
-            {r + 1},{c + 1}
+          <span className="lab-sector-rover">
+            <LabBuddyToken facing={ARROW[rover.dir]} pulse={running} />
+            <span className="lab-sector-rover-name">{buddyName}</span>
           </span>
         )}
       </div>
@@ -195,20 +231,20 @@ export function LabRobot({ onComplete }: Props) {
   return (
     <LabMissionShell
       labCode="NOVA LAB 002"
-      title="ARIA-7 · Rescue Navigation"
-      objective="Guide rover ARIA-7 from the Launch Pad (bottom-left) to Dr. Vega’s Rescue Module (top-left). You must go around the Debris Field — never through it."
+      title={`${buddyName} · Rescue Navigation`}
+      objective={`Guide ${buddyName} from the Launch Pad (bottom-left) to Dr. Vega’s Rescue Module (top-left). You must go around the Debris Field — never through it.`}
       steps={[
-        "Read the sector map: 🤖 starts at Launch Pad · 🛟 is Dr. Vega · 🪨 is debris (do not enter).",
+        `Read the sector map: ${buddyName} starts at Launch Pad · 🛟 is Dr. Vega · 🪨 is debris (do not enter).`,
         "Add commands with the buttons: Forward = move one cell · Left/Right = turn in place (no move).",
         "Build a safe route around the debris — use Clear Route to start over anytime.",
-        "Press Launch ARIA-7 and watch the rover follow your queue. Reach 🛟 to rescue Dr. Vega.",
+        `Press Launch and watch ${buddyName} follow your queue. Reach 🛟 to rescue Dr. Vega.`,
       ]}
-      hint="The arrow on 🤖 shows which way ARIA-7 is facing before each Forward move."
+      hint={`The arrow on ${buddyName} shows which way they are facing before each Forward move.`}
       attempts={attempts}
       success={success}
       status={
         success
-          ? "✓ Dr. Vega rescued — ARIA-7 mission complete."
+          ? `✓ Dr. Vega rescued — ${buddyName} mission complete.`
           : `Pod life-support: ${podLife}% · Program and launch your route.`
       }
     >
@@ -223,7 +259,7 @@ export function LabRobot({ onComplete }: Props) {
           { label: "Command queue", value: Math.min(100, cmds.length * 12), tone: "violet" },
         ]}
       >
-      <div className="mb-4 lab-telemetry-panel">
+        <div className="mb-4 lab-telemetry-panel">
           <p className="text-[10px] font-bold uppercase text-white/50">Comms · Mission Control</p>
           <ul className="mt-2 max-h-24 space-y-1 overflow-y-auto">
             {commsLog.map((line, i) => (
@@ -231,78 +267,93 @@ export function LabRobot({ onComplete }: Props) {
                 key={`${line}-${i}`}
                 className={cn(
                   "lab-console-line font-mono text-[10px] leading-snug text-white/70",
-                  i === commsLog.length - 1 && "lab-console-line--new"
+                  i === commsLog.length - 1 && "lab-console-line--new",
                 )}
               >
                 {line}
               </li>
             ))}
           </ul>
-      </div>
-
-      <div className="lab-sector-map">
-        <div className="mb-3 flex flex-wrap gap-2 rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-[10px] text-white/70">
-          <span><strong className="text-white/90">Legend:</strong></span>
-          <span>🤖 ARIA-7</span>
-          <span>🛟 Rescue Module</span>
-          <span>🪨 Debris — blocked</span>
-          <span>↑→↓← facing</span>
-        </div>
-        <div className="mb-2 flex items-center justify-between">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--exp-accent-2)]">
-            Sector Map · Top-down view
-          </p>
-          <span className="font-mono text-[10px] text-white/30">4×4 grid</span>
-        </div>
-        <div
-          className="grid gap-1.5 sm:gap-2"
-          style={{ gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))` }}
-        >
-          {Array.from({ length: ROWS * COLS }, (_, i) => {
-            const r = Math.floor(i / COLS);
-            const c = i % COLS;
-            return renderCell(r, c);
-          })}
         </div>
 
-        <div className="mt-5 flex flex-wrap gap-2">
-          {(
-            [
-              ["F", "↑ Forward"],
-              ["R", "↻ Turn Right"],
-              ["L", "↺ Turn Left"],
-            ] as const
-          ).map(([c, label]) => (
-            <button
-              key={c}
-              type="button"
-              onClick={() => add(c)}
-              disabled={running || success}
-              className="experience-lab-btn disabled:opacity-40"
-            >
-              {label}
-            </button>
-          ))}
-          <button type="button" onClick={clearAll} disabled={running} className="experience-lab-btn">
-            Clear Route
-          </button>
-          <button
-            type="button"
-            onClick={launch}
-            disabled={running || cmds.length === 0 || success}
-            className="experience-lab-btn experience-lab-btn-active disabled:opacity-40"
+        <div className="lab-sector-map">
+          <div className="lab-sector-legend">
+            <span className="lab-sector-legend-item">
+              <LabBuddyToken className="scale-75" />
+              <span>{buddyName}</span>
+            </span>
+            <span className="lab-sector-legend-item">
+              <span>🛟</span>
+              <span>Rescue Module</span>
+            </span>
+            <span className="lab-sector-legend-item">
+              <span>🪨</span>
+              <span>Debris — blocked</span>
+            </span>
+            <span className="lab-sector-legend-item">
+              <span className="text-[var(--exp-accent-2)]">↑→↓←</span>
+              <span>Facing</span>
+            </span>
+          </div>
+
+          <div className="mb-3 flex items-center justify-between gap-2">
+            <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[var(--exp-accent-2)]">
+              Sector Map · Lunar rescue theater
+            </p>
+            <span className="rounded-full border border-white/15 bg-black/30 px-2.5 py-0.5 text-[10px] font-semibold text-white/55">
+              Live ops
+            </span>
+          </div>
+
+          <div
+            className="lab-sector-board"
+            style={{ gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))` }}
           >
-            {running ? "ARIA-7 moving…" : "Launch ARIA-7"}
-          </button>
-        </div>
+            {Array.from({ length: ROWS * COLS }, (_, i) => {
+              const r = Math.floor(i / COLS);
+              const c = i % COLS;
+              return renderCell(r, c);
+            })}
+          </div>
 
-        <div className="mt-4 rounded-lg border border-white/10 bg-black/40 px-3 py-2">
-          <p className="text-[10px] font-bold uppercase text-white/40">Command queue</p>
-          <p className="mt-1 font-mono text-sm text-[var(--exp-accent-2)]">
-            {cmds.length ? cmds.join(" → ") : "— awaiting commands —"}
-          </p>
+          <div className="mt-5 flex flex-wrap gap-2">
+            {(
+              [
+                ["F", "↑ Forward"],
+                ["R", "↻ Turn Right"],
+                ["L", "↺ Turn Left"],
+              ] as const
+            ).map(([c, label]) => (
+              <button
+                key={c}
+                type="button"
+                onClick={() => add(c)}
+                disabled={running || success}
+                className="experience-lab-btn disabled:opacity-40"
+              >
+                {label}
+              </button>
+            ))}
+            <button type="button" onClick={clearAll} disabled={running} className="experience-lab-btn">
+              Clear Route
+            </button>
+            <button
+              type="button"
+              onClick={launch}
+              disabled={running || cmds.length === 0 || success}
+              className="experience-lab-btn experience-lab-btn-active disabled:opacity-40"
+            >
+              {running ? `${buddyName} moving…` : `Launch ${buddyName}`}
+            </button>
+          </div>
+
+          <div className="mt-4 rounded-xl border border-white/12 bg-black/40 px-3 py-2.5 backdrop-blur-sm">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-white/40">Command queue</p>
+            <p className="mt-1 font-mono text-sm text-[var(--exp-accent-2)]">
+              {cmds.length ? cmds.join(" → ") : "— awaiting commands —"}
+            </p>
+          </div>
         </div>
-      </div>
       </LabArena>
     </LabMissionShell>
   );

@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { LabMissionShell } from "./lab-mission-shell";
 import { LabArena } from "./lab-arena";
+import { LabBuddyToken } from "./lab-buddy-token";
+import { useLabBuddy } from "./lab-buddy-context";
+import { getBuddyDisplayName } from "@/lib/experiences/catalog";
 
 type Props = { onComplete: (msg: string) => void };
 
@@ -47,6 +50,11 @@ function TempGauge({ temp, threshold }: { temp: number; threshold: number }) {
 }
 
 export function LabIot({ onComplete }: Props) {
+  const labBuddy = useLabBuddy();
+  const buddyName = labBuddy
+    ? getBuddyDisplayName(labBuddy.buddyId, labBuddy.buddyNickname)
+    : "Buddy";
+
   const [threshold, setThreshold] = useState(32);
   const [auto, setAuto] = useState(false);
   const [temp, setTemp] = useState(34);
@@ -147,9 +155,15 @@ export function LabIot({ onComplete }: Props) {
       </div>
 
       <div className="mb-4">
-        <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-emerald-400/70">
-          Greenhouse bay · Live view
-        </p>
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-400/70">
+            Greenhouse bay · Live view
+          </p>
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/25 bg-black/30 px-2 py-0.5 text-[10px] font-semibold text-emerald-100/80">
+            <LabBuddyToken className="scale-[0.55]" />
+            {buddyName} on watch
+          </span>
+        </div>
         <div className="lab-greenhouse-grid">
           {PLANTS.map((plant, i) => (
             <div

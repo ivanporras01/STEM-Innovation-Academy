@@ -4,6 +4,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { LabMissionShell } from "./lab-mission-shell";
 import { LabArena } from "./lab-arena";
+import { LabBuddyToken } from "./lab-buddy-token";
+import { useLabBuddy } from "./lab-buddy-context";
+import { getBuddyDisplayName } from "@/lib/experiences/catalog";
 
 type Props = { onComplete: (msg: string) => void };
 
@@ -46,6 +49,11 @@ function findPath(walkable: Set<string>): string[] | null {
 
 /** High-energy Pixel Portal level forge — animated playtest + game-world HUD. */
 export function LabLevelForge({ onComplete }: Props) {
+  const labBuddy = useLabBuddy();
+  const buddyName = labBuddy
+    ? getBuddyDisplayName(labBuddy.buddyId, labBuddy.buddyNickname)
+    : "Explorer";
+
   const [path, setPath] = useState<Set<string>>(() => new Set(["0,4", "1,4"]));
   const [hazard, setHazard] = useState("2,2");
   const [success, setSuccess] = useState(false);
@@ -114,7 +122,7 @@ export function LabLevelForge({ onComplete }: Props) {
     }
 
     setRunning(true);
-    setStatus("▶ PLAYTEST LIVE — Explorer racing the neon path…");
+    setStatus(`▶ PLAYTEST LIVE — ${buddyName} racing the neon path…`);
     setPortalCharge(28);
 
     route.forEach((cell, i) => {
@@ -169,7 +177,7 @@ export function LabLevelForge({ onComplete }: Props) {
         ]}
       >
         {/* Legend */}
-        <div className="mb-3 flex flex-wrap gap-2 text-[10px] font-bold uppercase tracking-wide">
+        <div className="mb-4 flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-wide">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-500/15 px-2.5 py-1 text-emerald-200">
             <span className="pixel-legend-dot bg-emerald-400" /> Start pad
           </span>
@@ -182,11 +190,15 @@ export function LabLevelForge({ onComplete }: Props) {
           <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-500/15 px-2.5 py-1 text-amber-200">
             <span className="pixel-legend-dot bg-amber-400" /> Portal exit
           </span>
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/30 px-2.5 py-1 text-white/80">
+            <LabBuddyToken className="scale-[0.55]" />
+            {buddyName}
+          </span>
         </div>
 
         {/* Game grid */}
         <div
-          className="pixel-grid relative z-[2] mx-auto grid w-full max-w-md gap-2 p-3"
+          className="pixel-grid relative z-[2] mx-auto grid w-full max-w-lg gap-2.5 p-4 sm:gap-3 sm:p-5"
           style={{ gridTemplateColumns: `repeat(${SIZE}, minmax(0, 1fr))` }}
         >
           {Array.from({ length: SIZE * SIZE }, (_, i) => {
@@ -221,7 +233,7 @@ export function LabLevelForge({ onComplete }: Props) {
                   toggle(cell);
                 }}
                 className={cn(
-                  "pixel-tile group relative aspect-square overflow-hidden rounded-xl border transition duration-200",
+                  "pixel-tile group relative aspect-square overflow-hidden rounded-2xl border transition duration-200",
                   isStart && "pixel-tile--start",
                   isExit && "pixel-tile--exit",
                   isHazard && "pixel-tile--glitch",
@@ -232,35 +244,44 @@ export function LabLevelForge({ onComplete }: Props) {
                 )}
               >
                 <span className="pixel-tile-glow" aria-hidden />
-                {isStart && (
+                <span className="pixel-tile-sheen" aria-hidden />
+                {isStart && !isRunner && (
                   <span className="relative z-[1] flex flex-col items-center justify-center gap-0.5">
-                    <span className="text-lg leading-none sm:text-xl">🚀</span>
-                    <span className="text-[8px] font-black tracking-wider text-emerald-100">START</span>
+                    <span className="text-xl leading-none sm:text-2xl">🚀</span>
+                    <span className="text-[8px] font-black tracking-wider text-emerald-100 sm:text-[9px]">
+                      START
+                    </span>
                   </span>
                 )}
-                {isExit && (
+                {isExit && !isRunner && (
                   <span className="relative z-[1] flex flex-col items-center justify-center">
                     <span className={cn("pixel-portal-vortex", success && "pixel-portal-vortex--open")} aria-hidden />
-                    <span className="relative text-[8px] font-black tracking-wider text-amber-100">EXIT</span>
+                    <span className="relative text-[8px] font-black tracking-wider text-amber-100 sm:text-[9px]">
+                      EXIT
+                    </span>
                   </span>
                 )}
                 {isHazard && (
                   <span className="relative z-[1] flex flex-col items-center justify-center gap-0.5">
-                    <span className="text-lg leading-none sm:text-xl">👾</span>
-                    <span className="text-[8px] font-black tracking-wider text-fuchsia-100">GLITCH</span>
+                    <span className="text-xl leading-none sm:text-2xl">👾</span>
+                    <span className="text-[8px] font-black tracking-wider text-fuchsia-100 sm:text-[9px]">
+                      GLITCH
+                    </span>
                   </span>
                 )}
-                {!isStart && !isExit && !isHazard && isPath && (
-                  <span className="relative z-[1] text-cyan-100/90">
-                    {isRunner ? "🧑‍🚀" : isTrail ? "✦" : "◈"}
+                {!isStart && !isExit && !isHazard && isPath && !isRunner && (
+                  <span className="relative z-[1] text-base text-cyan-100/90 sm:text-lg">
+                    {isTrail ? "✦" : "◈"}
                   </span>
                 )}
                 {!isStart && !isExit && !isHazard && !isPath && (
-                  <span className="relative z-[1] text-[10px] text-white/15 group-hover:text-white/35">＋</span>
+                  <span className="relative z-[1] text-sm text-white/20 transition group-hover:text-white/45 group-hover:scale-110">
+                    ＋
+                  </span>
                 )}
-                {isRunner && !isStart && !isExit && (
-                  <span className="absolute inset-0 z-[2] grid place-items-center text-xl drop-shadow-[0_0_12px_#67e8f9]">
-                    🧑‍🚀
+                {isRunner && (
+                  <span className="absolute inset-0 z-[2] grid place-items-center">
+                    <LabBuddyToken pulse />
                   </span>
                 )}
               </button>

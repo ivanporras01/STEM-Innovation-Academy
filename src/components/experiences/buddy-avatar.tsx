@@ -7,10 +7,12 @@ type Props = {
   src: string;
   alt: string;
   className?: string;
-  size?: "sm" | "md" | "lg" | "xl" | "card";
+  size?: "tile" | "sm" | "md" | "lg" | "xl" | "card";
 };
 
 const sizeClasses = {
+  /** Compact circular portrait for LAB grid cells / rover tokens. */
+  tile: "h-10 w-10 rounded-full sm:h-12 sm:w-12",
   sm: "h-10 w-10 rounded-xl",
   md: "h-[72px] w-[72px] rounded-[18px]",
   lg: "h-24 w-24 rounded-3xl",

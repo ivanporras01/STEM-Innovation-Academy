@@ -24,6 +24,7 @@ import { LabCode } from "./labs/lab-code";
 import { LabRobot } from "./labs/lab-robot";
 import { LabIot } from "./labs/lab-iot";
 import { LabQuest } from "./labs/lab-quest";
+import { LabBuddyProvider } from "./labs/lab-buddy-context";
 import { ExperienceExitNav } from "./experience-exit-nav";
 import { MissionCinemaPanel } from "./mission-cinema";
 import { NOVA_SCHOOL } from "@/lib/nova-brand";
@@ -412,21 +413,23 @@ export function ExperiencePlayer({
                   compact
                 />
                 <div className="mt-6">
-                  {experience.labType === "code" && (
-                    <LabCode onComplete={handleLabComplete} />
-                  )}
-                  {experience.labType === "robot" && (
-                    <LabRobot onComplete={handleLabComplete} />
-                  )}
-                  {experience.labType === "iot" && (
-                    <LabIot onComplete={handleLabComplete} />
-                  )}
-                  {experience.labType === "quest" && (
-                    <LabQuest
-                      experienceSlug={experience.slug}
-                      onComplete={handleLabComplete}
-                    />
-                  )}
+                  <LabBuddyProvider buddyId={buddyId} buddyNickname={buddyNickname}>
+                    {experience.labType === "code" && (
+                      <LabCode onComplete={handleLabComplete} />
+                    )}
+                    {experience.labType === "robot" && (
+                      <LabRobot onComplete={handleLabComplete} />
+                    )}
+                    {experience.labType === "iot" && (
+                      <LabIot onComplete={handleLabComplete} />
+                    )}
+                    {experience.labType === "quest" && (
+                      <LabQuest
+                        experienceSlug={experience.slug}
+                        onComplete={handleLabComplete}
+                      />
+                    )}
+                  </LabBuddyProvider>
                 </div>
               </div>
               <div className="lab-stage-chrome-footer flex flex-wrap gap-3 px-6 py-5 sm:px-10">
