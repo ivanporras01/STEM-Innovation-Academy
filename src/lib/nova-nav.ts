@@ -141,34 +141,43 @@ function getContactPath(locale: AppLocale): string {
   return `${paths.school}#contact`;
 }
 
-/** Primary product tabs — footer and ecosystem links (no Resources mega-menu). */
+/** NOVA Shop is not live yet — keep footer links for now, hide from header nav + cart. */
+export const NOVA_SHOP_HEADER_ENABLED = false;
+
+/** Primary product tabs — footer and ecosystem links (flat list, no mega-menu). */
 export function getNovaPrimaryNav(locale: AppLocale): readonly NovaNavItem[] {
   const paths = LOCALE_PATHS[locale];
+  const hub = getNovaStemHubNav(locale);
   return [
+    { href: paths.school, label: NOVA_SCHOOL.name },
     { href: paths.college, label: NOVA_COLLEGE.name },
     { href: paths.language, label: NOVA_LANGUAGE.name },
     { href: "/ai-tutoring", label: "NOVA AI Tutoring" },
-    { href: paths.school, label: NOVA_SCHOOL.name },
-    { href: paths.shop, label: NOVA_SHOP.name },
+    { href: hub.homeHref, label: hub.menuLabel },
   ];
 }
 
 /**
- * Header-only ordering: College → Language → AI Tutoring → NOVA Resources → School → Shop.
- * School sits before Shop so it stays visible when the centered nav clips overflow at xl widths.
+ * Header ordering: School → College → Language → AI Tutoring → NOVA Resources.
+ * Shop omitted until NOVA_SHOP_HEADER_ENABLED.
  */
 export function getNovaHeaderNav(locale: AppLocale): readonly NovaHeaderNavItem[] {
   const paths = LOCALE_PATHS[locale];
   const hub = getNovaStemHubNav(locale);
 
-  return [
+  const items: NovaHeaderNavItem[] = [
+    { href: paths.school, label: NOVA_SCHOOL.name, kind: "product" },
     { href: paths.college, label: NOVA_COLLEGE.name, kind: "product" },
     { href: paths.language, label: NOVA_LANGUAGE.name, kind: "product" },
     { href: "/ai-tutoring", label: "NOVA AI Tutoring", kind: "product" },
     { href: hub.homeHref, label: hub.menuLabel, kind: "resources" },
-    { href: paths.school, label: NOVA_SCHOOL.name, kind: "product" },
-    { href: paths.shop, label: NOVA_SHOP.name, kind: "product" },
   ];
+
+  if (NOVA_SHOP_HEADER_ENABLED) {
+    items.push({ href: paths.shop, label: NOVA_SHOP.name, kind: "product" });
+  }
+
+  return items;
 }
 
 /** Secondary hub links — nested under NOVA STEM HUB in the header. */

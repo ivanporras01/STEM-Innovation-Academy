@@ -231,7 +231,12 @@
   }
 
   .nova-header-primary {
-    overflow: hidden;
+    overflow: visible;
+  }
+
+  /* Wider than page content so horizontal nav tabs are not clipped at ~1280px */
+  .nova-header-container {
+    @apply mx-auto w-full max-w-[84rem] px-3 sm:px-5 lg:px-6;
   }
 
   body.nova-nav-explore-open .nova-glass-nav {

@@ -206,7 +206,7 @@ export function StemHubNavMenu({ hub, variant, onNavigate }: Props) {
         <button
           type="button"
           className={cn(
-            "flex items-center gap-1.5 whitespace-nowrap rounded-lg border border-transparent px-2.5 py-2 text-xs font-medium text-white/85 transition hover:border-white/10 hover:bg-white/10 hover:text-nova-cyan-light xl:px-3 xl:text-sm",
+            "flex items-center gap-1.5 whitespace-nowrap rounded-lg border border-transparent px-2.5 py-2 text-xs font-medium text-white/85 transition hover:border-white/10 hover:bg-white/10 hover:text-nova-cyan-light lg:px-3 lg:text-sm",
             open && "border-nova-cyan/30 bg-nova-cyan/10 text-nova-cyan-light shadow-[0_0_20px_rgba(0,180,216,0.2)]",
           )}
           aria-haspopup="true"

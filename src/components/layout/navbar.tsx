@@ -9,7 +9,6 @@ import { dashboardRoutes } from "@/lib/auth.config";
 import { getNovaHeaderNav, getNovaStemHubNav } from "@/lib/nova-nav";
 import { getLocaleFromPath } from "@/lib/locale";
 import { NOVA_SCHOOL, getNavBrandContext } from "@/lib/novahub-brand";
-import { ShopCartButton } from "@/components/shop/shop-cart-button";
 import { LocaleSwitcher } from "@/components/layout/locale-switcher";
 import { StemHubNavMenu } from "@/components/layout/stem-hub-nav-menu";
 import { NovaLogo } from "@/components/ui/nova-logo-mark";
@@ -17,8 +16,8 @@ import { NovaLogo } from "@/components/ui/nova-logo-mark";
 const HEADER_HEIGHT = "h-[88px]";
 const MOBILE_NAV_TOP = "top-[88px]";
 
-/** Full horizontal nav only at xl+ — prevents item overlap at lg widths */
-const DESKTOP_NAV = "hidden xl:flex";
+/** Horizontal nav from lg+ — header container is wider so all tabs fit at ~1280px */
+const DESKTOP_NAV = "hidden lg:flex";
 const AI_TUTORING_PATH = "/ai-tutoring";
 
 const COMING_SOON_BADGE =
@@ -46,10 +45,10 @@ export function Navbar() {
   const closeMobile = () => setMenuOpen(false);
 
   return (
-    <header className="nova-glass-nav sticky top-0 z-50 overflow-hidden transition-colors">
+    <header className="nova-glass-nav sticky top-0 z-50 transition-colors">
       <div
         className={cn(
-          "nova-container nova-header-bar grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 sm:gap-3",
+          "nova-header-container nova-header-bar grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-1.5 sm:gap-2 lg:gap-2.5",
           HEADER_HEIGHT,
         )}
       >
@@ -74,16 +73,16 @@ export function Navbar() {
           </Link>
         </div>
 
-        {/* Primary tabs — College through Shop; Resources mega-menu before School. */}
+        {/* Primary tabs — School → College → Language → AI Tutoring → NOVA Resources. */}
         {!isDashboard && (
           <nav
             className={cn(
               DESKTOP_NAV,
-              "nova-header-primary relative z-10 min-w-0 items-center justify-center px-1",
+              "nova-header-primary relative z-10 min-w-0 items-center justify-center",
             )}
             aria-label="NOVA products"
           >
-            <div className="flex max-w-full items-center justify-center gap-0.5 overflow-hidden">
+            <div className="flex flex-wrap items-center justify-center gap-0.5 lg:gap-1">
               {headerNav.map((link) => {
                 if (link.kind === "resources") {
                   return <StemHubNavMenu key={link.href} hub={stemHubNav} variant="desktop" />;
@@ -125,7 +124,7 @@ export function Navbar() {
         {/* Mobile menu toggle */}
         <button
           type="button"
-          className="col-start-3 row-start-1 flex shrink-0 flex-col gap-1.5 rounded-lg p-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nova-cyan xl:hidden"
+          className="col-start-3 row-start-1 flex shrink-0 flex-col gap-1.5 rounded-lg p-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nova-cyan lg:hidden"
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen(!menuOpen)}
@@ -143,7 +142,6 @@ export function Navbar() {
           )}
         >
           <LocaleSwitcher />
-          <ShopCartButton compact />
           {session ? (
             <>
               {!onPortal && locale !== "pt" && (
@@ -179,10 +177,10 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile / tablet drawer — xl and below */}
+      {/* Mobile / tablet drawer — below lg */}
       <nav
         className={cn(
-          "absolute left-0 right-0 z-40 flex flex-col gap-3 border-b border-white/10 bg-[#0a1628] p-4 shadow-nova backdrop-blur-xl xl:hidden",
+          "absolute left-0 right-0 z-40 flex flex-col gap-3 border-b border-white/10 bg-[#0a1628] p-4 shadow-nova backdrop-blur-xl lg:hidden",
           MOBILE_NAV_TOP,
           !menuOpen && "hidden",
         )}
@@ -224,7 +222,6 @@ export function Navbar() {
 
         <div className="flex flex-wrap items-center gap-2 border-t border-white/10 pt-3">
           <LocaleSwitcher onNavigate={closeMobile} />
-          <ShopCartButton />
           {session ? (
             <>
               {!onPortal && locale !== "pt" && (
