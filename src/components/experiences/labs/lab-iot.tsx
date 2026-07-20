@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { LabMissionShell } from "./lab-mission-shell";
+import { LabArena } from "./lab-arena";
 
 type Props = { onComplete: (msg: string) => void };
 
@@ -122,46 +123,27 @@ export function LabIot({ onComplete }: Props) {
           : `Crop viability ${Math.round(viability)}% — configure before it hits critical.`
       }
     >
+      <LabArena
+        theme="iot"
+        mode={success ? "PROTECTED" : auto ? "ARMED" : "DISARMED"}
+        success={success}
+        failFlash={heatAlert && !success}
+        meters={[
+          { label: "Crop viability", value: viability, tone: viability < 60 ? "rose" : "emerald" },
+          { label: "Cooling readiness", value: auto ? (threshold <= 28 ? 90 : 35) : 10, tone: "cyan" },
+          { label: "Heat pressure", value: Math.min(100, ((temp - 20) / 16) * 100), tone: "amber" },
+        ]}
+      >
       {heatAlert && !success && (
         <div className="lab-alert-banner lab-alert-banner--danger mb-4">
           ⚠ HEAT SPIKE DETECTED — Crops at risk! Configure automation now.
         </div>
       )}
 
-      <div className="mb-4 grid gap-3 sm:grid-cols-3">
-        <div
-          className={cn(
-            "lab-telemetry-panel",
-            viability < 60 && "border-red-500/40"
-          )}
-        >
-          <p className="text-[10px] font-bold uppercase text-white/50">Crop viability</p>
-          <p className="mt-1 text-2xl font-black text-white">{Math.round(viability)}%</p>
-          <div className="lab-telemetry-bar mt-2">
-            <div
-              className={cn(
-                "lab-telemetry-bar-fill",
-                viability < 60 ? "lab-telemetry-bar-fill--danger" : "lab-telemetry-bar-fill--success"
-              )}
-              style={{ width: `${viability}%` }}
-            />
-          </div>
-          <p className="mt-1 text-[10px] text-white/50">200 student projects</p>
-        </div>
-        <div className="lab-telemetry-panel flex flex-col items-center justify-center">
+      <div className="mb-4 flex flex-col items-center justify-center rounded-2xl border border-emerald-400/20 bg-black/30 p-4">
           <p className="text-[10px] font-bold uppercase text-white/50">Temperature</p>
           <TempGauge temp={temp} threshold={threshold} />
-        </div>
-        <div className="lab-telemetry-panel">
-          <p className="text-[10px] font-bold uppercase text-white/50">System status</p>
-          <p className={`mt-1 text-lg font-black ${alertSent ? "text-emerald-400" : auto ? "text-amber-400" : "text-white/50"}`}>
-            {success ? "PROTECTED" : auto ? "ARMED" : "DISARMED"}
-          </p>
           <p className="mt-1 text-[10px] text-white/50">{fan}</p>
-          {alertSent && (
-            <p className="mt-1 text-[10px] font-bold text-emerald-400">Dashboard alert sent ✓</p>
-          )}
-        </div>
       </div>
 
       <div className="mb-4">
@@ -253,6 +235,9 @@ export function LabIot({ onComplete }: Props) {
           <p className={cn("mt-1 text-[10px] font-bold uppercase", auto ? "text-emerald-400" : "text-red-400")}>
             {auto ? "● Systems armed" : "○ Disarmed — arm before testing"}
           </p>
+          {alertSent && (
+            <p className="mt-1 text-[10px] font-bold text-emerald-400">Dashboard alert sent ✓</p>
+          )}
         </div>
       </div>
 
@@ -269,6 +254,7 @@ export function LabIot({ onComplete }: Props) {
           Simulate Heat Spike
         </button>
       </div>
+      </LabArena>
     </LabMissionShell>
   );
 }

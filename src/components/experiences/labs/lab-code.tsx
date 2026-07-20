@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { cn } from "@/lib/utils";
 import { LabMissionShell } from "./lab-mission-shell";
+import { LabArena } from "./lab-arena";
 
 const STARTER = `# Relay Theta-9 · Decoder Patch
 message = "NOVA STANDBY"
@@ -83,39 +83,22 @@ export function LabCode({ onComplete }: Props) {
             : "Patch the decoder and bring signal strength to 100%."
       }
     >
+      <LabArena
+        theme="code"
+        mode={success ? "ONLINE" : phase === 2 ? "UPLINK" : "DECODE"}
+        success={success}
+        meters={[
+          { label: "Signal strength", value: signalStrength, tone: "cyan" },
+          { label: "Phase progress", value: success ? 100 : phase === 2 ? 55 : 18, tone: "violet" },
+          { label: "Explorers waiting", value: success ? 100 : Math.min(90, signalStrength + 10), tone: "amber" },
+        ]}
+      >
       <div className="mb-4 flex flex-wrap gap-2">
         <div className={phase1Done ? "lab-phase-step lab-phase-step--done" : "lab-phase-step lab-phase-step--active"}>
           <span>{phase1Done ? "✓" : "1"}</span> Decode Signal
         </div>
         <div className={success ? "lab-phase-step lab-phase-step--done" : phase === 2 ? "lab-phase-step lab-phase-step--active" : "lab-phase-step lab-phase-step--pending"}>
           <span>{success ? "✓" : "2"}</span> Activate Uplink
-        </div>
-      </div>
-
-      <div className="mb-4 grid gap-3 sm:grid-cols-3">
-        <div className="lab-telemetry-panel">
-          <p className="text-[10px] font-bold uppercase text-white/50">Signal strength</p>
-          <p className="mt-1 text-2xl font-black text-[var(--exp-accent-2)]">{signalStrength}%</p>
-          <div className="lab-telemetry-bar mt-2">
-            <div
-              className={cn(
-                "lab-telemetry-bar-fill",
-                success && "lab-telemetry-bar-fill--success"
-              )}
-              style={{ width: `${signalStrength}%` }}
-            />
-          </div>
-        </div>
-        <div className="lab-telemetry-panel text-center">
-          <p className="text-[10px] font-bold uppercase text-white/50">Phase</p>
-          <p className="mt-1 text-2xl font-black text-white">{phase}/2</p>
-        </div>
-        <div className="lab-telemetry-panel text-center">
-          <p className="text-[10px] font-bold uppercase text-white/50">Relay Theta-9</p>
-          <p className={`mt-1 text-lg font-black ${success ? "text-emerald-400" : "text-red-400"}`}>
-            {success ? "ONLINE" : "OFFLINE"}
-          </p>
-          <span className={`mt-1 inline-block h-1.5 w-1.5 rounded-full ${success ? "bg-emerald-400" : "bg-red-500 animate-pulse"}`} />
         </div>
       </div>
 
@@ -127,7 +110,7 @@ export function LabCode({ onComplete }: Props) {
               key={i}
               className="lab-waveform-bar"
               style={{
-                height: `${success ? 70 + Math.sin(i * 0.6 + Date.now() / 500) * 25 : 8 + (signalStrength / 100) * 50 * Math.abs(Math.sin(i * 0.45))}%`,
+                height: `${success ? 70 + Math.sin(i * 0.6) * 25 : 8 + (signalStrength / 100) * 50 * Math.abs(Math.sin(i * 0.45))}%`,
                 opacity: success ? 0.95 : 0.25 + (signalStrength / 100) * 0.6,
               }}
             />
@@ -182,6 +165,7 @@ export function LabCode({ onComplete }: Props) {
           )}
         </div>
       </div>
+      </LabArena>
     </LabMissionShell>
   );
 }

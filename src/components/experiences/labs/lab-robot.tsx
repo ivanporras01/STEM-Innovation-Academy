@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { LabMissionShell } from "./lab-mission-shell";
+import { LabArena } from "./lab-arena";
 
 type Dir = "N" | "E" | "S" | "W";
 type Cell = "empty" | "rock" | "goal";
@@ -211,26 +212,18 @@ export function LabRobot({ onComplete }: Props) {
           : `Pod life-support: ${podLife}% · Program and launch your route.`
       }
     >
-      <div className="mb-4 grid gap-3 lg:grid-cols-2">
-        <div className="lab-telemetry-panel">
-          <p className="text-[10px] font-bold uppercase text-amber-400/80">Dr. Vega · Pod life-support</p>
-          <p className="mt-1 text-2xl font-black text-amber-300">{podLife}%</p>
-          <div className="lab-telemetry-bar mt-2">
-            <div
-              className={cn(
-                "lab-telemetry-bar-fill",
-                podLife < 70 && "lab-telemetry-bar-fill--danger"
-              )}
-              style={{ width: `${podLife}%` }}
-            />
-          </div>
-          {podLife < 70 && (
-            <p className="mt-1 text-[10px] font-bold uppercase text-red-400 animate-pulse">
-              Critical — route ARIA-7 now
-            </p>
-          )}
-        </div>
-        <div className="lab-telemetry-panel">
+      <LabArena
+        theme="robot"
+        mode={success ? "RESCUED" : running ? "NAVIGATING" : crashed ? "CRASHED" : "PROGRAM"}
+        success={success}
+        failFlash={crashed}
+        meters={[
+          { label: "Pod life-support", value: success ? 100 : podLife, tone: "amber" },
+          { label: "Route progress", value: success ? 100 : Math.min(90, trail.length * 18), tone: "cyan" },
+          { label: "Command queue", value: Math.min(100, cmds.length * 12), tone: "violet" },
+        ]}
+      >
+      <div className="mb-4 lab-telemetry-panel">
           <p className="text-[10px] font-bold uppercase text-white/50">Comms · Mission Control</p>
           <ul className="mt-2 max-h-24 space-y-1 overflow-y-auto">
             {commsLog.map((line, i) => (
@@ -245,7 +238,6 @@ export function LabRobot({ onComplete }: Props) {
               </li>
             ))}
           </ul>
-        </div>
       </div>
 
       <div className="lab-sector-map">
@@ -311,6 +303,7 @@ export function LabRobot({ onComplete }: Props) {
           </p>
         </div>
       </div>
+      </LabArena>
     </LabMissionShell>
   );
 }

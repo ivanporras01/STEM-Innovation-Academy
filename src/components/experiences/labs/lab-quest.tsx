@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 import { LabMissionShell } from "./lab-mission-shell";
 import { LabLevelForge } from "./lab-level-forge";
+import { LabArena, LabChoiceCard } from "./lab-arena";
 
 type Props = { experienceSlug: string; onComplete: (msg: string) => void };
 
@@ -39,19 +40,19 @@ export function LabQuest({ experienceSlug, onComplete }: Props) {
 
 function LabViralBrief({ onComplete }: { onComplete: (msg: string) => void }) {
   const audiences = [
-    { id: "explorers", label: "NOVA Explorers (8–16)", score: 28 },
-    { id: "parents", label: "Parents & guardians", score: 18 },
-    { id: "random", label: "Everyone on Earth", score: 6 },
+    { id: "explorers", label: "NOVA Explorers (8–16)", score: 28, icon: "🧑‍🚀", sub: "Precision audience" },
+    { id: "parents", label: "Parents & guardians", score: 18, icon: "👨‍👩‍👧", sub: "Good, but secondary" },
+    { id: "random", label: "Everyone on Earth", score: 6, icon: "🌍", sub: "Too broad — weak signal" },
   ];
   const hooks = [
-    { id: "mission", label: "“Your first STEM mission starts in 60 seconds”", score: 32 },
-    { id: "discount", label: "“Buy now before prices explode!!!!”", score: 8 },
-    { id: "fear", label: "“If you don’t share this, you’ll fail forever”", score: 4 },
+    { id: "mission", label: "“Your first STEM mission starts in 60 seconds”", score: 32, icon: "✨", sub: "Curiosity invite" },
+    { id: "discount", label: "“Buy now before prices explode!!!!”", score: 8, icon: "💸", sub: "Fake urgency" },
+    { id: "fear", label: "“If you don’t share this, you’ll fail forever”", score: 4, icon: "😱", sub: "Dark pattern" },
   ];
   const channels = [
-    { id: "reels", label: "Short video / Reels", score: 30 },
-    { id: "poster", label: "Static poster only", score: 12 },
-    { id: "spam", label: "Mass DM spam", score: 2 },
+    { id: "reels", label: "Short video / Reels", score: 30, icon: "🎬", sub: "High reach + ethical" },
+    { id: "poster", label: "Static poster only", score: 12, icon: "🖼️", sub: "Low momentum" },
+    { id: "spam", label: "Mass DM spam", score: 2, icon: "📵", sub: "Burns trust" },
   ];
 
   const [audience, setAudience] = useState(audiences[0]!.id);
@@ -60,6 +61,8 @@ function LabViralBrief({ onComplete }: { onComplete: (msg: string) => void }) {
   const [launched, setLaunched] = useState(false);
   const [success, setSuccess] = useState(false);
   const [attempts, setAttempts] = useState(0);
+  const [pulse, setPulse] = useState(0);
+  const [failFlash, setFailFlash] = useState(false);
 
   const score = useMemo(() => {
     const a = audiences.find((x) => x.id === audience)?.score ?? 0;
@@ -68,12 +71,22 @@ function LabViralBrief({ onComplete }: { onComplete: (msg: string) => void }) {
     return a + h + c;
   }, [audience, hook, channel]);
 
+  useEffect(() => {
+    if (!launched || success) return;
+    const t = setInterval(() => setPulse((p) => (p + 7) % 100), 120);
+    return () => clearInterval(t);
+  }, [launched, success]);
+
   function launch() {
     setAttempts((n) => n + 1);
     setLaunched(true);
     if (score >= 80) {
       setSuccess(true);
+      setFailFlash(false);
       onComplete("Campaign live. Ethical signal is climbing across NOVA Network.");
+    } else {
+      setFailFlash(true);
+      setTimeout(() => setFailFlash(false), 600);
     }
   }
 
@@ -98,7 +111,36 @@ function LabViralBrief({ onComplete }: { onComplete: (msg: string) => void }) {
             : `Live preview: Signal Strength ${score}/100`
       }
     >
-      <div className="space-y-4">
+      <LabArena
+        theme="viral"
+        mode={success ? "LIVE" : launched ? "RECALIBRATING" : "BRIEFING"}
+        success={success}
+        failFlash={failFlash}
+        meters={[
+          { label: "Signal strength", value: success ? 100 : score, tone: "amber" },
+          { label: "Trust score", value: success ? 96 : Math.max(12, score - 10), tone: "emerald" },
+          { label: "Network buzz", value: success ? 88 : launched ? 20 + pulse * 0.3 : 8, tone: "violet" },
+        ]}
+      >
+        <div className="mb-4 overflow-hidden rounded-2xl border border-orange-400/25 bg-black/35 p-3">
+          <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-orange-200/80">
+            <span>📡 NOVA Network feed</span>
+            <span>{success ? "TRENDING" : "IDLE"}</span>
+          </div>
+          <div className="mt-2 flex h-10 items-end gap-1">
+            {Array.from({ length: 24 }, (_, i) => (
+              <span
+                key={i}
+                className="flex-1 rounded-sm bg-gradient-to-t from-orange-500 to-amber-300 transition-all duration-300"
+                style={{
+                  height: `${success ? 40 + (i % 5) * 12 : Math.max(8, ((score + pulse) / 140) * (20 + (i % 7) * 8))}%`,
+                  opacity: success ? 0.95 : 0.35 + score / 200,
+                }}
+              />
+            ))}
+          </div>
+        </div>
+
         {(
           [
             ["Audience", audiences, audience, setAudience],
@@ -106,41 +148,39 @@ function LabViralBrief({ onComplete }: { onComplete: (msg: string) => void }) {
             ["Channel", channels, channel, setChannel],
           ] as const
         ).map(([label, options, value, setter]) => (
-          <fieldset key={label}>
-            <legend className="mb-2 text-xs font-bold uppercase tracking-wider text-nova-cyan">{label}</legend>
+          <fieldset key={label} className="mb-4">
+            <legend className="mb-2 text-xs font-black uppercase tracking-wider text-orange-200/90">
+              {label}
+            </legend>
             <div className="grid gap-2">
               {options.map((opt) => (
-                <button
+                <LabChoiceCard
                   key={opt.id}
-                  type="button"
+                  active={value === opt.id}
+                  icon={opt.icon}
+                  title={opt.label}
+                  subtitle={opt.sub}
+                  disabled={success}
                   onClick={() => {
                     setter(opt.id);
                     setLaunched(false);
                     setSuccess(false);
                   }}
-                  className={cn(
-                    "rounded-xl border px-3 py-2.5 text-left text-sm transition",
-                    value === opt.id
-                      ? "border-nova-cyan/50 bg-nova-cyan/15 text-white"
-                      : "border-white/10 bg-white/5 text-white/75 hover:bg-white/10",
-                  )}
-                >
-                  {opt.label}
-                </button>
+                />
               ))}
             </div>
           </fieldset>
         ))}
-      </div>
-      <div className="mt-4 h-3 overflow-hidden rounded-full bg-white/10">
-        <div
-          className="h-full rounded-full bg-gradient-to-r from-nova-cyan to-emerald-400 transition-all duration-500"
-          style={{ width: `${Math.min(100, score)}%` }}
-        />
-      </div>
-      <button type="button" onClick={launch} className="experience-btn-primary mt-4 w-full sm:w-auto">
-        ▶ Launch Campaign
-      </button>
+
+        <button
+          type="button"
+          onClick={launch}
+          disabled={success}
+          className="experience-btn-primary mission-invite-cta mt-2 w-full disabled:opacity-50 sm:w-auto"
+        >
+          {success ? "✓ Campaign Live" : "▶ Launch Campaign"}
+        </button>
+      </LabArena>
     </LabMissionShell>
   );
 }
@@ -152,9 +192,16 @@ function LabPitchPad({ onComplete }: { onComplete: (msg: string) => void }) {
   const [success, setSuccess] = useState(false);
   const [attempts, setAttempts] = useState(0);
   const [score, setScore] = useState(0);
+  const [judges, setJudges] = useState([0, 0, 0]);
+  const [failFlash, setFailFlash] = useState(false);
+  const [scoring, setScoring] = useState(false);
 
-  function pitch() {
+  async function pitch() {
+    if (scoring || success) return;
     setAttempts((a) => a + 1);
+    setScoring(true);
+    setFailFlash(false);
+
     const p = problem.trim().length;
     const s = solution.trim().length;
     const c = customer.trim().length;
@@ -165,10 +212,24 @@ function LabPitchPad({ onComplete }: { onComplete: (msg: string) => void }) {
       (/(student|school|community|family|teen)/i.test(customer) ? 8 : 0) +
       (/(app|robot|sensor|platform|kit|game)/i.test(solution) ? 8 : 0);
     const capped = Math.min(100, next);
+
+    // Animated judge reveal
+    setJudges([0, 0, 0]);
+    await new Promise((r) => setTimeout(r, 280));
+    setJudges([Math.min(100, capped + 4), 0, 0]);
+    await new Promise((r) => setTimeout(r, 280));
+    setJudges([Math.min(100, capped + 4), Math.min(100, capped - 2), 0]);
+    await new Promise((r) => setTimeout(r, 280));
+    setJudges([Math.min(100, capped + 4), Math.min(100, capped - 2), Math.min(100, capped + 1)]);
     setScore(capped);
+    setScoring(false);
+
     if (capped >= 72 && p >= 12 && s >= 12 && c >= 8) {
       setSuccess(true);
       onComplete("Demo Day unlocked. Mentors want your pitch next.");
+    } else {
+      setFailFlash(true);
+      setTimeout(() => setFailFlash(false), 600);
     }
   }
 
@@ -193,50 +254,82 @@ function LabPitchPad({ onComplete }: { onComplete: (msg: string) => void }) {
             : "Pitch Pad online. Mentors are listening…"
       }
     >
-      <div className="space-y-3">
-        {(
-          [
-            ["Problem", problem, setProblem, "e.g. After-school Explorers lose track of homework deadlines"],
-            ["Solution", solution, setSolution, "e.g. A buddy app that turns deadlines into micro-missions"],
-            ["Customer", customer, setCustomer, "e.g. Middle-school students + busy families"],
-          ] as const
-        ).map(([label, value, setter, placeholder]) => (
-          <label key={label} className="block">
-            <span className="mb-1 block text-xs font-bold uppercase tracking-wider text-nova-cyan">
-              {label}
-            </span>
-            <textarea
-              value={value}
-              onChange={(e) => {
-                setter(e.target.value);
-                setSuccess(false);
-              }}
-              rows={2}
-              placeholder={placeholder}
-              className="w-full rounded-xl border border-white/15 bg-[#071225] px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-nova-cyan/50 focus:outline-none"
-            />
-          </label>
-        ))}
-      </div>
-      <div className="mt-4 h-3 overflow-hidden rounded-full bg-white/10">
-        <div
-          className="h-full rounded-full bg-gradient-to-r from-orange-400 to-nova-cyan transition-all duration-500"
-          style={{ width: `${score}%` }}
-        />
-      </div>
-      <button type="button" onClick={pitch} className="experience-btn-primary mt-4 w-full sm:w-auto">
-        ▶ Score Pitch
-      </button>
+      <LabArena
+        theme="pitch"
+        mode={success ? "FUNDED PATH" : scoring ? "JUDGING" : "PITCHING"}
+        success={success}
+        failFlash={failFlash}
+        meters={[
+          { label: "Pitch power", value: score, tone: "rose" },
+          { label: "Clarity", value: Math.min(100, problem.trim().length * 3), tone: "cyan" },
+          { label: "STEM fit", value: Math.min(100, solution.trim().length * 3), tone: "violet" },
+        ]}
+      >
+        <div className="mb-4 grid grid-cols-3 gap-2">
+          {["Mentor Vega", "Founder Lex", "Buddy Nova"].map((name, i) => (
+            <div
+              key={name}
+              className="rounded-2xl border border-rose-400/25 bg-black/35 p-3 text-center"
+            >
+              <p className="text-[10px] font-black uppercase tracking-wider text-rose-200/70">{name}</p>
+              <p className="mt-1 text-2xl font-black text-white">{judges[i] || "—"}</p>
+              <div className="mx-auto mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-rose-400 to-orange-300 transition-all duration-500"
+                  style={{ width: `${judges[i]}%` }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="space-y-3">
+          {(
+            [
+              ["Problem", problem, setProblem, "e.g. After-school Explorers lose track of homework deadlines", "🔥"],
+              ["Solution", solution, setSolution, "e.g. A buddy app that turns deadlines into micro-missions", "💡"],
+              ["Customer", customer, setCustomer, "e.g. Middle-school students + busy families", "🎯"],
+            ] as const
+          ).map(([label, value, setter, placeholder, icon]) => (
+            <label key={label} className="block">
+              <span className="mb-1 flex items-center gap-2 text-xs font-black uppercase tracking-wider text-rose-200/90">
+                <span>{icon}</span> {label}
+              </span>
+              <textarea
+                value={value}
+                onChange={(e) => {
+                  setter(e.target.value);
+                  setSuccess(false);
+                  setScore(0);
+                }}
+                rows={2}
+                disabled={success}
+                placeholder={placeholder}
+                className="w-full rounded-2xl border border-white/15 bg-black/40 px-3 py-2.5 text-sm text-white placeholder:text-white/30 focus:border-rose-400/50 focus:outline-none"
+              />
+            </label>
+          ))}
+        </div>
+
+        <button
+          type="button"
+          onClick={pitch}
+          disabled={success || scoring}
+          className="experience-btn-primary mission-invite-cta mt-4 w-full disabled:opacity-50 sm:w-auto"
+        >
+          {scoring ? "▶ Mentors scoring…" : success ? "✓ Demo Day Ready" : "▶ Score Pitch"}
+        </button>
+      </LabArena>
     </LabMissionShell>
   );
 }
 
 const STORY_BEATS = [
-  { id: "hook", label: "Hook — stars flicker, signal dies" },
-  { id: "problem", label: "Problem — Explorers stranded offline" },
-  { id: "hero", label: "Hero — YOU open the forge console" },
-  { id: "twist", label: "Twist — glitch virus fights back" },
-  { id: "win", label: "Win — uplink restored, celebration" },
+  { id: "hook", label: "Hook — stars flicker, signal dies", icon: "🌌", color: "from-indigo-500/40 to-cyan-500/20" },
+  { id: "problem", label: "Problem — Explorers stranded offline", icon: "📡", color: "from-rose-500/40 to-orange-500/20" },
+  { id: "hero", label: "Hero — YOU open the forge console", icon: "🧑‍🚀", color: "from-cyan-500/40 to-emerald-500/20" },
+  { id: "twist", label: "Twist — glitch virus fights back", icon: "👾", color: "from-fuchsia-500/40 to-violet-500/20" },
+  { id: "win", label: "Win — uplink restored, celebration", icon: "🏆", color: "from-amber-500/40 to-emerald-500/20" },
 ];
 
 function LabStoryReel({ onComplete }: { onComplete: (msg: string) => void }) {
@@ -244,9 +337,13 @@ function LabStoryReel({ onComplete }: { onComplete: (msg: string) => void }) {
   const [order, setOrder] = useState(() => [...correct].reverse());
   const [success, setSuccess] = useState(false);
   const [attempts, setAttempts] = useState(0);
-  const [status, setStatus] = useState("Drag the story order with ▲ / ▼ until the trailer hits.");
+  const [status, setStatus] = useState("Reorder the storyboard until the trailer hits.");
+  const [previewing, setPreviewing] = useState(false);
+  const [spotlight, setSpotlight] = useState(0);
+  const [failFlash, setFailFlash] = useState(false);
 
   function move(index: number, dir: -1 | 1) {
+    if (success || previewing) return;
     const next = [...order];
     const j = index + dir;
     if (j < 0 || j >= next.length) return;
@@ -255,17 +352,33 @@ function LabStoryReel({ onComplete }: { onComplete: (msg: string) => void }) {
     setSuccess(false);
   }
 
-  function preview() {
+  async function preview() {
+    if (previewing || success) return;
     setAttempts((a) => a + 1);
+    setPreviewing(true);
+    setFailFlash(false);
+
+    for (let i = 0; i < order.length; i++) {
+      setSpotlight(i);
+      await new Promise((r) => setTimeout(r, 380));
+    }
+
     const ok = order.every((id, i) => id === correct[i]);
+    setPreviewing(false);
     if (ok) {
       setSuccess(true);
       setStatus("✓ TRAILER LOCKED — Story Beacon reel is festival-ready.");
       onComplete("Story reel sequenced. Premiere unlocked.");
     } else {
+      setFailFlash(true);
       setStatus("Sequence off. Great trailers: Hook → Problem → Hero → Twist → Win.");
+      setTimeout(() => setFailFlash(false), 600);
     }
   }
+
+  const arcScore = Math.round(
+    (order.filter((id, i) => id === correct[i]).length / correct.length) * 100,
+  );
 
   return (
     <LabMissionShell
@@ -282,39 +395,85 @@ function LabStoryReel({ onComplete }: { onComplete: (msg: string) => void }) {
       success={success}
       status={status}
     >
-      <ol className="space-y-2">
-        {order.map((id, index) => {
-          const beat = STORY_BEATS.find((b) => b.id === id)!;
-          return (
-            <li
-              key={id}
-              className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2"
-            >
-              <span className="w-6 text-xs font-black text-nova-cyan">{index + 1}</span>
-              <span className="flex-1 text-sm text-white">{beat.label}</span>
-              <button
-                type="button"
-                aria-label="Move up"
-                onClick={() => move(index, -1)}
-                className="rounded-lg border border-white/15 px-2 py-1 text-xs text-white/80 hover:bg-white/10"
+      <LabArena
+        theme="story"
+        mode={success ? "PREMIERE" : previewing ? "PLAYING" : "EDITING"}
+        success={success}
+        failFlash={failFlash}
+        meters={[
+          { label: "Story arc", value: success ? 100 : arcScore, tone: "rose" },
+          { label: "Tension", value: success ? 92 : 35 + arcScore * 0.4, tone: "violet" },
+          { label: "Payoff", value: success ? 98 : order[4] === "win" ? 70 : 18, tone: "amber" },
+        ]}
+      >
+        <div className="mb-4 overflow-hidden rounded-2xl border border-rose-400/30 bg-black/50 p-4">
+          <p className="text-[10px] font-black uppercase tracking-[0.18em] text-rose-200/80">
+            🎬 Live preview window
+          </p>
+          <div className="mt-3 flex min-h-[88px] items-center justify-center rounded-xl border border-white/10 bg-gradient-to-br from-rose-950/50 to-indigo-950/40">
+            {(() => {
+              const beat = STORY_BEATS.find((b) => b.id === order[spotlight])!;
+              return (
+                <div className="text-center">
+                  <div className="text-4xl">{beat.icon}</div>
+                  <p className="mt-2 text-sm font-bold text-white">{beat.label}</p>
+                </div>
+              );
+            })()}
+          </div>
+        </div>
+
+        <ol className="space-y-2">
+          {order.map((id, index) => {
+            const beat = STORY_BEATS.find((b) => b.id === id)!;
+            return (
+              <li
+                key={id}
+                className={cn(
+                  "flex items-center gap-2 rounded-2xl border px-3 py-2.5 transition",
+                  `bg-gradient-to-r ${beat.color}`,
+                  previewing && spotlight === index
+                    ? "border-rose-300/70 shadow-[0_0_24px_rgba(251,113,133,0.35)]"
+                    : "border-white/10",
+                )}
               >
-                ▲
-              </button>
-              <button
-                type="button"
-                aria-label="Move down"
-                onClick={() => move(index, 1)}
-                className="rounded-lg border border-white/15 px-2 py-1 text-xs text-white/80 hover:bg-white/10"
-              >
-                ▼
-              </button>
-            </li>
-          );
-        })}
-      </ol>
-      <button type="button" onClick={preview} className="experience-btn-primary mt-4 w-full sm:w-auto">
-        ▶ Preview Trailer
-      </button>
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-black/40 text-xs font-black text-rose-100">
+                  {index + 1}
+                </span>
+                <span className="text-xl">{beat.icon}</span>
+                <span className="flex-1 text-sm font-semibold text-white">{beat.label}</span>
+                <button
+                  type="button"
+                  aria-label="Move up"
+                  disabled={success || previewing}
+                  onClick={() => move(index, -1)}
+                  className="rounded-lg border border-white/20 bg-black/30 px-2 py-1 text-xs text-white/80 hover:bg-white/10 disabled:opacity-40"
+                >
+                  ▲
+                </button>
+                <button
+                  type="button"
+                  aria-label="Move down"
+                  disabled={success || previewing}
+                  onClick={() => move(index, 1)}
+                  className="rounded-lg border border-white/20 bg-black/30 px-2 py-1 text-xs text-white/80 hover:bg-white/10 disabled:opacity-40"
+                >
+                  ▼
+                </button>
+              </li>
+            );
+          })}
+        </ol>
+
+        <button
+          type="button"
+          onClick={preview}
+          disabled={success || previewing}
+          className="experience-btn-primary mission-invite-cta mt-4 w-full disabled:opacity-50 sm:w-auto"
+        >
+          {previewing ? "▶ Playing trailer…" : success ? "✓ Trailer Locked" : "▶ Preview Trailer"}
+        </button>
+      </LabArena>
     </LabMissionShell>
   );
 }
@@ -324,21 +483,25 @@ const PHISH_ITEMS = [
     id: "1",
     text: "From: mentor@nova-stem-hub.education — “Your mission badge is ready. Open the portal to claim it.”",
     phish: false,
+    icon: "✅",
   },
   {
     id: "2",
     text: "From: secur1ty-alert@nova-stem-hub.ru — “URGENT: click here or your account deletes in 1 hour!!!”",
     phish: true,
+    icon: "🚨",
   },
   {
     id: "3",
     text: "From: billing@paypa1-security.com — “Confirm your password now to keep Explorer access.”",
     phish: true,
+    icon: "🎣",
   },
   {
     id: "4",
     text: "From: news@novastemhub.education — “Weekly NOVA News: three new Explore missions launched.”",
     phish: false,
+    icon: "📰",
   },
 ];
 
@@ -348,6 +511,8 @@ function LabPhishGuard({ onComplete }: { onComplete: (msg: string) => void }) {
   const [success, setSuccess] = useState(false);
   const [attempts, setAttempts] = useState(0);
   const [status, setStatus] = useState("Classify each message, then forge a strong vault password.");
+  const [failFlash, setFailFlash] = useState(false);
+  const [scanLine, setScanLine] = useState(0);
 
   const strength = useMemo(() => {
     let s = 0;
@@ -359,17 +524,30 @@ function LabPhishGuard({ onComplete }: { onComplete: (msg: string) => void }) {
     return Math.min(100, s);
   }, [password]);
 
+  const classifiedCount = PHISH_ITEMS.filter((item) => marks[item.id] === item.phish).length;
+  const defense = Math.round((classifiedCount / PHISH_ITEMS.length) * 55 + strength * 0.45);
+
+  useEffect(() => {
+    if (success) return;
+    const t = setInterval(() => setScanLine((v) => (v + 1) % 100), 80);
+    return () => clearInterval(t);
+  }, [success]);
+
   function verify() {
     setAttempts((a) => a + 1);
     const classified = PHISH_ITEMS.every((item) => marks[item.id] === item.phish);
     if (!classified) {
       setStatus("Inbox still compromised. Flag every phishing lure (urgency, fake domains, password asks).");
       setSuccess(false);
+      setFailFlash(true);
+      setTimeout(() => setFailFlash(false), 600);
       return;
     }
     if (strength < 80) {
       setStatus("Inbox clear — but vault password needs 80+ strength (length + mix + symbol).");
       setSuccess(false);
+      setFailFlash(true);
+      setTimeout(() => setFailFlash(false), 600);
       return;
     }
     setSuccess(true);
@@ -393,90 +571,143 @@ function LabPhishGuard({ onComplete }: { onComplete: (msg: string) => void }) {
       success={success}
       status={status}
     >
-      <ul className="space-y-3">
-        {PHISH_ITEMS.map((item) => (
-          <li key={item.id} className="rounded-xl border border-white/10 bg-white/5 p-3">
-            <p className="text-sm text-white/85">{item.text}</p>
-            <div className="mt-2 flex gap-2">
-              {([false, true] as const).map((phish) => (
-                <button
-                  key={String(phish)}
-                  type="button"
-                  onClick={() => {
-                    setMarks((m) => ({ ...m, [item.id]: phish }));
-                    setSuccess(false);
-                  }}
-                  className={cn(
-                    "rounded-lg px-3 py-1.5 text-xs font-bold uppercase tracking-wide",
-                    marks[item.id] === phish
-                      ? phish
-                        ? "bg-rose-500/30 text-rose-200"
-                        : "bg-emerald-500/30 text-emerald-200"
-                      : "bg-white/10 text-white/60 hover:bg-white/15",
-                  )}
-                >
-                  {phish ? "Phish" : "Safe"}
-                </button>
-              ))}
-            </div>
-          </li>
-        ))}
-      </ul>
-      <label className="mt-4 block">
-        <span className="mb-1 block text-xs font-bold uppercase tracking-wider text-nova-cyan">
-          Vault password
-        </span>
-        <input
-          type="text"
-          value={password}
-          onChange={(e) => {
-            setPassword(e.target.value);
-            setSuccess(false);
-          }}
-          placeholder="Forge something unique…"
-          className="w-full rounded-xl border border-white/15 bg-[#071225] px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-nova-cyan/50 focus:outline-none"
-        />
-      </label>
-      <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
-        <div
-          className="h-full rounded-full bg-gradient-to-r from-rose-400 via-amber-300 to-emerald-400 transition-all"
-          style={{ width: `${strength}%` }}
-        />
-      </div>
-      <p className="mt-1 text-xs text-white/50">Strength {strength}/100</p>
-      <button type="button" onClick={verify} className="experience-btn-primary mt-4 w-full sm:w-auto">
-        ▶ Seal the Vault
-      </button>
+      <LabArena
+        theme="cyber"
+        mode={success ? "SECURE" : "THREAT HUNT"}
+        success={success}
+        failFlash={failFlash}
+        meters={[
+          { label: "Defense rating", value: success ? 100 : defense, tone: "emerald" },
+          { label: "Inbox clarity", value: (classifiedCount / PHISH_ITEMS.length) * 100, tone: "cyan" },
+          { label: "Vault strength", value: strength, tone: "rose" },
+        ]}
+      >
+        <div className="relative mb-4 overflow-hidden rounded-2xl border border-teal-400/30 bg-black/45 p-3">
+          <div
+            className="pointer-events-none absolute left-0 right-0 h-0.5 bg-teal-300/70 shadow-[0_0_12px_#5eead4]"
+            style={{ top: `${scanLine}%` }}
+            aria-hidden
+          />
+          <p className="text-[10px] font-black uppercase tracking-wider text-teal-200/80">
+            🛡 Threat radar · scanning inbox swarm
+          </p>
+          <p className="mt-1 text-xs text-white/60">
+            {success ? "All lures neutralized." : `${4 - classifiedCount} threats still unmarked`}
+          </p>
+        </div>
+
+        <ul className="space-y-3">
+          {PHISH_ITEMS.map((item) => (
+            <li
+              key={item.id}
+              className={cn(
+                "rounded-2xl border p-3 transition",
+                marks[item.id] == null
+                  ? "border-white/10 bg-white/5"
+                  : marks[item.id] === item.phish
+                    ? "border-emerald-400/40 bg-emerald-500/10"
+                    : "border-rose-400/40 bg-rose-500/10",
+              )}
+            >
+              <div className="flex gap-2">
+                <span className="text-xl">{item.icon}</span>
+                <p className="flex-1 text-sm text-white/90">{item.text}</p>
+              </div>
+              <div className="mt-2 flex gap-2">
+                {([false, true] as const).map((phish) => (
+                  <button
+                    key={String(phish)}
+                    type="button"
+                    disabled={success}
+                    onClick={() => {
+                      setMarks((m) => ({ ...m, [item.id]: phish }));
+                      setSuccess(false);
+                    }}
+                    className={cn(
+                      "rounded-lg px-3 py-1.5 text-xs font-bold uppercase tracking-wide transition",
+                      marks[item.id] === phish
+                        ? phish
+                          ? "bg-rose-500/35 text-rose-100 shadow-[0_0_14px_rgba(244,63,94,0.35)]"
+                          : "bg-emerald-500/35 text-emerald-100 shadow-[0_0_14px_rgba(52,211,153,0.35)]"
+                        : "bg-white/10 text-white/60 hover:bg-white/15",
+                    )}
+                  >
+                    {phish ? "Phish" : "Safe"}
+                  </button>
+                ))}
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        <label className="mt-4 block">
+          <span className="mb-1 block text-xs font-black uppercase tracking-wider text-teal-200/90">
+            🔐 Vault password
+          </span>
+          <input
+            type="text"
+            value={password}
+            disabled={success}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              setSuccess(false);
+            }}
+            placeholder="Forge something unique…"
+            className="w-full rounded-2xl border border-white/15 bg-black/40 px-3 py-2.5 text-sm text-white placeholder:text-white/30 focus:border-teal-400/50 focus:outline-none"
+          />
+        </label>
+
+        <button
+          type="button"
+          onClick={verify}
+          disabled={success}
+          className="experience-btn-primary mission-invite-cta mt-4 w-full disabled:opacity-50 sm:w-auto"
+        >
+          {success ? "✓ Vault Sealed" : "▶ Seal the Vault"}
+        </button>
+      </LabArena>
     </LabMissionShell>
   );
 }
 
 function LabImpactStudio({ onComplete }: { onComplete: (msg: string) => void }) {
   const needs = [
-    { id: "water", label: "Neighborhood flooding alerts" },
-    { id: "food", label: "Food waste at school lunch" },
-    { id: "lonely", label: "Isolated elders nearby" },
+    { id: "water", label: "Neighborhood flooding alerts", icon: "🌊", sub: "Safety + community" },
+    { id: "food", label: "Food waste at school lunch", icon: "🥗", sub: "Sustainability" },
+    { id: "lonely", label: "Isolated elders nearby", icon: "💛", sub: "Human connection" },
   ];
   const tools = [
-    { id: "scratch", label: "Scratch story + interactive quiz" },
-    { id: "sensor", label: "Simple sensor + alert idea" },
-    { id: "campaign", label: "Youth media campaign" },
+    { id: "scratch", label: "Scratch story + interactive quiz", icon: "🎨", sub: "Creative coding" },
+    { id: "sensor", label: "Simple sensor + alert idea", icon: "📟", sub: "IoT thinking" },
+    { id: "campaign", label: "Youth media campaign", icon: "📣", sub: "Story + reach" },
   ];
   const [need, setNeed] = useState(needs[0]!.id);
   const [tool, setTool] = useState(tools[0]!.id);
   const [promise, setPromise] = useState("");
   const [success, setSuccess] = useState(false);
   const [attempts, setAttempts] = useState(0);
+  const [failFlash, setFailFlash] = useState(false);
+  const [assembling, setAssembling] = useState(false);
 
-  function assemble() {
+  const spark = Math.min(100, Math.round(promise.trim().length * 3.2 + (need && tool ? 20 : 0)));
+
+  async function assemble() {
+    if (assembling || success) return;
     setAttempts((a) => a + 1);
     if (promise.trim().length < 20) {
-      setSuccess(false);
+      setFailFlash(true);
+      setTimeout(() => setFailFlash(false), 600);
       return;
     }
+    setAssembling(true);
+    await new Promise((r) => setTimeout(r, 700));
+    setAssembling(false);
     setSuccess(true);
     onComplete("Community Spark prototype locked. Impact circle wants your demo.");
   }
+
+  const needMeta = needs.find((n) => n.id === need)!;
+  const toolMeta = tools.find((t) => t.id === tool)!;
 
   return (
     <LabMissionShell
@@ -500,76 +731,110 @@ function LabImpactStudio({ onComplete }: { onComplete: (msg: string) => void }) 
             : "Impact Studio standing by…"
       }
     >
-      <div className="space-y-4">
-        <fieldset>
-          <legend className="mb-2 text-xs font-bold uppercase tracking-wider text-nova-cyan">
+      <LabArena
+        theme="impact"
+        mode={success ? "SHOWCASE" : assembling ? "BUILDING" : "DESIGN"}
+        success={success}
+        failFlash={failFlash}
+        meters={[
+          { label: "Impact spark", value: success ? 100 : spark, tone: "emerald" },
+          { label: "Empathy", value: need ? 78 : 20, tone: "amber" },
+          { label: "Build ready", value: success ? 100 : Math.min(90, promise.trim().length * 4), tone: "cyan" },
+        ]}
+      >
+        <div
+          className={cn(
+            "mb-4 rounded-2xl border p-4 transition",
+            success
+              ? "border-lime-400/50 bg-lime-500/10 shadow-[0_0_30px_rgba(163,230,53,0.25)]"
+              : "border-lime-400/25 bg-black/35",
+          )}
+        >
+          <p className="text-[10px] font-black uppercase tracking-wider text-lime-200/80">
+            ⚡ Prototype card preview
+          </p>
+          <div className="mt-3 flex items-center justify-center gap-3 text-3xl">
+            <span>{needMeta.icon}</span>
+            <span className="text-lg text-white/40">+</span>
+            <span>{toolMeta.icon}</span>
+            <span className="text-lg text-white/40">→</span>
+            <span>{success ? "🌟" : "🧩"}</span>
+          </div>
+          <p className="mt-3 text-center text-sm text-white/80">
+            {promise.trim() || "Your impact promise will appear here…"}
+          </p>
+        </div>
+
+        <fieldset className="mb-4">
+          <legend className="mb-2 text-xs font-black uppercase tracking-wider text-lime-200/90">
             Community need
           </legend>
           <div className="grid gap-2">
             {needs.map((n) => (
-              <button
+              <LabChoiceCard
                 key={n.id}
-                type="button"
+                active={need === n.id}
+                icon={n.icon}
+                title={n.label}
+                subtitle={n.sub}
+                disabled={success}
                 onClick={() => {
                   setNeed(n.id);
                   setSuccess(false);
                 }}
-                className={cn(
-                  "rounded-xl border px-3 py-2.5 text-left text-sm",
-                  need === n.id
-                    ? "border-nova-cyan/50 bg-nova-cyan/15 text-white"
-                    : "border-white/10 bg-white/5 text-white/75 hover:bg-white/10",
-                )}
-              >
-                {n.label}
-              </button>
+              />
             ))}
           </div>
         </fieldset>
-        <fieldset>
-          <legend className="mb-2 text-xs font-bold uppercase tracking-wider text-nova-cyan">
+
+        <fieldset className="mb-4">
+          <legend className="mb-2 text-xs font-black uppercase tracking-wider text-lime-200/90">
             Creative tech tool
           </legend>
           <div className="grid gap-2">
             {tools.map((t) => (
-              <button
+              <LabChoiceCard
                 key={t.id}
-                type="button"
+                active={tool === t.id}
+                icon={t.icon}
+                title={t.label}
+                subtitle={t.sub}
+                disabled={success}
                 onClick={() => {
                   setTool(t.id);
                   setSuccess(false);
                 }}
-                className={cn(
-                  "rounded-xl border px-3 py-2.5 text-left text-sm",
-                  tool === t.id
-                    ? "border-nova-orange/50 bg-nova-orange/15 text-white"
-                    : "border-white/10 bg-white/5 text-white/75 hover:bg-white/10",
-                )}
-              >
-                {t.label}
-              </button>
+              />
             ))}
           </div>
         </fieldset>
+
         <label className="block">
-          <span className="mb-1 block text-xs font-bold uppercase tracking-wider text-nova-cyan">
+          <span className="mb-1 block text-xs font-black uppercase tracking-wider text-lime-200/90">
             Impact promise
           </span>
           <textarea
             value={promise}
+            disabled={success}
             onChange={(e) => {
               setPromise(e.target.value);
               setSuccess(false);
             }}
             rows={2}
             placeholder="In 30 days, our prototype will help…"
-            className="w-full rounded-xl border border-white/15 bg-[#071225] px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-nova-cyan/50 focus:outline-none"
+            className="w-full rounded-2xl border border-white/15 bg-black/40 px-3 py-2.5 text-sm text-white placeholder:text-white/30 focus:border-lime-400/50 focus:outline-none"
           />
         </label>
-      </div>
-      <button type="button" onClick={assemble} className="experience-btn-primary mt-4 w-full sm:w-auto">
-        ▶ Assemble Prototype
-      </button>
+
+        <button
+          type="button"
+          onClick={assemble}
+          disabled={success || assembling}
+          className="experience-btn-primary mission-invite-cta mt-4 w-full disabled:opacity-50 sm:w-auto"
+        >
+          {assembling ? "▶ Assembling…" : success ? "✓ Spark Ignited" : "▶ Assemble Prototype"}
+        </button>
+      </LabArena>
     </LabMissionShell>
   );
 }

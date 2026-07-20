@@ -915,7 +915,108 @@
     @apply border-red-500/50 bg-red-950/50 text-red-300;
   }
 
-  /* ── Pixel Portal game arena ── */
+  /* ── Shared cinematic LabArena (all Explore Now labs) ── */
+  .lab-arena {
+    border-color: color-mix(in srgb, var(--lab-arena-accent, #22d3ee) 45%, transparent);
+    background:
+      radial-gradient(ellipse at 18% 0%, color-mix(in srgb, var(--lab-arena-accent, #22d3ee) 28%, transparent), transparent 48%),
+      radial-gradient(ellipse at 92% 100%, color-mix(in srgb, var(--lab-arena-accent-2, #a855f7) 22%, transparent), transparent 52%),
+      linear-gradient(165deg, #070b18 0%, #06101f 55%, #040d18 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 0 48px color-mix(in srgb, var(--lab-arena-accent, #22d3ee) 18%, transparent);
+  }
+
+  .lab-arena--pixel {
+    --lab-arena-accent: #a855f7;
+    --lab-arena-accent-2: #22d3ee;
+  }
+
+  .lab-arena--viral {
+    --lab-arena-accent: #f472b6;
+    --lab-arena-accent-2: #fb923c;
+  }
+
+  .lab-arena--pitch {
+    --lab-arena-accent: #fbbf24;
+    --lab-arena-accent-2: #38bdf8;
+  }
+
+  .lab-arena--story {
+    --lab-arena-accent: #c084fc;
+    --lab-arena-accent-2: #f472b6;
+  }
+
+  .lab-arena--cyber {
+    --lab-arena-accent: #34d399;
+    --lab-arena-accent-2: #f43f5e;
+  }
+
+  .lab-arena--impact {
+    --lab-arena-accent: #4ade80;
+    --lab-arena-accent-2: #22d3ee;
+  }
+
+  .lab-arena--code {
+    --lab-arena-accent: #22d3ee;
+    --lab-arena-accent-2: #818cf8;
+  }
+
+  .lab-arena--robot {
+    --lab-arena-accent: #38bdf8;
+    --lab-arena-accent-2: #fbbf24;
+  }
+
+  .lab-arena--iot {
+    --lab-arena-accent: #34d399;
+    --lab-arena-accent-2: #a3e635;
+  }
+
+  .lab-arena--fail {
+    animation: pixel-fail-shake 0.45s ease-in-out;
+    box-shadow: 0 0 40px rgba(244, 63, 94, 0.35);
+  }
+
+  .lab-arena--win {
+    box-shadow:
+      0 0 0 1px rgba(52, 211, 153, 0.45),
+      0 0 60px rgba(52, 211, 153, 0.25),
+      0 0 80px color-mix(in srgb, var(--lab-arena-accent, #22d3ee) 22%, transparent);
+  }
+
+  .lab-arena-scan {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(255, 255, 255, 0.015) 3px,
+      rgba(255, 255, 255, 0.015) 6px
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .lab-arena-stars {
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(1.5px 1.5px at 15% 20%, #fff8, transparent),
+      radial-gradient(1px 1px at 70% 30%, #fff6, transparent),
+      radial-gradient(1.5px 1.5px at 40% 75%, #fff5, transparent),
+      radial-gradient(1px 1px at 85% 80%, #fff7, transparent);
+    animation: experience-twinkle 5s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.7;
+  }
+
+  .lab-choice {
+    backdrop-filter: blur(8px);
+  }
+
+  /* Legacy aliases (Pixel Portal) */
   .pixel-arena {
     border-color: color-mix(in srgb, #a855f7 45%, transparent);
     background:

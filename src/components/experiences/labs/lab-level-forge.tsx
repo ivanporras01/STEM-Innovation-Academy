@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { LabMissionShell } from "./lab-mission-shell";
+import { LabArena } from "./lab-arena";
 
 type Props = { onComplete: (msg: string) => void };
 
@@ -156,61 +157,19 @@ export function LabLevelForge({ onComplete }: Props) {
       success={success}
       status={status}
     >
-      <div
-        className={cn(
-          "pixel-arena relative overflow-hidden rounded-3xl border p-4 sm:p-5",
-          failFlash && "pixel-arena--fail",
-          success && "pixel-arena--win",
-        )}
+      <LabArena
+        theme="pixel"
+        mode={success ? "SHIPPED" : running ? "LIVE RUN" : "DESIGN"}
+        success={success}
+        failFlash={failFlash}
+        meters={[
+          { label: "Portal charge", value: portalCharge, tone: "violet" },
+          { label: "Glitch threat", value: success ? 0 : glitchThreat, tone: "rose" },
+          { label: "Combo", value: Math.min(100, combo * 18), tone: "cyan" },
+        ]}
       >
-        <div className="pixel-arena-scan" aria-hidden />
-        <div className="pixel-arena-stars" aria-hidden />
-
-        {/* Telemetry strip */}
-        <div className="relative z-[2] mb-4 grid gap-2 sm:grid-cols-3">
-          <div className="pixel-meter">
-            <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider">
-              <span className="text-cyan-300">Portal charge</span>
-              <span className="text-white/80">{portalCharge}%</span>
-            </div>
-            <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-black/40">
-              <div
-                className="h-full rounded-full bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-amber-300 transition-all duration-300"
-                style={{ width: `${portalCharge}%` }}
-              />
-            </div>
-          </div>
-          <div className="pixel-meter">
-            <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider">
-              <span className="text-fuchsia-300">Glitch threat</span>
-              <span className="text-white/80">{success ? 0 : glitchThreat}%</span>
-            </div>
-            <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-black/40">
-              <div
-                className={cn(
-                  "h-full rounded-full transition-all duration-500",
-                  success ? "bg-emerald-400" : "bg-gradient-to-r from-fuchsia-600 to-rose-500",
-                )}
-                style={{ width: `${success ? 0 : glitchThreat}%` }}
-              />
-            </div>
-          </div>
-          <div className="pixel-meter flex items-center justify-between gap-2">
-            <div>
-              <p className="text-[10px] font-black uppercase tracking-wider text-amber-300">Combo</p>
-              <p className="text-lg font-black text-white">{combo}</p>
-            </div>
-            <div className="text-right">
-              <p className="text-[10px] font-black uppercase tracking-wider text-white/45">Mode</p>
-              <p className="text-xs font-bold text-emerald-300">
-                {success ? "SHIPPED" : running ? "LIVE RUN" : "DESIGN"}
-              </p>
-            </div>
-          </div>
-        </div>
-
         {/* Legend */}
-        <div className="relative z-[2] mb-3 flex flex-wrap gap-2 text-[10px] font-bold uppercase tracking-wide">
+        <div className="mb-3 flex flex-wrap gap-2 text-[10px] font-bold uppercase tracking-wide">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-500/15 px-2.5 py-1 text-emerald-200">
             <span className="pixel-legend-dot bg-emerald-400" /> Start pad
           </span>
@@ -309,7 +268,7 @@ export function LabLevelForge({ onComplete }: Props) {
           })}
         </div>
 
-        <p className="relative z-[2] mt-3 text-center text-xs text-white/55">
+        <p className="mt-3 text-center text-xs text-white/55">
           {running
             ? "Hold tight — playtest in motion…"
             : success
@@ -321,11 +280,11 @@ export function LabLevelForge({ onComplete }: Props) {
           type="button"
           disabled={running || success}
           onClick={playtest}
-          className="experience-btn-primary mission-invite-cta relative z-[2] mt-4 w-full disabled:opacity-50 sm:w-auto"
+          className="experience-btn-primary mission-invite-cta mt-4 w-full disabled:opacity-50 sm:w-auto"
         >
           {running ? "▶ Playtesting…" : success ? "✓ Portal Open" : "▶ Playtest Level"}
         </button>
-      </div>
+      </LabArena>
     </LabMissionShell>
   );
 }
