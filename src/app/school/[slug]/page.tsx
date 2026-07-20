@@ -5,6 +5,8 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { getNovaSchoolElectiveBySlug, novaSchoolElectives } from "@/data/nova-school";
 import { getSchoolElectiveCopy } from "@/lib/program-locale-copy";
+import { getExperience } from "@/lib/experiences/catalog";
+import { MissionInviteCard } from "@/components/experiences/mission-cinema";
 import { NOVA_COLLEGE, NOVA_SCHOOL, NOVA_STEM_HUB } from "@/lib/novahub-brand";
 
 type Props = {
@@ -84,17 +86,13 @@ export default async function SchoolElectivePage({ params }: Props) {
           </section>
 
           {elective.experienceSlug && (
-            <section className="nova-glass-island p-6 text-center">
-              <p className="text-sm text-nova-cyan-light/80">
-                Interactive mission: <strong className="text-white">{elective.experienceTitle}</strong>
-              </p>
-              <Link
-                href={`/experiences/${elective.experienceSlug}`}
-                className="nova-btn-primary nova-btn-glow mt-4 inline-flex"
-              >
-                Start Explore Now mission →
-              </Link>
-            </section>
+            <MissionInviteCard
+              title={elective.experienceTitle ?? "Explore Now Mission"}
+              subtitle="Your first contact with NOVA — interactive LAB, buddy co-pilot, and a badge waiting for you."
+              href={`/experiences/${elective.experienceSlug}`}
+              accent={getExperience(elective.experienceSlug)?.accent}
+              accentSecondary={getExperience(elective.experienceSlug)?.accentSecondary}
+            />
           )}
 
           {elective.missionPathHref && (

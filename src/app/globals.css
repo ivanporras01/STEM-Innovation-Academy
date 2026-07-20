@@ -349,29 +349,50 @@
 
   /* NOVA Experience immersive mode — translucent so global cosmos shows through */
   .experience-shell {
-    background: radial-gradient(
-        circle at 15% 10%,
-        color-mix(in srgb, var(--exp-accent) 14%, transparent),
-        transparent 35%
+    background:
+      radial-gradient(
+        ellipse 80% 50% at 12% -10%,
+        color-mix(in srgb, var(--exp-accent) 28%, transparent),
+        transparent 55%
       ),
       radial-gradient(
-        circle at 85% 10%,
-        color-mix(in srgb, var(--exp-accent-2) 12%, transparent),
-        transparent 34%
+        ellipse 70% 45% at 92% 0%,
+        color-mix(in srgb, var(--exp-accent-2) 22%, transparent),
+        transparent 50%
       ),
-      linear-gradient(145deg, rgba(6, 17, 39, 0.72), rgba(11, 26, 59, 0.78) 48%, rgba(16, 54, 99, 0.75));
+      radial-gradient(
+        circle at 50% 120%,
+        color-mix(in srgb, var(--exp-accent) 12%, transparent),
+        transparent 45%
+      ),
+      linear-gradient(160deg, #040b18 0%, #0a1630 42%, #0c2248 100%);
   }
 
   .experience-stars {
     pointer-events: none;
     position: fixed;
     inset: 0;
-    opacity: 0.35;
-    background-image: radial-gradient(1px 1px at 20px 30px, #fff8, transparent),
-      radial-gradient(1px 1px at 80px 120px, #fff6, transparent),
-      radial-gradient(1px 1px at 160px 80px, #fff5, transparent);
-    background-size: 200px 200px;
-    animation: experience-twinkle 8s ease-in-out infinite alternate;
+    opacity: 0.55;
+    background-image:
+      radial-gradient(1.5px 1.5px at 12% 18%, #fff, transparent),
+      radial-gradient(1px 1px at 28% 62%, #fffc, transparent),
+      radial-gradient(1.5px 1.5px at 48% 22%, #fff9, transparent),
+      radial-gradient(1px 1px at 72% 44%, #fff, transparent),
+      radial-gradient(2px 2px at 88% 16%, #fff8, transparent),
+      radial-gradient(1px 1px at 64% 78%, #fff6, transparent),
+      radial-gradient(1.5px 1.5px at 18% 88%, #fff9, transparent),
+      radial-gradient(1px 1px at 92% 72%, #fffb, transparent);
+    background-size: 100% 100%;
+    animation: experience-twinkle 7s ease-in-out infinite alternate;
+  }
+
+  .experience-stars::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--exp-accent) 18%, transparent), transparent 55%);
+    animation: mission-aurora-drift 12s ease-in-out infinite alternate;
+    pointer-events: none;
   }
 
   .experience-mark {
@@ -381,20 +402,49 @@
 
   .experience-progress-fill {
     background: linear-gradient(90deg, var(--exp-accent), var(--exp-accent-2));
+    box-shadow: 0 0 16px color-mix(in srgb, var(--exp-accent) 55%, transparent);
   }
 
   .experience-stage {
-    animation: experience-stage-in 0.35s ease-out;
+    animation: experience-stage-in 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--exp-accent) 18%, transparent),
+      0 24px 80px rgba(0, 0, 0, 0.45);
   }
 
   .experience-stage-exit {
-    opacity: 0.6;
-    transform: translateY(8px);
+    opacity: 0.55;
+    transform: translateY(10px) scale(0.985);
     transition: opacity 0.18s, transform 0.18s;
   }
 
   .experience-panel {
     background: linear-gradient(145deg, #0d1b3d, #123f73);
+  }
+
+  .experience-btn-primary {
+    @apply inline-flex min-h-[50px] items-center justify-center rounded-full px-7 py-3 text-sm font-black text-white transition;
+    background: linear-gradient(135deg, var(--exp-accent), color-mix(in srgb, var(--exp-accent) 40%, #1e3a8a));
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--exp-accent) 40%, transparent),
+      0 0 28px color-mix(in srgb, var(--exp-accent) 45%, transparent),
+      0 12px 28px rgba(0, 0, 0, 0.35);
+  }
+
+  .experience-btn-primary:hover {
+    transform: translateY(-1px) scale(1.03);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--exp-accent) 55%, transparent),
+      0 0 40px color-mix(in srgb, var(--exp-accent) 60%, transparent),
+      0 16px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  .experience-btn-secondary {
+    @apply inline-flex min-h-[50px] items-center justify-center rounded-full border-2 border-white/25 bg-white/10 px-6 py-3 text-sm font-black text-white transition hover:border-[var(--exp-accent)] hover:bg-white/15;
+  }
+
+  .experience-btn-secondary-light {
+    @apply inline-flex min-h-[47px] items-center justify-center rounded-full border-2 border-nova-light-gray bg-white px-6 py-3 text-sm font-black text-nova-deep-blue transition hover:border-[var(--exp-accent)];
   }
 
   .experience-hero {
@@ -420,17 +470,210 @@
     transform: scale(1.05);
   }
 
-  .experience-btn-primary {
-    @apply inline-flex min-h-[47px] items-center justify-center rounded-full px-6 py-3 text-sm font-black text-white transition hover:scale-[1.02] hover:shadow-lg;
-    background: linear-gradient(135deg, var(--exp-accent), #1e3a8a);
+  /* ── Cinematic mission panel ── */
+  .mission-cinema {
+    background:
+      radial-gradient(circle at 50% 20%, color-mix(in srgb, var(--exp-accent) 28%, transparent), transparent 55%),
+      linear-gradient(160deg, rgba(8, 18, 42, 0.95), rgba(12, 36, 72, 0.92));
+    border: 1px solid color-mix(in srgb, var(--exp-accent) 35%, transparent);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 0 60px color-mix(in srgb, var(--exp-accent) 18%, transparent);
   }
 
-  .experience-btn-secondary {
-    @apply inline-flex min-h-[47px] items-center justify-center rounded-full border-2 border-white/25 bg-white/10 px-6 py-3 text-sm font-black text-white transition hover:border-[var(--exp-accent)] hover:bg-white/15;
+  .mission-cinema-aurora {
+    position: absolute;
+    inset: -20%;
+    background:
+      conic-gradient(
+        from 120deg,
+        transparent,
+        color-mix(in srgb, var(--exp-accent) 22%, transparent),
+        transparent 40%,
+        color-mix(in srgb, var(--exp-accent-2) 18%, transparent),
+        transparent 70%
+      );
+    animation: mission-aurora-spin 18s linear infinite;
+    opacity: 0.7;
+    pointer-events: none;
   }
 
-  .experience-btn-secondary-light {
-    @apply inline-flex min-h-[47px] items-center justify-center rounded-full border-2 border-nova-light-gray bg-white px-6 py-3 text-sm font-black text-nova-deep-blue transition hover:border-[var(--exp-accent)];
+  .mission-cinema-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 28px 28px;
+    mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  .mission-orbit-stage {
+    width: min(100%, 220px);
+    height: 220px;
+  }
+
+  .mission-orbit {
+    position: absolute;
+    border-radius: 9999px;
+    border: 1px solid color-mix(in srgb, var(--exp-accent-2) 45%, transparent);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--exp-accent) 20%, transparent);
+  }
+
+  .mission-orbit--outer {
+    inset: 0;
+    animation: mission-orbit-spin 16s linear infinite;
+  }
+
+  .mission-orbit--mid {
+    inset: 18%;
+    border-style: dashed;
+    animation: mission-orbit-spin 11s linear infinite reverse;
+  }
+
+  .mission-orbit--inner {
+    inset: 34%;
+    animation: mission-orbit-spin 7s linear infinite;
+  }
+
+  .mission-core-glow {
+    position: absolute;
+    inset: 38%;
+    border-radius: 9999px;
+    background: radial-gradient(circle, color-mix(in srgb, var(--exp-accent) 55%, transparent), transparent 70%);
+    filter: blur(8px);
+    animation: mission-core-pulse 2.8s ease-in-out infinite;
+  }
+
+  .mission-spark {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border-radius: 9999px;
+    background: var(--exp-accent-2);
+    box-shadow: 0 0 10px var(--exp-accent-2);
+    animation: mission-spark-float 3.6s ease-in-out infinite;
+  }
+
+  .mission-spark--1 { top: 8%; left: 48%; animation-delay: 0s; }
+  .mission-spark--2 { top: 22%; right: 10%; animation-delay: 0.3s; }
+  .mission-spark--3 { top: 48%; right: 4%; animation-delay: 0.6s; }
+  .mission-spark--4 { bottom: 18%; right: 18%; animation-delay: 0.9s; }
+  .mission-spark--5 { bottom: 6%; left: 46%; animation-delay: 1.2s; }
+  .mission-spark--6 { bottom: 22%; left: 8%; animation-delay: 1.5s; }
+  .mission-spark--7 { top: 42%; left: 2%; animation-delay: 1.8s; }
+  .mission-spark--8 { top: 14%; left: 16%; animation-delay: 2.1s; }
+
+  .mission-badge-shimmer {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      110deg,
+      transparent 30%,
+      color-mix(in srgb, var(--exp-accent-2) 18%, transparent) 48%,
+      transparent 62%
+    );
+    animation: mission-shimmer 3.5s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .mission-invite {
+    background:
+      radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--exp-accent) 32%, transparent), transparent 55%),
+      linear-gradient(165deg, rgba(6, 16, 36, 0.95), rgba(10, 28, 58, 0.92));
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--exp-accent) 30%, transparent),
+      0 24px 80px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  .mission-invite-aurora {
+    position: absolute;
+    inset: -30%;
+    background: conic-gradient(
+      from 80deg,
+      transparent,
+      color-mix(in srgb, var(--exp-accent) 25%, transparent),
+      transparent 35%,
+      color-mix(in srgb, var(--exp-accent-2) 20%, transparent),
+      transparent 65%
+    );
+    animation: mission-aurora-spin 22s linear infinite;
+    opacity: 0.65;
+    pointer-events: none;
+  }
+
+  .mission-invite-rings {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .mission-invite-rings span {
+    position: absolute;
+    left: 50%;
+    top: 42%;
+    width: 180px;
+    height: 180px;
+    margin: -90px 0 0 -90px;
+    border-radius: 9999px;
+    border: 1px solid color-mix(in srgb, var(--exp-accent) 28%, transparent);
+    animation: mission-ring-pulse 4s ease-out infinite;
+  }
+
+  .mission-invite-rings span:nth-child(2) {
+    width: 260px;
+    height: 260px;
+    margin: -130px 0 0 -130px;
+    animation-delay: 0.8s;
+  }
+
+  .mission-invite-rings span:nth-child(3) {
+    width: 340px;
+    height: 340px;
+    margin: -170px 0 0 -170px;
+    animation-delay: 1.6s;
+  }
+
+  .mission-invite-cta {
+    animation: mission-cta-glow 2.4s ease-in-out infinite;
+  }
+
+  .mission-stakes-ticker {
+    @apply relative overflow-hidden rounded-2xl border px-4 py-3.5 text-sm font-semibold;
+    border-color: color-mix(in srgb, #f59e0b 45%, transparent);
+    background: linear-gradient(90deg, rgba(120, 53, 15, 0.45), rgba(69, 26, 3, 0.35));
+    color: #fde68a;
+    box-shadow: 0 0 24px rgba(245, 158, 11, 0.15);
+  }
+
+  .mission-stakes-ticker::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: #f59e0b;
+    box-shadow: 0 0 12px #f59e0b;
+    animation: mission-stakes-pulse 1.6s ease-in-out infinite;
+  }
+
+  .mission-launch-headline {
+    text-shadow: 0 0 40px color-mix(in srgb, var(--exp-accent) 35%, transparent);
+  }
+
+  .mission-skill-chip {
+    @apply rounded-full border px-3 py-1.5 text-xs font-bold text-white transition;
+    border-color: color-mix(in srgb, var(--exp-accent) 35%, transparent);
+    background: color-mix(in srgb, var(--exp-accent) 12%, transparent);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--exp-accent) 12%, transparent);
+  }
+
+  .mission-skill-chip:hover {
+    background: color-mix(in srgb, var(--exp-accent) 22%, transparent);
   }
 
   .experience-lab {
@@ -730,18 +973,18 @@
 }
 
 @keyframes experience-twinkle {
-  from { opacity: 0.4; }
-  to { opacity: 0.9; }
+  from { opacity: 0.35; }
+  to { opacity: 0.85; }
 }
 
 @keyframes experience-stage-in {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(18px) scale(0.98);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -753,6 +996,59 @@
 @keyframes experience-confetti-fade {
   0% { opacity: 1; }
   100% { opacity: 0; }
+}
+
+@keyframes mission-aurora-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes mission-aurora-drift {
+  from { opacity: 0.35; transform: translateY(0); }
+  to { opacity: 0.7; transform: translateY(12px); }
+}
+
+@keyframes mission-orbit-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes mission-core-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.12); }
+}
+
+@keyframes mission-spark-float {
+  0%, 100% { opacity: 0.35; transform: translateY(0) scale(0.85); }
+  50% { opacity: 1; transform: translateY(-6px) scale(1.15); }
+}
+
+@keyframes mission-shimmer {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(120%); }
+}
+
+@keyframes mission-ring-pulse {
+  0% { opacity: 0.55; transform: scale(0.85); }
+  100% { opacity: 0; transform: scale(1.25); }
+}
+
+@keyframes mission-cta-glow {
+  0%, 100% {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--exp-accent) 40%, transparent),
+      0 0 28px color-mix(in srgb, var(--exp-accent) 45%, transparent);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--exp-accent) 60%, transparent),
+      0 0 48px color-mix(in srgb, var(--exp-accent) 70%, transparent);
+  }
+}
+
+@keyframes mission-stakes-pulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
 }
 
 @keyframes nova-nebula-float {

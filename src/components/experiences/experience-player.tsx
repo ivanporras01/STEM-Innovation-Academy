@@ -21,6 +21,7 @@ import { LabRobot } from "./labs/lab-robot";
 import { LabIot } from "./labs/lab-iot";
 import { LabQuest } from "./labs/lab-quest";
 import { ExperienceExitNav } from "./experience-exit-nav";
+import { MissionCinemaPanel } from "./mission-cinema";
 import { NOVA_SCHOOL } from "@/lib/nova-brand";
 import { cn } from "@/lib/utils";
 
@@ -206,38 +207,33 @@ export function ExperiencePlayer({
           {stage === "launch" && (
             <div className="relative">
               <div
-                className="pointer-events-none absolute inset-0 opacity-50"
+                className="pointer-events-none absolute inset-0 opacity-60"
                 style={{
-                  background: `radial-gradient(ellipse at 15% 0%, ${experience.accent}44, transparent 55%), radial-gradient(ellipse at 90% 100%, ${experience.accentSecondary}33, transparent 50%)`,
+                  background: `radial-gradient(ellipse at 10% -5%, ${experience.accent}55, transparent 50%), radial-gradient(ellipse at 95% 110%, ${experience.accentSecondary}40, transparent 48%)`,
                 }}
               />
-              <div className="relative grid items-start gap-10 lg:grid-cols-[1.2fr_0.8fr]">
+              <div className="relative grid items-start gap-10 lg:grid-cols-[1.15fr_0.85fr]">
                 <div>
-                  <p className="text-xs font-black uppercase tracking-[0.18em] text-[var(--exp-accent-2)]">
+                  <p className="text-xs font-black uppercase tracking-[0.2em] text-[var(--exp-accent-2)]">
                     {experience.launchTagline}
                   </p>
-                  <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-[var(--exp-accent)]/40 bg-[var(--exp-accent)]/10 px-4 py-1.5">
-                    <span className="h-2 w-2 animate-pulse rounded-full bg-[var(--exp-accent)]" />
+                  <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-[var(--exp-accent)]/50 bg-[var(--exp-accent)]/15 px-4 py-1.5 shadow-[0_0_24px_color-mix(in_srgb,var(--exp-accent)_25%,transparent)]">
+                    <span className="h-2 w-2 animate-pulse rounded-full bg-[var(--exp-accent)] shadow-[0_0_10px_var(--exp-accent)]" />
                     <span className="text-xs font-black uppercase tracking-[0.14em] text-[var(--exp-accent-2)]">
                       Explore Now · {experience.labCode}
                     </span>
                   </div>
-                  <h1 className="mt-5 text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+                  <h1 className="mission-launch-headline mt-5 text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
                     {experience.headline}
                   </h1>
                   <p className="mt-2 text-xl font-semibold text-[var(--exp-accent-2)]">{experience.title}</p>
-                  <p className="mt-5 text-lg leading-relaxed text-white/85">{experience.storyHook}</p>
+                  <p className="mt-5 text-lg leading-relaxed text-white/90">{experience.storyHook}</p>
 
-                  <div className="mt-6 rounded-xl border border-amber-500/30 bg-amber-950/25 px-4 py-3 text-sm font-medium text-amber-200/90">
-                    {experience.stakes}
-                  </div>
+                  <div className="mission-stakes-ticker mt-6">{experience.stakes}</div>
 
                   <div className="mt-6 flex flex-wrap gap-2">
                     {experience.skills.map((skill) => (
-                      <span
-                        key={skill}
-                        className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-bold text-white"
-                      >
+                      <span key={skill} className="mission-skill-chip">
                         {skill}
                       </span>
                     ))}
@@ -247,7 +243,7 @@ export function ExperiencePlayer({
                     {STAGE_ORDER.slice(0, 4).map((sid, i) => (
                       <div
                         key={sid}
-                        className="rounded-xl border border-white/10 bg-white/5 p-3 text-center"
+                        className="rounded-2xl border border-white/10 bg-gradient-to-b from-white/10 to-white/[0.03] p-3 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
                       >
                         <span className="text-[0.65rem] font-black uppercase text-[var(--exp-accent)]">
                           {String(i + 1).padStart(2, "0")}
@@ -260,37 +256,21 @@ export function ExperiencePlayer({
                   <button
                     type="button"
                     onClick={() => goTo(1)}
-                    className="experience-btn-primary mt-8 w-full sm:w-auto"
+                    className="experience-btn-primary mission-invite-cta mt-8 w-full sm:w-auto"
                   >
                     Accept Mission →
                   </button>
                 </div>
 
-                <aside className="experience-panel relative overflow-hidden rounded-3xl p-8">
-                  <div
-                    className="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full blur-3xl"
-                    style={{ background: experience.accent }}
-                  />
-                  <PathwayIcon pathway={experience.pathway} variant="hero" className="relative mx-auto mb-6" />
-                  <h2 className="relative text-center text-xl font-bold">{experience.pathwayTitle}</h2>
-                  <p className="relative mt-3 text-center text-sm text-white/80">
-                    {experience.questTeaser}
-                  </p>
-                  <div className="relative mt-6 rounded-2xl border border-white/20 bg-white/10 p-4">
-                    <p className="text-xs font-black uppercase tracking-wider text-white/60">Badge waiting</p>
-                    <p className="mt-1 text-lg font-black text-[var(--exp-accent-2)]">
-                      {experience.achievementTitle}
-                    </p>
-                  </div>
-                  <div className="relative mt-4 flex justify-center gap-1">
-                    {Array.from({ length: experience.difficulty }, (_, i) => (
-                      <span key={i} className="text-[var(--exp-accent-2)]">
-                        ⚡
-                      </span>
-                    ))}
-                    <span className="ml-2 text-xs text-white/50">~{experience.durationMinutes} min</span>
-                  </div>
-                </aside>
+                <MissionCinemaPanel
+                  pathway={experience.pathway}
+                  pathwayTitle={experience.pathwayTitle}
+                  badgeTitle={experience.achievementTitle}
+                  labCode={experience.labCode}
+                  difficulty={experience.difficulty}
+                  durationMinutes={experience.durationMinutes}
+                  questTeaser={experience.questTeaser}
+                />
               </div>
             </div>
           )}
@@ -539,25 +519,28 @@ export function ExperiencePlayer({
           )}
 
           {stage === "achievement" && (
-            <div className="py-6 text-center">
-              <div className="experience-badge mx-auto">
+            <div className="relative overflow-hidden py-8 text-center">
+              <div className="mission-invite-aurora opacity-40" aria-hidden />
+              <div className="relative experience-badge mx-auto">
                 <PathwayIcon pathway={experience.pathway} variant="badge" />
               </div>
-              <p className="mt-8 text-xs font-black uppercase tracking-[0.14em] text-[var(--exp-accent)]">
+              <p className="relative mt-8 text-xs font-black uppercase tracking-[0.18em] text-[var(--exp-accent)]">
                 Achievement Unlocked ✦
               </p>
-              <h2 className="mt-2 text-4xl font-black sm:text-5xl">{experience.achievementTitle}</h2>
-              <p className="mx-auto mt-4 max-w-lg text-lg text-white/85">
+              <h2 className="mission-launch-headline relative mt-2 text-4xl font-black sm:text-5xl">
+                {experience.achievementTitle}
+              </h2>
+              <p className="relative mx-auto mt-4 max-w-lg text-lg text-white/90">
                 {experience.achievementMessage}
               </p>
-              <p className="mx-auto mt-4 max-w-md text-sm text-white/70">
+              <p className="relative mx-auto mt-4 max-w-md text-sm text-white/70">
                 Explorer <strong className="text-[var(--exp-accent-2)]">{displayName}</strong> ·
                 with <strong className="text-[var(--exp-accent-2)]">{buddyDisplayName}</strong>
               </p>
-              <p className="mx-auto mt-3 max-w-md text-sm italic text-white/60">
+              <p className="relative mx-auto mt-3 max-w-md text-sm italic text-white/60">
                 &ldquo;{getBuddyDialogue(buddyId, experience.slug, "achievement")}&rdquo;
               </p>
-              <div className="mx-auto mt-6 flex items-center justify-center gap-3">
+              <div className="relative mx-auto mt-6 flex items-center justify-center gap-3">
                 <BuddyAvatar
                   src={buddy.image}
                   alt={buddyDisplayName}
@@ -569,7 +552,7 @@ export function ExperiencePlayer({
                   <p className="text-xs text-white/60">{buddy.subtitle} · {buddy.trait}</p>
                 </div>
               </div>
-              <div className="mt-10 flex flex-wrap justify-center gap-3">
+              <div className="relative mt-10 flex flex-wrap justify-center gap-3">
                 <Link href={experience.homeHref} className="experience-btn-primary">
                   Continue Mission Path →
                 </Link>
@@ -601,7 +584,7 @@ export function ExperiencePlayer({
                 variant="footer"
               />
               {!isLoggedIn && (
-                <p className="mt-6 text-sm text-white/60">
+                <p className="relative mt-6 text-sm text-white/60">
                   <Link href="/login" className="font-semibold text-[var(--exp-accent)] hover:underline">
                     Sign in
                   </Link>{" "}

@@ -125,7 +125,7 @@ function LabLevelForge({ onComplete }: { onComplete: (msg: string) => void }) {
         <span className="rounded-full bg-amber-500/20 px-2.5 py-1 text-amber-300">EXIT</span>
       </div>
       <div
-        className="mx-auto grid w-full max-w-sm gap-1.5"
+        className="mx-auto grid w-full max-w-sm gap-1.5 rounded-2xl border border-fuchsia-400/20 bg-gradient-to-b from-fuchsia-950/30 via-black/40 to-cyan-950/30 p-3 shadow-[0_0_40px_rgba(168,85,247,0.15)]"
         style={{ gridTemplateColumns: `repeat(${SIZE}, minmax(0, 1fr))` }}
       >
         {Array.from({ length: SIZE * SIZE }, (_, i) => {
@@ -156,11 +156,11 @@ function LabLevelForge({ onComplete }: { onComplete: (msg: string) => void }) {
               }}
               className={cn(
                 "aspect-square rounded-lg border text-[10px] font-black transition",
-                isStart && "border-emerald-400/60 bg-emerald-500/30 text-emerald-100",
-                isExit && "border-amber-400/60 bg-amber-500/30 text-amber-100",
-                isHazard && "border-fuchsia-400/70 bg-fuchsia-600/40 text-fuchsia-100 animate-pulse",
-                !isStart && !isExit && !isHazard && isPath && "border-cyan-400/50 bg-cyan-500/25 text-cyan-100",
-                !isStart && !isExit && !isHazard && !isPath && "border-white/10 bg-white/5 text-white/30 hover:bg-white/10",
+                isStart && "border-emerald-400/70 bg-emerald-500/35 text-emerald-100 shadow-[0_0_14px_rgba(52,211,153,0.45)]",
+                isExit && "border-amber-400/70 bg-amber-500/35 text-amber-100 shadow-[0_0_14px_rgba(251,191,36,0.45)]",
+                isHazard && "border-fuchsia-400/80 bg-fuchsia-600/45 text-fuchsia-100 animate-pulse shadow-[0_0_16px_rgba(217,70,239,0.5)]",
+                !isStart && !isExit && !isHazard && isPath && "border-cyan-400/60 bg-cyan-500/30 text-cyan-100 shadow-[0_0_10px_rgba(34,211,238,0.35)]",
+                !isStart && !isExit && !isHazard && !isPath && "border-white/10 bg-white/5 text-white/30 hover:bg-white/10 hover:border-white/25",
               )}
             >
               {isStart ? "S" : isExit ? "E" : isHazard ? "⚠" : isPath ? "·" : ""}
