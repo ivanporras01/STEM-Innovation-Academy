@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { ensureCourseProduct } from "@/lib/course-products";
+import { notifyAdminPendingPayment } from "@/lib/email";
 import { isStudentPaymentMethod } from "@/lib/payments/payment-methods";
 import { salePriceCents } from "@/lib/pricing";
 import { getStripe, getSiteUrl, isStripeConfigured } from "@/lib/stripe";
@@ -89,10 +90,22 @@ export async function POST(request: Request) {
         },
       });
 
+      const reference = buildReference(payment.id);
+
+      // Soft-fail: checkout succeeds even if admin notify email fails
+      await notifyAdminPendingPayment({
+        studentName: session.user.name || `${session.user.firstName} ${session.user.lastName}`.trim(),
+        studentEmail: session.user.email,
+        courseTitle: course.title,
+        amountCents: chargeCents,
+        reference,
+        method,
+      });
+
       return NextResponse.json({
         pending: true,
         paymentId: payment.id,
-        reference: buildReference(payment.id),
+        reference,
         amountCents: chargeCents,
         listPriceCents: product.priceCents,
         courseSlug: course.slug,
