@@ -1,0 +1,333 @@
+.catalog-print-page {
+  min-height: 100vh;
+  background: #f4f6f8;
+  color: #0f172a;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+}
+
+.catalog-print-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1.5rem;
+  background: #0b1f3a;
+  color: #e2e8f0;
+  border-bottom: 2px solid #22d3ee;
+}
+
+.catalog-print-toolbar code {
+  font-size: 0.85em;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+
+.catalog-print-toolbar button {
+  cursor: pointer;
+  border: none;
+  border-radius: 999px;
+  padding: 0.55rem 1.25rem;
+  font-weight: 700;
+  background: #22d3ee;
+  color: #0b1f3a;
+}
+
+.catalog-print-root {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 3rem;
+  background: #fff;
+  box-shadow: 0 0 0 1px #e2e8f0;
+}
+
+.catalog-cover {
+  text-align: center;
+  padding: 2rem 1rem 2.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 3px solid #0b1f3a;
+}
+
+.catalog-cover .eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #0891b2;
+  margin: 0 0 0.75rem;
+}
+
+.catalog-cover h1 {
+  font-size: 2rem;
+  margin: 0 0 0.5rem;
+  color: #0b1f3a;
+}
+
+.catalog-cover .subtitle {
+  font-size: 1.05rem;
+  color: #475569;
+  margin: 0;
+}
+
+.catalog-cover .generated {
+  margin: 1.25rem 0 0;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.catalog-section {
+  margin-bottom: 2.25rem;
+  page-break-inside: avoid;
+}
+
+.catalog-section h2 {
+  font-size: 1.25rem;
+  color: #0b1f3a;
+  border-left: 4px solid #22d3ee;
+  padding-left: 0.75rem;
+  margin: 0 0 1rem;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.stats-row div {
+  text-align: center;
+  padding: 0.75rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.stats-row strong {
+  display: block;
+  font-size: 1.5rem;
+  color: #0891b2;
+}
+
+.stats-row span {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+}
+
+.access-model {
+  font-size: 0.95rem;
+  color: #334155;
+}
+
+.pricing-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.pricing-table th,
+.pricing-table td {
+  border: 1px solid #cbd5e1;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.pricing-table th {
+  background: #0b1f3a;
+  color: #fff;
+}
+
+.pricing-table tr:nth-child(even) td {
+  background: #f8fafc;
+}
+
+.catalog-program {
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  page-break-inside: avoid;
+}
+
+.catalog-program-quantum {
+  border-color: #0891b2;
+  background: linear-gradient(135deg, #f0fdff 0%, #fff 60%);
+}
+
+.catalog-program-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.65rem;
+}
+
+.catalog-program-header h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: #0b1f3a;
+}
+
+.tagline {
+  margin: 0.2rem 0 0;
+  font-size: 0.88rem;
+  color: #64748b;
+  font-style: italic;
+}
+
+.tuition-badge {
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.35rem 0.65rem;
+  background: #0b1f3a;
+  color: #22d3ee;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.description {
+  margin: 0 0 0.75rem;
+  font-size: 0.92rem;
+  color: #334155;
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem 1rem;
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+}
+
+.meta-grid dt {
+  font-weight: 700;
+  color: #475569;
+}
+
+.meta-grid dd {
+  margin: 0.1rem 0 0;
+  color: #0f172a;
+}
+
+.meta-span-2 {
+  grid-column: span 2;
+}
+
+.highlights {
+  margin: 0 0 0.65rem;
+  padding-left: 1.25rem;
+  font-size: 0.88rem;
+  color: #334155;
+}
+
+.highlights li {
+  margin-bottom: 0.2rem;
+}
+
+.delivery-note {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #0891b2;
+  font-weight: 600;
+}
+
+.quantum-extra {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(8, 145, 178, 0.08);
+  border-radius: 8px;
+  font-size: 0.88rem;
+}
+
+.quantum-extra h4 {
+  margin: 0 0 0.4rem;
+  font-size: 0.95rem;
+  color: #0e7490;
+}
+
+.quantum-extra p {
+  margin: 0 0 0.4rem;
+}
+
+.quantum-extra a {
+  color: #0891b2;
+}
+
+.bundle-block {
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  border: 1px dashed #94a3b8;
+  border-radius: 10px;
+}
+
+.bundle-slugs {
+  font-size: 0.78rem;
+  color: #64748b;
+  word-break: break-word;
+}
+
+.catalog-footer {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 2px solid #e2e8f0;
+  font-size: 0.85rem;
+  color: #64748b;
+  text-align: center;
+}
+
+.catalog-footer a {
+  color: #0891b2;
+}
+
+.fine-print {
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .catalog-print-page {
+    background: #fff;
+  }
+
+  .catalog-print-root {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+
+  .catalog-vertical {
+    page-break-before: auto;
+  }
+
+  .catalog-program-quantum {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+@media (max-width: 640px) {
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .catalog-program-header {
+    flex-direction: column;
+  }
+
+  .tuition-badge {
+    align-self: flex-start;
+  }
+}

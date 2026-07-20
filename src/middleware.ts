@@ -13,14 +13,22 @@ function isProtectedPath(pathname: string): boolean {
   return /\/courses\/[^/]+\/lessons\//.test(pathname);
 }
 
+function isAuthPage(pathname: string): boolean {
+  return (
+    pathname === "/login" ||
+    pathname.startsWith("/login/") ||
+    pathname === "/register" ||
+    pathname.startsWith("/register/") ||
+    pathname === "/es/register" ||
+    pathname.startsWith("/es/register/")
+  );
+}
+
 export default auth((req) => {
   const { pathname } = req.nextUrl;
   const isLoggedIn = !!req.auth;
 
   const isProtected = isProtectedPath(pathname);
-
-  const isAuthPage =
-    pathname.startsWith("/login") || pathname.startsWith("/register");
 
   if (isProtected && !isLoggedIn) {
     const loginUrl = new URL("/login", req.nextUrl.origin);
@@ -28,7 +36,7 @@ export default auth((req) => {
     return NextResponse.redirect(loginUrl);
   }
 
-  if (isAuthPage && isLoggedIn) {
+  if (isAuthPage(pathname) && isLoggedIn) {
     const role = req.auth?.user?.role ?? "STUDENT";
     const dashboardMap: Record<string, string> = {
       STUDENT: "/dashboard/student",
@@ -59,5 +67,6 @@ export const config = {
     "/admin/:path*",
     "/login",
     "/register",
+    "/es/register",
   ],
 };

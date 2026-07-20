@@ -2,7 +2,7 @@
   "name": "nova-lms",
   "version": "1.0.0",
   "private": true,
-  "description": "NOVA STEM Innovation Academy — Learning Management System",
+  "description": "NOVA Academy — STEM Innovation Academy LMS (NOVA STEM HUB K-12)",
   "scripts": {
     "dev": "next dev",
     "dev:clean": "node -e \"require('fs').rmSync('.next',{recursive:true,force:true})\" && next dev",
@@ -13,7 +13,11 @@
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
     "db:setup": "prisma generate && prisma db push && tsx prisma/seed.ts",
-    "vercel-build": "node scripts/prepare-vercel-build.mjs && prisma generate && prisma db push --skip-generate && tsx prisma/seed.ts && next build",
+    "test:ai-tutoring-graph": "tsx scripts/test-ai-tutoring-graph.ts",
+    "test:ai-tutoring-quality": "tsx scripts/test-ai-tutoring-quality.ts",
+    "catalog:pdf": "tsx scripts/generate-catalog-pdf.ts",
+    "cert:sample-pdf": "tsx scripts/generate-certificate-sample-pdf.ts",
+    "vercel-build": "node scripts/prepare-vercel-build.mjs && prisma generate && prisma db push --skip-generate --accept-data-loss && tsx prisma/seed.ts && next build",
     "postinstall": "prisma generate"
   },
   "dependencies": {
@@ -26,6 +30,7 @@
     "next-auth": "^5.0.0-beta.25",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "stripe": "^22.3.2",
     "tailwind-merge": "^2.6.0",
     "zod": "^3.24.1"
   },
@@ -39,6 +44,7 @@
     "eslint-config-next": "^15.1.0",
     "postcss": "^8.4.49",
     "prisma": "^6.1.0",
+    "puppeteer": "^25.3.0",
     "sharp": "^0.35.3",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.19.2",

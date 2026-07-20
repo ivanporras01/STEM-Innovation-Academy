@@ -5,6 +5,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
   }
 
   body {
@@ -23,29 +24,44 @@
 
   .nova-cosmos-canvas {
     @apply absolute inset-0 h-full w-full;
-    opacity: 0.29;
+    opacity: 0.48;
+    transition: opacity 0.5s ease, filter 0.5s ease;
   }
 
   .nova-cosmos-vignette {
     @apply absolute inset-0;
-    background: radial-gradient(ellipse at center, transparent 55%, rgba(1, 4, 9, 0.3) 100%);
+    background: radial-gradient(ellipse at center, transparent 50%, rgba(1, 4, 9, 0.22) 100%);
+  }
+
+  body.nova-hyperspace .nova-cosmos-canvas {
+    opacity: 0.62;
+    filter: brightness(1.12) saturate(1.15);
+  }
+
+  body.nova-hyperspace .nova-nebula {
+    opacity: 1.35;
+    filter: blur(72px) brightness(1.15);
+  }
+
+  body.nova-orbit-open .nova-cosmos-canvas {
+    opacity: 0.58;
   }
 
   .nova-hyperspace .nova-cosmos-canvas {
-    filter: brightness(1.05) saturate(1.06);
+    filter: brightness(1.15) saturate(1.2);
     transition: filter 0.4s ease;
   }
 
   .nova-hyperspace .nova-nebula {
-    opacity: 1.05;
-    filter: blur(80px) brightness(1.08);
+    opacity: 1.25;
+    filter: blur(72px) brightness(1.12);
   }
 
   .nova-cosmos-parallax {
     @apply absolute inset-0;
     transform: translate(
-      calc(var(--nova-parallax-x, 0px) * 8),
-      calc(var(--nova-parallax-y, 0px) * 8)
+      calc(var(--nova-parallax-x, 0px) * 14),
+      calc(var(--nova-parallax-y, 0px) * 14)
     );
     will-change: transform;
   }
@@ -61,9 +77,9 @@
     height: min(100vw, 780px);
     top: -14%;
     left: -10%;
-    background: radial-gradient(circle, rgba(0, 180, 216, 0.092) 0%, rgba(0, 180, 216, 0.029) 35%, transparent 68%);
+    background: radial-gradient(circle, rgba(0, 180, 216, 0.14) 0%, rgba(0, 180, 216, 0.045) 35%, transparent 68%);
     animation-duration: 18s;
-    opacity: 0.18;
+    opacity: 0.28;
   }
 
   .nova-nebula--violet {
@@ -71,10 +87,10 @@
     height: min(90vw, 640px);
     top: 28%;
     right: -18%;
-    background: radial-gradient(circle, rgba(118, 87, 232, 0.08) 0%, rgba(118, 87, 232, 0.023) 40%, transparent 68%);
+    background: radial-gradient(circle, rgba(118, 87, 232, 0.12) 0%, rgba(118, 87, 232, 0.035) 40%, transparent 68%);
     animation-duration: 24s;
     animation-delay: -6s;
-    opacity: 0.16;
+    opacity: 0.26;
   }
 
   .nova-nebula--orange {
@@ -82,10 +98,10 @@
     height: min(80vw, 560px);
     bottom: -12%;
     left: 18%;
-    background: radial-gradient(circle, rgba(255, 122, 0, 0.069) 0%, rgba(255, 122, 0, 0.021) 40%, transparent 68%);
+    background: radial-gradient(circle, rgba(255, 122, 0, 0.11) 0%, rgba(255, 122, 0, 0.035) 40%, transparent 68%);
     animation-duration: 22s;
     animation-delay: -12s;
-    opacity: 0.15;
+    opacity: 0.24;
   }
 
   .nova-orbit-satellite {
@@ -115,6 +131,53 @@
 
   .nova-glass-island {
     @apply rounded-[24px] border border-white/10 bg-[#0a1628]/55 p-6 shadow-[0_8px_40px_rgba(0,0,0,0.4)] backdrop-blur-xl;
+  }
+
+  /* Galactic portal border — Orbita welcome panel (inset frame ring only, no outer glow) */
+  /* Outer welcome panel — subtle cyan frame only */
+  .nova-orbita-panel {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(0, 180, 216, 0.28) !important;
+    box-shadow: none !important;
+  }
+
+  /* Inner Orbita door — cycling portal lights on robot frame */
+  .nova-orbita-portal {
+    position: relative;
+    overflow: hidden;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .nova-orbita-portal::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 3px;
+    background: conic-gradient(
+      from var(--portal-angle, 0deg),
+      #00e5ff,
+      #00ff88,
+      #ff3366,
+      #ff6b35,
+      #00e5ff
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    box-shadow: inset 0 0 8px rgba(0, 229, 255, 0.22);
+    animation:
+      nova-portal-spin 3s linear infinite,
+      nova-portal-border-pulse 4s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 30;
   }
 
   .nova-glass-card {
@@ -153,7 +216,35 @@
   }
 
   .nova-glass-nav {
-    @apply border-b border-white/10 bg-[#0a1628]/45 backdrop-blur-xl;
+    @apply border-b border-white/10 bg-[#0a1628]/55 backdrop-blur-xl;
+    transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+  }
+
+  /* Header grid — prevent nav items from overlapping adjacent zones */
+  .nova-header-bar {
+    isolation: isolate;
+  }
+
+  .nova-header-brand,
+  .nova-header-actions {
+    flex-shrink: 0;
+  }
+
+  .nova-header-primary {
+    overflow: hidden;
+  }
+
+  body.nova-nav-explore-open .nova-glass-nav {
+    @apply border-nova-cyan/25 bg-[#0a1628]/80;
+    box-shadow: 0 4px 40px rgba(0, 180, 216, 0.12);
+  }
+
+  .nova-nav-mega-panel {
+    animation: nova-mega-in 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .nova-nav-mega-backdrop {
+    animation: nova-mega-backdrop-in 0.25s ease both;
   }
 
   .nova-glass-nav-light {
@@ -709,4 +800,1399 @@
 @keyframes nova-orbit-pulse {
   0%, 100% { opacity: 0.6; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.3); }
+}
+
+@keyframes nova-mega-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes nova-mega-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes novito-briefing-in {
+  from { opacity: 0; transform: scale(0.94) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@property --portal-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes nova-portal-spin {
+  to {
+    --portal-angle: 360deg;
+  }
+}
+
+@keyframes nova-portal-border-pulse {
+  0%, 100% { box-shadow: inset 0 0 8px rgba(0, 229, 255, 0.22); }
+  50% { box-shadow: inset 0 0 10px rgba(0, 255, 136, 0.32); }
+}
+
+@keyframes novito-chip-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes novito-chip-in-fast {
+  from { opacity: 0; transform: translateY(4px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.nova-orbita-portal-sm::before {
+  padding: 2px;
+}
+
+/* Orbita chatbot — fixed dimensions (not Tailwind-dependent) */
+.orbita-chatbot-panel {
+  width: min(calc(100vw - 1.5rem), 300px);
+  max-width: 300px;
+}
+
+.orbita-chatbot-avatar {
+  position: relative;
+  width: 40px !important;
+  height: 50px !important;
+  min-width: 40px;
+  min-height: 50px;
+  max-width: 40px;
+  max-height: 50px;
+  flex-shrink: 0;
+}
+
+.orbita-chatbot-fab {
+  position: relative;
+  width: 32px !important;
+  height: 38px !important;
+  min-width: 32px;
+  min-height: 38px;
+  max-width: 32px;
+  max-height: 38px;
+  flex-shrink: 0;
+}
+
+.orbita-size-sm {
+  position: relative;
+  width: 64px;
+  height: 80px;
+}
+
+.orbita-size-chat {
+  position: relative;
+  width: 160px;
+  height: 200px;
+}
+
+.orbita-size-md {
+  position: relative;
+  width: 192px;
+  height: 240px;
+}
+
+.orbita-size-hero {
+  position: relative;
+  width: 288px;
+  height: 360px;
+}
+
+@media (min-width: 640px) {
+  .orbita-size-hero {
+    width: 320px;
+    height: 400px;
+  }
+}
+
+@keyframes novito-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* ORBIT robot animations */
+.orbit-robot-tilt {
+  animation: orbit-robot-float 3.5s ease-in-out infinite, orbit-robot-tilt 6s ease-in-out infinite;
+}
+
+.orbit-hover-plume {
+  animation: orbit-plume-pulse 2s ease-in-out infinite;
+}
+
+.orbit-legs {
+  animation: orbit-legs-hover 3.5s ease-in-out infinite;
+}
+
+.orbit-eye {
+  filter: drop-shadow(0 0 6px rgba(0, 180, 216, 0.9));
+  animation: orbit-eye-glow 2s ease-in-out infinite;
+}
+
+.orbit-core {
+  filter: drop-shadow(0 0 10px rgba(0, 180, 216, 0.85));
+  animation: orbit-core-pulse 1.8s ease-in-out infinite;
+}
+
+.orbit-antenna-pulse {
+  animation: orbit-antenna-blink 1.2s ease-in-out infinite;
+}
+
+.orbit-robot-scanning .orbit-scan-line {
+  animation: orbit-scan-sweep 1.4s ease-in-out infinite;
+}
+
+.orbit-arm-left {
+  transform-origin: 16px 92px;
+  animation: orbit-arm-left 2.5s ease-in-out infinite;
+}
+
+.orbit-arm-right {
+  transform-origin: 104px 92px;
+  animation: orbit-arm-right 2.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-robot-float,
+  .orbit-eye,
+  .orbit-core,
+  .orbit-antenna-pulse,
+  .orbit-arm-left,
+  .orbit-arm-right {
+    animation: none;
+  }
+
+  .nova-orbita-portal::before {
+    animation: none;
+    opacity: 0.85;
+  }
+
+  .nova-orbita-panel {
+    border-color: rgba(0, 180, 216, 0.22) !important;
+  }
+}
+
+@keyframes orbit-eye-glow {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 1; }
+}
+
+@keyframes orbit-core-pulse {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
+@keyframes orbit-antenna-blink {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes orbit-scan-sweep {
+  0%, 100% { transform: translateY(-6px); opacity: 0; }
+  50% { transform: translateY(6px); opacity: 1; }
+}
+
+@keyframes orbit-arm-left {
+  0%, 100% { transform: rotate(4deg); }
+  50% { transform: rotate(-6deg); }
+}
+
+@keyframes orbit-arm-right {
+  0%, 100% { transform: rotate(-4deg); }
+  50% { transform: rotate(6deg); }
+}
+
+.orbit-sphere-ring {
+  animation: nova-orbit-spin 12s linear infinite;
+  transform-origin: 80px 90px;
+}
+
+.orbit-sphere-ring-reverse {
+  animation: nova-orbit-spin 18s linear infinite reverse;
+  transform-origin: 80px 90px;
+}
+
+.orbit-scout-ping {
+  animation: orbit-scout-ping 1.5s ease-out infinite;
+  transform-origin: 68px 54px;
+}
+
+.orbit-scout-wheel {
+  animation: orbit-scout-wheel 2s linear infinite;
+}
+
+.orbit-hover-disc {
+  animation: orbit-core-pulse 2s ease-in-out infinite;
+}
+
+@keyframes orbit-scout-ping {
+  0% { transform: scale(0.85); opacity: 0.7; }
+  100% { transform: scale(1.25); opacity: 0; }
+}
+
+@keyframes orbit-scout-wheel {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.orbit-nexus-img-greet {
+  animation: orbit-nexus-img-wave 2.5s ease-in-out infinite;
+}
+
+.orbit-nexus-img-scan {
+  animation: orbit-nexus-img-scan 3s ease-in-out infinite;
+}
+
+/* ── Articulated robot modes ── */
+.orbit-nexus-stage {
+  filter: drop-shadow(0 14px 36px rgba(0, 180, 216, 0.28));
+}
+
+.orbit-nexus-idle {
+  animation: orbit-nexus-float 4s ease-in-out infinite;
+}
+
+.orbit-nexus-idle .orbit-nexus-torso {
+  animation: orbit-nexus-breathe 3s ease-in-out infinite;
+}
+
+.orbit-nexus-idle .orbit-nexus-head {
+  animation: orbit-nexus-head-idle 4s ease-in-out infinite;
+}
+
+.orbit-nexus-greet {
+  animation: orbit-nexus-float 4s ease-in-out infinite;
+}
+
+.orbit-nexus-greet .orbit-nexus-torso {
+  animation: orbit-nexus-bow 2.8s ease-in-out infinite;
+}
+
+.orbit-nexus-greet .orbit-nexus-head {
+  animation: orbit-nexus-head-nod 1.4s ease-in-out infinite;
+}
+
+.orbit-nexus-greet .orbit-nexus-r-upper {
+  animation: orbit-nexus-r-upper-wave 1.1s ease-in-out infinite;
+}
+
+.orbit-nexus-greet .orbit-nexus-r-forearm {
+  animation: orbit-nexus-r-forearm-wave 0.55s ease-in-out infinite;
+}
+
+.orbit-nexus-greet .orbit-nexus-r-hand {
+  animation: orbit-nexus-r-hand-wave 0.55s ease-in-out infinite;
+}
+
+.orbit-nexus-greet .orbit-nexus-l-arm {
+  animation: orbit-nexus-l-welcome 2.5s ease-in-out infinite;
+}
+
+.orbit-nexus-greet .orbit-nexus-l-forearm {
+  animation: orbit-nexus-l-forearm-open 2.5s ease-in-out infinite;
+}
+
+.orbit-nexus-greet .orbit-nexus-leg-l {
+  animation: orbit-nexus-leg-shift-l 2.8s ease-in-out infinite;
+}
+
+.orbit-nexus-greet .orbit-nexus-leg-r {
+  animation: orbit-nexus-leg-shift-r 2.8s ease-in-out infinite;
+}
+
+.orbit-nexus-scan {
+  animation: orbit-nexus-float 3.5s ease-in-out infinite;
+}
+
+.orbit-nexus-scan .orbit-nexus-torso {
+  animation: orbit-nexus-scan-lean 2s ease-in-out infinite;
+}
+
+.orbit-nexus-scan .orbit-nexus-r-upper {
+  animation: orbit-nexus-r-upper-scan 2.5s ease-in-out infinite;
+}
+
+.orbit-nexus-scan .orbit-nexus-r-forearm {
+  animation: orbit-nexus-r-forearm-scan 2.5s ease-in-out infinite;
+}
+
+.orbit-nexus-scan .orbit-nexus-head {
+  animation: orbit-nexus-head-scan 2s ease-in-out infinite;
+}
+
+.orbit-nexus-greeting-mode {
+  animation: orbit-nexus-float 4s ease-in-out infinite;
+}
+
+.orbit-nexus-scan-mode {
+  animation: orbit-nexus-float 3.5s ease-in-out infinite, orbit-nexus-scan-tilt 2s ease-in-out infinite;
+}
+
+@keyframes orbit-nexus-breathe {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(1.015); }
+}
+
+@keyframes orbit-nexus-head-idle {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(2deg); }
+}
+
+@keyframes orbit-nexus-head-nod {
+  0%, 100% { transform: rotate(0deg); }
+  30% { transform: rotate(4deg); }
+  60% { transform: rotate(-2deg); }
+}
+
+@keyframes orbit-nexus-r-upper-wave {
+  0%, 100% { transform: rotate(-58deg); }
+  50% { transform: rotate(-72deg); }
+}
+
+@keyframes orbit-nexus-r-forearm-wave {
+  0%, 100% { transform: rotate(18deg); }
+  50% { transform: rotate(42deg); }
+}
+
+@keyframes orbit-nexus-r-hand-wave {
+  0%, 100% { transform: rotate(-8deg); }
+  50% { transform: rotate(14deg); }
+}
+
+@keyframes orbit-nexus-l-welcome {
+  0%, 100% { transform: rotate(12deg); }
+  50% { transform: rotate(18deg); }
+}
+
+@keyframes orbit-nexus-l-forearm-open {
+  0%, 100% { transform: rotate(-6deg); }
+  50% { transform: rotate(4deg); }
+}
+
+@keyframes orbit-nexus-leg-shift-l {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-2deg); }
+}
+
+@keyframes orbit-nexus-leg-shift-r {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(2deg); }
+}
+
+@keyframes orbit-nexus-scan-lean {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(3deg); }
+}
+
+@keyframes orbit-nexus-r-upper-scan {
+  0%, 100% { transform: rotate(-28deg); }
+  50% { transform: rotate(-22deg); }
+}
+
+@keyframes orbit-nexus-r-forearm-scan {
+  0%, 100% { transform: rotate(8deg); }
+  50% { transform: rotate(14deg); }
+}
+
+@keyframes orbit-nexus-head-scan {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(3deg); }
+}
+
+/* ── Greeting style variants ── */
+.orbit-greet-wave {
+  animation: orbit-nexus-float 4s ease-in-out infinite;
+}
+.orbit-greet-wave .orbit-nexus-torso { animation: orbit-nexus-bow 2.8s ease-in-out infinite; }
+.orbit-greet-wave .orbit-nexus-head { animation: orbit-nexus-head-nod 1.4s ease-in-out infinite; }
+.orbit-greet-wave .orbit-nexus-r-upper { animation: orbit-nexus-r-upper-wave 1.1s ease-in-out infinite; }
+.orbit-greet-wave .orbit-nexus-r-forearm { animation: orbit-nexus-r-forearm-wave 0.55s ease-in-out infinite; }
+.orbit-greet-wave .orbit-nexus-r-hand { animation: orbit-nexus-r-hand-wave 0.55s ease-in-out infinite; }
+.orbit-greet-wave .orbit-nexus-l-arm { animation: orbit-nexus-l-welcome 2.5s ease-in-out infinite; }
+.orbit-greet-wave .orbit-nexus-l-forearm { animation: orbit-nexus-l-forearm-open 2.5s ease-in-out infinite; }
+
+.orbit-greet-salute {
+  animation: orbit-nexus-float 4.5s ease-in-out infinite;
+}
+.orbit-greet-salute .orbit-nexus-torso { animation: orbit-nexus-bow 3s ease-in-out infinite; }
+.orbit-greet-salute .orbit-nexus-head { animation: orbit-nexus-head-nod 2s ease-in-out infinite; }
+.orbit-greet-salute .orbit-nexus-r-upper { animation: orbit-greet-salute-upper 2.5s ease-in-out infinite; }
+.orbit-greet-salute .orbit-nexus-r-forearm { animation: orbit-greet-salute-forearm 2.5s ease-in-out infinite; }
+.orbit-greet-salute .orbit-nexus-r-hand { animation: orbit-nexus-head-nod 1.8s ease-in-out infinite; }
+.orbit-greet-salute .orbit-nexus-l-arm { animation: orbit-nexus-idle-left 3s ease-in-out infinite; }
+
+.orbit-greet-open {
+  animation: orbit-nexus-float 3.8s ease-in-out infinite;
+}
+.orbit-greet-open .orbit-nexus-torso { animation: orbit-nexus-breathe 2.5s ease-in-out infinite; }
+.orbit-greet-open .orbit-nexus-head { animation: orbit-nexus-head-nod 1.6s ease-in-out infinite; }
+.orbit-greet-open .orbit-nexus-r-upper { animation: orbit-greet-open-r 2s ease-in-out infinite; }
+.orbit-greet-open .orbit-nexus-r-forearm { animation: orbit-greet-open-r-fore 2s ease-in-out infinite; }
+.orbit-greet-open .orbit-nexus-l-upper { animation: orbit-greet-open-l 2s ease-in-out infinite; }
+.orbit-greet-open .orbit-nexus-l-forearm { animation: orbit-greet-open-l-fore 2s ease-in-out infinite; }
+
+.orbit-greet-bounce {
+  animation: orbit-greet-bounce-body 0.9s ease-in-out infinite;
+}
+.orbit-greet-bounce .orbit-nexus-torso { animation: orbit-nexus-breathe 0.9s ease-in-out infinite; }
+.orbit-greet-bounce .orbit-nexus-head { animation: orbit-nexus-head-nod 0.7s ease-in-out infinite; }
+.orbit-greet-bounce .orbit-nexus-r-upper { animation: orbit-greet-bounce-r-upper 0.45s ease-in-out infinite; }
+.orbit-greet-bounce .orbit-nexus-r-forearm { animation: orbit-nexus-r-forearm-wave 0.35s ease-in-out infinite; }
+.orbit-greet-bounce .orbit-nexus-l-upper { animation: orbit-greet-bounce-l-upper 0.45s ease-in-out infinite alternate; }
+.orbit-greet-bounce .orbit-nexus-l-forearm { animation: orbit-nexus-r-forearm-wave 0.35s ease-in-out infinite alternate; }
+
+@keyframes orbit-greet-salute-upper {
+  0%, 100% { transform: rotate(-75deg); }
+  50% { transform: rotate(-82deg); }
+}
+@keyframes orbit-greet-salute-forearm {
+  0%, 100% { transform: rotate(55deg); }
+  50% { transform: rotate(62deg); }
+}
+@keyframes orbit-greet-open-r {
+  0%, 100% { transform: rotate(-48deg); }
+  50% { transform: rotate(-55deg); }
+}
+@keyframes orbit-greet-open-r-fore {
+  0%, 100% { transform: rotate(12deg); }
+  50% { transform: rotate(18deg); }
+}
+@keyframes orbit-greet-open-l {
+  0%, 100% { transform: rotate(48deg); }
+  50% { transform: rotate(55deg); }
+}
+@keyframes orbit-greet-open-l-fore {
+  0%, 100% { transform: rotate(-12deg); }
+  50% { transform: rotate(-18deg); }
+}
+@keyframes orbit-greet-bounce-body {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+@keyframes orbit-greet-bounce-r-upper {
+  0%, 100% { transform: rotate(-65deg); }
+  50% { transform: rotate(-78deg); }
+}
+@keyframes orbit-greet-bounce-l-upper {
+  0%, 100% { transform: rotate(65deg); }
+  50% { transform: rotate(78deg); }
+}
+
+.orbit-greet-wave.orbit-nexus-greet,
+.orbit-greet-salute,
+.orbit-greet-open,
+.orbit-greet-bounce {
+  /* shared leg shift on greet */
+}
+.orbit-greet-wave .orbit-nexus-leg-l,
+.orbit-greet-salute .orbit-nexus-leg-l,
+.orbit-greet-open .orbit-nexus-leg-l,
+.orbit-greet-bounce .orbit-nexus-leg-l { animation: orbit-nexus-leg-shift-l 2.8s ease-in-out infinite; }
+.orbit-greet-wave .orbit-nexus-leg-r,
+.orbit-greet-salute .orbit-nexus-leg-r,
+.orbit-greet-open .orbit-nexus-leg-r,
+.orbit-greet-bounce .orbit-nexus-leg-r { animation: orbit-nexus-leg-shift-r 2.8s ease-in-out infinite; }
+
+@keyframes orbit-nexus-img-wave {
+  0%, 100% { transform: translateY(0) scale(1); }
+  25% { transform: translateY(-4px) scale(1.02) rotate(-0.5deg); }
+  50% { transform: translateY(-8px) scale(1.03); }
+  75% { transform: translateY(-4px) scale(1.02) rotate(0.5deg); }
+}
+
+@keyframes orbit-nexus-img-scan {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes orbit-nexus-scan-tilt {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-6px) rotate(1deg); }
+}
+
+/* Orbito Nexus — advanced humanoid greeting */
+.orbit-nexus-root {
+  animation: orbit-nexus-float 4s ease-in-out infinite;
+}
+
+.orbit-nexus-greeting-mode .orbit-nexus-torso {
+  animation: orbit-nexus-bow 3s ease-in-out infinite;
+  transform-origin: 100px 166px;
+}
+
+.orbit-nexus-arm-wave {
+  animation: orbit-nexus-wave 1.2s ease-in-out infinite;
+}
+
+.orbit-nexus-arm-welcome {
+  animation: orbit-nexus-welcome-arm 3s ease-in-out infinite;
+}
+
+.orbit-nexus-arm-scan {
+  animation: orbit-nexus-scan-arm 2.5s ease-in-out infinite;
+}
+
+.orbit-nexus-arm-left-idle {
+  animation: orbit-nexus-idle-left 3.5s ease-in-out infinite;
+}
+
+.orbit-nexus-arm-right-idle {
+  animation: orbit-nexus-idle-right 3.5s ease-in-out infinite;
+}
+
+.orbit-nexus-visor {
+  filter: drop-shadow(0 0 8px rgba(0, 180, 216, 0.95));
+  animation: orbit-nexus-visor-pulse 2s ease-in-out infinite;
+}
+
+.orbit-nexus-holo-ring {
+  animation: nova-orbit-spin 8s linear infinite;
+  transform-origin: 100px 52px;
+}
+
+.orbit-nexus-holo-ring-reverse {
+  animation: nova-orbit-spin 12s linear infinite reverse;
+  transform-origin: 100px 52px;
+}
+
+.orbit-nexus-holo-text {
+  animation: orbit-nexus-holo-fade 2s ease-in-out infinite;
+}
+
+.orbit-nexus-scan-beam {
+  animation: orbit-nexus-beam 1s ease-in-out infinite;
+}
+
+.orbit-nexus-scan-dot {
+  animation: orbit-core-pulse 0.8s ease-in-out infinite;
+}
+
+.orbit-nexus-foot-glow {
+  animation: orbit-plume-pulse 2.5s ease-in-out infinite;
+}
+
+.orbit-nexus-spark {
+  animation: orbit-antenna-blink 1.5s ease-in-out infinite;
+}
+
+.orbit-nexus-finger {
+  animation: orbit-nexus-finger-wiggle 0.6s ease-in-out infinite;
+}
+
+@keyframes orbit-nexus-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes orbit-nexus-bow {
+  0%, 100% { transform: rotate(0deg); }
+  40%, 60% { transform: rotate(2deg); }
+}
+
+@keyframes orbit-nexus-wave {
+  0%, 100% { transform: rotate(-18deg); }
+  25% { transform: rotate(22deg); }
+  50% { transform: rotate(-12deg); }
+  75% { transform: rotate(28deg); }
+}
+
+@keyframes orbit-nexus-welcome-arm {
+  0%, 100% { transform: rotate(8deg); }
+  50% { transform: rotate(14deg); }
+}
+
+@keyframes orbit-nexus-scan-arm {
+  0%, 100% { transform: rotate(-6deg); }
+  50% { transform: rotate(4deg); }
+}
+
+@keyframes orbit-nexus-idle-left {
+  0%, 100% { transform: rotate(6deg); }
+  50% { transform: rotate(2deg); }
+}
+
+@keyframes orbit-nexus-idle-right {
+  0%, 100% { transform: rotate(-6deg); }
+  50% { transform: rotate(-2deg); }
+}
+
+@keyframes orbit-nexus-visor-pulse {
+  0%, 100% { opacity: 0.85; filter: drop-shadow(0 0 6px rgba(0, 180, 216, 0.8)); }
+  50% { opacity: 1; filter: drop-shadow(0 0 14px rgba(0, 229, 255, 1)); }
+}
+
+@keyframes orbit-nexus-holo-fade {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+@keyframes orbit-nexus-beam {
+  0%, 100% { opacity: 0.4; stroke-width: 1.5; }
+  50% { opacity: 1; stroke-width: 2.5; }
+}
+
+@keyframes orbit-nexus-finger-wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-8deg); }
+}
+
+.orbit-real-pose-in {
+  animation: orbit-real-pose-in 0.18s ease-out both;
+}
+
+@keyframes orbit-real-pose-in {
+  from { opacity: 0.88; transform: scale(0.995); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-nexus-root,
+  .orbit-nexus-stage,
+  .orbit-nexus-idle,
+  .orbit-nexus-greet,
+  .orbit-nexus-scan,
+  .orbit-greet-wave,
+  .orbit-greet-salute,
+  .orbit-greet-open,
+  .orbit-greet-bounce,
+  .orbit-nexus-arm-wave,
+  .orbit-nexus-arm-welcome,
+  .orbit-nexus-arm-scan,
+  .orbit-nexus-torso,
+  .orbit-nexus-head,
+  .orbit-nexus-r-upper,
+  .orbit-nexus-r-forearm,
+  .orbit-nexus-r-hand,
+  .orbit-nexus-l-arm,
+  .orbit-nexus-l-upper,
+  .orbit-nexus-l-forearm,
+  .orbit-nexus-visor,
+  .orbit-nexus-holo-ring,
+  .orbit-nexus-holo-ring-reverse,
+  .orbit-nexus-finger {
+    animation: none !important;
+  }
+}
+
+/* ── NOVA Certificate — Certificate of Achievement styling ── */
+.nova-cert-outer-border {
+  background: linear-gradient(135deg, #0b1d3a 0%, #1a3a5c 40%, #c9a227 50%, #0b1d3a 100%);
+}
+
+.nova-cert-paper-texture {
+  background-image:
+    radial-gradient(circle at 10% 10%, rgba(201, 162, 39, 0.06), transparent 40%),
+    radial-gradient(circle at 90% 90%, rgba(11, 29, 58, 0.04), transparent 35%);
+}
+
+.nova-cert-cosmic-glow {
+  background-image:
+    radial-gradient(circle at 15% 15%, rgba(0, 212, 255, 0.18), transparent 42%),
+    radial-gradient(circle at 85% 85%, rgba(245, 215, 110, 0.12), transparent 40%),
+    radial-gradient(circle at 50% 100%, rgba(0, 180, 216, 0.08), transparent 50%);
+}
+
+.nova-cert-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+.nova-cert-divider {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #c9a227 25%, #0b1d3a 50%, #c9a227 75%, transparent);
+  opacity: 0.85;
+}
+
+.nova-cert-achievement-title {
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+  letter-spacing: 0.04em;
+}
+
+.nova-cert-holder-name {
+  text-shadow: none;
+}
+
+.nova-cert-seal {
+  filter: drop-shadow(0 2px 6px rgba(11, 29, 58, 0.12));
+}
+
+.nova-cert-seal-ring {
+  box-shadow:
+    inset 0 0 0 4px rgba(201, 162, 39, 0.12),
+    0 2px 8px rgba(11, 29, 58, 0.08);
+}
+
+.nova-cert-side-flourish {
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(201, 162, 39, 0.35) 30%,
+    rgba(201, 162, 39, 0.35) 70%,
+    transparent
+  );
+}
+
+.nova-cert-stat-box {
+  backdrop-filter: blur(2px);
+}
+
+.nova-cert-signature {
+  line-height: 2.25rem;
+}
+
+.nova-cert-verify-box {
+  min-width: 11rem;
+}
+
+.nova-cert-corner {
+  border-color: rgba(212, 175, 55, 0.45);
+  border-style: solid;
+  border-width: 0;
+}
+
+.nova-cert-corner-tl {
+  border-top-width: 2px;
+  border-left-width: 2px;
+  border-top-left-radius: 4px;
+}
+
+.nova-cert-corner-tr {
+  border-top-width: 2px;
+  border-right-width: 2px;
+  border-top-right-radius: 4px;
+}
+
+.nova-cert-corner-bl {
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+  border-bottom-left-radius: 4px;
+}
+
+.nova-cert-corner-br {
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+  border-bottom-right-radius: 4px;
+}
+
+.nova-cert-security-pattern {
+  opacity: 0.06;
+  background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 8px,
+      rgba(0, 212, 255, 0.4) 8px,
+      rgba(0, 212, 255, 0.4) 9px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 12px,
+      rgba(212, 175, 55, 0.3) 12px,
+      rgba(212, 175, 55, 0.3) 13px
+    );
+}
+
+.nova-cert-void-watermark {
+  z-index: 15;
+  opacity: 0.12;
+  background-image: repeating-linear-gradient(
+    -35deg,
+    transparent,
+    transparent 48px,
+    rgba(255, 255, 255, 0.08) 48px,
+    rgba(255, 255, 255, 0.08) 49px
+  );
+}
+
+.nova-cert-void-watermark::before {
+  content: "VOID · NOVA STEM HUB · VOID · NOVA STEM HUB · VOID · NOVA STEM HUB";
+  position: absolute;
+  inset: -20%;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  gap: 2rem 4rem;
+  font-size: clamp(0.65rem, 2vw, 0.85rem);
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(11, 29, 58, 0.12);
+  transform: rotate(-28deg);
+  white-space: nowrap;
+  user-select: none;
+  pointer-events: auto;
+}
+
+.nova-cert-sample-banner {
+  z-index: 25;
+}
+
+/* Navy + gold NOVA certificate presentation */
+.nova-cert-outer-border {
+  background: linear-gradient(135deg, #00E5FF 0%, #008db7 18%, #D4AF37 50%, #00E5FF 82%, #008db7 100%);
+}
+
+.nova-cert-inner {
+  overflow: visible;
+  align-items: center;
+  background:
+    radial-gradient(ellipse at 50% -20%, rgba(0, 229, 255, 0.14), transparent 55%),
+    radial-gradient(circle at 12% 88%, rgba(0, 212, 255, 0.08), transparent 32%),
+    radial-gradient(circle at 88% 15%, rgba(212, 175, 55, 0.06), transparent 28%),
+    #030810;
+}
+
+.nova-cert-cosmic-glow {
+  background-image:
+    radial-gradient(circle at 50% 8%, rgba(0, 229, 255, 0.12), transparent 38%),
+    radial-gradient(circle at 9% 10%, rgba(0, 212, 255, 0.08), transparent 27%),
+    radial-gradient(circle at 92% 75%, rgba(245, 196, 81, 0.06), transparent 32%);
+}
+
+.nova-cert-hub-label {
+  width: 100%;
+  text-align: center;
+  font-size: clamp(7px, 1.6vw, 10px);
+  font-weight: 700;
+  letter-spacing: 0.55em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.92);
+  padding-right: 0.55em;
+}
+
+.nova-cert-location-line {
+  width: 100%;
+  text-align: center;
+  font-size: clamp(6px, 1.35vw, 8px);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(0, 229, 255, 0.82);
+  line-height: 1.4;
+  padding-right: 0.22em;
+}
+
+.nova-cert-gold-divider {
+  position: relative;
+  width: 11rem;
+  height: 1px;
+  margin-left: auto;
+  margin-right: auto;
+  background: linear-gradient(90deg, transparent, #D4AF37 20%, #D4AF37 80%, transparent);
+}
+
+.nova-cert-gold-divider::after {
+  content: "◆";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: #F5C451;
+  font-size: 0.45rem;
+  line-height: 1;
+}
+
+.nova-cert-achievement-title {
+  width: 100%;
+  text-align: center;
+  text-shadow: 0 2px 16px rgba(212, 175, 55, 0.25);
+  letter-spacing: 0.1em;
+  padding-right: 0.1em;
+}
+
+.nova-cert-presented-to {
+  width: 100%;
+  text-align: center;
+  font-size: clamp(7px, 1.5vw, 10px);
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+  padding-right: 0.28em;
+}
+
+.nova-cert-completed {
+  width: 100%;
+  text-align: center;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(9px, 1.6vw, 11px);
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.nova-cert-program-title {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  text-shadow: 0 0 18px rgba(0, 229, 255, 0.25);
+}
+
+.nova-cert-excellence {
+  width: 100%;
+  margin-top: 0.25rem;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  font-size: clamp(7px, 1.35vw, 9px);
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.nova-cert-stats {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  width: 100%;
+  max-width: 48rem;
+  margin-top: 0.4rem;
+  margin-left: auto;
+  margin-right: auto;
+  justify-items: center;
+  align-items: center;
+}
+
+.nova-cert-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  text-align: center;
+  min-height: 0;
+  flex: 1 1 auto;
+}
+
+.nova-cert-name-divider {
+  display: flex;
+  width: 100%;
+  max-width: 28rem;
+  margin-left: auto;
+  margin-right: auto;
+  align-items: center;
+  justify-content: center;
+}
+.nova-cert-name-divider span {
+  height: 1px;
+  flex: 1 1 0;
+  min-width: 0;
+  background: linear-gradient(90deg, transparent, #D4AF37);
+}
+.nova-cert-name-divider span:last-child { background: linear-gradient(90deg, #D4AF37, transparent); }
+.nova-cert-name-divider b { flex: 0 0 auto; color: #F5C451; font-size: 0.55rem; font-weight: 400; }
+.nova-cert-holder-name {
+  width: 100%;
+  text-align: center;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.55);
+}
+
+.nova-cert-data-card { min-width: 0; width: 100%; max-width: 11rem; color: #fff; }
+.nova-cert-data-card-left { justify-self: end; }
+.nova-cert-data-card-right { justify-self: start; }
+.nova-cert-data-card > div:first-child:not(.nova-cert-hex) { min-width: 0; }
+.nova-cert-data-card p, .nova-cert-data-card small {
+  display: block;
+  font-size: clamp(6px, 1.3vw, 8px);
+  line-height: 1.25;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.72);
+}
+.nova-cert-data-card strong {
+  display: block;
+  color: #00E5FF;
+  font-size: clamp(1.05rem, 2.5vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+}
+.nova-cert-data-card .nova-cert-date {
+  font-size: clamp(0.62rem, 1.45vw, 0.88rem);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.nova-cert-hex {
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  flex: 0 0 auto;
+  color: #00E5FF;
+  background: rgba(0, 229, 255, 0.06);
+  border: 1px solid rgba(0, 229, 255, 0.65);
+  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.15);
+}
+.nova-cert-hex svg { width: 0.9rem; height: 0.9rem; }
+
+.nova-cert-laurel {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 6.5rem;
+  height: 5.8rem;
+  color: #F5C451;
+}
+.nova-cert-laurel-wreath {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.nova-cert-seal {
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 4.1rem;
+  height: 4.1rem;
+  border: 2px solid #D4AF37;
+  border-radius: 50%;
+  outline: 1px solid rgba(212, 175, 55, 0.55);
+  outline-offset: 3px;
+  background: radial-gradient(circle at 50% 35%, rgba(212, 175, 55, 0.12), #031326 65%);
+  box-shadow: 0 0 18px rgba(212, 175, 55, 0.28);
+}
+.nova-cert-seal span {
+  font: 700 0.72rem Georgia, serif;
+  letter-spacing: 0.06em;
+  color: #F5C451;
+  line-height: 1.1;
+}
+.nova-cert-seal small {
+  color: #F5C451;
+  font-size: 0.38rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  line-height: 1.2;
+}
+.nova-cert-seal i {
+  margin-top: 0.2rem;
+  color: #F5C451;
+  font-size: 0.38rem;
+  font-style: normal;
+  letter-spacing: 0.12em;
+}
+
+.nova-cert-footer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 0;
+  overflow: visible;
+  padding-bottom: 1.65rem;
+}
+
+.nova-cert-footer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: end;
+  justify-items: center;
+  gap: clamp(0.35rem, 1.5vw, 0.75rem);
+  width: 100%;
+  overflow: visible;
+}
+
+.nova-cert-signatory {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  width: clamp(6.5rem, 18vw, 8.5rem);
+  max-width: 100%;
+  min-height: 3.75rem;
+  flex-shrink: 0;
+  overflow: visible;
+  text-align: center;
+  color: #fff;
+  justify-self: center;
+}
+
+.nova-cert-signatory-left,
+.nova-cert-signatory-right {
+  justify-self: center;
+}
+
+.nova-cert-quill {
+  display: block;
+  width: 1.15rem !important;
+  height: 1.15rem !important;
+  flex: 0 0 auto;
+  margin: 0;
+  color: #D4AF37 !important;
+  filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.35));
+}
+
+.nova-cert-signature-line {
+  flex: 0 0 auto;
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, transparent, #D4AF37 15%, #D4AF37 85%, transparent);
+}
+
+.nova-cert-signatory p,
+.nova-cert-signatory small {
+  display: block;
+  width: 100%;
+  margin: 0;
+  font-size: 7px;
+  line-height: 1.15;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.nova-cert-signatory p {
+  margin-top: 3px;
+  min-height: calc(2 * 1.15em);
+  color: rgba(255, 255, 255, 0.88);
+  font-weight: 600;
+  text-align: center;
+}
+
+.nova-cert-signatory small {
+  margin-top: 2px;
+  color: #00E5FF;
+  font-size: 6px;
+  font-weight: 700;
+  min-height: 1.15em;
+}
+
+.nova-cert-verification {
+  display: flex;
+  align-items: center;
+  justify-self: center;
+  align-self: center;
+  gap: 0.55rem;
+  color: #fff;
+  min-width: 0;
+  text-align: left;
+}
+
+.nova-cert-verification-copy {
+  min-width: 0;
+}
+.nova-cert-qr {
+  width: 2.6rem;
+  height: 2.6rem;
+  flex: 0 0 auto;
+  border: 2px solid #00E5FF;
+  background-color: #fff;
+  background-image:
+    repeating-linear-gradient(90deg, #07111f 0 3px, transparent 3px 6px),
+    repeating-linear-gradient(#07111f 0 3px, transparent 3px 6px);
+  background-size: 12px 12px;
+  box-shadow: inset 0 0 0 3px white;
+}
+.nova-cert-verification strong,
+.nova-cert-verification p,
+.nova-cert-verification a,
+.nova-cert-verification small {
+  display: block;
+  font-size: 7px;
+  line-height: 1.25;
+}
+.nova-cert-verification strong {
+  color: #00E5FF;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  font-weight: 700;
+}
+.nova-cert-verification p { color: rgba(255, 255, 255, 0.68); margin-top: 2px; }
+.nova-cert-verification a {
+  color: #00E5FF;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+  text-decoration: none;
+}
+.nova-cert-verification a:hover { text-decoration: underline; }
+.nova-cert-prefix, .nova-cert-code { color: rgba(255, 255, 255, 0.55); margin-top: 2px; }
+
+.nova-cert-verified-badge {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #00E5FF;
+  font-size: 6px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.nova-cert-verified-badge svg {
+  width: 1.65rem;
+  height: 1.65rem;
+  flex-shrink: 0;
+  color: #00E5FF;
+  fill: rgba(0, 229, 255, 0.12);
+  filter: drop-shadow(0 0 5px rgba(0, 229, 255, 0.4));
+}
+.nova-cert-verified-badge span { text-align: left; line-height: 1.15; }
+.nova-cert-verified-badge small {
+  display: block;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.nova-cert-sample-watermark { display: grid; place-items: center; overflow: hidden; opacity: 0.13; }
+.nova-cert-sample-watermark::before {
+  content: attr(data-label);
+  color: #F5C451;
+  font-size: clamp(2rem, 7vw, 5.5rem);
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  transform: rotate(-25deg);
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .nova-cert-verified-badge { display: none; }
+  .nova-cert-footer { padding-bottom: 0; }
+  .nova-cert-footer-grid { gap: 0.35rem; }
+  .nova-cert-signatory { width: 5.75rem; min-height: 3.25rem; }
+  .nova-cert-signatory-left { padding-right: 0; }
+  .nova-cert-signatory-right { padding-left: 0; }
+  .nova-cert-stats { gap: .35rem; }
+  .nova-cert-laurel { transform: scale(.82); }
+  .nova-cert-verification { gap: 0.3rem; }
+  .nova-cert-qr { width: 2rem; height: 2rem; }
+}
+
+.nova-certificate {
+  min-height: 520px;
+  height: auto;
+  overflow: visible;
+}
+
+.nova-cert-inner {
+  overflow: visible;
+  min-height: 100%;
+}
+
+@media print {
+  body {
+    background: white !important;
+    color: #0b1d3a !important;
+  }
+
+  .nova-container aside,
+  nav,
+  header,
+  footer,
+  .print\\:hidden,
+  .nova-cert-preview-promo > div > p:first-of-type,
+  .nova-cert-preview-promo ul,
+  .nova-cert-preview-promo h2,
+  .nova-cert-preview-promo > div > p:nth-of-type(2) {
+    display: none !important;
+  }
+
+  #nova-certificate {
+    box-shadow: none !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    max-width: 100% !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  #nova-certificate[data-sample="true"] .nova-cert-void-watermark,
+  #nova-certificate[data-sample="true"] .nova-cert-sample-banner {
+    display: block !important;
+    opacity: 0.18 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  #nova-certificate[data-sample="false"] .nova-cert-security-pattern {
+    opacity: 0.08 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .cert-sample-toolbar,
+  .cert-sample-page .nova-container > .cert-sample-toolbar {
+    display: none !important;
+  }
+
+  .cert-sample-page {
+    padding: 0 !important;
+    background: white !important;
+  }
+}
+
+/* ── Certificate sample page toolbar ── */
+.cert-sample-toolbar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+}
+
+.cert-sample-toolbar-note {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgb(248 113 113 / 0.85);
+}
+
+.cert-sample-toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.cert-sample-toolbar-hint {
+  max-width: 32rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: rgb(144 224 239 / 0.65);
+}
+
+.cert-sample-locale-switch {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.cert-sample-locale-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgb(144 224 239 / 0.55);
+}
+
+.cert-sample-locale-btn {
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  border: 1px solid rgb(255 255 255 / 0.15);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgb(144 224 239 / 0.85);
+  transition: border-color 0.15s, background-color 0.15s, color 0.15s;
+}
+
+.cert-sample-locale-btn:hover {
+  border-color: rgb(245 215 110 / 0.45);
+  color: white;
+}
+
+.cert-sample-locale-btn.is-active {
+  border-color: rgb(245 215 110 / 0.6);
+  background: rgb(245 215 110 / 0.12);
+  color: rgb(245 215 110);
 }

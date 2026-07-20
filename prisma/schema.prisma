@@ -36,6 +36,40 @@ enum SubmissionStatus {
   RETURNED
 }
 
+enum EnrollmentStatus {
+  PENDING_PAYMENT
+  ACTIVE
+  INSTITUTIONAL
+  CANCELLED
+}
+
+enum PaymentMethod {
+  STRIPE
+  CREDIT_CARD
+  WIRE_TRANSFER
+  ZELLE
+  VENMO
+  OTHER
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum PartnershipStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum CertificateStatus {
+  VALID
+  REVOKED
+}
+
 model User {
   id            String    @id @default(cuid())
   email         String    @unique
@@ -50,12 +84,45 @@ model User {
   updatedAt     DateTime  @updatedAt
 
   enrollments   Enrollment[]
+  payments      Payment[]
   progress      LessonProgress[]
   submissions   Submission[]
   experienceProgress ExperienceProgress[]
   taughtCourses Course[]  @relation("CourseMentor")
   accounts      Account[]
   sessions      Session[]
+  studentProfile StudentProfile?
+  certificates   Certificate[]
+  assessmentAttempts CourseAssessmentAttempt[]
+}
+
+model StudentProfile {
+  id                       String   @id @default(cuid())
+  userId                   String   @unique
+  user                     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  middleName               String?
+  dateOfBirth              DateTime
+  phone                    String
+  gender                   String?
+  streetAddress            String
+  city                     String
+  stateProvince            String
+  country                  String
+  postalCode               String
+  emergencyContactName     String
+  emergencyContactPhone    String
+  emergencyContactRelation String
+  guardianName             String
+  guardianEmail            String
+  guardianPhone            String
+  currentSchoolName        String
+  gradeLevel               String
+  graduationYear           String
+  preferredLanguage        String   @default("en")
+  howHeardAboutNova        String?
+  termsAcceptedAt          DateTime
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
 }
 
 model School {
@@ -66,8 +133,9 @@ model School {
   state     String?
   createdAt DateTime @default(now())
 
-  users     User[]
-  courses   Course[]
+  users       User[]
+  courses     Course[]
+  partnership PartnershipApplication?
 }
 
 model Course {
@@ -89,6 +157,10 @@ model Course {
   modules     Module[]
   enrollments Enrollment[]
   assignments Assignment[]
+  product     CourseProduct?
+  payments    Payment[]
+  certificates Certificate[]
+  assessmentAttempts CourseAssessmentAttempt[]
 }
 
 model Module {
@@ -119,15 +191,130 @@ model Lesson {
 }
 
 model Enrollment {
-  id          String   @id @default(cuid())
+  id          String           @id @default(cuid())
   userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   courseId    String
-  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  enrolledAt  DateTime @default(now())
+  course      Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  status      EnrollmentStatus @default(PENDING_PAYMENT)
+  paymentId   String?          @unique
+  payment     Payment?         @relation(fields: [paymentId], references: [id])
+  enrolledAt  DateTime         @default(now())
   completedAt DateTime?
+  certificate Certificate?
 
   @@unique([userId, courseId])
+}
+
+model CourseAssessmentAttempt {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId      String
+  course        Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  attemptNumber Int
+  scorePercent  Int
+  passed        Boolean
+  createdAt     DateTime @default(now())
+
+  @@unique([userId, courseId, attemptNumber])
+}
+
+model Certificate {
+  id           String            @id @default(cuid())
+  code         String            @unique
+  userId       String
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId     String
+  course       Course            @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  enrollmentId String?           @unique
+  enrollment   Enrollment?       @relation(fields: [enrollmentId], references: [id])
+  holderName   String
+  programTitle String
+  programSlug  String
+  scorePercent Int
+  prefix       String            @default("NOVA-CERT")
+  locale       String            @default("en")
+  status       CertificateStatus @default(VALID)
+  issuedAt     DateTime          @default(now())
+}
+
+model CourseProduct {
+  id            String   @id @default(cuid())
+  courseId      String   @unique
+  course        Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  priceCents    Int
+  currency      String   @default("usd")
+  stripePriceId String?
+  active        Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Payment {
+  id              String        @id @default(cuid())
+  userId          String
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId        String
+  course          Course        @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  amountCents     Int
+  currency        String        @default("usd")
+  method          PaymentMethod @default(STRIPE)
+  status          PaymentStatus @default(PENDING)
+  stripeSessionId String?       @unique
+  stripePaymentId String?
+  notes           String?
+  paidAt          DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  enrollment Enrollment?
+}
+
+model PartnershipApplication {
+  id                     String            @id @default(cuid())
+  institutionName        String
+  legalName              String?
+  institutionType        String
+  website                String?
+  taxId                  String?
+  yearEstablished        String?
+  streetAddress          String?
+  stateProvince          String?
+  postalCode             String?
+  contactName            String
+  contactRole            String
+  email                  String
+  phone                  String?
+  billingContactName     String?
+  billingEmail           String?
+  billingPhone           String?
+  decisionMakerName      String?
+  decisionMakerTitle     String?
+  decisionMakerEmail     String?
+  country                String
+  city                   String
+  productInterest        String
+  estimatedStudents      Int
+  studentAgeRange        String?
+  targetLaunchDate       String?
+  contractTerm           String?
+  budgetRange            String?
+  currentStemOfferings   String?
+  hardwareInfrastructure String?
+  message                String
+  locale                 String            @default("en")
+  status                 PartnershipStatus @default(PENDING)
+  paymentMethod          PaymentMethod?
+  paymentStatus          PaymentStatus     @default(PENDING)
+  paymentNotes           String?
+  termsAcceptedAt        DateTime?
+  schoolId               String?           @unique
+  school                 School?           @relation(fields: [schoolId], references: [id])
+  reviewedAt             DateTime?
+  reviewedBy             String?
+  submittedAt            DateTime          @default(now())
+  updatedAt              DateTime          @updatedAt
 }
 
 model LessonProgress {

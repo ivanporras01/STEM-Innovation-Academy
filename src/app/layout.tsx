@@ -1,19 +1,20 @@
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Providers } from "./providers";
 import { NovaCosmosBackground } from "@/components/ui/nova-universe";
+import { GoogleAnalytics } from "@/components/seo/google-analytics";
+import { buildRootMetadata } from "@/lib/seo";
+import { getOrbitoRealVariant } from "@/components/orbit/orbito-real-catalog";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  preload: true,
+});
 
-export const metadata: Metadata = {
-  title: {
-    default: "NOVA — STEM Innovation Academy",
-    template: "%s | NOVA LMS",
-  },
-  description:
-    "Practical STEM education for future innovators. NOVA helps middle and high school learners explore technology, build projects, and grow into confident innovators. Learn • Build • Innovate • Inspire.",
-};
+export const metadata = buildRootMetadata();
+
+const ORBITA_GREETING_FRAMES = getOrbitoRealVariant("orbita").greetingFrames;
 
 export default function RootLayout({
   children,
@@ -22,7 +23,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <head>
+        {ORBITA_GREETING_FRAMES.map((href) => (
+          <link key={href} rel="preload" as="image" href={href} fetchPriority="high" />
+        ))}
+      </head>
+      <body className={inter.className}>        <GoogleAnalytics />
         <NovaCosmosBackground />
         <div className="relative z-[1]">
           <Providers>{children}</Providers>
