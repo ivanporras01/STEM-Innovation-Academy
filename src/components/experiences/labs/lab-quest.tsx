@@ -703,6 +703,7 @@ function LabImpactStudio({ onComplete }: { onComplete: (msg: string) => void }) 
     await new Promise((r) => setTimeout(r, 700));
     setAssembling(false);
     setSuccess(true);
+    // Always notify the player — unlocks Mission Complete for every quest lab path.
     onComplete("Community Spark prototype locked. Impact circle wants your demo.");
   }
 
@@ -779,8 +780,8 @@ function LabImpactStudio({ onComplete }: { onComplete: (msg: string) => void }) 
                 subtitle={n.sub}
                 disabled={success}
                 onClick={() => {
+                  if (success) return;
                   setNeed(n.id);
-                  setSuccess(false);
                 }}
               />
             ))}
@@ -801,8 +802,8 @@ function LabImpactStudio({ onComplete }: { onComplete: (msg: string) => void }) 
                 subtitle={t.sub}
                 disabled={success}
                 onClick={() => {
+                  if (success) return;
                   setTool(t.id);
-                  setSuccess(false);
                 }}
               />
             ))}
@@ -817,8 +818,8 @@ function LabImpactStudio({ onComplete }: { onComplete: (msg: string) => void }) 
             value={promise}
             disabled={success}
             onChange={(e) => {
+              if (success) return;
               setPromise(e.target.value);
-              setSuccess(false);
             }}
             rows={2}
             placeholder="In 30 days, our prototype will help…"

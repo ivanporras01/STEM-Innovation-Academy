@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   STAGE_ORDER,
@@ -15,6 +15,12 @@ import {
   EXPERIENCE_STAGE_LABELS,
   EXPERIENCE_UI,
 } from "@/lib/experiences/ui-copy";
+import {
+  isMissionSfxMuted,
+  playLabClearChime,
+  playMissionCompleteFanfare,
+  setMissionSfxMuted,
+} from "@/lib/experiences/mission-sfx";
 import type { AppLocale } from "@/lib/locale";
 import { StageBuddySelect } from "./stage-buddy-select";
 import { BuddyCompanion } from "./buddy-companion";
@@ -82,12 +88,33 @@ export function ExperiencePlayer({
   const [selectedQuiz, setSelectedQuiz] = useState<number | null>(null);
   const [animating, setAnimating] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [showLabVictory, setShowLabVictory] = useState(
+    () => Boolean(initialProgress?.labComplete && (initialProgress?.currentStage ?? 0) === 3)
+  );
+  const [showMissionCongrats, setShowMissionCongrats] = useState(false);
+  const [sfxMuted, setSfxMuted] = useState(false);
+  const labContinueRef = useRef<HTMLButtonElement | null>(null);
+  const celebratedAchievementRef = useRef(false);
+  // Keep flags in a ref so delayed goTo / saveProgress never overwrite labComplete=true with a stale false.
+  const progressFlagsRef = useRef({
+    labComplete: initialProgress?.labComplete ?? false,
+    quizComplete: initialProgress?.quizComplete ?? false,
+    reflection: initialProgress?.reflection ?? "",
+  });
 
   const ui = EXPERIENCE_UI[locale];
   const stageLabels = EXPERIENCE_STAGE_LABELS[locale];
   const stage = STAGE_ORDER[stageIndex];
   const buddy = getBuddy(buddyId);
   const progressPct = ((stageIndex + 1) / STAGE_ORDER.length) * 100;
+
+  useEffect(() => {
+    setSfxMuted(isMissionSfxMuted());
+  }, []);
+
+  useEffect(() => {
+    progressFlagsRef.current = { labComplete, quizComplete, reflection };
+  }, [labComplete, quizComplete, reflection]);
 
   const saveProgress = useCallback(
     async (payload: ProgressPayload) => {
@@ -108,6 +135,7 @@ export function ExperiencePlayer({
   const goTo = useCallback(
     (index: number) => {
       const next = Math.max(0, Math.min(STAGE_ORDER.length - 1, index));
+      const flags = progressFlagsRef.current;
       // Advance stage immediately so CTA clicks never depend on a delayed timeout
       // (remounts / translate DOM mutations could otherwise leave the user stuck).
       setStageIndex(next);
@@ -116,32 +144,41 @@ export function ExperiencePlayer({
       if (typeof window !== "undefined") {
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
+      if (next !== 3) setShowLabVictory(false);
       void saveProgress({
         buddyId,
         buddyNickname,
         currentStage: next,
-        labComplete,
-        quizComplete,
-        reflection,
+        labComplete: flags.labComplete,
+        quizComplete: flags.quizComplete,
+        reflection: flags.reflection,
       });
     },
-    [buddyId, buddyNickname, labComplete, quizComplete, reflection, saveProgress]
+    [buddyId, buddyNickname, saveProgress]
   );
 
   useEffect(() => {
-    if (stage === "achievement") {
-      setShowConfetti(true);
-      saveProgress({
-        buddyId,
-        buddyNickname,
-        currentStage: stageIndex,
-        labComplete: true,
-        quizComplete: true,
-        reflection,
-        completed: true,
-      });
+    if (stage !== "achievement") return;
+    setShowConfetti(true);
+    setShowMissionCongrats(true);
+    progressFlagsRef.current.labComplete = true;
+    progressFlagsRef.current.quizComplete = true;
+    setLabComplete(true);
+    setQuizComplete(true);
+    void saveProgress({
+      buddyId,
+      buddyNickname,
+      currentStage: stageIndex,
+      labComplete: true,
+      quizComplete: true,
+      reflection: progressFlagsRef.current.reflection,
+      completed: true,
+    });
+    if (!celebratedAchievementRef.current) {
+      celebratedAchievementRef.current = true;
+      void playMissionCompleteFanfare();
     }
-  }, [stage, stageIndex, buddyId, buddyNickname, reflection, saveProgress]);
+  }, [stage, stageIndex, buddyId, buddyNickname, saveProgress]);
 
   function handleBuddyConfirm() {
     if (displayName.trim().length < 2) return;
@@ -149,9 +186,26 @@ export function ExperiencePlayer({
     goTo(2);
   }
 
-  function handleLabComplete() {
+  function handleLabComplete(_msg?: string) {
+    progressFlagsRef.current.labComplete = true;
     setLabComplete(true);
-    saveProgress({ buddyId, buddyNickname, currentStage: stageIndex, labComplete: true });
+    setShowLabVictory(true);
+    void saveProgress({
+      buddyId,
+      buddyNickname,
+      currentStage: stageIndex,
+      labComplete: true,
+    });
+    void playLabClearChime();
+    window.requestAnimationFrame(() => {
+      labContinueRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  }
+
+  function toggleSfxMute() {
+    const next = !sfxMuted;
+    setSfxMuted(next);
+    setMissionSfxMuted(next);
   }
 
   const buddyDisplayName = getBuddyDisplayName(buddyId, buddyNickname);
@@ -161,6 +215,7 @@ export function ExperiencePlayer({
     setSelectedQuiz(index);
     if (option.correct) {
       setQuizFeedback(experience.quizSuccess);
+      progressFlagsRef.current.quizComplete = true;
       setQuizComplete(true);
     } else {
       setQuizFeedback("Try again. Choose the answer that explains the system.");
@@ -198,6 +253,15 @@ export function ExperiencePlayer({
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            <button
+              type="button"
+              onClick={toggleSfxMute}
+              className="rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-xs font-bold text-white/85 hover:bg-white/15"
+              aria-pressed={sfxMuted}
+              title={sfxMuted ? ui.unmuteSound : ui.muteSound}
+            >
+              {sfxMuted ? "🔇" : "🔊"}
+            </button>
             <span className="rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-xs font-bold">
               {ui.missionLive}
             </span>
@@ -395,7 +459,7 @@ export function ExperiencePlayer({
           )}
 
           {stage === "lab" && (
-            <div className="lab-stage-chrome">
+            <div className={cn("lab-stage-chrome", labComplete && showLabVictory && "pb-28 sm:pb-24")}>
               <div className="lab-stage-chrome-aurora" aria-hidden />
               <div className="lab-stage-chrome-header px-6 py-5 sm:px-10">
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--exp-accent-2)]">
@@ -433,16 +497,50 @@ export function ExperiencePlayer({
                 </div>
               </div>
               <div className="lab-stage-chrome-footer flex flex-wrap gap-3 px-6 py-5 sm:px-10">
+                {labComplete && (
+                  <div
+                    className="mission-lab-victory mb-1 w-full rounded-2xl border border-emerald-400/40 bg-emerald-500/15 px-4 py-3"
+                    role="status"
+                  >
+                    <p className="text-xs font-black uppercase tracking-[0.16em] text-emerald-300">
+                      {ui.labClearedTitle}
+                    </p>
+                    <p className="mt-1 text-sm text-emerald-50/90">{ui.labClearedBody}</p>
+                  </div>
+                )}
                 <button
+                  ref={labContinueRef}
                   type="button"
                   disabled={!labComplete}
                   onClick={() => goTo(4)}
                   className="experience-btn-primary disabled:opacity-40"
+                  data-mission-cta="lab-complete"
                 >
-                  Mission Complete — Continue →
+                  {ui.missionCompleteContinue}
                 </button>
                 <button type="button" onClick={() => goTo(2)} className="experience-btn-secondary">
-                  Back
+                  {ui.back}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {stage === "lab" && labComplete && showLabVictory && (
+            <div className="mission-lab-sticky-dock" role="dialog" aria-label={ui.labClearedTitle}>
+              <div className="mission-lab-sticky-dock-inner">
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-[0.16em] text-emerald-300">
+                    {ui.labClearedTitle}
+                  </p>
+                  <p className="mt-0.5 text-sm font-semibold text-white">{ui.labClearedBody}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => goTo(4)}
+                  className="experience-btn-primary shrink-0"
+                  data-mission-cta="lab-complete-sticky"
+                >
+                  {ui.missionCompleteContinue}
                 </button>
               </div>
             </div>
@@ -522,7 +620,11 @@ export function ExperiencePlayer({
               <textarea
                 className="mt-4 min-h-[160px] w-full resize-y rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/40 focus:border-[var(--exp-accent)] focus:outline-none focus:ring-2 focus:ring-[var(--exp-accent)]/30"
                 value={reflection}
-                onChange={(e) => setReflection(e.target.value)}
+                onChange={(e) => {
+                  const next = e.target.value;
+                  progressFlagsRef.current.reflection = next;
+                  setReflection(next);
+                }}
                 placeholder="Your innovation idea belongs here — no wrong answers, only honest thinking…"
               />
               <div className="mt-8 flex flex-wrap gap-3">
@@ -530,6 +632,11 @@ export function ExperiencePlayer({
                   type="button"
                   disabled={reflection.trim().length < 12}
                   onClick={() => {
+                    progressFlagsRef.current.labComplete = true;
+                    progressFlagsRef.current.quizComplete = true;
+                    progressFlagsRef.current.reflection = reflection;
+                    setLabComplete(true);
+                    setQuizComplete(true);
                     saveProgress({
                       buddyId,
                       buddyNickname,
@@ -554,6 +661,12 @@ export function ExperiencePlayer({
           {stage === "achievement" && (
             <div className="relative overflow-hidden py-8 text-center">
               <div className="mission-invite-aurora opacity-40" aria-hidden />
+              {showMissionCongrats && (
+                <div className="mission-congrats-banner" role="status" aria-live="polite">
+                  <p className="mission-congrats-eyebrow">{ui.congratulations}</p>
+                  <p className="mission-congrats-greeting">{ui.missionCompleteGreeting}</p>
+                </div>
+              )}
               <div className="relative experience-badge mx-auto">
                 <PathwayIcon pathway={experience.pathway} variant="badge" />
               </div>
@@ -598,6 +711,11 @@ export function ExperiencePlayer({
                 <button
                   type="button"
                   onClick={() => {
+                    progressFlagsRef.current = {
+                      labComplete: false,
+                      quizComplete: false,
+                      reflection: "",
+                    };
                     setStageIndex(0);
                     setLabComplete(false);
                     setQuizComplete(false);
@@ -605,6 +723,9 @@ export function ExperiencePlayer({
                     setSelectedQuiz(null);
                     setQuizFeedback("");
                     setShowConfetti(false);
+                    setShowLabVictory(false);
+                    setShowMissionCongrats(false);
+                    celebratedAchievementRef.current = false;
                   }}
                   className="experience-btn-secondary"
                 >
