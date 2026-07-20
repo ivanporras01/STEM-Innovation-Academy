@@ -5,8 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { MessageCircle, Rocket, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { type AppLocale } from "@/lib/locale";
-import { getNovaStemHubNav, getOrbitaMenuItems } from "@/lib/nova-nav";
-import { NOVA_COLLEGE, NOVA_LANGUAGE, NOVA_SCHOOL, NOVA_SHOP } from "@/lib/novahub-brand";
+import { getOrbitaMenuItems } from "@/lib/nova-nav";
 import { OrbitoRealGuide } from "@/components/orbit/orbito-real-guide";
 import { getOrbitoRealVariant } from "@/components/orbit/orbito-real-catalog";
 import {
@@ -27,7 +26,7 @@ const COPY = {
   en: {
     role: "NOVA Welcome Guide",
     greeting: "Welcome to NOVA STEM HUB.",
-    body: "I'm Orbita — pick a product or open NOVA Resources, just like the menu above.",
+    body: "I'm Orbita — pick a destination, same options as the menu above.",
     dismiss: "Start exploring",
     reopen: "Chat with Orbita",
     close: "Close chat",
@@ -35,7 +34,7 @@ const COPY = {
   es: {
     role: "Guía de bienvenida NOVA",
     greeting: "Bienvenido a NOVA STEM HUB.",
-    body: "Soy Orbita — elige un producto o NOVA Resources, igual que el menú de arriba.",
+    body: "Soy Orbita — elige un destino, las mismas opciones del menú de arriba.",
     dismiss: "Empezar a explorar",
     reopen: "Hablar con Orbita",
     close: "Cerrar chat",
@@ -43,29 +42,16 @@ const COPY = {
   pt: {
     role: "Guia de boas-vindas NOVA",
     greeting: "Bem-vindo ao NOVA STEM HUB.",
-    body: "Sou Orbita — escolha um produto ou NOVA Resources, como no menu acima.",
+    body: "Sou Orbita — escolha um destino, as mesmas opções do menu acima.",
     dismiss: "Começar a explorar",
     reopen: "Falar com Orbita",
     close: "Fechar chat",
   },
 } as const;
 
-/** Match navbar product accent colors */
-function menuAccent(label: string): string {
-  if (label === NOVA_SCHOOL.name) {
-    return "from-nova-cyan/20 to-nova-cyan/5 border-nova-cyan/30";
-  }
-  if (label === NOVA_COLLEGE.name) {
-    return "from-nova-orange/20 to-nova-orange/5 border-nova-orange/30";
-  }
-  if (label === NOVA_LANGUAGE.name) {
-    return "from-nova-green/20 to-nova-green/5 border-nova-green/30";
-  }
-  if (label === NOVA_SHOP.name) {
-    return "from-nova-cyan/15 to-nova-blue/10 border-nova-cyan/25";
-  }
-  return "from-nova-blue/20 to-nova-violet/10 border-white/20";
-}
+/** Shared chip style — matches main header tab calm uniformity (no mixed accent borders). */
+const MENU_CHIP =
+  "flex w-full items-center justify-center rounded-lg border border-white/20 bg-white/[0.04] px-3 py-2.5 text-center text-[11px] font-semibold leading-snug text-white/90 transition hover:border-nova-cyan/50 hover:bg-nova-cyan/10 hover:text-nova-cyan-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nova-cyan";
 
 type Props = {
   locale: AppLocale;
@@ -83,14 +69,7 @@ export function OrbitWelcome({ locale, autoOpen = true }: Props) {
   const [reduceMotion, setReduceMotion] = useState(false);
   const copy = COPY[locale];
 
-  const actions = useMemo(() => {
-    const resourcesLabel = getNovaStemHubNav(locale).menuLabel;
-    return getOrbitaMenuItems(locale).map((item) => ({
-      ...item,
-      accent: menuAccent(item.label),
-      wide: item.label === resourcesLabel,
-    }));
-  }, [locale]);
+  const actions = useMemo(() => getOrbitaMenuItems(locale), [locale]);
 
   useEffect(() => {
     setReduceMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
@@ -156,16 +135,12 @@ export function OrbitWelcome({ locale, autoOpen = true }: Props) {
               </h2>
               <p className="mt-1.5 text-[11px] leading-relaxed text-nova-cyan-light/85">{copy.body}</p>
 
-              <nav className="mt-2.5 grid grid-cols-2 gap-1" aria-label="Main navigation">
+              <nav className="mt-3 flex flex-col gap-1.5" aria-label="Main navigation">
                 {actions.map((action) => (
                   <Link
                     key={`${action.href}-${action.label}`}
                     href={action.href}
-                    className={cn(
-                      "rounded-md border bg-gradient-to-br px-1.5 py-2 text-[9px] font-semibold leading-tight text-white transition hover:-translate-y-0.5 sm:text-[10px]",
-                      action.accent,
-                      action.wide && "col-span-2",
-                    )}
+                    className={MENU_CHIP}
                     onClick={dismiss}
                   >
                     {action.label}
@@ -175,7 +150,7 @@ export function OrbitWelcome({ locale, autoOpen = true }: Props) {
 
               <button
                 type="button"
-                className="nova-btn-primary nova-btn-glow mt-2 flex w-full items-center justify-center gap-1.5 py-1.5 text-[11px]"
+                className="nova-btn-primary nova-btn-glow mt-2.5 flex w-full items-center justify-center gap-1.5 py-2 text-[11px]"
                 onClick={dismiss}
               >
                 <Rocket className="h-3 w-3" aria-hidden />
