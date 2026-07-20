@@ -20,7 +20,7 @@ export default async function AdminPaymentsPage() {
   const pendingPayments = await db.payment.findMany({
     where: {
       status: "PENDING",
-      method: { in: ["ZELLE", "VENMO", "OTHER"] },
+      method: { in: ["PAYPAL", "ZELLE", "VENMO", "OTHER"] },
     },
     include: {
       user: { select: { firstName: true, lastName: true, email: true } },
@@ -41,9 +41,9 @@ export default async function AdminPaymentsPage() {
         <p className="mb-1 text-sm font-semibold uppercase tracking-wider text-nova-orange">
           Enrollment payments
         </p>
-        <h1 className="text-2xl font-bold text-white">Pending Zelle / Venmo / Other</h1>
+        <h1 className="text-2xl font-bold text-white">Pending PayPal (and legacy manual)</h1>
         <p className="mt-1 text-nova-cyan-light/80">
-          Verify payment received, then approve to unlock the Explorer&apos;s mission path instantly.
+          Verify PayPal received, then approve to unlock the Explorer&apos;s mission path instantly.
         </p>
       </div>
 

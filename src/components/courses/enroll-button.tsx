@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { CheckoutModal } from "@/components/checkout/checkout-modal";
-import { formatPrice } from "@/lib/enrollment-access";
+import { SalePriceFromCents } from "@/components/pricing/sale-price";
+import { formatSalePriceLabel } from "@/lib/pricing";
 
 export function EnrollButton({
   courseId,
@@ -24,7 +25,8 @@ export function EnrollButton({
   const [showCheckout, setShowCheckout] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
-  const priceLabel = priceCents && priceCents > 0 ? formatPrice(priceCents) : null;
+  const hasPrice = Boolean(priceCents && priceCents > 0);
+  const priceLabel = hasPrice ? formatSalePriceLabel(priceCents!) : null;
 
   if (enrolled) {
     return (
@@ -44,8 +46,14 @@ export function EnrollButton({
 
       {pendingPayment && (
         <p className="text-sm text-nova-orange">
-          Payment pending verification — we&apos;ll unlock your path within 24 hours once confirmed.
-          You can also choose another method below.
+          Payment pending verification — we&apos;ll unlock your path within 24 hours once your
+          PayPal payment is confirmed. You can resubmit below if needed.
+        </p>
+      )}
+
+      {hasPrice && (
+        <p className="text-sm">
+          <SalePriceFromCents listCents={priceCents!} />
         </p>
       )}
 
@@ -55,16 +63,15 @@ export function EnrollButton({
         className="nova-btn-primary"
       >
         {pendingPayment
-          ? "Complete or update payment"
+          ? "Complete or update PayPal payment"
           : priceLabel
             ? `Enroll — ${priceLabel}`
             : "Enroll in Mission Path"}
       </button>
 
-      {!enrolled && priceLabel && (
+      {!enrolled && hasPrice && (
         <p className="text-xs text-nova-cyan-light/60">
-          Play free demo missions first, then enroll for full path access. Pay by card, Zelle, or
-          Venmo.
+          Play free demo missions first, then enroll for full path access. Pay with PayPal only.
         </p>
       )}
 

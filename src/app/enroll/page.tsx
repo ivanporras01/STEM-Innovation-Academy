@@ -8,6 +8,7 @@ import { buildPageMetadata } from "@/lib/seo";
 import { enrollPathForProgram } from "@/lib/program-enrollment";
 import { localizeProgram } from "@/lib/program-locale-copy";
 import { CertificatePreviewPromo } from "@/components/certificates/certificate-preview-promo";
+import { SaleTuitionDisplay } from "@/components/pricing/sale-price";
 import { ArrowRight, Building2, GraduationCap, UserPlus } from "lucide-react";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -72,8 +73,8 @@ async function EnrollHubContent({
               <h2 className="text-2xl font-black text-white">For students &amp; families</h2>
               <p className="mt-3 text-sm leading-relaxed text-nova-cyan-light/85">
                 Create your free Explorer account, pick any program from the catalog, and complete
-                payment by card, Zelle, or Venmo. Your courses unlock immediately after payment
-                confirmation.
+                payment with PayPal. Your courses unlock after our team confirms payment (usually
+                within 24 hours).
               </p>
               <ol className="mt-5 space-y-2 text-sm text-white/80">
                 <li>1. <Link href="/register" className="text-nova-cyan hover:underline">Register</Link> (free — then pay immediately)</li>
@@ -119,8 +120,8 @@ async function EnrollHubContent({
           <section className="mt-14">
             <h2 className="text-xl font-black text-white">Enroll in a program</h2>
             <p className="mt-2 text-sm text-nova-cyan-light/80">
-              Select a program to register and pay. Payment methods: credit/debit card, Zelle,
-              Venmo, or other (no wire transfer for individual students).
+              Select a program to register and pay. Students pay with PayPal only (50% off list
+              tuition). Institutional licensing uses partnership checkout.
             </p>
             <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {NOVA_PROGRAM_CATALOG.map((program) => {
@@ -133,7 +134,9 @@ async function EnrollHubContent({
                 >
                   <div className="min-w-0">
                     <p className="truncate font-semibold text-white">{copy.title}</p>
-                    <p className="text-xs text-nova-cyan-light/70">{program.tuitionLabel}</p>
+                    <p className="text-xs text-nova-cyan-light/70">
+                      <SaleTuitionDisplay listUsd={program.tuitionUsd} showBadge={false} />
+                    </p>
                   </div>
                   <ArrowRight className="h-4 w-4 shrink-0 text-nova-cyan" />
                 </Link>

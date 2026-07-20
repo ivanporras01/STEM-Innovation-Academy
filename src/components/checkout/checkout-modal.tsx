@@ -8,6 +8,8 @@ import {
   type PaymentMethodOption,
 } from "@/lib/payments/payment-methods";
 import { formatPrice } from "@/lib/enrollment-access";
+import { SalePriceFromCents } from "@/components/pricing/sale-price";
+import { salePriceCents } from "@/lib/pricing";
 import type { PaymentMethod } from "@prisma/client";
 
 type Step = "choose" | "instructions" | "processing";
@@ -41,14 +43,18 @@ export function CheckoutModal({
   onSuccess,
 }: Props) {
   const router = useRouter();
-  const [step, setStep] = useState<Step>("choose");
+  const [step, setStep] = useState<Step>(
+    STUDENT_PAYMENT_METHODS.length === 1 ? "instructions" : "choose",
+  );
   const [error, setError] = useState("");
   const [reference, setReference] = useState("");
   const [otherNote, setOtherNote] = useState("");
   const [pending, setPending] = useState<PendingManual | null>(null);
-  const [selectedMethod, setSelectedMethod] = useState<PaymentMethodOption | null>(null);
+  const [selectedMethod, setSelectedMethod] = useState<PaymentMethodOption | null>(
+    STUDENT_PAYMENT_METHODS.length === 1 ? STUDENT_PAYMENT_METHODS[0]! : null,
+  );
 
-  const priceLabel = formatPrice(priceCents);
+  const chargeCents = salePriceCents(priceCents);
   const stripeReady = stripeAvailable;
 
   async function submitCheckout(method: PaymentMethod) {
@@ -71,7 +77,7 @@ export function CheckoutModal({
 
       if (!res.ok) {
         setError(data.error ?? "Checkout failed");
-        setStep("choose");
+        setStep(STUDENT_PAYMENT_METHODS.length === 1 ? "instructions" : "choose");
         return;
       }
 
@@ -92,7 +98,7 @@ export function CheckoutModal({
           paymentId: data.paymentId,
           reference: data.reference,
           method,
-          amountCents: data.amountCents ?? priceCents,
+          amountCents: data.amountCents ?? chargeCents,
           courseTitle: data.courseTitle ?? courseTitle,
           courseSlug: data.courseSlug ?? courseSlug,
         });
@@ -115,10 +121,10 @@ export function CheckoutModal({
       }
 
       setError("Unexpected checkout response");
-      setStep("choose");
+      setStep(STUDENT_PAYMENT_METHODS.length === 1 ? "instructions" : "choose");
     } catch {
       setError("Something went wrong. Please try again.");
-      setStep("choose");
+      setStep(STUDENT_PAYMENT_METHODS.length === 1 ? "instructions" : "choose");
     }
   }
 
@@ -164,7 +170,10 @@ export function CheckoutModal({
             <h2 id="checkout-title" className="text-xl font-bold text-white">
               {courseTitle}
             </h2>
-            <p className="mt-1 text-sm text-nova-cyan-light/80">{priceLabel} · full path access</p>
+            <p className="mt-1 text-sm text-nova-cyan-light/80">
+              <SalePriceFromCents listCents={priceCents} showBadge />
+              <span className="ml-1">· full path access</span>
+            </p>
           </div>
           <button
             type="button"
@@ -185,8 +194,8 @@ export function CheckoutModal({
         {step === "choose" && (
           <div className="space-y-3">
             <p className="text-sm text-nova-cyan-light/85">
-              Choose how you&apos;d like to pay. Your mission path unlocks as soon as payment is
-              confirmed — usually instantly for cards, within 24 hours for Zelle/Venmo.
+              Pay with PayPal. Your mission path unlocks once payment is confirmed — usually within
+              24 hours.
             </p>
             {STUDENT_PAYMENT_METHODS.map((method) => (
               <button
@@ -223,6 +232,13 @@ export function CheckoutModal({
                     {instructions.account}
                   </p>
                 )}
+                <p className="text-sm text-nova-cyan-light/85">
+                  Amount due:{" "}
+                  <strong className="text-white">{formatPrice(chargeCents)}</strong>
+                  {chargeCents < priceCents && (
+                    <span className="ml-2 text-white/45 line-through">{formatPrice(priceCents)}</span>
+                  )}
+                </p>
                 <ol className="list-decimal space-y-2 pl-5 text-sm text-nova-cyan-light/85">
                   {instructions.steps.map((s) => (
                     <li key={s}>{s}</li>
@@ -232,14 +248,14 @@ export function CheckoutModal({
             )}
             <div>
               <label htmlFor="payment-ref" className="nova-label">
-                Your reference (name or confirmation #)
+                Your PayPal confirmation or name
               </label>
               <input
                 id="payment-ref"
                 className="nova-input"
                 value={reference}
                 onChange={(e) => setReference(e.target.value)}
-                placeholder="e.g. Alex Nova or Zelle confirmation"
+                placeholder="e.g. PayPal transaction ID or your name"
               />
             </div>
             {selectedMethod.id === "OTHER" && (
@@ -252,17 +268,19 @@ export function CheckoutModal({
                   className="nova-input"
                   value={otherNote}
                   onChange={(e) => setOtherNote(e.target.value)}
-                  placeholder="CashApp, PayPal, etc."
+                  placeholder="Describe your method"
                 />
               </div>
             )}
             <div className="flex flex-wrap gap-2">
               <button type="button" onClick={submitManualPayment} className="nova-btn-primary">
-                Submit payment request
+                I&apos;ve paid / submit PayPal request
               </button>
-              <button type="button" onClick={() => setStep("choose")} className="nova-btn-secondary">
-                Back
-              </button>
+              {STUDENT_PAYMENT_METHODS.length > 1 && (
+                <button type="button" onClick={() => setStep("choose")} className="nova-btn-secondary">
+                  Back
+                </button>
+              )}
             </div>
           </div>
         )}
@@ -272,7 +290,8 @@ export function CheckoutModal({
             <div className="rounded-xl border border-nova-green/30 bg-nova-green/10 px-4 py-3 text-sm text-nova-green">
               Payment request received! Include reference{" "}
               <strong className="font-mono">{pending.reference}</strong> with your{" "}
-              {selectedMethod?.label ?? "payment"}. We&apos;ll email you when your path unlocks.
+              {selectedMethod?.label ?? "PayPal"} payment. We&apos;ll email you when your path
+              unlocks.
             </div>
             {instructions && (
               <>

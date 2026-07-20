@@ -12,6 +12,7 @@ import {
   type ProgramVertical,
 } from "@/data/courses";
 import { cn } from "@/lib/utils";
+import { SaleTuitionDisplay } from "@/components/pricing/sale-price";
 
 const FILTERS: { id: "all" | ProgramVertical; label: string }[] = [
   { id: "all", label: "All programs" },
@@ -129,9 +130,11 @@ export function CatalogPageClient() {
                 >
                   <h3 className="text-lg font-bold text-white">{bundle.title}</h3>
                   <p className="mt-2 text-sm text-white/70">{bundle.description}</p>
-                  <p className="mt-4 text-2xl font-black text-nova-cyan">{bundle.tuitionLabel}</p>
+                  <p className="mt-4 text-2xl font-black text-nova-cyan">
+                    <SaleTuitionDisplay listUsd={bundle.tuitionUsd} />
+                  </p>
                   <p className="mt-1 text-xs text-nova-green">
-                    Save ~${bundle.savingsUsd} vs individual enrollment
+                    Plus 50% sitewide sale on list price · save more vs individual enrollment
                   </p>
                 </div>
               ))}

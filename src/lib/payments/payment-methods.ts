@@ -1,11 +1,36 @@
 import type { PaymentMethod } from "@prisma/client";
 
-/** Zelle recipient — phone or email */
+/** Zelle recipient — phone or email (kept for institutional / legacy) */
 export const ZELLE_PAYMENT_CONTACT = {
   phone: "954-997-3487",
   email: "hectorporras0916@gmail.com",
   label: "954-997-3487 or hectorporras0916@gmail.com",
 };
+
+/**
+ * PayPal receive details — set in Vercel / .env (no secrets required for friends & family / me links).
+ *   NEXT_PUBLIC_PAYPAL_EMAIL="you@business.com"
+ *   NEXT_PUBLIC_PAYPAL_ME="https://paypal.me/YourHandle"   (optional)
+ */
+export const PAYPAL_PAYMENT_CONTACT = {
+  email: (process.env.NEXT_PUBLIC_PAYPAL_EMAIL ?? "").trim(),
+  meLink: (process.env.NEXT_PUBLIC_PAYPAL_ME ?? "").trim(),
+};
+
+export function isPayPalConfigured(): boolean {
+  return Boolean(PAYPAL_PAYMENT_CONTACT.email || PAYPAL_PAYMENT_CONTACT.meLink);
+}
+
+export function paypalReceiveLabel(): string {
+  if (PAYPAL_PAYMENT_CONTACT.email && PAYPAL_PAYMENT_CONTACT.meLink) {
+    return `${PAYPAL_PAYMENT_CONTACT.email} · ${PAYPAL_PAYMENT_CONTACT.meLink}`;
+  }
+  return (
+    PAYPAL_PAYMENT_CONTACT.email ||
+    PAYPAL_PAYMENT_CONTACT.meLink ||
+    "NOVA STEM HUB PayPal (configure NEXT_PUBLIC_PAYPAL_EMAIL)"
+  );
+}
 
 export type PaymentMethodOption = {
   id: PaymentMethod;
@@ -15,32 +40,21 @@ export type PaymentMethodOption = {
   usesStripe?: boolean;
 };
 
-/** B2C — students never see wire transfer */
+/**
+ * B2C student checkout — PayPal only for now.
+ * Stripe / Zelle / Venmo remain in code for institutional + future re-enable.
+ */
 export const STUDENT_PAYMENT_METHODS: PaymentMethodOption[] = [
   {
-    id: "STRIPE",
-    label: "Credit or debit card",
-    description: "Secure checkout — Visa, Mastercard, Amex, and debit cards accepted.",
-    usesStripe: true,
-  },
-  {
-    id: "ZELLE",
-    label: "Zelle",
-    description: `Send payment via Zelle to ${ZELLE_PAYMENT_CONTACT.label} — we verify and unlock your path within 24 hours.`,
-  },
-  {
-    id: "VENMO",
-    label: "Venmo",
-    description: "Pay @NOVASTEMHub — include your reference code so we can match your enrollment.",
-  },
-  {
-    id: "OTHER",
-    label: "Other method",
-    description: "CashApp, PayPal, or another method — tell us in the reference field.",
+    id: "PAYPAL",
+    label: "PayPal",
+    description: isPayPalConfigured()
+      ? `Send the exact tuition via PayPal to ${paypalReceiveLabel()} — include your reference code. We verify and unlock within 24 hours.`
+      : "Pay with PayPal — send the exact tuition amount and include your reference code. We verify and unlock within 24 hours.",
   },
 ];
 
-/** B2B — institutions include wire transfer */
+/** B2B — institutions include wire transfer (unchanged for partnership flow) */
 export const INSTITUTION_PAYMENT_METHODS: PaymentMethodOption[] = [
   {
     id: "STRIPE",
@@ -64,6 +78,13 @@ export const INSTITUTION_PAYMENT_METHODS: PaymentMethodOption[] = [
     description: "Venmo for business accounts when applicable.",
   },
   {
+    id: "PAYPAL",
+    label: "PayPal",
+    description: isPayPalConfigured()
+      ? `PayPal to ${paypalReceiveLabel()} for pilot or licensing deposits.`
+      : "PayPal for institutional deposits when arranged with partnerships.",
+  },
+  {
     id: "OTHER",
     label: "Other",
     description: "Purchase order, check, or custom arrangement — describe below.",
@@ -76,7 +97,38 @@ export type PaymentInstructionBlock = {
   account?: string;
 };
 
+function buildPaypalInstructions(audience: "student" | "institution"): PaymentInstructionBlock {
+  const account = isPayPalConfigured() ? paypalReceiveLabel() : undefined;
+  const steps =
+    audience === "student"
+      ? [
+          "Open PayPal (app or paypal.com) and choose Send.",
+          isPayPalConfigured()
+            ? `Send the exact discounted tuition to ${paypalReceiveLabel()}.`
+            : "Send the exact discounted tuition to the NOVA STEM HUB PayPal account provided by enrollments.",
+          "Prefer Friends & Family if available, or Goods & Services — paste your reference code in the note.",
+          "After you submit this request, keep a screenshot of the PayPal confirmation.",
+          "We verify within 24 hours (often same day) and unlock your mission path.",
+        ]
+      : [
+          "Send the deposit from your institution's PayPal Business account when possible.",
+          isPayPalConfigured()
+            ? `Pay ${paypalReceiveLabel()}.`
+            : "Use the PayPal account emailed with your invoice.",
+          "Paste the reference code in the payment note.",
+          "Email partnerships@steminnovationacademy.org with confirmation.",
+          "We confirm within 1–2 business days and schedule onboarding.",
+        ];
+
+  return {
+    heading: "Pay with PayPal",
+    account,
+    steps,
+  };
+}
+
 export const PAYMENT_INSTRUCTIONS: Partial<Record<PaymentMethod, PaymentInstructionBlock>> = {
+  PAYPAL: buildPaypalInstructions("student"),
   ZELLE: {
     heading: "Pay with Zelle",
     account: ZELLE_PAYMENT_CONTACT.label,
@@ -101,7 +153,7 @@ export const PAYMENT_INSTRUCTIONS: Partial<Record<PaymentMethod, PaymentInstruct
     heading: "Alternative payment",
     steps: [
       "Contact enrollments@steminnovationacademy.org with your reference code.",
-      "Include how you'd like to pay (CashApp, PayPal, etc.).",
+      "Include how you'd like to pay.",
       "Our team will reply with instructions within one business day.",
       "Your mission path unlocks when payment is confirmed.",
     ],
@@ -143,6 +195,7 @@ export const INSTITUTION_PAYMENT_INSTRUCTIONS: Partial<
       "Our partnerships team confirms and schedules discovery call.",
     ],
   },
+  PAYPAL: buildPaypalInstructions("institution"),
   OTHER: {
     heading: "Purchase order or custom arrangement",
     steps: [
@@ -173,6 +226,7 @@ export function isInstitutionPaymentMethod(id: string): id is PaymentMethod {
 }
 
 export function formatPaymentMethodLabel(method: PaymentMethod): string {
+  if (method === "PAYPAL") return "PayPal";
   const student = getStudentPaymentMethod(method);
   if (student) return student.label;
   const inst = INSTITUTION_PAYMENT_METHODS.find((m) => m.id === method);

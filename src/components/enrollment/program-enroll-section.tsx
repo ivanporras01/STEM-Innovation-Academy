@@ -2,8 +2,9 @@ import Link from "next/link";
 import { EnrollButton } from "@/components/courses/enroll-button";
 import { CertificatePreviewPromo } from "@/components/certificates/certificate-preview-promo";
 import { FinalAssessmentPanel } from "@/components/certificates/final-assessment-panel";
+import { SalePriceFromCents } from "@/components/pricing/sale-price";
 import { resolveCertificateLocale } from "@/lib/certificates/locale";
-import { formatPrice, hasCourseAccess } from "@/lib/enrollment-access";
+import { hasCourseAccess } from "@/lib/enrollment-access";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import type { NovaProgram } from "@/data/courses/types";
@@ -47,8 +48,8 @@ export async function ProgramEnrollSection({
     <section className="nova-glass-island border-2 border-nova-cyan/25 p-6 sm:p-8">
       {justRegistered && (
         <div className="mb-5 rounded-xl border border-nova-green/30 bg-nova-green/10 px-4 py-3 text-sm text-nova-green">
-          <strong className="text-white">Welcome, Explorer!</strong> Your account is ready — choose
-          a payment method below to unlock this mission path.
+          <strong className="text-white">Welcome, Explorer!</strong> Your account is ready — complete
+          PayPal payment below to unlock this mission path.
         </div>
       )}
       <p className="text-xs font-bold uppercase tracking-[0.2em] text-nova-cyan">
@@ -57,14 +58,14 @@ export async function ProgramEnrollSection({
       <h2 className="mt-2 text-xl font-black text-white">{copy.title}</h2>
       <p className="mt-2 text-sm text-nova-cyan-light/85">
         Tuition:{" "}
-        <strong className="text-white">{program.tuitionLabel}</strong> — pay by credit/debit
-        card, Zelle, Venmo, or other method. Access unlocks when payment is confirmed.
+        <SalePriceFromCents listCents={priceCents} className="align-middle" /> — pay with PayPal.
+        Access unlocks when payment is confirmed (usually within 24 hours).
       </p>
 
       <ol className="mt-5 grid gap-3 sm:grid-cols-3">
         {[
           { step: "1", title: "Create account", body: "Free Explorer registration" },
-          { step: "2", title: "Choose payment", body: "Card, Zelle, Venmo, or other" },
+          { step: "2", title: "Pay with PayPal", body: "Send tuition + reference code" },
           { step: "3", title: "Start learning", body: "Full program access unlocked" },
         ].map((item) => (
           <li
@@ -87,12 +88,13 @@ export async function ProgramEnrollSection({
             enrolled={enrolled}
             pendingPayment={pendingPayment}
             priceCents={priceCents}
-            stripeAvailable={Boolean(process.env.STRIPE_SECRET_KEY?.startsWith("sk_"))}
+            stripeAvailable={false}
           />
         ) : (
           <>
-            <Link href={registerHref} className="nova-btn-primary nova-btn-glow">
-              Create account &amp; enroll — {formatPrice(priceCents)}
+            <Link href={registerHref} className="nova-btn-primary nova-btn-glow inline-flex flex-wrap items-center gap-2">
+              <span>Create account &amp; enroll —</span>
+              <SalePriceFromCents listCents={priceCents} showBadge={false} />
             </Link>
             <Link href={loginHref} className="nova-btn-secondary border-white/20 text-white">
               Already have an account? Login

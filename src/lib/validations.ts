@@ -164,7 +164,9 @@ const partnershipApplyFieldsEn = {
   message: z
     .string()
     .min(30, "Tell us about your goals and timeline (minimum 30 characters)"),
-  paymentMethod: z.enum(["STRIPE", "WIRE_TRANSFER", "ZELLE", "VENMO", "OTHER"]).optional(),
+  paymentMethod: z
+    .enum(["STRIPE", "WIRE_TRANSFER", "ZELLE", "VENMO", "PAYPAL", "OTHER"])
+    .optional(),
   acceptTerms: z.literal(true, {
     errorMap: () => ({ message: "You must accept the partnership terms" }),
   }),
@@ -209,7 +211,9 @@ const partnershipApplyFieldsEs = {
   message: z
     .string()
     .min(30, "Cuéntanos tus objetivos y cronograma (mínimo 30 caracteres)"),
-  paymentMethod: z.enum(["STRIPE", "WIRE_TRANSFER", "ZELLE", "VENMO", "OTHER"]).optional(),
+  paymentMethod: z
+    .enum(["STRIPE", "WIRE_TRANSFER", "ZELLE", "VENMO", "PAYPAL", "OTHER"])
+    .optional(),
   acceptTerms: z.literal(true, {
     errorMap: () => ({ message: "Debes aceptar los términos del partnership" }),
   }),

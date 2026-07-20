@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import type { NovaProgram, ProgramVertical } from "@/data/courses";
 import { enrollPathForProgram } from "@/lib/program-enrollment";
 import { localizeProgram } from "@/lib/program-locale-copy";
+import { SaleTuitionDisplay } from "@/components/pricing/sale-price";
 
 const VERTICAL_STYLE: Record<
   ProgramVertical,
@@ -95,7 +96,9 @@ export function CatalogProgramCard({ program }: Props) {
 
       <div className="mt-4 rounded-xl border border-white/10 bg-white/5 px-4 py-3">
         <p className="text-[10px] font-bold uppercase tracking-widest text-white/50">Tuition</p>
-        <p className="mt-0.5 text-xl font-black text-white">{program.tuitionLabel}</p>
+        <div className="mt-0.5 text-xl font-black text-white">
+          <SaleTuitionDisplay listUsd={program.tuitionUsd} />
+        </div>
         {program.deliveryNote && (
           <p className="mt-1 text-[11px] text-white/55">{program.deliveryNote}</p>
         )}

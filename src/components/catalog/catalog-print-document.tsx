@@ -6,6 +6,7 @@ import {
   type ProgramVertical,
 } from "@/data/courses";
 import { localizeProgram } from "@/lib/program-locale-copy";
+import { COURSE_DISCOUNT_PERCENT, formatSaleTuitionLabel, isCourseSaleActive } from "@/lib/pricing";
 
 const VERTICAL_LABELS: Record<ProgramVertical, string> = {
   school: "NOVA School — Youth Electives (9)",
@@ -24,6 +25,11 @@ const PRICING_GUIDE = [
   { tier: "NOVA Language (each)", range: "$449 / program" },
   { tier: "Language Trilingual Pack (EN + ES + PT)", range: "$999" },
 ];
+
+function printTuition(program: NovaProgram): string {
+  if (!isCourseSaleActive()) return program.tuitionLabel;
+  return `${formatSaleTuitionLabel(program.tuitionUsd, "")} (${COURSE_DISCOUNT_PERCENT}% off · was $${program.tuitionUsd.toLocaleString("en-US")})`;
+}
 
 function groupByVertical(programs: readonly NovaProgram[]) {
   return (["school", "college", "language"] as const).map((vertical) => ({
@@ -47,7 +53,7 @@ function ProgramBlock({ program }: { program: NovaProgram }) {
           <h3>{copy.title}</h3>
           <p className="tagline">{copy.tagline}</p>
         </div>
-        <div className="tuition-badge">{program.tuitionLabel}</div>
+        <div className="tuition-badge">{printTuition(program)}</div>
       </header>
 
       <p className="description">{copy.description.replace(/\*\*/g, "")}</p>
@@ -63,7 +69,7 @@ function ProgramBlock({ program }: { program: NovaProgram }) {
         </div>
         <div>
           <dt>Tuition (USD)</dt>
-          <dd>${program.tuitionUsd.toLocaleString("en-US")}</dd>
+          <dd>{printTuition(program)}</dd>
         </div>
         <div>
           <dt>Access</dt>
@@ -207,11 +213,23 @@ export function CatalogPrintDocument() {
                 <h3>{bundle.title}</h3>
                 <p className="tagline">{bundle.description}</p>
               </div>
-              <div className="tuition-badge">{bundle.tuitionLabel}</div>
+              <div className="tuition-badge">
+                {isCourseSaleActive()
+                  ? `${formatSaleTuitionLabel(bundle.tuitionUsd, "")} (${COURSE_DISCOUNT_PERCENT}% off)`
+                  : bundle.tuitionLabel}
+              </div>
             </header>
             <p>
-              <strong>${bundle.tuitionUsd.toLocaleString("en-US")}</strong>
-              {bundle.savingsUsd ? ` · save ~$${bundle.savingsUsd} vs individual enrollment` : null}
+              <strong>
+                {isCourseSaleActive()
+                  ? formatSaleTuitionLabel(bundle.tuitionUsd, "")
+                  : `$${bundle.tuitionUsd.toLocaleString("en-US")}`}
+              </strong>
+              {isCourseSaleActive() ? (
+                <span> · list ${bundle.tuitionUsd.toLocaleString("en-US")}</span>
+              ) : bundle.savingsUsd ? (
+                ` · save ~$${bundle.savingsUsd} vs individual enrollment`
+              ) : null}
             </p>
             <p className="bundle-slugs">Includes: {bundle.programSlugs.join(", ")}</p>
           </article>
@@ -228,8 +246,8 @@ export function CatalogPrintDocument() {
           <a href="https://quantum-workforce-academy.vercel.app">quantum-workforce-academy.vercel.app</a>
         </p>
         <p className="fine-print">
-          Tuition shown are suggested list prices for institutional and direct enrollment. Scholarships and
-          B2B licensing available. Prices subject to change.
+          Tuition shown include the current {COURSE_DISCOUNT_PERCENT}% sitewide sale (list price struck in
+          online catalog). Scholarships and B2B licensing available. Prices subject to change.
         </p>
       </footer>
     </div>

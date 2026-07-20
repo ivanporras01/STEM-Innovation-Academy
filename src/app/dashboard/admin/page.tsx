@@ -194,7 +194,7 @@ export default async function AdminDashboardPage() {
 
             <Link href="/dashboard/admin/payments" className="nova-btn-secondary justify-start">
 
-              Pending Payments (Zelle/Venmo)
+              Pending Payments (PayPal)
 
             </Link>
 

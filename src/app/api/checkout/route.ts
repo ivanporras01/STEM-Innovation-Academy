@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { ensureCourseProduct } from "@/lib/course-products";
 import { isStudentPaymentMethod } from "@/lib/payments/payment-methods";
+import { salePriceCents } from "@/lib/pricing";
 import { getStripe, getSiteUrl, isStripeConfigured } from "@/lib/stripe";
 import type { PaymentMethod } from "@prisma/client";
 
@@ -24,7 +25,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Course ID required" }, { status: 400 });
     }
 
-    const method = (rawMethod ?? "STRIPE") as PaymentMethod;
+    const method = (rawMethod ?? "PAYPAL") as PaymentMethod;
     if (!isStudentPaymentMethod(method)) {
       return NextResponse.json(
         { error: "Invalid payment method for student checkout" },
@@ -50,8 +51,9 @@ export async function POST(request: Request) {
     }
 
     const product = await ensureCourseProduct(course.id, course.slug);
+    const chargeCents = salePriceCents(product.priceCents);
 
-    if (product.priceCents <= 0) {
+    if (chargeCents <= 0) {
       const enrollment = await db.enrollment.upsert({
         where: { userId_courseId: { userId: session.user.id, courseId } },
         update: { status: "ACTIVE" },
@@ -62,13 +64,13 @@ export async function POST(request: Request) {
 
     const paymentNotes = [reference && `Ref: ${reference}`, notes].filter(Boolean).join(" · ");
 
-    // Manual payment methods — Zelle, Venmo, Other
+    // Manual payment methods — PayPal (and legacy Zelle/Venmo/Other if re-enabled)
     if (method !== "STRIPE") {
       const payment = await db.payment.create({
         data: {
           userId: session.user.id,
           courseId,
-          amountCents: product.priceCents,
+          amountCents: chargeCents,
           currency: product.currency,
           method,
           status: "PENDING",
@@ -91,14 +93,15 @@ export async function POST(request: Request) {
         pending: true,
         paymentId: payment.id,
         reference: buildReference(payment.id),
-        amountCents: product.priceCents,
+        amountCents: chargeCents,
+        listPriceCents: product.priceCents,
         courseSlug: course.slug,
         courseTitle: course.title,
         method,
       });
     }
 
-    // Card checkout via Stripe
+    // Card checkout via Stripe (not offered in student UI while PayPal-only)
     const stripe = getStripe();
     const siteUrl = getSiteUrl();
 
@@ -107,7 +110,7 @@ export async function POST(request: Request) {
         data: {
           userId: session.user.id,
           courseId,
-          amountCents: product.priceCents,
+          amountCents: chargeCents,
           currency: product.currency,
           method: "STRIPE",
           status: "PENDING",
@@ -134,7 +137,7 @@ export async function POST(request: Request) {
           {
             price_data: {
               currency: product.currency,
-              unit_amount: product.priceCents,
+              unit_amount: chargeCents,
               product_data: {
                 name: course.title,
                 description: `NOVA Mission Path — ${course.title}`,
@@ -165,7 +168,7 @@ export async function POST(request: Request) {
       data: {
         userId: session.user.id,
         courseId,
-        amountCents: product.priceCents,
+        amountCents: chargeCents,
         currency: product.currency,
         method: "STRIPE",
         status: "PENDING",
@@ -187,7 +190,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       demo: true,
       paymentId: payment.id,
-      amountCents: product.priceCents,
+      amountCents: chargeCents,
       courseSlug: course.slug,
       courseTitle: course.title,
     });

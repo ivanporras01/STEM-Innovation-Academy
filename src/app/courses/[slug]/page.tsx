@@ -9,7 +9,8 @@ import { MissionPathHero } from "@/components/courses/mission-path-hero";
 import { SubmissionForm } from "@/components/courses/submission-form";
 import { getCourseBySlug, getCourseProgress } from "@/lib/courses";
 import { ensureCourseProduct } from "@/lib/course-products";
-import { formatPrice, hasCourseAccess } from "@/lib/enrollment-access";
+import { hasCourseAccess } from "@/lib/enrollment-access";
+import { SalePriceFromCents } from "@/components/pricing/sale-price";
 import { getPathwayMeta } from "@/lib/pathways/meta";
 import { getLmsCoursePublicPresentation } from "@/lib/program-locale-copy";
 import { auth } from "@/lib/auth";
@@ -186,15 +187,16 @@ export default async function CourseDetailPage({
                   enrolled={enrolled}
                   pendingPayment={pendingPayment}
                   priceCents={priceCents}
-                  stripeAvailable={Boolean(process.env.STRIPE_SECRET_KEY?.startsWith("sk_"))}
+                  stripeAvailable={false}
                 />
               ) : (
                 <div className="flex flex-wrap gap-3">
                   <Link
                     href={`/register?callbackUrl=${encodeURIComponent(`/courses/${slug}`)}`}
-                    className="nova-btn-primary nova-btn-glow"
+                    className="nova-btn-primary nova-btn-glow inline-flex flex-wrap items-center gap-2"
                   >
-                    Register &amp; enroll — {formatPrice(priceCents)}
+                    <span>Register &amp; enroll —</span>
+                    <SalePriceFromCents listCents={priceCents} showBadge={false} />
                   </Link>
                   <Link
                     href={`/login?callbackUrl=${encodeURIComponent(`/courses/${slug}`)}`}

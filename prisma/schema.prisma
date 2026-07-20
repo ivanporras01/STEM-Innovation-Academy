@@ -49,6 +49,7 @@ enum PaymentMethod {
   WIRE_TRANSFER
   ZELLE
   VENMO
+  PAYPAL
   OTHER
 }
 

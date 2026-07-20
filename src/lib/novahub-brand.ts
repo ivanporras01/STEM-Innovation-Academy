@@ -48,7 +48,7 @@ export const NOVA_STEM_HUB = {
     verify: "https://verify.novastemhub.education",
   },
   deliveryModel: {
-    b2c: "Direct enrollment · Stripe",
+    b2c: "Direct enrollment · PayPal",
     b2b: "Institutional license · curriculum + platform + facilitator guide",
   },
   path: "/",
