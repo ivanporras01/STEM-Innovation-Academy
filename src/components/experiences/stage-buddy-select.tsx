@@ -37,7 +37,7 @@ function BuddyCard({
       type="button"
       onClick={onSelect}
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-2xl border-2 text-left transition-all duration-300",
+        "group relative flex min-w-0 flex-col overflow-hidden rounded-2xl border-2 text-left transition-all duration-300",
         selected
           ? "border-[var(--exp-accent)] -translate-y-1 scale-[1.02] bg-[#0d1b3d]/90 ring-4 ring-[var(--exp-accent)]/25"
           : "border-white/15 bg-[#0a1628]/70 hover:border-[var(--exp-accent)]/40 hover:bg-[#0d1b3d]/80"
@@ -45,7 +45,7 @@ function BuddyCard({
     >
       <div
         className={cn(
-          "relative overflow-hidden transition-transform duration-300 group-hover:scale-[1.02]",
+          "relative min-w-0 overflow-hidden",
           selected && b.glow
         )}
       >
@@ -61,7 +61,7 @@ function BuddyCard({
           </span>
         )}
       </div>
-      <div className="flex flex-1 flex-col p-3">
+      <div className="flex min-w-0 flex-1 flex-col p-3">
         <strong className="text-sm text-white">{b.name}</strong>
         <span className="text-[11px] text-white/60">{b.subtitle}</span>
         <span className="mt-1 text-[9px] font-bold uppercase tracking-wider text-[var(--exp-accent-2)]">

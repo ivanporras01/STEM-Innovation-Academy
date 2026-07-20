@@ -15,7 +15,8 @@ const sizeClasses = {
   md: "h-[72px] w-[72px] rounded-[18px]",
   lg: "h-24 w-24 rounded-3xl",
   xl: "h-28 w-28 rounded-3xl",
-  card: "aspect-square w-full rounded-none",
+  /** Portrait frame matching buddy art (~2:3) so faces stay proportional in the grid. */
+  card: "aspect-[3/4] w-full rounded-none",
 };
 
 export function BuddyAvatar({ src, alt, className, size = "md" }: Props) {
@@ -40,18 +41,22 @@ export function BuddyAvatar({ src, alt, className, size = "md" }: Props) {
   return (
     <div
       className={cn(
-        "relative shrink-0 overflow-hidden bg-gradient-to-br from-slate-100 to-blue-50",
+        "relative isolate shrink-0 overflow-hidden bg-[#0a1628]",
         sizeClasses[size],
-        className
+        className,
       )}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={src}
         alt={alt}
-        className={cn("buddy-portrait h-full w-full", size === "card" && "buddy-portrait--card")}
+        decoding="async"
         draggable={false}
         onError={() => setFailed(true)}
+        className={cn(
+          "buddy-portrait pointer-events-none absolute inset-0 h-full w-full max-w-none object-cover object-top",
+          size === "card" && "buddy-portrait--card",
+        )}
       />
     </div>
   );
