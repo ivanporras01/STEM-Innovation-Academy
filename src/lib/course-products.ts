@@ -24,12 +24,17 @@ export async function ensureCourseProduct(
   slug: string,
   priceCentsOverride?: number,
 ) {
-  const priceCents =
-    priceCentsOverride ?? DEFAULT_PRICES_CENTS[slug] ?? 19900;
+  const existing = await db.courseProduct.findUnique({ where: { courseId } });
+  if (existing) return existing;
+
+  const priceCents = priceCentsOverride ?? DEFAULT_PRICES_CENTS[slug];
+  if (priceCents === undefined) {
+    throw new Error(`No canonical price configured for course: ${slug}`);
+  }
 
   return db.courseProduct.upsert({
     where: { courseId },
-    update: { priceCents, active: true },
+    update: {},
     create: { courseId, priceCents, currency: "usd" },
   });
 }

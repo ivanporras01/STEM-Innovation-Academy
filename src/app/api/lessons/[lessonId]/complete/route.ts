@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { hasCourseAccess } from "@/lib/enrollment-access";
 
 export async function POST(
   _request: Request,
@@ -14,6 +15,26 @@ export async function POST(
   const { lessonId } = await params;
 
   try {
+    const lesson = await db.lesson.findUnique({
+      where: { id: lessonId },
+      select: { module: { select: { courseId: true } } },
+    });
+    if (!lesson) {
+      return NextResponse.json({ error: "Mission not found" }, { status: 404 });
+    }
+
+    const enrollment = await db.enrollment.findUnique({
+      where: {
+        userId_courseId: {
+          userId: session.user.id,
+          courseId: lesson.module.courseId,
+        },
+      },
+    });
+    if (!hasCourseAccess(enrollment)) {
+      return NextResponse.json({ error: "Active enrollment required" }, { status: 403 });
+    }
+
     await db.lessonProgress.upsert({
       where: {
         userId_lessonId: {

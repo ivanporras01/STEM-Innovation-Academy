@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { activateEnrollmentFromPayment } from "@/lib/payments/activate-enrollment";
@@ -44,10 +43,39 @@ export async function POST(
     if (application.status === "APPROVED") {
       return NextResponse.json({ error: "Already approved" }, { status: 409 });
     }
+    if (application.paymentStatus !== "COMPLETED") {
+      return NextResponse.json(
+        { error: "Verified institutional payment is required before provisioning" },
+        { status: 409 }
+      );
+    }
 
     const method = paymentMethod ?? application.paymentMethod ?? "OTHER";
     if (paymentMethod && !isInstitutionPaymentMethod(paymentMethod)) {
       return NextResponse.json({ error: "Invalid institution payment method" }, { status: 400 });
+    }
+
+    const emails = (bulkEmails ?? [])
+      .map((email: string) => email.trim().toLowerCase())
+      .filter(Boolean);
+    const requiredEmails = [
+      ...emails,
+      ...(createSchoolAdmin ? [application.email.trim().toLowerCase()] : []),
+    ];
+    const registeredUsers = await db.user.findMany({
+      where: { email: { in: requiredEmails } },
+      select: { id: true, email: true },
+    });
+    const registeredByEmail = new Map(registeredUsers.map((user) => [user.email, user]));
+    const unregisteredEmails = requiredEmails.filter((email) => !registeredByEmail.has(email));
+    if (unregisteredEmails.length > 0) {
+      return NextResponse.json(
+        {
+          error: "All institutional users must create their NOVA account before provisioning",
+          unregisteredEmails,
+        },
+        { status: 409 }
+      );
     }
 
     const schoolCode = `NOVA-${application.institutionName
@@ -67,47 +95,24 @@ export async function POST(
     let schoolAdminId: string | undefined;
 
     if (createSchoolAdmin) {
-      const passwordHash = await bcrypt.hash("nova2026", 12);
-      const adminUser = await db.user.upsert({
-        where: { email: application.email },
-        update: { role: "SCHOOL_ADMIN", schoolId: school.id },
-        create: {
-          email: application.email,
-          passwordHash,
-          firstName: application.contactName.split(" ")[0] ?? application.contactName,
-          lastName: application.contactName.split(" ").slice(1).join(" ") || "Admin",
-          role: "SCHOOL_ADMIN",
-          schoolId: school.id,
-        },
+      const adminUser = await db.user.update({
+        where: { email: application.email.trim().toLowerCase() },
+        data: { role: "SCHOOL_ADMIN", schoolId: school.id },
       });
       schoolAdminId = adminUser.id;
     }
-
-    const emails = (bulkEmails ?? [])
-      .map((e: string) => e.trim().toLowerCase())
-      .filter(Boolean);
 
     const courses =
       courseIds && courseIds.length > 0
         ? await db.course.findMany({ where: { id: { in: courseIds }, published: true } })
         : await db.course.findMany({ where: { published: true } });
 
-    const passwordHash = await bcrypt.hash("nova2026", 12);
     let enrolledCount = 0;
 
     for (const email of emails) {
-      const nameParts = email.split("@")[0]?.split(".") ?? ["Explorer"];
-      const user = await db.user.upsert({
+      const user = await db.user.update({
         where: { email },
-        update: { schoolId: school.id },
-        create: {
-          email,
-          passwordHash,
-          firstName: nameParts[0] ?? "Explorer",
-          lastName: nameParts[1] ?? "Student",
-          role: "STUDENT",
-          schoolId: school.id,
-        },
+        data: { schoolId: school.id },
       });
 
       for (const course of courses) {
@@ -129,7 +134,7 @@ export async function POST(
         status: "APPROVED",
         schoolId: school.id,
         paymentMethod: method,
-        paymentStatus: "PENDING",
+        paymentStatus: "COMPLETED",
         paymentNotes: paymentNotes ?? application.paymentNotes,
         reviewedAt: new Date(),
         reviewedBy: session.user.email,

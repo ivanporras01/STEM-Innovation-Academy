@@ -26,66 +26,73 @@ export async function activateEnrollmentFromPayment({
 }: ActivateParams) {
   const now = new Date();
 
-  const payment = await db.payment.create({
-    data: {
-      userId,
-      courseId,
-      amountCents,
-      method,
-      status: "COMPLETED",
-      stripeSessionId,
-      stripePaymentId,
-      notes,
-      paidAt: now,
-    },
-  });
+  return db.$transaction(async (tx) => {
+    const payment = await tx.payment.create({
+      data: {
+        userId,
+        courseId,
+        amountCents,
+        method,
+        status: "COMPLETED",
+        stripeSessionId,
+        stripePaymentId,
+        notes,
+        paidAt: now,
+      },
+    });
 
-  const enrollment = await db.enrollment.upsert({
-    where: { userId_courseId: { userId, courseId } },
-    update: {
-      status: enrollmentStatus,
-      paymentId: payment.id,
-    },
-    create: {
-      userId,
-      courseId,
-      status: enrollmentStatus,
-      paymentId: payment.id,
-    },
-  });
+    const enrollment = await tx.enrollment.upsert({
+      where: { userId_courseId: { userId, courseId } },
+      update: {
+        status: enrollmentStatus,
+        paymentId: payment.id,
+      },
+      create: {
+        userId,
+        courseId,
+        status: enrollmentStatus,
+        paymentId: payment.id,
+      },
+    });
 
-  return { payment, enrollment };
+    return { payment, enrollment };
+  });
 }
 
 /** Complete a pending payment and activate enrollment (demo or admin) */
 export async function completePendingPayment(paymentId: string, userId?: string) {
-  const payment = await db.payment.findFirst({
-    where: {
-      id: paymentId,
-      status: "PENDING",
-      ...(userId ? { userId } : {}),
-    },
+  return db.$transaction(async (tx) => {
+    const payment = await tx.payment.findFirst({
+      where: {
+        id: paymentId,
+        status: "PENDING",
+        ...(userId ? { userId } : {}),
+      },
+    });
+
+    if (!payment) return null;
+
+    const paidAt = new Date();
+    const claimed = await tx.payment.updateMany({
+      where: { id: payment.id, status: "PENDING" },
+      data: { status: "COMPLETED", paidAt },
+    });
+    if (claimed.count !== 1) return null;
+
+    const enrollment = await tx.enrollment.upsert({
+      where: { userId_courseId: { userId: payment.userId, courseId: payment.courseId } },
+      update: { status: "ACTIVE", paymentId: payment.id },
+      create: {
+        userId: payment.userId,
+        courseId: payment.courseId,
+        status: "ACTIVE",
+        paymentId: payment.id,
+      },
+    });
+
+    return {
+      payment: { ...payment, status: "COMPLETED" as const, paidAt },
+      enrollment,
+    };
   });
-
-  if (!payment) return null;
-
-  const now = new Date();
-
-  await db.payment.update({
-    where: { id: paymentId },
-    data: { status: "COMPLETED", paidAt: now },
-  });
-
-  const enrollment = await db.enrollment.upsert({
-    where: { userId_courseId: { userId: payment.userId, courseId: payment.courseId } },
-    update: { status: "ACTIVE", paymentId: payment.id },
-    create: {
-      userId: payment.userId,
-      courseId: payment.courseId,
-      status: "ACTIVE",
-      paymentId: payment.id,
-    },
-  });
-
-  return { payment, enrollment };
 }

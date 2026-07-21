@@ -5,6 +5,11 @@ export type ProgramVertical = "school" | "college" | "language";
 export type ProgramTier = "youth" | "entry" | "advanced";
 
 export type ProgramAccess = "paid" | "demo-then-paid";
+export type ProgramCheckoutStatus =
+  | "ready"
+  | "quality-review"
+  | "external-integration";
+export type ProgramReadiness = "ready" | "quality-review" | "external-integration";
 
 export type NovaProgram = {
   slug: string;
@@ -22,6 +27,13 @@ export type NovaProgram = {
   tuitionUsd: number;
   tuitionLabel: string;
   access: ProgramAccess;
+  /** Only `ready` programs may create a learner checkout. */
+  checkoutStatus: ProgramCheckoutStatus;
+  checkoutStatusNote?: string;
+  /** Controls whether checkout may accept payment for this program. */
+  readiness: ProgramReadiness;
+  /** Public-safe explanation when checkout is not yet available. */
+  readinessNote?: string;
   /** Free trial for School — mission slug or experience slug. */
   demoHref?: string;
   demoLabel?: string;

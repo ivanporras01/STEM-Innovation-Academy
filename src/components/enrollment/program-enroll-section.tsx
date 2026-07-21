@@ -115,7 +115,7 @@ export async function ProgramEnrollSection({
           <Link href={lmsHref} className="font-semibold underline">
             open curriculum &amp; missions
           </Link>
-          {program.vertical === "college" && (
+          {program.vertical === "college" && lmsHref !== `/courses/${courseSlug}` && (
             <>
               {" "}
               ·{" "}

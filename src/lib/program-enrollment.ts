@@ -37,9 +37,6 @@ export function lmsHrefForProgram(program: NovaProgram): string {
   if (program.vertical === "school" && SCHOOL_LMS_SLUG[program.slug]) {
     return `/courses/${SCHOOL_LMS_SLUG[program.slug]}`;
   }
-  if (program.vertical === "college") {
-    return `/es/college/${program.slug}`;
-  }
   return `/courses/${courseSlugForProgram(program)}`;
 }
 

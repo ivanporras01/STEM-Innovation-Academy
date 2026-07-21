@@ -8,6 +8,7 @@ import {
 } from "@/lib/certificates/constants";
 import { gradeFinalExam } from "@/lib/certificates/final-exam";
 import { collegeCatalogSlugFromCourseSlug, resolveCertificatePrefix } from "@/lib/certificates/prefix";
+import { normalizeCertificateLocale } from "@/lib/certificates/locale";
 import type { AppLocale } from "@/lib/locale";
 import type { VerifiedCertificate } from "@/data/novahub/certificates";
 
@@ -55,11 +56,54 @@ export async function canTakeFinalAssessment(userId: string, courseId: string): 
   }
 
   const progress = await getCourseProgress(userId, courseId);
-  if (progress.total > 0 && progress.percent < 100) {
+  if (progress.total === 0) {
+    return {
+      allowed: false,
+      reason: "Este curso todavía no tiene una ruta curricular certificable.",
+    };
+  }
+  if (progress.percent < 100) {
     return {
       allowed: false,
       reason: `Completa todas las misiones del curso (${progress.completed}/${progress.total}) antes del examen final.`,
     };
+  }
+
+  const assignments = await db.assignment.findMany({
+    where: { courseId },
+    select: {
+      title: true,
+      maxScore: true,
+      submissions: {
+        where: { userId },
+        select: { status: true, score: true },
+        take: 1,
+      },
+    },
+  });
+  if (assignments.length === 0) {
+    return {
+      allowed: false,
+      reason: "Este curso no tiene una evidencia final configurada para certificación.",
+    };
+  }
+
+  for (const assignment of assignments) {
+    const submission = assignment.submissions[0];
+    if (submission?.status !== "REVIEWED" || submission.score === null) {
+      return {
+        allowed: false,
+        reason: `Tu evidencia “${assignment.title}” debe ser revisada por un Innovation Mentor.`,
+      };
+    }
+    const scorePercent =
+      assignment.maxScore > 0 ? (submission.score / assignment.maxScore) * 100 : 0;
+    if (scorePercent < PASSING_SCORE_PERCENT) {
+      return {
+        allowed: false,
+        reason: `Tu evidencia “${assignment.title}” necesita una nueva iteración antes de certificar.`,
+      };
+    }
   }
 
   return { allowed: true };
@@ -104,6 +148,7 @@ export async function submitFinalAssessment(
   userId: string,
   courseId: string,
   answers: Record<string, number>,
+  locale?: string,
 ) {
   const eligibility = await canTakeFinalAssessment(userId, courseId);
   if (!eligibility.allowed) {
@@ -122,41 +167,67 @@ export async function submitFinalAssessment(
     return { ok: false as const, error: "Curso o inscripción no encontrados." };
   }
 
-  const existingAttempts = await db.courseAssessmentAttempt.count({
-    where: { userId, courseId },
-  });
-  const attemptNumber = existingAttempts + 1;
-  const { scorePercent } = gradeFinalExam(answers);
-  const passed = scorePercent >= PASSING_SCORE_PERCENT;
-
-  const attempt = await db.courseAssessmentAttempt.create({
-    data: {
-      userId,
-      courseId,
-      attemptNumber,
-      scorePercent,
-      passed,
+  const completionEvidence = await db.assignment.findMany({
+    where: { courseId },
+    select: {
+      maxScore: true,
+      submissions: {
+        where: { userId, status: "REVIEWED" },
+        select: { score: true },
+        take: 1,
+      },
     },
   });
-
-  if (!passed) {
-    return {
-      ok: true as const,
-      passed: false,
-      scorePercent,
-      attemptNumber,
-      attemptsRemaining: Math.max(0, MAX_ASSESSMENT_ATTEMPTS - attemptNumber),
-      certificateCode: null,
-    };
+  const evidenceScores = completionEvidence
+    .map((assignment) => {
+      const score = assignment.submissions[0]?.score;
+      return score !== null && score !== undefined && assignment.maxScore > 0
+        ? Math.round((score / assignment.maxScore) * 100)
+        : null;
+    })
+    .filter((score): score is number => score !== null);
+  if (
+    completionEvidence.length === 0 ||
+    evidenceScores.length !== completionEvidence.length
+  ) {
+    return { ok: false as const, error: "La evidencia final revisada ya no está disponible." };
   }
+  const credentialScorePercent = Math.round(
+    evidenceScores.reduce((sum, score) => sum + score, 0) / evidenceScores.length,
+  );
 
+  const { scorePercent } = gradeFinalExam(answers);
+  const passed = scorePercent >= PASSING_SCORE_PERCENT;
   const prefix = resolveCertificatePrefix(course.slug);
-  const code = await generateUniqueCertificateCode(prefix);
+  const code = passed ? await generateUniqueCertificateCode(prefix) : null;
   const catalogSlug = collegeCatalogSlugFromCourseSlug(course.slug) ?? course.slug;
+  const certificateLocale = normalizeCertificateLocale(locale, course.slug, catalogSlug);
   const holderName = `${user.firstName} ${user.lastName}`.trim();
-  const certificate = await db.$transaction(async (tx) => {
-    const cert = await tx.certificate.create({
+
+  const recorded = await db.$transaction(async (tx) => {
+    const existingAttempts = await tx.courseAssessmentAttempt.count({
+      where: { userId, courseId },
+    });
+    if (existingAttempts >= MAX_ASSESSMENT_ATTEMPTS) return null;
+
+    const attempt = await tx.courseAssessmentAttempt.create({
       data: {
+        userId,
+        courseId,
+        attemptNumber: existingAttempts + 1,
+        scorePercent,
+        passed,
+      },
+    });
+
+    if (!passed || !code) {
+      return { attempt, certificate: null };
+    }
+
+    const certificate = await tx.certificate.upsert({
+      where: { enrollmentId: enrollment.id },
+      update: {},
+      create: {
         code,
         userId,
         courseId,
@@ -164,9 +235,9 @@ export async function submitFinalAssessment(
         holderName,
         programTitle: course.title,
         programSlug: catalogSlug,
-        scorePercent,
+        scorePercent: credentialScorePercent,
         prefix,
-        locale: "en",
+        locale: certificateLocale,
         status: "VALID",
       },
     });
@@ -176,16 +247,23 @@ export async function submitFinalAssessment(
       data: { completedAt: new Date() },
     });
 
-    return cert;
+    return { attempt, certificate };
+  }, {
+    isolationLevel: "Serializable",
   });
 
+  if (!recorded) {
+    return { ok: false as const, error: "Agotaste los 3 intentos permitidos." };
+  }
+
+  const { attempt, certificate } = recorded;
   return {
     ok: true as const,
-    passed: true,
+    passed,
     scorePercent,
     attemptNumber: attempt.attemptNumber,
     attemptsRemaining: Math.max(0, MAX_ASSESSMENT_ATTEMPTS - attempt.attemptNumber),
-    certificateCode: certificate.code,
+    certificateCode: certificate?.code ?? null,
   };
 }
 

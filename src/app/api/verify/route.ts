@@ -36,7 +36,8 @@ export async function GET(request: Request) {
     return NextResponse.json({ certificate: dbCertificate });
   }
 
-  const demoCertificate = verifyCertificateCode(normalized);
+  const demoCertificate =
+    process.env.NODE_ENV !== "production" ? verifyCertificateCode(normalized) : null;
   if (!demoCertificate) {
     return NextResponse.json(
       { error: "Certificado no encontrado en el registro NOVA STEM HUB" },

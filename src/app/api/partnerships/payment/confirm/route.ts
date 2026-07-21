@@ -1,14 +1,24 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { buildPartnershipReference } from "@/lib/partnerships/deposit";
+import { z } from "zod";
+
+const demoConfirmationSchema = z.object({
+  applicationId: z.string().cuid(),
+});
 
 /** Demo card checkout when Stripe is not configured (partnership deposit). */
 export async function POST(request: Request) {
+  if (process.env.NODE_ENV === "production") {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
   try {
-    const { applicationId } = await request.json();
-    if (!applicationId) {
-      return NextResponse.json({ error: "Application ID required" }, { status: 400 });
+    const parsed = demoConfirmationSchema.safeParse(await request.json());
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Valid application ID required" }, { status: 400 });
     }
+    const { applicationId } = parsed.data;
 
     const application = await db.partnershipApplication.findUnique({
       where: { id: applicationId },

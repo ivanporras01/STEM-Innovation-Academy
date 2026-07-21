@@ -38,7 +38,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const { courseId, answers } = body;
+  const { courseId, answers, locale } = body;
   if (!courseId || !answers || typeof answers !== "object") {
     return NextResponse.json(
       { error: "courseId and answers are required" },
@@ -50,6 +50,7 @@ export async function POST(request: Request) {
     session.user.id,
     courseId,
     answers,
+    locale,
   );
   if (!result.ok) {
     return NextResponse.json({ error: result.error }, { status: 400 });

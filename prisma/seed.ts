@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { pathwayCourses } from "../src/data/pathways";
 import { getAllProgramLmsSeedCourses } from "../src/data/program-lms";
 import type { SeedCourse } from "../src/data/pathways/types";
+import { NOVA_PROGRAM_CATALOG } from "../src/data/courses";
 
 const prisma = new PrismaClient();
 
@@ -14,9 +15,9 @@ const PATHWAY_PRICE: Record<string, number> = {
 
 async function upsertSeedCourse(
   courseData: SeedCourse,
-  mentorId: string,
-  schoolId: string,
-  studentId: string,
+  mentorId: string | undefined,
+  schoolId: string | undefined,
+  studentId: string | undefined,
   priceCents: number,
 ) {
   const { modules, capstone, ...courseFields } = courseData;
@@ -89,13 +90,15 @@ async function upsertSeedCourse(
     },
   });
 
-  await prisma.enrollment.upsert({
-    where: {
-      userId_courseId: { userId: studentId, courseId: course.id },
-    },
-    update: { status: "ACTIVE" },
-    create: { userId: studentId, courseId: course.id, status: "ACTIVE" },
-  });
+  if (studentId) {
+    await prisma.enrollment.upsert({
+      where: {
+        userId_courseId: { userId: studentId, courseId: course.id },
+      },
+      update: { status: "ACTIVE" },
+      create: { userId: studentId, courseId: course.id, status: "ACTIVE" },
+    });
+  }
 
   await prisma.courseProduct.upsert({
     where: { courseId: course.id },
@@ -135,73 +138,94 @@ async function upsertSeedCourse(
 }
 
 function priceForSlug(slug: string): number {
-  if (PATHWAY_PRICE[slug]) return PATHWAY_PRICE[slug];
-  if (slug.startsWith("nova-college-")) return 89900;
-  if (slug.startsWith("nova-language-")) return 44900;
-  if (slug.startsWith("nova-school-")) return 17900;
-  return 24900;
+  const schoolPathSlugs: Record<string, string> = {
+    "coding-ai": "intro-python-ai",
+    "robotics-engineering": "robotics-engineering",
+    "iot-smart-systems": "iot-smart-systems",
+  };
+  const program = NOVA_PROGRAM_CATALOG.find((candidate) => {
+    const lmsSlug =
+      candidate.vertical === "school" && schoolPathSlugs[candidate.slug]
+        ? schoolPathSlugs[candidate.slug]
+        : `nova-${candidate.vertical}-${candidate.slug}`;
+    return lmsSlug === slug;
+  });
+  if (!program) {
+    throw new Error(`No catalog price configured for seeded course: ${slug}`);
+  }
+  return program.tuitionUsd * 100;
 }
 
 async function main() {
   console.log("🌱 Seeding NOVA LMS database...\n");
 
-  const passwordHash = await bcrypt.hash("nova2026", 12);
+  const seedDemoAccounts =
+    process.env.NODE_ENV !== "production" && process.env.VERCEL !== "1";
+  let mentorId: string | undefined;
+  let studentId: string | undefined;
+  let schoolId: string | undefined;
 
-  const school = await prisma.school.upsert({
-    where: { code: "NOVA-PILOT" },
-    update: {},
-    create: {
-      name: "NOVA School — Pilot Campus",
-      code: "NOVA-PILOT",
-      city: "San Juan",
-      state: "PR",
-    },
-  });
+  if (seedDemoAccounts) {
+    const passwordHash = await bcrypt.hash("nova2026", 12);
+    const school = await prisma.school.upsert({
+      where: { code: "NOVA-PILOT" },
+      update: {},
+      create: {
+        name: "NOVA School — Pilot Campus",
+        code: "NOVA-PILOT",
+        city: "San Juan",
+        state: "PR",
+      },
+    });
+    schoolId = school.id;
 
-  await prisma.user.upsert({
-    where: { email: "admin@steminnovationacademy.org" },
-    update: {},
-    create: {
-      email: "admin@steminnovationacademy.org",
-      passwordHash,
-      firstName: "NOVA",
-      lastName: "Admin",
-      role: Role.ADMIN,
-    },
-  });
+    await prisma.user.upsert({
+      where: { email: "admin@steminnovationacademy.org" },
+      update: {},
+      create: {
+        email: "admin@steminnovationacademy.org",
+        passwordHash,
+        firstName: "NOVA",
+        lastName: "Admin",
+        role: Role.ADMIN,
+      },
+    });
 
-  const mentor = await prisma.user.upsert({
-    where: { email: "mentor@steminnovationacademy.org" },
-    update: {},
-    create: {
-      email: "mentor@steminnovationacademy.org",
-      passwordHash,
-      firstName: "Dr. Elena",
-      lastName: "Rivera",
-      role: Role.MENTOR,
-      schoolId: school.id,
-    },
-  });
+    const mentor = await prisma.user.upsert({
+      where: { email: "mentor@steminnovationacademy.org" },
+      update: {},
+      create: {
+        email: "mentor@steminnovationacademy.org",
+        passwordHash,
+        firstName: "Dr. Elena",
+        lastName: "Rivera",
+        role: Role.MENTOR,
+        schoolId,
+      },
+    });
+    mentorId = mentor.id;
 
-  const student = await prisma.user.upsert({
-    where: { email: "student@steminnovationacademy.org" },
-    update: {},
-    create: {
-      email: "student@steminnovationacademy.org",
-      passwordHash,
-      firstName: "Alex",
-      lastName: "Nova",
-      role: Role.STUDENT,
-      schoolId: school.id,
-    },
-  });
+    const student = await prisma.user.upsert({
+      where: { email: "student@steminnovationacademy.org" },
+      update: {},
+      create: {
+        email: "student@steminnovationacademy.org",
+        passwordHash,
+        firstName: "Alex",
+        lastName: "Nova",
+        role: Role.STUDENT,
+        schoolId,
+      },
+    });
+    studentId = student.id;
+  }
 
   for (const courseData of pathwayCourses) {
     await upsertSeedCourse(
       courseData,
-      mentor.id,
-      school.id,
-      student.id,
+      mentorId,
+      schoolId,
+      studentId,
       PATHWAY_PRICE[courseData.slug] ?? 24900,
     );
   }
@@ -210,9 +234,9 @@ async function main() {
   for (const courseData of programCourses) {
     await upsertSeedCourse(
       courseData,
-      mentor.id,
-      school.id,
-      student.id,
+      mentorId,
+      schoolId,
+      studentId,
       priceForSlug(courseData.slug),
     );
   }
@@ -226,10 +250,14 @@ async function main() {
   console.log(
     `✅ Seed complete — ${allCourses.length} mission paths, ${totalMissions} missions\n`,
   );
-  console.log("Demo accounts (password: nova2026):");
-  console.log("  Admin:   admin@steminnovationacademy.org");
-  console.log("  Mentor:  mentor@steminnovationacademy.org");
-  console.log("  Explorer: student@steminnovationacademy.org");
+  if (seedDemoAccounts) {
+    console.log("Local demo accounts (password: nova2026):");
+    console.log("  Admin:   admin@steminnovationacademy.org");
+    console.log("  Mentor:  mentor@steminnovationacademy.org");
+    console.log("  Explorer: student@steminnovationacademy.org");
+  } else {
+    console.log("Production seed: demo identities were not created.");
+  }
 }
 
 main()

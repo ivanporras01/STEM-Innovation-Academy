@@ -43,7 +43,7 @@ College is the primary entry product (`entryPath: "/college"`).
 | NOVA College + Academy LMS | `STEM-Innovation-Academy` | https://stem-innovation-academy.vercel.app |
 | QCW interactive delivery app | `quantum-workforce-academy` | https://quantum-workforce-academy.vercel.app |
 
-## NOVA College — 8 tracks
+## NOVA College — 10 tracks
 
 | # | Slug | Cert prefix |
 |---|------|-------------|
@@ -54,7 +54,9 @@ College is the primary entry product (`entryPath: "/college"`).
 | 5 | `robotics-automation-technician` | NOVA-COL-ROBOT |
 | 6 | `intro-telecommunications` | NOVA-COL-TEL |
 | 7 | `electronics-technician` | NOVA-COL-ELE |
-| 8 | `quantum-workforce` | NOVA-COL-QNT *(QCW program)* |
+| 8 | `digital-marketing-business` | NOVA-COL-DMK |
+| 9 | `startup-innovation-digital-launch` | NOVA-COL-STU |
+| 10 | `quantum-workforce` | NOVA-COL-QNT *(QCW program)* |
 
 Data: `src/data/nova-college/`  
 Format: 40% theory · 40% labs · 10% soft skills · 10% exam prep (~120h)

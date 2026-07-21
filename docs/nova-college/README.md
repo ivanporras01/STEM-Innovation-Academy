@@ -1,6 +1,6 @@
 # NOVA College — Programas Técnicos
 
-Currículo B2B de **NOVA College** bajo el paraguas NOVAHub: **8 tracks** (~120 h) — 7 técnicos entry-level + **1 advanced (Quantum Workforce / QCW)**.
+Currículo B2B de **NOVA College** bajo NOVA STEM HUB: **10 tracks** (~120 h) — 9 programas Tier 1 orientados a empleabilidad + **1 programa avanzado (Quantum Workforce / QCW)**.
 
 ## Formato estándar
 
@@ -25,7 +25,9 @@ Certificados verificables en [verify.novahub.education](https://verify.novahub.e
 | 5 | `robotics-automation-technician` | Técnico en Robótica y Automatización | Siemens PLC, ROS 2 |
 | 6 | `intro-telecommunications` | Introducción a las Telecomunicaciones | CompTIA Network+, ETA FOT-NP |
 | 7 | `electronics-technician` | Técnico en Electrónica | ETA DC/AC Associate, IPC-A-610 |
-| 8 | `quantum-workforce` | **Quantum Workforce** (Tier 2) | IBM Quantum, NOVA-COL-QNT, QCW app |
+| 8 | `digital-marketing-business` | Marketing Digital y Crecimiento Empresarial | Meta, Google Digital Marketing |
+| 9 | `startup-innovation-digital-launch` | Innovación de Startups y Lanzamiento Digital | Lean Startup, emprendimiento digital |
+| 10 | `quantum-workforce` | **Quantum Workforce** (Tier 2) | IBM Quantum, NOVA-COL-QNT, QCW app |
 
 ### Tier 2 — Quantum Workforce (QCW)
 
@@ -51,6 +53,8 @@ src/data/nova-college/
 ├── robotics-automation-technician.ts
 ├── intro-telecommunications.ts
 ├── electronics-technician.ts
+├── digital-marketing-business.ts
+├── startup-innovation-digital-launch.ts
 ├── quantum-workforce.ts
 └── lessons/
     ├── index.ts                              # Re-export de todos los mapas
@@ -63,12 +67,14 @@ src/data/nova-college/
     ├── robotics-automation-technician-lessons.ts
     ├── intro-telecommunications-lessons.ts
     ├── electronics-technician-lessons.ts
+    ├── digital-marketing-business-lessons.ts
+    ├── startup-innovation-digital-launch-lessons.ts
     └── quantum-workforce-lessons.ts
 ```
 
 ## Contenido de lecciones (estilo QCW)
 
-Cada track incluye `Record<string, LessonContent>` con secciones, `summary`, `careerInsight`, glosario y referencias (~149 lecciones teóricas en tracks 1–5 vía `attachContentToModules()`).
+Cada track incluye contenido estructurado con secciones, resumen, perspectiva profesional, glosario y referencias. Los 9 tracks Tier 1 se convierten también en misiones Markdown para el LMS mediante `collegeCourseToSeedCourse()`.
 
 Regenerar contenido teórico auto-generado de **tracks 1–5** (tras editar `theoryLesson()` en el `.ts` del curso):
 
@@ -76,7 +82,7 @@ Regenerar contenido teórico auto-generado de **tracks 1–5** (tras editar `the
 node scripts/generate-lesson-content-from-courses.mjs
 ```
 
-Tracks 6–8 (Telecom, Electronics, Quantum) tienen mapas de lecciones curados — Telecom/Electronics manual; Quantum bridge a QCW app.
+Telecomunicaciones y Electrónica usan mapas curados; Marketing Digital y Startup añaden recorridos de empleabilidad y portafolio; Quantum funciona como puente hacia la aplicación interactiva QCW.
 
 ## Puentes con NOVA School (K-12)
 

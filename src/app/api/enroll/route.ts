@@ -36,11 +36,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, alreadyEnrolled: true });
     }
 
-    const isAdmin =
-      session.user.role === "ADMIN" || session.user.role === "SCHOOL_ADMIN";
+    const isPlatformAdmin = session.user.role === "ADMIN";
 
     // Institutional bulk enroll (school admin / platform admin)
-    if (institutional && isAdmin) {
+    if (institutional && isPlatformAdmin) {
       await activateEnrollmentFromPayment({
         userId: session.user.id,
         courseId,
@@ -54,7 +53,7 @@ export async function POST(request: Request) {
 
     // Free courses or admin override
     const priceCents = course.product?.priceCents ?? 0;
-    if (priceCents <= 0 && isAdmin) {
+    if (priceCents <= 0 && isPlatformAdmin) {
       await db.enrollment.upsert({
         where: { userId_courseId: { userId: session.user.id, courseId } },
         update: { status: "ACTIVE" },

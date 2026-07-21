@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { ensureCourseProduct } from "@/lib/course-products";
+import { getCourseProduct } from "@/lib/course-products";
 import { notifyAdminPendingPayment } from "@/lib/email";
 import { isStudentPaymentMethod } from "@/lib/payments/payment-methods";
 import { salePriceCents } from "@/lib/pricing";
@@ -51,7 +51,13 @@ export async function POST(request: Request) {
       );
     }
 
-    const product = await ensureCourseProduct(course.id, course.slug);
+    const product = await getCourseProduct(course.id);
+    if (!product?.active) {
+      return NextResponse.json(
+        { error: "This mission path is not available for checkout" },
+        { status: 409 }
+      );
+    }
     const chargeCents = salePriceCents(product.priceCents);
 
     if (chargeCents <= 0) {
@@ -176,7 +182,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ stripe: true, url: checkoutSession.url });
     }
 
-    // Demo card checkout when Stripe is not configured
+    // Demo checkout is local-only. Hosted environments must never mint a
+    // payment that the Explorer can confirm without a payment provider.
+    if (process.env.NODE_ENV === "production") {
+      return NextResponse.json(
+        { error: "Card checkout is temporarily unavailable" },
+        { status: 503 }
+      );
+    }
+
+    // Local demo card checkout when Stripe is not configured
     const payment = await db.payment.create({
       data: {
         userId: session.user.id,

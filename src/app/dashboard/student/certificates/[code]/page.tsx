@@ -30,7 +30,11 @@ export default async function StudentCertificateDetailPage({ params }: Props) {
     where: { code: normalized },
   });
 
-  if (!certificate || certificate.userId !== session.user.id) {
+  if (
+    !certificate ||
+    certificate.userId !== session.user.id ||
+    certificate.status !== "VALID"
+  ) {
     notFound();
   }
 

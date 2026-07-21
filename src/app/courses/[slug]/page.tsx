@@ -8,7 +8,7 @@ import { EnrollButton } from "@/components/courses/enroll-button";
 import { MissionPathHero } from "@/components/courses/mission-path-hero";
 import { SubmissionForm } from "@/components/courses/submission-form";
 import { getCourseBySlug, getCourseProgress } from "@/lib/courses";
-import { ensureCourseProduct } from "@/lib/course-products";
+import { getCourseProduct } from "@/lib/course-products";
 import { hasCourseAccess } from "@/lib/enrollment-access";
 import { SalePriceFromCents } from "@/components/pricing/sale-price";
 import { getPathwayMeta } from "@/lib/pathways/meta";
@@ -55,7 +55,10 @@ export default async function CourseDetailPage({
   let completedLessonIds = new Set<string>();
   let submission: { content: string; status: string } | null = null;
 
-  const product = await ensureCourseProduct(course.id, course.slug);
+  const product = await getCourseProduct(course.id);
+  if (!product) {
+    throw new Error(`Missing course product for published course: ${course.slug}`);
+  }
   priceCents = product.priceCents;
 
   if (session?.user) {

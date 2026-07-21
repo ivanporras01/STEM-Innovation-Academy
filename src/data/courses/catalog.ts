@@ -47,6 +47,12 @@ const LANGUAGE_TUITION: Record<string, number> = {
 function schoolPrograms(): NovaProgram[] {
   return novaSchoolElectives.map((e) => {
     const pricing = SCHOOL_TUITION[e.slug] ?? { usd: 179 };
+    const demo = e.experienceSlug
+      ? {
+          href: `/experiences/${e.experienceSlug}`,
+          label: `Try mission: ${e.experienceTitle ?? e.title}`,
+        }
+      : pricing.demo;
     return {
       slug: e.slug,
       vertical: "school",
@@ -60,9 +66,9 @@ function schoolPrograms(): NovaProgram[] {
       ageRange: e.ageRange,
       tuitionUsd: pricing.usd,
       tuitionLabel: `$${pricing.usd} / elective`,
-      access: pricing.demo ? "demo-then-paid" : "paid",
-      demoHref: pricing.demo?.href,
-      demoLabel: pricing.demo?.label,
+      access: demo ? "demo-then-paid" : "paid",
+      demoHref: demo?.href,
+      demoLabel: demo?.label,
       highlights: e.highlights,
       deliveryNote: e.missionPathHref
         ? "Includes interactive Mission Path + mentor sessions"
@@ -123,7 +129,7 @@ function languagePrograms(): NovaProgram[] {
   }));
 }
 
-/** Master catalog — 21 programs (9 School + 9 College + 3 Language). */
+/** Master catalog — 22 programs (9 School + 10 College + 3 Language). */
 export const NOVA_PROGRAM_CATALOG: readonly NovaProgram[] = [
   ...schoolPrograms(),
   ...collegePrograms(),
@@ -211,8 +217,8 @@ export const LAUNCH_READINESS: readonly LaunchBlocker[] = [
     id: "school-demos",
     area: "content",
     title: "School demo missions marked isDemo",
-    status: "partial",
-    note: "3 experiences live; gate other electives with teaser mission.",
+    status: "done",
+    note: "All 9 School electives expose a public NOVA Experience before paid enrollment.",
   },
   {
     id: "domain-dns",
