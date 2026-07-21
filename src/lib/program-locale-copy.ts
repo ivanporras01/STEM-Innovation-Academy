@@ -54,6 +54,9 @@ export function parseLmsCourseSlug(lmsSlug: string): {
   if (lmsSlug.startsWith(SCHOOL_LMS_PREFIX)) {
     return { vertical: "school", programSlug: lmsSlug.slice(SCHOOL_LMS_PREFIX.length) };
   }
+  if (lmsSlug.startsWith("nova-language-")) {
+    return { vertical: "language", programSlug: lmsSlug.slice("nova-language-".length) };
+  }
   if (LMS_TO_SCHOOL_SLUG[lmsSlug]) {
     return { vertical: "school", programSlug: LMS_TO_SCHOOL_SLUG[lmsSlug] };
   }
@@ -202,6 +205,21 @@ export function getLmsCoursePublicPresentation(
       pathwayHref: schoolBase,
       levelLabel: fallback.level || "Explorer",
       levelHref: `${schoolBase}/${parsed.programSlug}`,
+      isCollegeTrack: false,
+    };
+  }
+
+  if (parsed.vertical === "language" && parsed.programSlug) {
+    const copy = getLanguageCourseCopy(parsed.programSlug, locale);
+    const languageBase =
+      locale === "es" ? "/es/language" : locale === "pt" ? "/pt/language" : "/language";
+    return {
+      ...copy,
+      pathwayLabel: "NOVA Language",
+      pathwayHref: languageBase,
+      levelLabel:
+        locale === "es" ? "Idioma" : locale === "pt" ? "Idioma" : "Language",
+      levelHref: `${languageBase}/${parsed.programSlug}`,
       isCollegeTrack: false,
     };
   }

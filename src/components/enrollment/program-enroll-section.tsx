@@ -111,10 +111,19 @@ export async function ProgramEnrollSection({
 
       {lmsHref && enrolled && (
         <p className="mt-4 text-sm text-nova-green">
-          Your mission path is live —{" "}
+          Your program is unlocked —{" "}
           <Link href={lmsHref} className="font-semibold underline">
-            open interactive missions
+            open curriculum &amp; missions
           </Link>
+          {program.vertical === "college" && (
+            <>
+              {" "}
+              ·{" "}
+              <Link href={`/courses/${courseSlug}`} className="font-semibold underline">
+                LMS progress
+              </Link>
+            </>
+          )}
         </p>
       )}
 

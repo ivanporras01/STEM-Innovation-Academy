@@ -41,7 +41,7 @@ export function CollegeTrackCard({ track, locale = "en" }: Props) {
             </span>
           )}
           <span className="text-xs text-nova-cyan-light/60">
-            {track.durationHours}h · {track.moduleCount} {modulesLabel}
+            ~{track.durationHours}h · {track.moduleCount} {modulesLabel}
           </span>
         </div>
         <h2 className="text-lg font-bold text-white group-hover:text-nova-cyan-light">

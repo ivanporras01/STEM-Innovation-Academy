@@ -66,7 +66,7 @@ export default async function SpanishCollegeTrackPage({ params }: Props) {
               </span>
             )}
             <span className="rounded-full border border-white/10 px-3 py-1 text-xs text-nova-cyan-light/70">
-              {course.durationHours}h · {course.modules.length} módulos
+              ~{course.durationHours}h · {course.modules.length} módulos
             </span>
             <span className="rounded-full border border-white/10 px-3 py-1 font-mono text-xs text-white/50">
               {course.verifyCertificatePrefix}
@@ -130,7 +130,7 @@ export default async function SpanishCollegeTrackPage({ params }: Props) {
           <section>
             <h2 className="mb-2 text-xl font-bold text-white">Estructura del programa</h2>
             <p className="mb-6 text-sm text-nova-cyan-light/70">
-              {course.modules.length} módulos · {course.durationHours} horas de contacto
+              {course.modules.length} módulos · ~{course.durationHours} horas de estudio
             </p>
             <div className="space-y-4">
               {course.modules.map((mod) => (

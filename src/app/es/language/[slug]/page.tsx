@@ -48,7 +48,7 @@ export default async function SpanishLanguageCoursePage({ params }: Props) {
           <h1 className="text-3xl font-black sm:text-4xl">{title}</h1>
           <p className="mt-4 max-w-2xl text-lg text-white/80">{tagline}</p>
           <p className="mt-3 text-sm text-nova-cyan-light/70">
-            {course.durationHours} horas · MCER {course.cefrLevel} · {course.ageRange}
+            ~{course.durationHours} horas · MCER {course.cefrLevel} · {course.ageRange}
           </p>
         </div>
       </section>

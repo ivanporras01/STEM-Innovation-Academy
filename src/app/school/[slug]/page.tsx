@@ -46,7 +46,7 @@ export default async function SchoolElectivePage({ params }: Props) {
           <h1 className="text-3xl font-black sm:text-4xl">{copy.title}</h1>
           <p className="mt-4 max-w-2xl text-lg text-white/80">{copy.tagline}</p>
           <p className="mt-3 text-sm text-nova-cyan-light/70">
-            {elective.durationWeeks} weeks · Ages {elective.ageRange} · {elective.grades}
+            ~{elective.durationHours} hours · Ages {elective.ageRange} · {elective.grades}
           </p>
         </div>
       </section>
@@ -104,6 +104,9 @@ export default async function SchoolElectivePage({ params }: Props) {
           )}
 
           <section className="flex flex-wrap gap-3">
+            <Link href={`/enroll/${slug}`} className="nova-btn-primary nova-btn-glow">
+              Enroll &amp; unlock LMS →
+            </Link>
             <Link href={NOVA_SCHOOL.path} className="nova-btn-secondary border-white/20 text-white">
               ← All {NOVA_SCHOOL.electiveCount} electives
             </Link>

@@ -24,7 +24,8 @@ export type NovaSchoolElective = {
   description: string;
   ageRange: string;
   grades: string;
-  durationWeeks: number;
+  /** Approximate student hours (reading + interaction + assignments). */
+  durationHours: number;
   highlights: string[];
   learningOutcomes: string[];
   modules: NovaSchoolModule[];

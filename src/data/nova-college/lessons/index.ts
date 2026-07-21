@@ -5,5 +5,6 @@ export { IOT_SMART_SYSTEMS_LESSONS } from "./iot-smart-systems-technician-lesson
 export { ROBOTICS_AUTOMATION_LESSONS } from "./robotics-automation-technician-lessons";
 export { INTRO_TELECOM_LESSONS } from "./intro-telecommunications-lessons";
 export { ELECTRONICS_LESSONS } from "./electronics-technician-lessons";
+export { DIGITAL_MARKETING_BUSINESS_LESSONS } from "./digital-marketing-business-lessons";
 export { STARTUP_INNOVATION_LESSONS } from "./startup-innovation-digital-launch-lessons";
 export { QUANTUM_WORKFORCE_LESSONS } from "./quantum-workforce-lessons";

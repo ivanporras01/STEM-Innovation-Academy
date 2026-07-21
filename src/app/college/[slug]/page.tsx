@@ -72,7 +72,7 @@ export default async function CollegeTrackPage({ params }: Props) {
               </span>
             )}
             <span className="rounded-full border border-white/10 px-3 py-1 text-xs text-nova-cyan-light/70">
-              {course.durationHours}h · {course.modules.length} modules
+              ~{course.durationHours} hours · {course.modules.length} modules
             </span>
             <span className="rounded-full border border-white/10 px-3 py-1 font-mono text-xs text-white/50">
               {course.verifyCertificatePrefix}
@@ -81,12 +81,17 @@ export default async function CollegeTrackPage({ params }: Props) {
           <h1 className="text-3xl font-black sm:text-4xl lg:text-5xl">{copy.title}</h1>
           <p className="mt-3 max-w-2xl text-lg text-nova-cyan-light/90">{copy.tagline}</p>
           <p className="mt-4 max-w-3xl text-sm text-white/75">{copy.description}</p>
-          <Link
-            href={`/es/college/${slug}`}
-            className="mt-4 inline-block text-sm text-nova-cyan-light/60 hover:text-nova-cyan"
-          >
-            Full syllabus in Spanish edition →
-          </Link>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link href={`/enroll/${slug}`} className="nova-btn-primary nova-btn-glow">
+              Enroll &amp; unlock LMS →
+            </Link>
+            <Link
+              href={`/es/college/${slug}`}
+              className="nova-btn-secondary border-white/20 text-white"
+            >
+              Full syllabus in Spanish edition →
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -136,7 +141,7 @@ export default async function CollegeTrackPage({ params }: Props) {
           <section>
             <h2 className="mb-2 text-xl font-bold text-white">Program structure</h2>
             <p className="mb-6 text-sm text-nova-cyan-light/70">
-              {course.modules.length} modules · {course.durationHours} contact hours ·{" "}
+              {course.modules.length} modules · ~{course.durationHours} hours ·{" "}
               {NOVA_COLLEGE_PAGE_EN.syllabusNote}
             </p>
             <div className="space-y-4">

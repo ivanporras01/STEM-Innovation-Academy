@@ -1,6 +1,7 @@
 import { novaSchoolElectives } from "@/data/nova-school";
 import { novaCollegeCourses } from "@/data/nova-college";
 import { novaLanguageCourses } from "@/data/nova-language";
+import { formatCourseHours } from "@/lib/course-hours";
 import type { LaunchBlocker, NovaProgram, ProgramBundle } from "./types";
 
 const SCHOOL_TUITION: Record<string, { usd: number; demo?: { href: string; label: string } }> = {
@@ -54,7 +55,8 @@ function schoolPrograms(): NovaProgram[] {
       tagline: e.tagline,
       description: e.description,
       catalogHref: `/school/${e.slug}`,
-      durationLabel: `${e.durationWeeks} weeks`,
+      durationLabel: formatCourseHours(e.durationHours),
+      contactHours: e.durationHours,
       ageRange: e.ageRange,
       tuitionUsd: pricing.usd,
       tuitionLabel: `$${pricing.usd} / elective`,
@@ -78,7 +80,7 @@ function collegePrograms(): NovaProgram[] {
     tagline: c.tagline,
     description: c.description,
     catalogHref: `/college/${c.slug}`,
-    durationLabel: `${c.durationHours} contact hours`,
+    durationLabel: formatCourseHours(c.durationHours),
     contactHours: c.durationHours,
     ageRange: "16–25+",
     tuitionUsd: COLLEGE_TUITION[c.slug] ?? 899,
@@ -109,7 +111,7 @@ function languagePrograms(): NovaProgram[] {
     tagline: c.tagline,
     description: c.description,
     catalogHref: `/language/${c.slug}`,
-    durationLabel: `${c.durationHours} hours · ${c.cefrLevel}`,
+    durationLabel: `${formatCourseHours(c.durationHours)} · ${c.cefrLevel}`,
     contactHours: c.durationHours,
     ageRange: c.ageRange,
     tuitionUsd: LANGUAGE_TUITION[c.slug] ?? 449,
@@ -196,14 +198,14 @@ export const LAUNCH_READINESS: readonly LaunchBlocker[] = [
     area: "access",
     title: "Lesson gate: paid OR demo mission",
     status: "partial",
-    note: "/courses/* checks enrollment; /college lessons & /language still open.",
+    note: "/courses/* gated; college/language lesson routes require ACTIVE enrollment.",
   },
   {
     id: "course-db-sync",
     area: "content",
     title: "Sync 21 programs to Prisma CourseProduct",
-    status: "pending",
-    note: "Today only 3 mission paths exist in DB seed.",
+    status: "partial",
+    note: "ensureProgramCourse + seed sync curriculum into LMS for all verticals; pathway trio remains source of truth for Coding/Robotics/IoT.",
   },
   {
     id: "school-demos",

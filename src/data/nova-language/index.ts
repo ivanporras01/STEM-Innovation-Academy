@@ -22,33 +22,39 @@ export {
 
 import type { NovaLanguageCourse, NovaLanguageCourseSummary } from "./types";
 
-const PLACEHOLDER_MODULES: NovaLanguageCourse["modules"] = [
+/** Marketing syllabus modules — full lesson bodies unlock in LMS after payment via ensureProgramCourse. */
+const LANGUAGE_SYLLABUS_MODULES: NovaLanguageCourse["modules"] = [
   {
     order: 1,
     title: "Foundations & First Conversation",
-    description: "Core sounds, greetings, and everyday phrases with guided speaking labs.",
+    description:
+      "Sounds, greetings, self-introduction, and repair phrases with guided speaking labs and phrase banks.",
   },
   {
     order: 2,
     title: "Grammar in Context",
-    description: "Structured grammar through real dialogues, reading, and writing practice.",
+    description:
+      "Form → meaning → use cycles: notice patterns in real dialogues, transform sentences, and rewrite for natural register.",
   },
   {
     order: 3,
     title: "Listening & Pronunciation Lab",
-    description: "Audio drills, shadowing, and feedback loops to build confident speech.",
+    description:
+      "Three-pass listening, shadowing, intelligibility drills, and peer feedback for clearer speech.",
   },
   {
     order: 4,
     title: "Culture & Real-World Use",
-    description: "Cultural communication, professional basics, and scenario-based role play.",
+    description:
+      "Politeness levels, professional messages, and scenario role-plays for travel, school, and work.",
   },
   {
     order: 5,
     title: "Capstone & Certificate",
-    description: "Integrated assessment, portfolio speaking demo, and verifiable completion.",
+    description:
+      "CEFR can-do portfolio: speaking demo, writing sample, self-assessment, and a 4-week practice plan.",
   },
-];
+]
 
 export const novaLanguageCourses: NovaLanguageCourse[] = [
   {
@@ -68,7 +74,7 @@ export const novaLanguageCourses: NovaLanguageCourse[] = [
       "Apply grammar patterns in real dialogues and written tasks",
       "Demonstrate progress in a capstone speaking assessment",
     ],
-    modules: PLACEHOLDER_MODULES,
+    modules: LANGUAGE_SYLLABUS_MODULES,
   },
   {
     slug: "spanish",
@@ -87,7 +93,7 @@ export const novaLanguageCourses: NovaLanguageCourse[] = [
       "Build listening comprehension through guided audio labs",
       "Complete a capstone presentation in Spanish",
     ],
-    modules: PLACEHOLDER_MODULES,
+    modules: LANGUAGE_SYLLABUS_MODULES,
   },
   {
     slug: "portuguese",
@@ -106,7 +112,7 @@ export const novaLanguageCourses: NovaLanguageCourse[] = [
       "Apply essential grammar for reading and writing tasks",
       "Demonstrate fluency growth in a final speaking portfolio",
     ],
-    modules: PLACEHOLDER_MODULES,
+    modules: LANGUAGE_SYLLABUS_MODULES,
   },
 ];
 

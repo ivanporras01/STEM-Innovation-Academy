@@ -1,8 +1,146 @@
 import { PrismaClient, Role } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { pathwayCourses } from "../src/data/pathways";
+import { getAllProgramLmsSeedCourses } from "../src/data/program-lms";
+import type { SeedCourse } from "../src/data/pathways/types";
 
 const prisma = new PrismaClient();
+
+const PATHWAY_PRICE: Record<string, number> = {
+  "intro-python-ai": 24900,
+  "robotics-engineering": 24900,
+  "iot-smart-systems": 24900,
+};
+
+async function upsertSeedCourse(
+  courseData: SeedCourse,
+  mentorId: string,
+  schoolId: string,
+  studentId: string,
+  priceCents: number,
+) {
+  const { modules, capstone, ...courseFields } = courseData;
+
+  const course = await prisma.course.upsert({
+    where: { slug: courseFields.slug },
+    update: {
+      title: courseFields.title,
+      description: courseFields.description,
+      pathway: courseFields.pathway,
+      level: courseFields.level,
+      published: true,
+      mentorId,
+      schoolId,
+    },
+    create: {
+      ...courseFields,
+      mentorId,
+      schoolId,
+    },
+  });
+
+  for (const modData of modules) {
+    const { lessons, ...modFields } = modData;
+
+    const existingModule = await prisma.module.findFirst({
+      where: { courseId: course.id, order: modFields.order },
+    });
+
+    const mod = existingModule
+      ? await prisma.module.update({
+          where: { id: existingModule.id },
+          data: modFields,
+        })
+      : await prisma.module.create({
+          data: { ...modFields, courseId: course.id },
+        });
+
+    for (const lessonData of lessons) {
+      const existingLesson = await prisma.lesson.findFirst({
+        where: { moduleId: mod.id, order: lessonData.order },
+      });
+
+      if (existingLesson) {
+        await prisma.lesson.update({
+          where: { id: existingLesson.id },
+          data: lessonData,
+        });
+      } else {
+        await prisma.lesson.create({
+          data: { ...lessonData, moduleId: mod.id },
+        });
+      }
+    }
+
+    const seedOrders = lessons.map((l) => l.order);
+    await prisma.lesson.deleteMany({
+      where: {
+        moduleId: mod.id,
+        order: { notIn: seedOrders },
+      },
+    });
+  }
+
+  const seedModuleOrders = modules.map((m) => m.order);
+  await prisma.module.deleteMany({
+    where: {
+      courseId: course.id,
+      order: { notIn: seedModuleOrders },
+    },
+  });
+
+  await prisma.enrollment.upsert({
+    where: {
+      userId_courseId: { userId: studentId, courseId: course.id },
+    },
+    update: { status: "ACTIVE" },
+    create: { userId: studentId, courseId: course.id, status: "ACTIVE" },
+  });
+
+  await prisma.courseProduct.upsert({
+    where: { courseId: course.id },
+    update: { priceCents },
+    create: {
+      courseId: course.id,
+      priceCents,
+      currency: "usd",
+    },
+  });
+
+  const existingAssignment = await prisma.assignment.findFirst({
+    where: { courseId: course.id },
+  });
+
+  if (existingAssignment) {
+    await prisma.assignment.update({
+      where: { id: existingAssignment.id },
+      data: {
+        title: capstone.title,
+        description: capstone.description,
+      },
+    });
+  } else {
+    await prisma.assignment.create({
+      data: {
+        title: capstone.title,
+        description: capstone.description,
+        courseId: course.id,
+        maxScore: 100,
+        dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      },
+    });
+  }
+
+  return course;
+}
+
+function priceForSlug(slug: string): number {
+  if (PATHWAY_PRICE[slug]) return PATHWAY_PRICE[slug];
+  if (slug.startsWith("nova-college-")) return 89900;
+  if (slug.startsWith("nova-language-")) return 44900;
+  if (slug.startsWith("nova-school-")) return 17900;
+  return 24900;
+}
 
 async function main() {
   console.log("🌱 Seeding NOVA LMS database...\n");
@@ -59,131 +197,35 @@ async function main() {
   });
 
   for (const courseData of pathwayCourses) {
-    const { modules, capstone, ...courseFields } = courseData;
-
-    const course = await prisma.course.upsert({
-      where: { slug: courseFields.slug },
-      update: {
-        title: courseFields.title,
-        description: courseFields.description,
-        pathway: courseFields.pathway,
-        level: courseFields.level,
-        published: true,
-        mentorId: mentor.id,
-        schoolId: school.id,
-      },
-      create: {
-        ...courseFields,
-        mentorId: mentor.id,
-        schoolId: school.id,
-      },
-    });
-
-    for (const modData of modules) {
-      const { lessons, ...modFields } = modData;
-
-      const existingModule = await prisma.module.findFirst({
-        where: { courseId: course.id, order: modFields.order },
-      });
-
-      const mod = existingModule
-        ? await prisma.module.update({
-            where: { id: existingModule.id },
-            data: modFields,
-          })
-        : await prisma.module.create({
-            data: { ...modFields, courseId: course.id },
-          });
-
-      for (const lessonData of lessons) {
-        const existingLesson = await prisma.lesson.findFirst({
-          where: { moduleId: mod.id, order: lessonData.order },
-        });
-
-        if (existingLesson) {
-          await prisma.lesson.update({
-            where: { id: existingLesson.id },
-            data: lessonData,
-          });
-        } else {
-          await prisma.lesson.create({
-            data: { ...lessonData, moduleId: mod.id },
-          });
-        }
-      }
-
-      const seedOrders = lessons.map((l) => l.order);
-      await prisma.lesson.deleteMany({
-        where: {
-          moduleId: mod.id,
-          order: { notIn: seedOrders },
-        },
-      });
-    }
-
-    const seedModuleOrders = modules.map((m) => m.order);
-    await prisma.module.deleteMany({
-      where: {
-        courseId: course.id,
-        order: { notIn: seedModuleOrders },
-      },
-    });
-
-    await prisma.enrollment.upsert({
-      where: {
-        userId_courseId: { userId: student.id, courseId: course.id },
-      },
-      update: { status: "ACTIVE" },
-      create: { userId: student.id, courseId: course.id, status: "ACTIVE" },
-    });
-
-    const priceMap: Record<string, number> = {
-      "intro-python-ai": 24900,
-      "robotics-engineering": 24900,
-      "iot-smart-systems": 24900,
-    };
-
-    await prisma.courseProduct.upsert({
-      where: { courseId: course.id },
-      update: { priceCents: priceMap[courseFields.slug] ?? 24900 },
-      create: {
-        courseId: course.id,
-        priceCents: priceMap[courseFields.slug] ?? 24900,
-        currency: "usd",
-      },
-    });
-
-    const existingAssignment = await prisma.assignment.findFirst({
-      where: { courseId: course.id },
-    });
-
-    if (existingAssignment) {
-      await prisma.assignment.update({
-        where: { id: existingAssignment.id },
-        data: {
-          title: capstone.title,
-          description: capstone.description,
-        },
-      });
-    } else {
-      await prisma.assignment.create({
-        data: {
-          title: capstone.title,
-          description: capstone.description,
-          courseId: course.id,
-          maxScore: 100,
-          dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-        },
-      });
-    }
+    await upsertSeedCourse(
+      courseData,
+      mentor.id,
+      school.id,
+      student.id,
+      PATHWAY_PRICE[courseData.slug] ?? 24900,
+    );
   }
 
-  const totalMissions = pathwayCourses.reduce(
+  const programCourses = getAllProgramLmsSeedCourses();
+  for (const courseData of programCourses) {
+    await upsertSeedCourse(
+      courseData,
+      mentor.id,
+      school.id,
+      student.id,
+      priceForSlug(courseData.slug),
+    );
+  }
+
+  const allCourses = [...pathwayCourses, ...programCourses];
+  const totalMissions = allCourses.reduce(
     (acc, c) => acc + c.modules.reduce((mAcc, m) => mAcc + m.lessons.length, 0),
-    0
+    0,
   );
 
-  console.log(`✅ Seed complete — ${pathwayCourses.length} mission paths, ${totalMissions} missions\n`);
+  console.log(
+    `✅ Seed complete — ${allCourses.length} mission paths, ${totalMissions} missions\n`,
+  );
   console.log("Demo accounts (password: nova2026):");
   console.log("  Admin:   admin@steminnovationacademy.org");
   console.log("  Mentor:  mentor@steminnovationacademy.org");

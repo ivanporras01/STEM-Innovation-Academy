@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { findCollegeLesson } from "@/lib/nova-college-catalog";
 import { getCollegeTrackEn } from "@/data/nova-college/catalog-en";
 import { NOVA_COLLEGE } from "@/lib/novahub-brand";
+import { requirePaidProgramAccess } from "@/lib/require-paid-program-access";
+import { auth } from "@/lib/auth";
+import { db } from "@/lib/db";
+import { hasCourseAccess } from "@/lib/enrollment-access";
+import { courseSlugForProgram } from "@/lib/program-enrollment";
+import { getProgramBySlug } from "@/data/courses";
 
 type Props = {
   params: Promise<{ slug: string; lessonSlug: string }>;
@@ -25,50 +31,39 @@ export default async function CollegeLessonPage({ params }: Props) {
   if (!ctx) notFound();
 
   const en = getCollegeTrackEn(slug);
+  const program = getProgramBySlug(slug);
+  const lmsSlug = program ? courseSlugForProgram(program) : `nova-college-${slug}`;
+  const session = await auth();
+
+  if (session?.user) {
+    const enrollment = await db.enrollment.findFirst({
+      where: { userId: session.user.id, course: { slug: lmsSlug } },
+    });
+    if (enrollment && hasCourseAccess(enrollment)) {
+      redirect(`/courses/${lmsSlug}`);
+    }
+  }
+
+  // Unenrolled visitors: send to enroll (do not leak full curriculum on EN lesson URLs)
+  await requirePaidProgramAccess({
+    programSlug: slug,
+    loginCallback: `/college/${slug}/lessons/${lessonSlug}`,
+    enrollPath: `/enroll/${slug}`,
+  });
 
   return (
     <div className="relative flex min-h-screen flex-col">
       <Navbar />
-
       <main className="nova-space-section relative flex-1 py-16">
         <div className="nova-container max-w-2xl text-center">
-          <Link
-            href={`/college/${slug}`}
-            className="mb-6 inline-block text-sm text-nova-cyan hover:underline"
-          >
-            ← {en?.title ?? ctx.course.title}
+          <p className="text-sm text-nova-cyan-light/80">
+            Redirecting to your unlocked mission path…
+          </p>
+          <Link href={`/courses/${lmsSlug}`} className="nova-btn-primary mt-6 inline-flex">
+            Open {en?.title ?? ctx.course.title} LMS →
           </Link>
-
-          <div className="nova-glass-island border-nova-cyan/20 p-8">
-            <p className="text-sm font-semibold uppercase tracking-wider text-nova-cyan">
-              Spanish edition only
-            </p>
-            <h1 className="mt-3 text-2xl font-black text-white">
-              Interactive lessons available in Spanish edition
-            </h1>
-            <p className="mt-4 text-sm text-nova-cyan-light/80">
-              Full curriculum content for this track is published in the Spanish edition at{" "}
-              <code className="text-nova-cyan">/es/college</code>. English routes show program
-              overview and outcomes — not Spanish lesson content.
-            </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Link
-                href={`/es/college/${slug}/lessons/${lessonSlug}`}
-                className="nova-btn-primary nova-btn-glow inline-flex"
-              >
-                Open lesson in Spanish edition →
-              </Link>
-              <Link
-                href={`/college/${slug}`}
-                className="nova-btn-secondary inline-flex border-white/20 text-white"
-              >
-                Back to English program overview
-              </Link>
-            </div>
-          </div>
         </div>
       </main>
-
       <Footer />
     </div>
   );

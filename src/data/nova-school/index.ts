@@ -18,7 +18,7 @@ export const novaSchoolElectives: NovaSchoolElective[] = [
       "Explorers learn game loops, level design, and basic coding through Scratch and Unity-style projects — building portfolio-ready games they can share.",
     ageRange: "8–16",
     grades: "Middle & High School",
-    durationWeeks: 12,
+    durationHours: 36,
     highlights: ["Game loops & mechanics", "Level & character design", "Scratch + intro game engines", "Portfolio showcase"],
     learningOutcomes: [
       "Explain core game design principles (rules, feedback, challenge)",
@@ -43,7 +43,7 @@ export const novaSchoolElectives: NovaSchoolElective[] = [
       "Hands-on elective covering personal brand, social campaigns, visual content, and ethical digital citizenship for the next generation of creators.",
     ageRange: "8–16",
     grades: "Middle & High School",
-    durationWeeks: 10,
+    durationHours: 30,
     highlights: ["Personal brand basics", "Content planning", "Visual storytelling", "Ethical digital citizenship"],
     learningOutcomes: [
       "Define a personal or project brand identity",
@@ -68,7 +68,7 @@ export const novaSchoolElectives: NovaSchoolElective[] = [
       "Explorers develop a real mini-startup: identify a problem, build a prototype, craft a pitch, and present to mentors in a celebration showcase.",
     ageRange: "8–16",
     grades: "Middle & High School",
-    durationWeeks: 12,
+    durationHours: 36,
     highlights: ["Problem discovery", "Lean canvas for youth", "Prototype sprint", "Pitch & showcase"],
     learningOutcomes: [
       "Identify and validate a real-world problem",
@@ -93,7 +93,7 @@ export const novaSchoolElectives: NovaSchoolElective[] = [
       "Aligned with the Coding & AI Mission Path. Programming fundamentals, computational thinking, and AI discovery through guided missions and LAB builds.",
     ageRange: "8–16",
     grades: "Middle & High School",
-    durationWeeks: 16,
+    durationHours: 48,
     highlights: ["Python fundamentals", "Computational thinking", "AI discovery missions", "ESP32 optional builds"],
     learningOutcomes: [
       "Write Python programs with variables, loops, and functions",
@@ -120,7 +120,7 @@ export const novaSchoolElectives: NovaSchoolElective[] = [
       "Aligned with the Robotics Mission Path. Electronics, microcontrollers, ESP32 builds, and engineering design challenges with Wokwi simulation fallback.",
     ageRange: "8–16",
     grades: "Middle & High School",
-    durationWeeks: 16,
+    durationHours: 48,
     highlights: ["Engineering design process", "Electronics & wiring", "ESP32 programming", "Wokwi simulation fallback"],
     learningOutcomes: [
       "Follow the engineering design process from sketch to prototype",
@@ -147,7 +147,7 @@ export const novaSchoolElectives: NovaSchoolElective[] = [
       "Aligned with the IoT Mission Path. Smart sensors, wireless systems, cloud dashboards, and real-world automation projects.",
     ageRange: "8–16",
     grades: "Middle & High School",
-    durationWeeks: 16,
+    durationHours: 48,
     highlights: ["Sensors & actuators", "MQTT & connectivity", "Cloud dashboards", "Smart automation projects"],
     learningOutcomes: [
       "Connect sensors and actuators to a microcontroller",
@@ -174,7 +174,7 @@ export const novaSchoolElectives: NovaSchoolElective[] = [
       "Explorers produce videos, graphics, and multimedia portfolios using industry-inspired tools — storytelling, editing, and visual design fundamentals.",
     ageRange: "8–16",
     grades: "Middle & High School",
-    durationWeeks: 10,
+    durationHours: 30,
     highlights: ["Storyboarding", "Video editing basics", "Graphic design intro", "Multimedia portfolio"],
     learningOutcomes: [
       "Plan a short video or media piece with a storyboard",
@@ -199,7 +199,7 @@ export const novaSchoolElectives: NovaSchoolElective[] = [
       "Age-appropriate security elective: safe online habits, threat awareness, basic network concepts, and ethical responsibility in the digital world.",
     ageRange: "10–16",
     grades: "Middle & High School",
-    durationWeeks: 8,
+    durationHours: 24,
     highlights: ["Password hygiene", "Phishing awareness", "Privacy fundamentals", "Ethical hacking intro"],
     learningOutcomes: [
       "Apply strong password and authentication habits",
@@ -225,7 +225,7 @@ export const novaSchoolElectives: NovaSchoolElective[] = [
       "A creative elective for teens: design thinking, creative coding with Scratch, digital storytelling, diverse STEM role models, and team projects that solve real community problems — less hardware-heavy, more human-centered.",
     ageRange: "8–16",
     grades: "Middle & High School",
-    durationWeeks: 10,
+    durationHours: 30,
     highlights: [
       "STEM role models & careers",
       "Design thinking & empathy",

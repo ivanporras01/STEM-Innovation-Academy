@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
@@ -8,15 +8,22 @@ import { CollegeLessonContent } from "@/components/college/college-lesson-conten
 import { Badge } from "@/components/ui/badge";
 import {
   findCollegeLesson,
-  getCollegeLessonStaticParams,
 } from "@/lib/nova-college-catalog";
+import { auth } from "@/lib/auth";
+import { db } from "@/lib/db";
+import { hasCourseAccess } from "@/lib/enrollment-access";
+import { courseSlugForProgram, getProgramEnrollmentContext } from "@/lib/program-enrollment";
+import { getProgramBySlug } from "@/data/courses";
 
 type Props = {
   params: Promise<{ slug: string; lessonSlug: string }>;
 };
 
+/** Enrollment gating requires session — do not statically prerender locked lessons. */
+export const dynamic = "force-dynamic";
+
 export async function generateStaticParams() {
-  return getCollegeLessonStaticParams();
+  return [];
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -32,6 +39,29 @@ export default async function SpanishCollegeLessonPage({ params }: Props) {
 
   const content = ctx.lesson.content;
   if (!content) notFound();
+
+  const program = getProgramBySlug(slug);
+  if (program) {
+    // Ensure LMS course + modules exist for enrolled dashboards.
+    await getProgramEnrollmentContext(slug);
+  }
+
+  const session = await auth();
+  let enrolled = false;
+  if (session?.user && program) {
+    const lmsSlug = courseSlugForProgram(program);
+    const course = await db.course.findUnique({ where: { slug: lmsSlug } });
+    if (course) {
+      const enrollment = await db.enrollment.findUnique({
+        where: { userId_courseId: { userId: session.user.id, courseId: course.id } },
+      });
+      enrolled = hasCourseAccess(enrollment);
+    }
+  }
+
+  if (!enrolled) {
+    redirect(`/enroll/${slug}?next=/es/college/${slug}/lessons/${lessonSlug}`);
+  }
 
   const { course, module, lesson, lessonIndex, moduleLessons } = ctx;
   const prev = lessonIndex > 0 ? moduleLessons[lessonIndex - 1] : null;
@@ -85,6 +115,14 @@ export default async function SpanishCollegeLessonPage({ params }: Props) {
               </Link>
             ) : null}
           </div>
+
+          <p className="mt-8 text-center text-sm text-nova-cyan-light/70">
+            También puedes seguir progreso en el{" "}
+            <Link href={`/courses/nova-college-${slug}`} className="text-nova-cyan hover:underline">
+              LMS dashboard
+            </Link>
+            .
+          </p>
 
           <div className="nova-glass-island mt-10 border-nova-orange/20 p-6 text-center">
             <p className="text-sm text-nova-cyan-light/80">
