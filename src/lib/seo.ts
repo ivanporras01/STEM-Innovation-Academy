@@ -15,25 +15,35 @@ export const SITE_URL =
 export const SITE_NAME = NOVA_STEM_HUB.name;
 
 export const SEO_KEYWORDS = [
-  "NOVA STEM HUB",
+  "NOVA STEM Hub",
   "STEM education",
-  "NOVA School",
-  "NOVA College",
-  "NOVA Language",
-  "NOVA Shop",
+  "School",
+  "College",
+  "Languages",
+  "Shop",
   "youth STEM electives",
+  "middle school STEM",
+  "high school STEM",
   "technical employability",
+  "career readiness",
   "learn English Spanish Portuguese",
   "verifiable certificates",
   "B2B STEM licensing",
   "mission paths",
   "quantum computing workforce",
+  "cybersecurity training",
+  "robotics engineering",
+  "coding and AI",
+  "data analytics",
+  "IoT smart systems",
+  "cloud technician",
+  "language learning online",
 ] as const;
 
 export const SEO_TWITTER_HANDLE = "@novastemhub";
 
 export const SEO_DEFAULT_DESCRIPTION =
-  "NOVA STEM HUB — youth STEM electives (NOVA School), employability tracks (NOVA College), language programs (English, Spanish, Portuguese), and official NOVA merchandise. Global, inclusive STEM education.";
+  "NOVA STEM Hub — youth STEM electives (School), employability tracks (College), and language programs (English, Spanish, Portuguese). Global, inclusive STEM education with verifiable certificates and institutional partnerships.";
 
 export function absoluteUrl(path: string): string {
   const normalized = path.startsWith("/") ? path : `/${path}`;
@@ -161,7 +171,7 @@ export function buildRootMetadata(): Metadata {
 }
 
 export const PRODUCT_SEO_SNIPPETS = {
-  school: `${NOVA_SCHOOL.electiveCount} youth electives · ages ${NOVA_SCHOOL.ages}`,
+  school: `${NOVA_SCHOOL.electiveCount} youth electives · Middle & High School`,
   college: `${NOVA_COLLEGE.trackCount} employability tracks · verifiable certificates`,
   language: `${NOVA_LANGUAGE.courseCount} programs · English · Spanish · Portuguese`,
   shop: `Official ${NOVA_SHOP.name} merchandise · apparel · accessories · stationery`,

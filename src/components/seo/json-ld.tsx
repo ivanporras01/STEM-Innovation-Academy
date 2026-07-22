@@ -26,9 +26,17 @@ export function organizationJsonLd() {
     areaServed: "Worldwide",
     knowsAbout: [
       "STEM education",
-      "Technical employability",
+      "Robotics engineering",
+      "Coding and artificial intelligence",
+      "Cybersecurity training",
+      "Quantum computing workforce development",
+      "Data analytics",
+      "IoT smart systems",
+      "Cloud technician training",
       "Language learning",
       "K-12 electives",
+      "Technical employability",
+      "Verifiable certificates",
     ],
   };
 }
@@ -45,6 +53,14 @@ export function webSiteJsonLd() {
       "@type": "Organization",
       name: SITE_NAME,
       url: SITE_URL,
+    },
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${SITE_URL}/catalog?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
     },
   };
 }

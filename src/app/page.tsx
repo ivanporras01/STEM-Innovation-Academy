@@ -29,7 +29,7 @@ const PRODUCT_CARDS = [
     product: NOVA_SCHOOL,
     href: NOVA_SCHOOL.path,
     accent: "border-nova-cyan/30 hover:border-nova-cyan/50",
-    badge: "Youth · Ages 8–16",
+    badge: "Youth · Middle & High School",
     highlights: [
       `${NOVA_SCHOOL.electiveCount} school electives`,
       "Mission Paths",

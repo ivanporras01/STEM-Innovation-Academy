@@ -65,19 +65,18 @@ export const NOVAHUB = NOVA_STEM_HUB;
 /** K-12 / middle & high school — youth line under NOVA STEM HUB (parallel to College). */
 export const NOVA_SCHOOL = {
   shortName: "NOVA",
-  name: "NOVA School",
+  name: "School",
   tagline: "STEM Innovation for Young Explorers",
   taglinePt: "Inovação STEM para jovens Explorers",
-  fullTitle: "NOVA School — STEM Innovation for Young Explorers",
+  fullTitle: "School — STEM Innovation for Young Explorers",
   description:
     "NOVA School helps middle and high school learners explore technology, develop practical skills, build meaningful projects, and grow into confident innovators.",
   portalName: "NOVA School Portal",
-  homeLabel: "NOVA School Home",
-  metadataTitle: "NOVA School — STEM Innovation for Young Explorers",
-  metadataTemplate: "%s | NOVA School",
+  homeLabel: "School Home",
+  metadataTitle: "School — STEM Innovation for Young Explorers",
+  metadataTemplate: "%s | NOVA STEM HUB",
   pillars: "Learn • Build • Innovate • Inspire",
-  heroEyebrow: "✦ NOVA STEM HUB · NOVA School",
-  ages: "8–16",
+  heroEyebrow: "✦ NOVA STEM HUB · School",
   electiveCount: 9,
   path: "/school",
   pathEs: "/es/school",
@@ -90,7 +89,7 @@ export const NOVA_ACADEMY = NOVA_SCHOOL;
 
 /** English · Spanish · Portuguese — structured language programs under NOVA STEM HUB. */
 export const NOVA_LANGUAGE = {
-  name: "NOVA Language",
+  name: "Languages",
   tagline: "English · Spanish · Portuguese — learn with confidence",
   taglineEs: "Inglés · Español · Portugués — aprende con confianza",
   taglinePt: "Inglês · Espanhol · Português — aprenda com confiança",
@@ -100,9 +99,9 @@ export const NOVA_LANGUAGE = {
     "Tres programas de idiomas alineados al MCER con labs de conversación, contexto cultural y certificados verificables. Licencia para colegios e instituciones.",
   descriptionPt:
     "Três programas de idiomas alinhados ao CEFR com labs de conversação, contexto cultural e certificados verificáveis. Licença para escolas e instituições.",
-  metadataTitle: "NOVA Language — NOVA STEM HUB",
-  metadataTemplate: "%s | NOVA Language",
-  heroEyebrow: "✦ NOVA STEM HUB · NOVA Language",
+  metadataTitle: "Languages — NOVA STEM HUB",
+  metadataTemplate: "%s | NOVA STEM HUB",
+  heroEyebrow: "✦ NOVA STEM HUB · Languages",
   courseCount: 3,
   path: "/language",
   pathEs: "/es/language",
@@ -129,7 +128,7 @@ export const NOVA_SHOP = {
 
 /** Technical employability tracks (16–25+) — NOVA STEM HUB entry product. Curriculum in src/data/nova-college. */
 export const NOVA_COLLEGE = {
-  name: "NOVA College",
+  name: "College",
   tagline: "From classroom to first tech job",
   taglineEs: "Del aula al primer empleo tech",
   taglinePt: "Da sala de aula ao primeiro emprego tech",
@@ -137,9 +136,11 @@ export const NOVA_COLLEGE = {
     "~120-hour technical programs, verifiable certificates, aligned to CompTIA, ETA, IBM Quantum, and more. B2B licensing for technical schools and community colleges.",
   descriptionEs:
     "Programas técnicos de ~120 horas, certificados verificables, alineados a CompTIA, ETA, IBM Quantum y más. Modelo B2B para colegios técnicos y community colleges.",
-  metadataTitle: "NOVA College — NOVA STEM HUB",
-  metadataTemplate: "%s | NOVA College",
-  heroEyebrow: "✦ NOVA STEM HUB · NOVA College",
+  descriptionPt:
+    "Programas técnicos de ~120 horas, certificados verificables, alineados a CompTIA, ETA, IBM Quantum y mais. Modelo B2B para colégios técnicos e community colleges.",
+  metadataTitle: "College — NOVA STEM HUB",
+  metadataTemplate: "%s | NOVA STEM HUB",
+  heroEyebrow: "✦ NOVA STEM HUB · College",
   isEntryProduct: true,
   ages: "16–25+",
   path: "/college",
@@ -212,7 +213,7 @@ export const NOVA_STEM_HUB_PRODUCTS = [
     order: 1,
     product: NOVA_SCHOOL.name,
     tier: "Youth",
-    ages: NOVA_SCHOOL.ages,
+    ages: "Middle & High School",
     focus: `${NOVA_SCHOOL.electiveCount} electives · Mission Paths · buddies`,
     path: NOVA_SCHOOL.path,
     role: "youth" as const,

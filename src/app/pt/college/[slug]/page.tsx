@@ -10,9 +10,7 @@ import {
   getNovaCollegeCourseBySlug,
   novaCollegeCourses,
 } from "@/lib/novahub";
-import { getCollegeTrackEn, NOVA_COLLEGE_PAGE_EN } from "@/data/nova-college/catalog-en";
-import { getCollegeTrackCopy } from "@/lib/program-locale-copy";
-import { NOVAHUB_IMPACT } from "@/lib/novahub-impact";
+import { getCollegeTrackEn } from "@/data/nova-college/catalog-en";
 import { CertificatePreviewPromo } from "@/components/certificates/certificate-preview-promo";
 
 type Props = {
@@ -26,25 +24,21 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const course = getNovaCollegeCourseBySlug(slug);
-  if (!course) return { title: "Track not found" };
-
-  const en = getCollegeTrackEn(slug);
+  if (!course) return { title: "Trilha não encontrada" };
   return {
-    title: `${en?.title ?? course.title} | ${NOVA_COLLEGE.name}`,
-    description: en?.description ?? course.description,
+    title: `${course.title} | ${NOVA_COLLEGE.name}`,
+    description: course.description,
   };
 }
 
-export default async function CollegeTrackPage({ params }: Props) {
+export default async function PortugueseCollegeTrackPage({ params }: Props) {
   const { slug } = await params;
   const course = getNovaCollegeCourseBySlug(slug);
   if (!course) notFound();
 
-  const copy = getCollegeTrackCopy(slug, "en");
+  const en = getCollegeTrackEn(slug);
   const isAdvanced = course.tier === "advanced";
   const qwaDelivery = course.contentDelivery;
-  const outcomes = copy.highlights?.length ? copy.highlights : [];
-  const prerequisites = copy.prerequisites?.length ? copy.prerequisites : [];
 
   return (
     <div className="relative flex min-h-screen flex-col">
@@ -56,7 +50,7 @@ export default async function CollegeTrackPage({ params }: Props) {
         />
         <div className="nova-container relative">
           <Link
-            href={NOVA_COLLEGE.path}
+            href="/pt/college"
             className="mb-4 inline-block text-sm text-nova-cyan-light/70 hover:text-white"
           >
             ← {NOVA_COLLEGE.name}
@@ -64,34 +58,31 @@ export default async function CollegeTrackPage({ params }: Props) {
           <div className="mb-3 flex flex-wrap gap-2">
             {isAdvanced ? (
               <span className="rounded-full border border-nova-orange/40 bg-nova-orange/15 px-3 py-1 text-xs font-bold uppercase text-nova-orange">
-                Tier 2 · Advanced
+                Tier 2 · Avançado
               </span>
             ) : (
               <span className="rounded-full border border-nova-cyan/30 bg-nova-cyan/10 px-3 py-1 text-xs font-bold uppercase text-nova-cyan-light">
-                Tier 1 · Entry
+                Tier 1 · Entrada
               </span>
             )}
             <span className="rounded-full border border-white/10 px-3 py-1 text-xs text-nova-cyan-light/70">
-              ~{course.durationHours} hours · {course.modules.length} modules
+              ~{course.durationHours}h · {course.modules.length} módulos
             </span>
             <span className="rounded-full border border-white/10 px-3 py-1 font-mono text-xs text-white/50">
               {course.verifyCertificatePrefix}
             </span>
           </div>
-          <h1 className="text-3xl font-black sm:text-4xl lg:text-5xl">{copy.title}</h1>
-          <p className="mt-3 max-w-2xl text-lg text-nova-cyan-light/90">{copy.tagline}</p>
-          <p className="mt-4 max-w-3xl text-sm text-white/75">{copy.description}</p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Link href={`/enroll/${slug}`} className="nova-btn-primary nova-btn-glow">
-              Enroll &amp; unlock LMS →
-            </Link>
+          <h1 className="text-3xl font-black sm:text-4xl lg:text-5xl">{course.title}</h1>
+          <p className="mt-3 max-w-2xl text-lg text-nova-cyan-light/90">{course.tagline}</p>
+          <p className="mt-4 max-w-3xl text-sm text-white/75">{course.description}</p>
+          {en && (
             <Link
-              href={`/es/college/${slug}`}
-              className="nova-btn-secondary border-white/20 text-white"
+              href={`/college/${slug}`}
+              className="mt-4 inline-block text-sm text-nova-cyan-light/60 hover:text-nova-cyan"
             >
-              Full syllabus in Spanish edition →
+              English edition overview →
             </Link>
-          </div>
+          )}
         </div>
       </section>
 
@@ -99,11 +90,9 @@ export default async function CollegeTrackPage({ params }: Props) {
         <div className="nova-container space-y-12">
           <div className="grid gap-6 lg:grid-cols-3">
             <section className="nova-glass-island lg:col-span-2">
-              <h2 className="text-lg font-bold text-white">
-                {NOVA_COLLEGE_PAGE_EN.learningOutcomesTitle}
-              </h2>
+              <h2 className="text-lg font-bold text-white">Resultados de aprendizagem</h2>
               <ul className="mt-4 space-y-2 text-sm text-nova-cyan-light/85">
-                {outcomes.slice(0, 8).map((outcome) => (
+                {course.learningOutcomes.slice(0, 8).map((outcome) => (
                   <li key={outcome} className="flex gap-2">
                     <span className="text-nova-cyan">✓</span>
                     <span>{outcome}</span>
@@ -115,7 +104,7 @@ export default async function CollegeTrackPage({ params }: Props) {
             <aside className="space-y-4">
               <div className="nova-glass-island">
                 <h2 className="text-sm font-semibold uppercase tracking-wider text-nova-cyan">
-                  {NOVA_COLLEGE_PAGE_EN.certificationsTitle}
+                  Certificações
                 </h2>
                 <ul className="mt-3 space-y-1 text-sm text-nova-cyan-light/80">
                   {course.certificationAlignment.primary.map((cert) => (
@@ -123,13 +112,13 @@ export default async function CollegeTrackPage({ params }: Props) {
                   ))}
                 </ul>
               </div>
-              {prerequisites.length > 0 && (
+              {course.prerequisites.length > 0 && (
                 <div className="nova-glass-island">
                   <h2 className="text-sm font-semibold uppercase tracking-wider text-nova-cyan">
-                    {NOVA_COLLEGE_PAGE_EN.prerequisitesTitle}
+                    Pré-requisitos
                   </h2>
                   <ul className="mt-3 space-y-1 text-sm text-nova-cyan-light/80">
-                    {prerequisites.map((req) => (
+                    {course.prerequisites.map((req) => (
                       <li key={req}>{req}</li>
                     ))}
                   </ul>
@@ -139,9 +128,9 @@ export default async function CollegeTrackPage({ params }: Props) {
           </div>
 
           <section>
-            <h2 className="mb-2 text-xl font-bold text-white">Program structure</h2>
+            <h2 className="mb-2 text-xl font-bold text-white">Estrutura do programa</h2>
             <p className="mb-6 text-sm text-nova-cyan-light/70">
-              {course.modules.length} modules · ~{course.durationHours} hours
+              {course.modules.length} módulos · ~{course.durationHours} horas de estudo
             </p>
             <div className="space-y-4">
               {course.modules.map((mod) => (
@@ -149,19 +138,19 @@ export default async function CollegeTrackPage({ params }: Props) {
                   <div className="flex flex-wrap items-start justify-between gap-2">
                     <div>
                       <p className="text-xs font-bold uppercase tracking-wider text-nova-cyan/70">
-                        Module {mod.order}
+                        Módulo {mod.order}
                       </p>
                       <h3 className="mt-1 font-semibold text-white">{mod.title}</h3>
                       <p className="mt-1 text-sm text-nova-cyan-light/70">{mod.description}</p>
                     </div>
-                    <span className="text-xs text-nova-cyan-light/60">{mod.contactHours}h contact</span>
+                    <span className="text-xs text-nova-cyan-light/60">{mod.contactHours}h contato</span>
                   </div>
                   <ul className="mt-4 space-y-2">
                     {mod.lessons.map((lesson) => (
                       <li key={lesson.slug}>
                         {lesson.content ? (
                           <Link
-                            href={`/college/${slug}/lessons/${lesson.slug}`}
+                            href={`/pt/college/${slug}/lessons/${lesson.slug}`}
                             className="text-sm text-nova-cyan hover:underline"
                           >
                             {lesson.title}
@@ -185,7 +174,7 @@ export default async function CollegeTrackPage({ params }: Props) {
 
           {course.capstone && (
             <section className="nova-glass-island">
-              <h2 className="text-lg font-bold text-white">Capstone project</h2>
+              <h2 className="text-lg font-bold text-white">Projeto capstone</h2>
               <p className="mt-2 font-medium text-white">{course.capstone.title}</p>
               <p className="mt-2 text-sm text-nova-cyan-light/70">
                 {course.capstone.description}
@@ -196,18 +185,18 @@ export default async function CollegeTrackPage({ params }: Props) {
           <section className="nova-glass-island flex flex-col gap-4 border-nova-orange/20 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-sm font-semibold uppercase tracking-wider text-nova-orange">
-                Need financial support?
+                Precisa de apoio financeiro?
               </p>
               <p className="mt-1 text-white">
-                Apply for a {NOVAHUB.name} scholarship for this track — human review, no automatic
-                guarantee.
+                Solicite uma bolsa {NOVAHUB.name} para esta trilha — revisão humana, sem garantia
+                automática.
               </p>
             </div>
             <Link
-              href={`${NOVAHUB_IMPACT.applyPath}?program=${isAdvanced ? "beca-quantum" : "techhub-beca"}`}
+              href={`/pt/scholarships/apply?program=${isAdvanced ? "beca-quantum" : "techhub-beca"}`}
               className="nova-btn-primary nova-btn-glow shrink-0 bg-nova-orange hover:bg-nova-orange/90"
             >
-              Apply for scholarship
+              Solicitar bolsa
             </Link>
           </section>
 
@@ -217,41 +206,36 @@ export default async function CollegeTrackPage({ params }: Props) {
                 {NOVA_COLLEGE.name} · {QUANTUM_WORKFORCE.programLabel}
               </p>
               <p className="mx-auto mt-2 max-w-xl text-sm text-nova-cyan-light/80">
-                This track is part of {NOVA_COLLEGE.name}. Interactive simulators, Bloch sphere,
-                and Qiskit labs run in the {QUANTUM_WORKFORCE.shortName} delivery app (English).
+                Esta trilha é parte de {NOVA_COLLEGE.name}. Simuladores, esfera de Bloch e labs
+                Qiskit são executados na app de delivery {QUANTUM_WORKFORCE.shortName}.
               </p>
-              <div className="mt-4 flex flex-wrap justify-center gap-3">
-                <a
-                  href={qwaDelivery.appBaseUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="nova-btn-primary nova-btn-glow inline-flex bg-nova-orange hover:bg-nova-orange/90"
-                >
-                  Open {QUANTUM_WORKFORCE.shortName} delivery app ↗
-                </a>
-              </div>
+              <a
+                href={qwaDelivery.appBaseUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="nova-btn-primary nova-btn-glow mt-4 inline-flex bg-nova-orange hover:bg-nova-orange/90"
+              >
+                Abrir app delivery {QUANTUM_WORKFORCE.shortName} ↗
+              </a>
             </section>
           )}
 
           <section className="mb-12">
-            <CertificatePreviewPromo
-              programTitle={copy.title}
-              locale="en"
-            />
+            <CertificatePreviewPromo programTitle={course.title} locale="pt" />
           </section>
 
           <section className="text-center">
             <p className="text-sm text-nova-cyan-light/60">
-              Verifiable certificate · {course.verifyCertificatePrefix} ·{" "}
-              <Link href={NOVAHUB_IMPACT.verifyPath} className="text-nova-cyan hover:underline">
-                Verify certificate
+              Certificado verificável · {course.verifyCertificatePrefix} ·{" "}
+              <Link href="/pt/verify" className="text-nova-cyan hover:underline">
+                Verificar certificado
               </Link>
             </p>
             <Link
-              href="/partnership"
-              className="nova-btn-secondary mt-4 inline-flex border-white/20 text-white"
+              href="/college"
+              className="nova-btn-secondary mt-4 inline-flex border-white/20 text-white/70"
             >
-              Partner as an institution
+              English edition overview
             </Link>
           </section>
         </div>

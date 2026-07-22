@@ -88,6 +88,9 @@ export default async function SpanishLanguageCoursePage({ params }: Props) {
           </section>
 
           <section className="flex flex-wrap gap-3">
+            <Link href={`/enroll/${slug}`} className="nova-btn-primary nova-btn-glow">
+              Inscribirse &amp; desbloquear LMS →
+            </Link>
             <Link href={NOVA_STEM_HUB.pathEs} className="nova-btn-secondary border-white/20 text-white">
               ← {NOVA_STEM_HUB.name}
             </Link>

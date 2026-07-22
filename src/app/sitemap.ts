@@ -45,6 +45,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     entry("/scholarships", 0.8, "monthly"),
     entry("/es/scholarships", 0.75, "monthly"),
     entry("/es/internships", 0.75, "monthly"),
+    entry("/about", 0.85, "monthly"),
+    entry("/es/about", 0.8, "monthly"),
+    entry("/pt/about", 0.75, "monthly"),
     entry("/mission", 0.75, "monthly"),
     entry("/es/mission", 0.7, "monthly"),
     entry("/verify", 0.7, "monthly"),
@@ -54,6 +57,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     entry("/enroll", 0.9, "weekly"),
     entry("/catalog", 0.9, "weekly"),
     entry("/partnership/apply", 0.85, "monthly"),
+    entry("/privacy", 0.6, "monthly"),
+    entry("/terms", 0.6, "monthly"),
+    entry("/cookies", 0.6, "monthly"),
   ];
 
   for (const program of NOVA_PROGRAM_CATALOG) {
@@ -63,11 +69,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
   for (const elective of novaSchoolElectives) {
     routes.push(entry(`/school/${elective.slug}`, 0.8, "monthly"));
     routes.push(entry(`/es/school/${elective.slug}`, 0.75, "monthly"));
+    routes.push(entry(`/pt/school/${elective.slug}`, 0.7, "monthly"));
   }
 
   for (const track of novaCollegeCourses) {
     routes.push(entry(`/college/${track.slug}`, 0.85, "monthly"));
     routes.push(entry(`/es/college/${track.slug}`, 0.8, "monthly"));
+    routes.push(entry(`/pt/college/${track.slug}`, 0.75, "monthly"));
   }
 
   for (const course of novaLanguageCourses) {

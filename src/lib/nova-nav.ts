@@ -36,9 +36,9 @@ export type NovaStemHubNav = {
 
 const STEM_HUB_LABELS = {
   en: {
-    menuLabel: "NOVA Resources",
+    menuLabel: "Resources",
     homeLabel: "Hub overview",
-    megaTitle: "NOVA Resources",
+    megaTitle: "Resources",
     sectionPrograms: "Programs",
     sectionFunding: "Funding",
     sectionCareers: "Careers",
@@ -69,9 +69,9 @@ const STEM_HUB_LABELS = {
     contactDesc: "Reach the NOVA STEM HUB team",
   },
   es: {
-    menuLabel: "NOVA Resources",
+    menuLabel: "Resources",
     homeLabel: "Inicio del hub",
-    megaTitle: "NOVA Resources",
+    megaTitle: "Resources",
     sectionPrograms: "Programas",
     sectionFunding: "Financiamiento",
     sectionCareers: "Carreras",
@@ -102,9 +102,9 @@ const STEM_HUB_LABELS = {
     contactDesc: "Equipo NOVA STEM HUB",
   },
   pt: {
-    menuLabel: "NOVA Resources",
+    menuLabel: "Resources",
     homeLabel: "Visão geral do hub",
-    megaTitle: "NOVA Resources",
+    megaTitle: "Resources",
     sectionPrograms: "Programas",
     sectionFunding: "Financiamento",
     sectionCareers: "Carreiras",
@@ -153,12 +153,12 @@ export function getNovaPrimaryNav(locale: AppLocale): readonly NovaNavItem[] {
     { href: paths.college, label: NOVA_COLLEGE.name },
     { href: paths.language, label: NOVA_LANGUAGE.name },
     { href: hub.homeHref, label: hub.menuLabel },
-    { href: paths.news, label: "NOVA News" },
+    { href: paths.news, label: "News" },
   ];
 }
 
 /**
- * Header ordering: School → College → Language → NOVA Resources → NOVA News (last).
+ * Header ordering: School → College → Languages → Resources → News → About (last).
  * Shop omitted until NOVA_SHOP_HEADER_ENABLED.
  */
 export function getNovaHeaderNav(locale: AppLocale): readonly NovaHeaderNavItem[] {
@@ -170,7 +170,8 @@ export function getNovaHeaderNav(locale: AppLocale): readonly NovaHeaderNavItem[
     { href: paths.college, label: NOVA_COLLEGE.name, kind: "product" },
     { href: paths.language, label: NOVA_LANGUAGE.name, kind: "product" },
     { href: hub.homeHref, label: hub.menuLabel, kind: "resources" },
-    { href: paths.news, label: "NOVA News", kind: "product" },
+    { href: paths.news, label: "News", kind: "product" },
+    { href: "/about", label: "About", kind: "product" },
   ];
 
   if (NOVA_SHOP_HEADER_ENABLED) {

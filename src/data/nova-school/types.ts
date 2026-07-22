@@ -1,4 +1,4 @@
-/** NOVA School — youth elective programs (ages 8–16, B2B licensable). */
+/** NOVA School — youth elective programs (Middle & High School, B2B licensable). */
 
 export type NovaSchoolModule = {
   order: number;
@@ -10,7 +10,6 @@ export type NovaSchoolElectiveSummary = {
   slug: string;
   title: string;
   tagline: string;
-  ageRange: string;
   highlights: string[];
   /** Links to existing Mission Path course when applicable */
   missionPathHref?: string;
@@ -22,7 +21,6 @@ export type NovaSchoolElective = {
   title: string;
   tagline: string;
   description: string;
-  ageRange: string;
   grades: string;
   /** Approximate student hours (reading + interaction + assignments). */
   durationHours: number;

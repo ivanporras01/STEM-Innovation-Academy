@@ -50,7 +50,7 @@ export default async function SpanishSchoolElectivePage({ params }: Props) {
           <h1 className="text-3xl font-black sm:text-4xl">{title}</h1>
           <p className="mt-4 max-w-2xl text-lg text-white/80">{tagline}</p>
           <p className="mt-3 text-sm text-nova-cyan-light/70">
-            ~{elective.durationHours} horas · Edades {elective.ageRange}
+            ~{elective.durationHours} horas · {elective.grades}
           </p>
         </div>
       </section>
@@ -60,6 +60,33 @@ export default async function SpanishSchoolElectivePage({ params }: Props) {
           <section className="nova-glass-island p-6 sm:p-8">
             <h2 className="text-lg font-bold text-white">Sobre esta electiva</h2>
             <p className="mt-3 text-sm leading-relaxed text-nova-cyan-light/85">{description}</p>
+          </section>
+
+          <section>
+            <h2 className="mb-4 text-lg font-bold text-white">Resultados de aprendizaje</h2>
+            <ul className="space-y-2 text-sm text-nova-cyan-light/80">
+              {elective.learningOutcomes.map((item) => (
+                <li key={item} className="flex gap-2">
+                  <span className="text-nova-cyan">✓</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="mb-4 text-lg font-bold text-white">Estructura del programa</h2>
+            <div className="space-y-3">
+              {elective.modules.map((mod) => (
+                <article key={mod.order} className="nova-glass-card p-4">
+                  <p className="text-xs font-bold uppercase tracking-wider text-nova-cyan/70">
+                    Módulo {mod.order}
+                  </p>
+                  <p className="mt-1 font-semibold text-white">{mod.title}</p>
+                  <p className="mt-1 text-sm text-nova-cyan-light/75">{mod.description}</p>
+                </article>
+              ))}
+            </div>
           </section>
 
           {elective.experienceSlug && (

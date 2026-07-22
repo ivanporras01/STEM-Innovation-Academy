@@ -88,6 +88,9 @@ export default async function PortugueseLanguageCoursePage({ params }: Props) {
           </section>
 
           <section className="flex flex-wrap gap-3">
+            <Link href={`/enroll/${slug}`} className="nova-btn-primary nova-btn-glow">
+              Inscrever-se &amp; desbloquear LMS →
+            </Link>
             <Link href={NOVA_LANGUAGE.pathPt} className="nova-btn-secondary border-white/20 text-white">
               ← Todos os cursos de idiomas
             </Link>

@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Navbar } from "@/components/layout/navbar";
@@ -20,19 +20,19 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const elective = getNovaSchoolElectiveBySlug(slug);
-  if (!elective) return { title: "Elective not found" };
-  const copy = getSchoolElectiveCopy(slug, "en");
+  if (!elective) return { title: "Eletiva não encontrada" };
+  const copy = getSchoolElectiveCopy(slug, "pt");
   return {
     title: `${copy.title} | ${NOVA_SCHOOL.name}`,
     description: copy.description,
   };
 }
 
-export default async function SchoolElectivePage({ params }: Props) {
+export default async function PortugueseSchoolElectivePage({ params }: Props) {
   const { slug } = await params;
   const elective = getNovaSchoolElectiveBySlug(slug);
   if (!elective) notFound();
-  const copy = getSchoolElectiveCopy(slug, "en");
+  const copy = getSchoolElectiveCopy(slug, "pt");
 
   return (
     <div className="relative flex min-h-screen flex-col">
@@ -46,7 +46,7 @@ export default async function SchoolElectivePage({ params }: Props) {
           <h1 className="text-3xl font-black sm:text-4xl">{copy.title}</h1>
           <p className="mt-4 max-w-2xl text-lg text-white/80">{copy.tagline}</p>
           <p className="mt-3 text-sm text-nova-cyan-light/70">
-            ~{elective.durationHours} hours · {elective.grades}
+            ~{elective.durationHours} horas · {elective.grades}
           </p>
         </div>
       </section>
@@ -54,12 +54,12 @@ export default async function SchoolElectivePage({ params }: Props) {
       <main className="nova-space-section relative flex-1">
         <div className="nova-container max-w-3xl space-y-10">
           <section className="nova-glass-island p-6 sm:p-8">
-            <h2 className="text-lg font-bold text-white">About this elective</h2>
+            <h2 className="text-lg font-bold text-white">Sobre esta eletiva</h2>
             <p className="mt-3 text-sm leading-relaxed text-nova-cyan-light/85">{copy.description}</p>
           </section>
 
           <section>
-            <h2 className="mb-4 text-lg font-bold text-white">Learning outcomes</h2>
+            <h2 className="mb-4 text-lg font-bold text-white">Resultados de aprendizagem</h2>
             <ul className="space-y-2 text-sm text-nova-cyan-light/80">
               {elective.learningOutcomes.map((item) => (
                 <li key={item} className="flex gap-2">
@@ -71,12 +71,12 @@ export default async function SchoolElectivePage({ params }: Props) {
           </section>
 
           <section>
-            <h2 className="mb-4 text-lg font-bold text-white">Program structure</h2>
+            <h2 className="mb-4 text-lg font-bold text-white">Estrutura do programa</h2>
             <div className="space-y-3">
               {elective.modules.map((mod) => (
                 <article key={mod.order} className="nova-glass-card p-4">
                   <p className="text-xs font-bold uppercase tracking-wider text-nova-cyan/70">
-                    Module {mod.order}
+                    Módulo {mod.order}
                   </p>
                   <p className="mt-1 font-semibold text-white">{mod.title}</p>
                   <p className="mt-1 text-sm text-nova-cyan-light/75">{mod.description}</p>
@@ -88,37 +88,38 @@ export default async function SchoolElectivePage({ params }: Props) {
           {elective.experienceSlug && (
             <MissionInviteCard
               title={elective.experienceTitle ?? "Explore Now Mission"}
-              subtitle="Your first contact with NOVA — interactive LAB, buddy co-pilot, and a badge waiting for you."
+              subtitle="Seu primeiro contato com NOVA — LAB interativo, buddy copiloto e uma insignia esperando por você."
               href={`/experiences/${elective.experienceSlug}`}
               accent={getExperience(elective.experienceSlug)?.accent}
               accentSecondary={getExperience(elective.experienceSlug)?.accentSecondary}
+              ctaLabel="Ativar missão →"
             />
           )}
 
           {elective.missionPathHref && (
             <section className="text-center">
               <Link href={elective.missionPathHref} className="text-sm font-semibold text-nova-cyan hover:underline">
-                View full Mission Path catalog →
+                Ver catálogo completo de Mission Paths →
               </Link>
             </section>
           )}
 
           <section className="flex flex-wrap gap-3">
             <Link href={`/enroll/${slug}`} className="nova-btn-primary nova-btn-glow">
-              Enroll &amp; unlock LMS →
+              Inscrever-se &amp; desbloquear LMS →
             </Link>
-            <Link href={NOVA_SCHOOL.path} className="nova-btn-secondary border-white/20 text-white">
-              ← All {NOVA_SCHOOL.electiveCount} electives
+            <Link href="/pt/school" className="nova-btn-secondary border-white/20 text-white">
+              ← Todas as {NOVA_SCHOOL.electiveCount} eletivas
             </Link>
-            <Link href={NOVA_COLLEGE.path} className="nova-btn-secondary border-white/20 text-white/70">
+            <Link href="/pt/college" className="nova-btn-secondary border-white/20 text-white/70">
               {NOVA_COLLEGE.name} →
             </Link>
           </section>
 
           <p className="text-center text-sm text-nova-cyan-light/60">
-            Spanish edition:{" "}
-            <Link href={`/es/school/${slug}`} className="text-nova-cyan hover:underline">
-              Ver en Español
+            Edição em inglês:{" "}
+            <Link href={`/school/${slug}`} className="text-nova-cyan hover:underline">
+              View in English
             </Link>
           </p>
         </div>

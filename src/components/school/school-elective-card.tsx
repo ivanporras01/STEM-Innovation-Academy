@@ -23,7 +23,6 @@ export function SchoolElectiveCard({ elective, locale = "en" }: Props) {
     locale === "es" ? "Electiva" : locale === "pt" ? "Eletiva" : "Elective";
   const cta =
     locale === "es" ? "Ver electiva →" : locale === "pt" ? "Ver eletiva →" : "View elective →";
-  const agesLabel = locale === "es" ? "edades" : locale === "pt" ? "idades" : "ages";
 
   return (
     <Link href={href} className="group block h-full">
@@ -33,7 +32,7 @@ export function SchoolElectiveCard({ elective, locale = "en" }: Props) {
             {electiveLabel}
           </span>
           <span className="text-xs text-nova-cyan-light/60">
-            {agesLabel} {elective.ageRange}
+            Middle & High School
           </span>
         </div>
         <h2 className="text-lg font-bold text-white group-hover:text-nova-cyan-light">{title}</h2>

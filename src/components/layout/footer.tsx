@@ -8,7 +8,7 @@ import {
 } from "@/lib/nova-nav";
 import { getLocaleFromPath, LOCALE_PATHS } from "@/lib/locale";
 import { getNovaResourcePaths } from "@/lib/nova-resources";
-import { NOVA_SCHOOL, NOVA_STEM_HUB } from "@/lib/novahub-brand";
+import { NOVA_STEM_HUB } from "@/lib/novahub-brand";
 import { NovaLogo } from "@/components/ui/nova-logo-mark";
 
 const MISSION_BY_LOCALE = {
@@ -123,11 +123,19 @@ export function Footer() {
         </div>
 
         <div className="border-t border-white/10">
-          <div className="nova-container flex flex-col items-center justify-between gap-2 py-4 text-xs text-nova-cyan-light/70 sm:flex-row">
-            <p>
-              © {new Date().getFullYear()} {NOVA_STEM_HUB.name}
-            </p>
-            <p>{NOVA_SCHOOL.pillars}</p>
+          <div className="nova-container flex flex-col items-center justify-between gap-3 py-5 text-xs text-nova-cyan-light/70 sm:flex-row">
+            <p>© 2026 NOVA STEM Hub. All Rights Reserved.</p>
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <Link href="/privacy" className="transition hover:text-white">
+                {locale === "es" ? "Política de privacidad" : locale === "pt" ? "Política de privacidade" : "Privacy Policy"}
+              </Link>
+              <Link href="/terms" className="transition hover:text-white">
+                {locale === "es" ? "Términos de servicio" : locale === "pt" ? "Termos de serviço" : "Terms of Service"}
+              </Link>
+              <Link href="/cookies" className="transition hover:text-white">
+                {locale === "es" ? "Política de cookies" : locale === "pt" ? "Política de cookies" : "Cookie Policy"}
+              </Link>
+            </div>
           </div>
         </div>
       </div>

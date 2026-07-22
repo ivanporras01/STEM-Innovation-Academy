@@ -46,7 +46,7 @@ export default function PortugueseSchoolCatalogPage() {
           <section>
             <h2 className="mb-2 text-xl font-bold text-white">Eletivas NOVA School</h2>
             <p className="mb-6 text-sm text-nova-cyan-light/70">
-              {NOVA_SCHOOL.electiveCount} eletivas · idades {NOVA_SCHOOL.ages} · Mission Paths interativos
+              {NOVA_SCHOOL.electiveCount} eletivas · Middle & High School · Mission Paths interativos
             </p>
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {novaSchoolElectiveIndex.map((elective) => (

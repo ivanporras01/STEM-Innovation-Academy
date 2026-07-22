@@ -15,15 +15,15 @@ type LogoProps = IconProps & {
 };
 
 const ICON_SIZES: Record<LogoSize, string> = {
-  sm: "h-8 w-8 min-h-8 min-w-8",
-  md: "h-11 w-11 min-h-11 min-w-11",
-  lg: "h-14 w-14 min-h-14 min-w-14",
+  sm: "h-9 w-9 min-h-9 min-w-9",
+  md: "h-12 w-12 min-h-12 min-w-12",
+  lg: "h-16 w-16 min-h-16 min-w-16",
 };
 
 const TEXT_SIZES: Record<LogoSize, string> = {
-  sm: "text-sm",
-  md: "text-base",
-  lg: "text-xl",
+  sm: "text-[1.075rem] leading-5",
+  md: "text-[1.3rem] leading-6",
+  lg: "text-[1.6rem] leading-7",
 };
 
 /** Orbit ring + 4-point star + planet — Logo #3 icon mark. */
@@ -62,13 +62,20 @@ export function NovaLogoIcon({ size = "md", className }: IconProps) {
   );
 }
 
-/** Horizontal lockup: Logo #3 icon + "NOVA" wordmark (no tagline). */
+/** Horizontal lockup: Logo #3 icon + "NOVA STEM Hub" wordmark with unified gradient. */
 export function NovaLogo({ size = "md", className, showText = true }: LogoProps) {
   return (
     <span className={cn("inline-flex shrink-0 items-center gap-2.5", className)}>
       <NovaLogoIcon size={size} />
       {showText && (
-        <span className={cn("font-bold tracking-tight text-white", TEXT_SIZES[size])}>NOVA</span>
+        <span
+          className={cn(
+            "whitespace-nowrap bg-gradient-to-r from-nova-cyan-light to-nova-cyan bg-clip-text font-bold tracking-tight text-transparent",
+            TEXT_SIZES[size],
+          )}
+        >
+          NOVA STEM Hub
+        </span>
       )}
     </span>
   );

@@ -57,7 +57,7 @@ export function Navbar() {
           HEADER_HEIGHT,
         )}
       >
-        {/* Brand lockup stays legible without competing with navigation at narrow widths. */}
+        {/* Brand lockup: unified NOVA STEM Hub wordmark with gradient. */}
         <div className="nova-header-brand relative z-20 shrink-0">
           <Link
             href={brand.homeHref}
@@ -65,16 +65,10 @@ export function Navbar() {
             aria-label={`${brand.name} — ${brand.homeLabel}`}
           >
             <NovaLogo
-              size="md"
-              showText={false}
+              size="sm"
+              showText={true}
               className="transition group-hover:[&_circle:last-of-type]:drop-shadow-[0_0_8px_rgba(0,212,255,0.8)]"
             />
-            <span className="flex min-w-0 flex-col leading-none">
-              <span className="whitespace-nowrap text-sm font-bold tracking-tight text-white sm:text-base">NOVA</span>
-              <span className="mt-1 whitespace-nowrap text-[9px] font-semibold uppercase tracking-[0.16em] text-nova-cyan-light/80 sm:text-[10px]">
-                STEM HUB
-              </span>
-            </span>
           </Link>
         </div>
 
