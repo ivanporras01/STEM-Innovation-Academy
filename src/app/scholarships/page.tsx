@@ -28,7 +28,7 @@ export default function ScholarshipsPage() {
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-orange/15 via-transparent to-nova-cyan/10" />
         <div className="nova-container relative">
           <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-nova-cyan">
-            ✦ {NOVA_STEM_HUB.name} · NOVA Resources
+            ✦ {NOVA_STEM_HUB.name}
           </p>
           <h1 className="text-3xl font-black sm:text-4xl lg:text-5xl">
             NOVA Scholarships

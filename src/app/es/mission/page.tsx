@@ -45,7 +45,7 @@ export default function SpanishMissionPage() {
 
         <div className="nova-container relative">
           <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-nova-cyan">
-            ✦ {NOVAHUB.name} · Impacto
+            ✦ {NOVAHUB.name}
           </p>
           <h1 className="max-w-4xl text-3xl font-black sm:text-4xl lg:text-5xl">
             {NOVAHUB_MISSION.headlineEs}

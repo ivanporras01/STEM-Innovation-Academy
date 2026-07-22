@@ -124,7 +124,7 @@ export function Footer() {
 
         <div className="border-t border-white/10">
           <div className="nova-container flex flex-col items-center justify-between gap-3 py-5 text-xs text-nova-cyan-light/70 sm:flex-row">
-            <p>© 2026 NOVA STEM Hub. All Rights Reserved.</p>
+            <p>© 2026 NOVA STEM HUB. All Rights Reserved.</p>
             <div className="flex flex-wrap items-center justify-center gap-4">
               <Link href="/privacy" className="transition hover:text-white">
                 {locale === "es" ? "Política de privacidad" : locale === "pt" ? "Política de privacidade" : "Privacy Policy"}

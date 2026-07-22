@@ -5,7 +5,7 @@ import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Terms of Service",
-  description: "NOVA STEM Hub terms of service — rules and conditions for using our platform and educational programs.",
+  description: "NOVA STEM HUB terms of service — rules and conditions for using our platform and educational programs.",
   path: "/terms",
 });
 
@@ -24,7 +24,7 @@ export default function TermsPage() {
               <div>
                 <h2 className="text-lg font-semibold text-white">1. Acceptance of Terms</h2>
                 <p className="mt-2">
-                  By accessing or using NOVA STEM Hub, you agree to be bound by these Terms of Service.
+                  By accessing or using NOVA STEM HUB, you agree to be bound by these Terms of Service.
                   If you do not agree, please do not use our platform.
                 </p>
               </div>
@@ -32,7 +32,7 @@ export default function TermsPage() {
               <div>
                 <h2 className="text-lg font-semibold text-white">2. Educational Services</h2>
                 <p className="mt-2">
-                  NOVA STEM Hub provides online STEM education programs, language courses, and related
+                  NOVA STEM HUB provides online STEM education programs, language courses, and related
                   learning resources for individuals and institutions. Course access is granted upon
                   enrollment and payment confirmation.
                 </p>
@@ -58,8 +58,8 @@ export default function TermsPage() {
               <div>
                 <h2 className="text-lg font-semibold text-white">5. Intellectual Property</h2>
                 <p className="mt-2">
-                  All content, trademarks, logos, course materials, and technology on NOVA STEM Hub are
-                  the property of NOVA STEM Hub or its licensors. You may not reproduce, distribute, or
+                  All content, trademarks, logos, course materials, and technology on NOVA STEM HUB are
+                  the property of NOVA STEM HUB or its licensors. You may not reproduce, distribute, or
                   create derivative works without written permission.
                 </p>
               </div>
@@ -76,7 +76,7 @@ export default function TermsPage() {
               <div>
                 <h2 className="text-lg font-semibold text-white">7. Limitation of Liability</h2>
                 <p className="mt-2">
-                  NOVA STEM Hub is not liable for indirect, incidental, or consequential damages arising
+                  NOVA STEM HUB is not liable for indirect, incidental, or consequential damages arising
                   from your use of the platform. Our total liability is limited to the amount paid for the
                   specific service giving rise to the claim.
                 </p>

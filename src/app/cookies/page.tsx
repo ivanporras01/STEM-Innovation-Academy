@@ -5,7 +5,7 @@ import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Cookie Policy",
-  description: "NOVA STEM Hub cookie policy — how we use cookies and similar technologies on our platform.",
+  description: "NOVA STEM HUB cookie policy — how we use cookies and similar technologies on our platform.",
   path: "/cookies",
 });
 
@@ -32,7 +32,7 @@ export default function CookiesPage() {
               <div>
                 <h2 className="text-lg font-semibold text-white">2. How We Use Cookies</h2>
                 <p className="mt-2">
-                  NOVA STEM Hub uses cookies to keep you signed in, remember your preferences, understand
+                  NOVA STEM HUB uses cookies to keep you signed in, remember your preferences, understand
                   how you use our platform, and deliver relevant content and communications.
                 </p>
               </div>

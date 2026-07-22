@@ -57,8 +57,8 @@ export function Navbar() {
           HEADER_HEIGHT,
         )}
       >
-        {/* Brand lockup: unified NOVA STEM Hub wordmark with gradient. */}
-        <div className="nova-header-brand relative z-20 shrink-0">
+        {/* Brand lockup: unified NOVA STEM HUB wordmark with gradient. */}
+        <div className="nova-header-brand relative z-20 shrink-0 pl-1 md:pl-2">
           <Link
             href={brand.homeHref}
             className="group flex items-center gap-2 sm:gap-2.5"

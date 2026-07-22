@@ -25,7 +25,7 @@ export default function VerifyPage() {
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-green/10 via-transparent to-nova-cyan/10" />
         <div className="nova-container relative text-center">
           <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-nova-cyan">
-            ✦ {NOVAHUB.name} · Verification
+            ✦ {NOVAHUB.name}
           </p>
           <h1 className="text-3xl font-black sm:text-4xl">Verify certificate</h1>
           <p className="mx-auto mt-4 max-w-2xl text-nova-cyan-light/85">

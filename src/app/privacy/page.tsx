@@ -5,7 +5,7 @@ import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Privacy Policy",
-  description: "NOVA STEM Hub privacy policy — how we collect, use, and protect your personal information.",
+  description: "NOVA STEM HUB privacy policy — how we collect, use, and protect your personal information.",
   path: "/privacy",
 });
 
@@ -24,7 +24,7 @@ export default function PrivacyPage() {
               <div>
                 <h2 className="text-lg font-semibold text-white">1. Introduction</h2>
                 <p className="mt-2">
-                  NOVA STEM Hub (“we,” “us,” or “our”) is committed to protecting your privacy. This
+                  NOVA STEM HUB (“we,” “us,” or “our”) is committed to protecting your privacy. This
                   Privacy Policy explains how we collect, use, disclose, and safeguard your information
                   when you use our website, learning platform, and related services.
                 </p>

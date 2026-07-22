@@ -62,7 +62,7 @@ export function NovaLogoIcon({ size = "md", className }: IconProps) {
   );
 }
 
-/** Horizontal lockup: Logo #3 icon + "NOVA STEM Hub" wordmark with unified gradient. */
+/** Horizontal lockup: Logo #3 icon + "NOVA STEM HUB" wordmark with unified gradient. */
 export function NovaLogo({ size = "md", className, showText = true }: LogoProps) {
   return (
     <span className={cn("inline-flex shrink-0 items-center gap-2.5", className)}>
@@ -74,7 +74,7 @@ export function NovaLogo({ size = "md", className, showText = true }: LogoProps)
             TEXT_SIZES[size],
           )}
         >
-          NOVA STEM Hub
+          NOVA STEM HUB
         </span>
       )}
     </span>

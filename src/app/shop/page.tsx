@@ -35,7 +35,7 @@ export default function NovaShopCatalogPage() {
           <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-nova-orange">
             {NOVA_SHOP.heroEyebrow}
           </p>
-          <h1 className="text-3xl font-black sm:text-4xl lg:text-5xl">{NOVA_SHOP.name}</h1>
+          <h1 className="text-3xl font-black sm:text-4xl lg:text-5xl">{NOVA_SHOP.heroTitle}</h1>
           <p className="mt-4 max-w-2xl text-lg text-white/80">{NOVA_SHOP.tagline}</p>
           <p className="mt-3 max-w-3xl text-sm text-nova-cyan-light/80">{copy.heroDescription}</p>
           <div className="mt-6 flex flex-wrap gap-3 text-sm">

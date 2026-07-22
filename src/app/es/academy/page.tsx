@@ -22,7 +22,7 @@ export default function SpanishAcademyHomePage() {
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-cyan/10 via-transparent to-nova-orange/10" />
         <div className="nova-container relative">
           <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-nova-cyan">
-            ✦ {NOVA_STEM_HUB.name} · {NOVA_ACADEMY.name}
+            ✦ {NOVA_STEM_HUB.name}
           </p>
           <h1 className="text-3xl font-black sm:text-4xl lg:text-5xl">
             Explora, construye e innova en STEM

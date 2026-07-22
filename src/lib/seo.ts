@@ -15,7 +15,7 @@ export const SITE_URL =
 export const SITE_NAME = NOVA_STEM_HUB.name;
 
 export const SEO_KEYWORDS = [
-  "NOVA STEM Hub",
+  "NOVA STEM HUB",
   "STEM education",
   "School",
   "College",
@@ -43,7 +43,7 @@ export const SEO_KEYWORDS = [
 export const SEO_TWITTER_HANDLE = "@novastemhub";
 
 export const SEO_DEFAULT_DESCRIPTION =
-  "NOVA STEM Hub — youth STEM electives (School), employability tracks (College), and language programs (English, Spanish, Portuguese). Global, inclusive STEM education with verifiable certificates and institutional partnerships.";
+  "NOVA STEM HUB — youth STEM electives (School), employability tracks (College), and language programs (English, Spanish, Portuguese). Global, inclusive STEM education with verifiable certificates and institutional partnerships.";
 
 export function absoluteUrl(path: string): string {
   const normalized = path.startsWith("/") ? path : `/${path}`;

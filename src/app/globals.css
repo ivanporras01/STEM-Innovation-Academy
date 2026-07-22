@@ -234,9 +234,9 @@
     overflow: visible;
   }
 
-  /* Wider than page content so horizontal nav tabs are not clipped at ~1280px */
+  /* Shared with .nova-container so header, hero, and page sections align perfectly */
   .nova-header-container {
-    @apply mx-auto w-full max-w-[84rem] px-3 sm:px-5 lg:px-6;
+    @apply nova-container;
   }
 
   body.nova-nav-explore-open .nova-glass-nav {
