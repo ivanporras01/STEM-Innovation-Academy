@@ -43,8 +43,9 @@ export async function GET(request: Request) {
   }
 
   const normalized = code.trim().toUpperCase();
+  const isSample = normalized === "NOVA-SAMPLE-V2-A1B2C3D4";
 
-  if (!isValidCertificateFormat(normalized)) {
+  if (!isSample && !isValidCertificateFormat(normalized)) {
     return NextResponse.json(
       {
         error:

@@ -56,9 +56,32 @@ function toPublicView(cert: Certificate, baseUrl: string): PublicCertificateView
 }
 
 function baseUrl(): string {
-  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
+  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL.trim();
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
   return "http://localhost:3000";
+}
+
+const SAMPLE_CERTIFICATE_CODE = "NOVA-SAMPLE-V2-A1B2C3D4";
+
+function getSampleCertificateView(base: string): PublicCertificateView {
+  return {
+    certificateId: SAMPLE_CERTIFICATE_CODE,
+    holderName: "Alexandra Isabella Montgomery",
+    programTitle: "Artificial Intelligence, Robotics, and Emerging Technologies",
+    programSlug: "ai-robotics-emerging-technologies",
+    credentialTitle: "Certificate of Achievement",
+    category: "College",
+    credentialLevel: "Professional Certificate",
+    completionDate: "2026-07-23",
+    issueDate: "2026-07-23",
+    learningHours: 120,
+    finalScore: 95,
+    passingScore: 80,
+    status: "valid",
+    issuedBy: "NOVA STEM HUB",
+    verificationUrl: `${base.replace(/\/$/, "")}/verify/${SAMPLE_CERTIFICATE_CODE}`,
+    locale: "en",
+  };
 }
 
 /** Verify a certificate by its public ID. Optionally validates a secure token. */
@@ -67,6 +90,12 @@ export async function verifyCertificateByCode(
   token?: string,
 ): Promise<PublicCertificateView | null> {
   const normalized = code.trim().toUpperCase();
+
+  // Static sample credential for review PDFs; never conflicts with real records.
+  if (normalized === SAMPLE_CERTIFICATE_CODE) {
+    return getSampleCertificateView(baseUrl());
+  }
+
   const cert = await db.certificate.findUnique({
     where: { code: normalized },
   });
