@@ -1,5 +1,5 @@
 {
-  "buildCommand": "node scripts/prepare-vercel-build.mjs && prisma generate && prisma db push --skip-generate --accept-data-loss && tsx prisma/seed.ts && next build",
+  "buildCommand": "node scripts/prepare-vercel-build.mjs && prisma generate && next build",
   "framework": "nextjs",
   "installCommand": "npm install",
   "regions": ["iad1"]
