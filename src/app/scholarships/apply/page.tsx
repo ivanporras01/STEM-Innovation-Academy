@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { ScholarshipApplyForm } from "@/components/scholarships/scholarship-apply-form";
-import { NOVA_STEM_HUB } from "@/lib/novahub-brand";
-
 export const metadata: Metadata = {
   title: "Apply for Scholarship",
   description:
@@ -15,9 +13,6 @@ export default function ScholarshipApplyPage() {
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-14 text-white">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-orange/10 via-transparent to-nova-cyan/10" />
         <div className="nova-container relative">
-          <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-nova-cyan">
-            ✦ {NOVA_STEM_HUB.name}
-          </p>
           <h1 className="text-3xl font-black sm:text-4xl">Apply for a scholarship</h1>
           <p className="mt-4 max-w-2xl text-nova-cyan-light/85">
             Tell us who you are and why you need support. We review each application carefully —

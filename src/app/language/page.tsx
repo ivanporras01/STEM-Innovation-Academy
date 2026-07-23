@@ -34,9 +34,6 @@ export default function NovaLanguageCatalogPage() {
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-green/10 via-transparent to-nova-cyan/10" />
         <div className="nova-container relative">
-          <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-nova-green">
-            ✦ {NOVA_STEM_HUB.name}
-          </p>
           <h1 className="text-3xl font-black sm:text-4xl lg:text-5xl">{NOVA_LANGUAGE.name}</h1>
           <p className="mt-4 max-w-2xl text-lg text-white/80">{NOVA_LANGUAGE.tagline}</p>
           <p className="mt-3 max-w-3xl text-sm text-nova-cyan-light/80">{copy.heroDescription}</p>

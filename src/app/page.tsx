@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { NovaOrbitRings } from "@/components/ui/nova-universe";
-import { NovaHeroLogoMark } from "@/components/ui/nova-logo-mark";
 import { JsonLd, organizationJsonLd, webSiteJsonLd } from "@/components/seo/json-ld";
 import { NOVA_COLLEGE, NOVA_LANGUAGE, NOVA_SCHOOL, NOVA_SHOP, NOVA_STEM_HUB } from "@/lib/novahub-brand";
 import { PARTNERSHIP_APPLY_PATH } from "@/data/novahub/partnerships";
@@ -75,10 +73,6 @@ export default function StemHubLandingPage() {
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-deep-blue/45 via-[#0a1628]/30 to-nova-deep-blue/50" />
 
           <div className="nova-container relative">
-            <p className="mb-6 text-sm font-semibold uppercase tracking-widest text-nova-cyan-light">
-              ✦ {NOVA_STEM_HUB.name}
-            </p>
-
             <div className="nova-glass-island mb-8 max-w-3xl border border-nova-cyan/35 px-6 py-5 shadow-[0_0_40px_rgba(0,212,255,0.12)] sm:px-8 sm:py-6">
               <p className="text-lg font-semibold leading-relaxed text-nova-cyan-light sm:text-xl sm:leading-relaxed">
                 {NOVA_STEM_HUB.missionStatement}
@@ -108,12 +102,6 @@ export default function StemHubLandingPage() {
               <span>EN · ES · PT</span>
               <span className="text-white/30" aria-hidden>·</span>
               <Link href="/partnership" className="hover:text-nova-cyan-light">Institutional partnership</Link>
-            </div>
-            <div className="relative mt-12 flex max-w-md items-center justify-center">
-              <NovaOrbitRings size="sm" />
-              <div className="absolute flex items-center justify-center">
-                <NovaHeroLogoMark />
-              </div>
             </div>
           </div>
         </section>

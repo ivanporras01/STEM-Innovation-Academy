@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { NovaOrbitRings } from "@/components/ui/nova-universe";
-import { NovaHeroLogoMark } from "@/components/ui/nova-logo-mark";
 import { NOVA_COLLEGE, NOVA_LANGUAGE, NOVA_SCHOOL, NOVA_SHOP, NOVA_STEM_HUB } from "@/lib/novahub-brand";
 import { buildPageMetadata } from "@/lib/seo";
 
@@ -61,10 +59,6 @@ export default function SpanishStemHubLandingPage() {
         <section className="nova-section-cosmic relative overflow-hidden py-20 text-white sm:py-24">
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-cyan/10 via-transparent to-nova-orange/10" />
           <div className="nova-container relative">
-            <p className="mb-6 text-sm font-bold uppercase tracking-[0.2em] text-nova-cyan">
-              ✦ {NOVA_STEM_HUB.name}
-            </p>
-
             <div className="nova-glass-island mb-8 max-w-3xl border border-nova-cyan/35 px-6 py-5 shadow-[0_0_40px_rgba(0,212,255,0.12)] sm:px-8 sm:py-6">
               <p className="text-lg font-semibold leading-relaxed text-nova-cyan-light sm:text-xl sm:leading-relaxed">
                 {NOVA_STEM_HUB.missionStatementEs}
@@ -77,12 +71,6 @@ export default function SpanishStemHubLandingPage() {
             <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/75 sm:text-lg">
               {NOVA_STEM_HUB.heroSubheadEs}
             </p>
-            <div className="relative mt-10 flex max-w-sm items-center justify-center">
-              <NovaOrbitRings size="sm" />
-              <div className="absolute flex items-center justify-center">
-                <NovaHeroLogoMark />
-              </div>
-            </div>
           </div>
         </section>
 

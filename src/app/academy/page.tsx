@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PathwayIcon, type PathwayKey } from "@/components/ui/pathway-icon";
-import { ExploreNowButton } from "@/components/courses/explore-now-button";
 import { NovaOrbitRings } from "@/components/ui/nova-universe";
+import { ExploreNowButton } from "@/components/courses/explore-now-button";
 import { NOVA_ACADEMY, NOVA_COLLEGE, QUANTUM_WORKFORCE } from "@/lib/novahub-brand";
 import { NOVA_STEM_HUB_IMPACT } from "@/lib/novahub-impact";
 import { buildPageMetadata } from "@/lib/seo";
@@ -181,9 +181,6 @@ export default function AcademyHomePage() {
           <div className="nova-container">
             <div className="nova-glass-island mx-auto grid max-w-5xl gap-8 p-8 md:grid-cols-2 md:items-center md:p-12">
               <div>
-                <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-nova-orange">
-                  ✦ NOVA STEM HUB · Impact
-                </p>
                 <h2 className="text-2xl font-bold text-white sm:text-3xl">
                   Real opportunity for those without access
                 </h2>

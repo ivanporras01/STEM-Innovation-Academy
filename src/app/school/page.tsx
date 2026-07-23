@@ -3,7 +3,7 @@ import Link from "next/link";
 import { SchoolElectiveCard } from "@/components/school/school-elective-card";
 import { NOVA_SCHOOL_PAGE_EN } from "@/data/nova-school/catalog-en";
 import { novaSchoolElectiveIndex } from "@/data/nova-school";
-import { NOVA_COLLEGE, NOVA_SCHOOL, NOVA_STEM_HUB } from "@/lib/novahub-brand";
+import { NOVA_COLLEGE, NOVA_SCHOOL } from "@/lib/novahub-brand";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -20,9 +20,6 @@ export default function NovaSchoolCatalogPage() {
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-cyan/10 via-transparent to-nova-blue/10" />
         <div className="nova-container relative">
-          <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-nova-cyan">
-            ✦ {NOVA_STEM_HUB.name}
-          </p>
           <h1 className="text-3xl font-black sm:text-4xl lg:text-5xl">{NOVA_SCHOOL.name}</h1>
           <p className="mt-4 max-w-2xl text-lg text-white/80">{NOVA_SCHOOL.tagline}</p>
           <p className="mt-3 max-w-3xl text-sm text-nova-cyan-light/80">{copy.heroDescription}</p>

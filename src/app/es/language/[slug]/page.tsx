@@ -38,9 +38,6 @@ export default async function SpanishLanguageCoursePage({ params }: Props) {
     <div className="relative flex flex-1 flex-col">
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-14 text-white">
         <div className="nova-container relative">
-          <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-nova-green">
-            ✦ {NOVA_STEM_HUB.name}
-          </p>
           <h1 className="text-3xl font-black sm:text-4xl">{title}</h1>
           <p className="mt-4 max-w-2xl text-lg text-white/80">{tagline}</p>
           <p className="mt-3 text-sm text-nova-cyan-light/70">

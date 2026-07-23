@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SCHOLARSHIP_FAQ, SCHOLARSHIP_PROGRAMS } from "@/data/novahub/scholarships";
-import { NOVA_COLLEGE, NOVA_STEM_HUB } from "@/lib/novahub-brand";
+import { NOVA_COLLEGE } from "@/lib/novahub-brand";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -23,9 +23,6 @@ export default function ScholarshipsPage() {
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-orange/15 via-transparent to-nova-cyan/10" />
         <div className="nova-container relative">
-          <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-nova-cyan">
-            ✦ {NOVA_STEM_HUB.name}
-          </p>
           <h1 className="text-3xl font-black sm:text-4xl lg:text-5xl">
             NOVA Scholarships
           </h1>

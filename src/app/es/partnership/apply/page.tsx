@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PartnershipApplyForm } from "@/components/partnerships/partnership-apply-form";
-import { NOVA_STEM_HUB } from "@/lib/novahub-brand";
 import { NOVA_STEM_HUB_IMPACT } from "@/lib/novahub-impact";
 import { buildPageMetadata } from "@/lib/seo";
 
@@ -19,9 +18,6 @@ export default function SpanishPartnershipApplyPage() {
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-14 text-white">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-cyan/10 via-transparent to-nova-orange/10" />
         <div className="nova-container relative">
-          <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-nova-cyan">
-            ✦ {NOVA_STEM_HUB.name}
-          </p>
           <h1 className="text-3xl font-black sm:text-4xl">Registra tu institución</h1>
           <p className="mt-4 max-w-2xl text-nova-cyan-light/85">
             Cuéntanos sobre tu colegio o institución y completa el depósito de licencia en la

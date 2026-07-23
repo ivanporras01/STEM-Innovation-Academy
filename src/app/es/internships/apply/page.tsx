@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { InternshipApplyForm } from "@/components/resources/internship-apply-form";
-import { NOVA_STEM_HUB } from "@/lib/novahub-brand";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -16,9 +15,6 @@ export default function SpanishInternshipApplyPage() {
     <div className="relative flex flex-1 flex-col">
       <section className="nova-section-cosmic border-b border-white/10 py-14 text-white">
         <div className="nova-container">
-          <p className="text-sm font-bold uppercase tracking-[0.2em] text-nova-cyan">
-            ✦ {NOVA_STEM_HUB.name}
-          </p>
           <h1 className="mt-2 text-3xl font-black">Pasantía — solicitud en línea</h1>
           <p className="mt-4 max-w-2xl text-nova-cyan-light/85">
             Cuéntanos sobre ti y tu interés. Te contactaremos cuando haya oportunidades en la red NOVA.
