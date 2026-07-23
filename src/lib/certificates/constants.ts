@@ -9,11 +9,11 @@ export const CERTIFICATE_VERIFY_BASE = "/verify";
 /** Public preview page — Certificate of Achievement sample with MUESTRA/VOID watermark. */
 export const SAMPLE_CERTIFICATE_PAGE_PATH = "/certificado-muestra";
 
-/** Static sample PDF (MUESTRA/VOID) — direct download by locale. */
+/** Static sample PDF — final v2 sample (single asset, all locales). */
 export const SAMPLE_CERTIFICATE_PDF_BY_LOCALE = {
-  en: "/downloads/certificate-of-achievement-nova-sample-en.pdf",
-  es: "/downloads/certificate-of-achievement-nova-sample-es.pdf",
-  pt: "/downloads/certificate-of-achievement-nova-sample-pt.pdf",
+  en: "/samples/NOVA-Certificate-v2-Sample.pdf",
+  es: "/samples/NOVA-Certificate-v2-Sample.pdf",
+  pt: "/samples/NOVA-Certificate-v2-Sample.pdf",
 } as const;
 
 export const SAMPLE_CERTIFICATE_PDF_PATH = SAMPLE_CERTIFICATE_PDF_BY_LOCALE.en;

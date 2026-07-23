@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { VerifyCertificateSearch } from "@/components/verify/verify-certificate-search";
 import { DEMO_CERTIFICATES } from "@/data/novahub/certificates";
 import { SAMPLE_CERTIFICATE_PAGE_PATH, getSampleCertificatePdfPath } from "@/lib/certificates/constants";
@@ -50,9 +51,9 @@ export default function SpanishVerifyPage() {
             </a>
           </p>
           <p className="mx-auto mt-4 text-center text-xs text-nova-cyan-light/50">
-            <a href="/verify" className="hover:text-nova-cyan">
+            <Link href="/verify" className="hover:text-nova-cyan">
               English edition →
-            </a>
+            </Link>
           </p>
         </div>
       </main>
