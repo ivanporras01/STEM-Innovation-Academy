@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { ShopProductCard } from "@/components/shop/shop-product-card";
 import { JsonLd, breadcrumbJsonLd } from "@/components/seo/json-ld";
 import { novaShopProductIndex } from "@/data/nova-shop";
@@ -20,15 +18,13 @@ export default function NovaShopCatalogPage() {
   const copy = NOVA_SHOP_PAGE_EN;
 
   return (
-    <div className="relative flex min-h-screen flex-col">
+    <div className="relative flex flex-1 flex-col">
       <JsonLd
         data={breadcrumbJsonLd([
           { name: NOVA_STEM_HUB.name, path: "/" },
           { name: NOVA_SHOP.name, path: "/shop" },
         ])}
       />
-      <Navbar />
-
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-orange/10 via-transparent to-nova-cyan/10" />
         <div className="nova-container relative">
@@ -84,7 +80,6 @@ export default function NovaShopCatalogPage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+      </div>
   );
 }

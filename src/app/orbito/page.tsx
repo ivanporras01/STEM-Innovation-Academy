@@ -3,8 +3,6 @@
 import Link from "next/link";
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { OrbitoRealGuide } from "@/components/orbit/orbito-real-guide";
 import { ORBITO_REAL_VARIANTS, type OrbitoRealId } from "@/components/orbit/orbito-real-catalog";
 
@@ -21,9 +19,7 @@ export default function OrbitoGalleryPage() {
   const goNext = () => setIndex((i) => (i === total - 1 ? 0 : i + 1));
 
   return (
-    <div className="relative flex min-h-screen flex-col">
-      <Navbar />
-
+    <div className="relative flex flex-1 flex-col">
       <main className="nova-space-section flex-1">
         <div className="nova-container py-8">
           <div className="mx-auto mb-8 max-w-xl text-center">
@@ -145,7 +141,6 @@ export default function OrbitoGalleryPage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+      </div>
   );
 }

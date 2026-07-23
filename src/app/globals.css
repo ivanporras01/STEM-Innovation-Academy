@@ -225,7 +225,10 @@
     isolation: isolate;
   }
 
-  .nova-header-brand,
+  .nova-header-brand {
+    @apply shrink-0 pl-2 md:pl-3;
+  }
+
   .nova-header-actions {
     flex-shrink: 0;
   }

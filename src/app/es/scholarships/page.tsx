@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { SCHOLARSHIP_FAQ, SCHOLARSHIP_PROGRAMS } from "@/data/novahub/scholarships";
 import { NOVA_COLLEGE, NOVAHUB } from "@/lib/novahub-brand";
 import { buildPageMetadata } from "@/lib/seo";
@@ -22,9 +20,7 @@ const COVERAGE_LABELS: Record<string, string> = {
 
 export default function SpanishScholarshipsPage() {
   return (
-    <div className="relative flex min-h-screen flex-col">
-      <Navbar />
-
+    <div className="relative flex flex-1 flex-col">
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-orange/15 via-transparent to-nova-cyan/10" />
         <div className="nova-container relative">
@@ -138,7 +134,6 @@ export default function SpanishScholarshipsPage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+      </div>
   );
 }

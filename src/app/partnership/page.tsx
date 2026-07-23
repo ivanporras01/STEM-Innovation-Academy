@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { PartnershipPageContent } from "@/components/partnerships/partnership-page-content";
 import { NOVA_LANGUAGE, NOVA_SCHOOL, NOVA_COLLEGE } from "@/lib/novahub-brand";
 import { buildPageMetadata } from "@/lib/seo";
@@ -14,10 +12,8 @@ export const metadata: Metadata = buildPageMetadata({
 
 export default function PartnershipPage() {
   return (
-    <div className="relative flex min-h-screen flex-col">
-      <Navbar />
+    <div className="relative flex flex-1 flex-col">
       <PartnershipPageContent locale="en" />
-      <Footer />
-    </div>
+      </div>
   );
 }

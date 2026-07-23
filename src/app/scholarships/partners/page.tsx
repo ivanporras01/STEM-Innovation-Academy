@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { NOVA_STEM_HUB } from "@/lib/novahub-brand";
 import { buildPageMetadata } from "@/lib/seo";
 
@@ -29,8 +27,7 @@ const PARTNER_TYPES = [
 
 export default function PartnerScholarshipsPage() {
   return (
-    <div className="relative flex min-h-screen flex-col">
-      <Navbar />
+    <div className="relative flex flex-1 flex-col">
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white">
         <div className="nova-container relative">
           <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-nova-cyan">
@@ -60,7 +57,6 @@ export default function PartnerScholarshipsPage() {
           ))}
         </div>
       </main>
-      <Footer />
-    </div>
+      </div>
   );
 }

@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { PathwayIcon, type PathwayKey } from "@/components/ui/pathway-icon";
 import { ExploreNowButton } from "@/components/courses/explore-now-button";
 import { NovaOrbitRings } from "@/components/ui/nova-universe";
@@ -101,9 +99,7 @@ const FOUNDING_PATHWAYS = [
 
 export default function AcademyHomePage() {
   return (
-    <div className="relative flex min-h-screen flex-col">
-      <Navbar />
-
+    <div className="relative flex flex-1 flex-col">
       <main className="relative flex-1">
         <section className="nova-section-cosmic relative overflow-hidden py-20 text-white sm:py-28">
           <div className="nova-nebula-glow absolute -left-32 top-0 h-96 w-96 bg-nova-cyan/25" />
@@ -435,7 +431,6 @@ export default function AcademyHomePage() {
         </section>
       </main>
 
-      <Footer />
-    </div>
+      </div>
   );
 }

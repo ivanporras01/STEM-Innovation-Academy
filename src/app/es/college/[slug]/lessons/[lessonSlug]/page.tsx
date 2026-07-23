@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { CollegeLessonContent } from "@/components/college/college-lesson-content";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -69,9 +67,7 @@ export default async function SpanishCollegeLessonPage({ params }: Props) {
     lessonIndex < moduleLessons.length - 1 ? moduleLessons[lessonIndex + 1] : null;
 
   return (
-    <div className="relative flex min-h-screen flex-col">
-      <Navbar />
-
+    <div className="relative flex flex-1 flex-col">
       <main className="nova-space-section relative flex-1 py-10">
         <div className="nova-container max-w-4xl">
           <Link
@@ -144,7 +140,6 @@ export default async function SpanishCollegeLessonPage({ params }: Props) {
         </div>
       </main>
 
-      <Footer />
-    </div>
+      </div>
   );
 }

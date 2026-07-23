@@ -9,7 +9,7 @@ export default function AiTutoringError({
   reset: () => void;
 }) {
   return (
-    <div className="relative flex min-h-screen flex-col items-center justify-center bg-[#030b16] px-4 text-center">
+    <div className="relative flex flex-1 flex-col items-center justify-center bg-[#030b16] px-4 text-center">
       <h1 className="text-2xl font-bold text-white">Something went wrong</h1>
       <p className="mt-2 max-w-md text-nova-cyan-light/80">
         Órbita hit an unexpected issue. Your work is still in this browser — try again, or return to tutoring setup.

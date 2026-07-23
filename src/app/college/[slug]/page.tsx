@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import {
   NOVA_COLLEGE,
   QUANTUM_WORKFORCE,
@@ -47,9 +45,7 @@ export default async function CollegeTrackPage({ params }: Props) {
   const prerequisites = copy.prerequisites?.length ? copy.prerequisites : [];
 
   return (
-    <div className="relative flex min-h-screen flex-col">
-      <Navbar />
-
+    <div className="relative flex flex-1 flex-col">
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-14 text-white">
         <div
           className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${isAdvanced ? "from-nova-orange/15" : "from-nova-cyan/10"} via-transparent to-transparent`}
@@ -257,7 +253,6 @@ export default async function CollegeTrackPage({ params }: Props) {
         </div>
       </main>
 
-      <Footer />
-    </div>
+      </div>
   );
 }

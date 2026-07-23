@@ -1,6 +1,4 @@
 import { Suspense } from "react";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { RegisterForm } from "@/components/auth/register-form";
 import { CertificatePreviewPromo } from "@/components/certificates/certificate-preview-promo";
 import { NovaLogo } from "@/components/ui/nova-logo-mark";
@@ -18,8 +16,7 @@ export const metadata = buildPageMetadata({
 
 export default function SpanishRegisterPage() {
   return (
-    <div className="flex min-h-screen flex-col">
-      <Navbar />
+    <div className="flex flex-1 flex-col">
       <main className="nova-page-main flex-1 py-12">
         <div className="nova-container max-w-6xl">
           <div className="grid items-start gap-10 xl:grid-cols-[1fr_1.05fr]">
@@ -48,7 +45,6 @@ export default function SpanishRegisterPage() {
           </div>
         </div>
       </main>
-      <Footer />
-    </div>
+      </div>
   );
 }

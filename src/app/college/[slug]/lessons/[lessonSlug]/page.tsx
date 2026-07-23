@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { findCollegeLesson } from "@/lib/nova-college-catalog";
 import { getCollegeTrackEn } from "@/data/nova-college/catalog-en";
 import { NOVA_COLLEGE } from "@/lib/novahub-brand";
@@ -52,8 +50,7 @@ export default async function CollegeLessonPage({ params }: Props) {
   });
 
   return (
-    <div className="relative flex min-h-screen flex-col">
-      <Navbar />
+    <div className="relative flex flex-1 flex-col">
       <main className="nova-space-section relative flex-1 py-16">
         <div className="nova-container max-w-2xl text-center">
           <p className="text-sm text-nova-cyan-light/80">
@@ -64,7 +61,6 @@ export default async function CollegeLessonPage({ params }: Props) {
           </Link>
         </div>
       </main>
-      <Footer />
-    </div>
+      </div>
   );
 }

@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { MarkdownContent } from "@/components/ui/markdown-content";
 import { Badge } from "@/components/ui/badge";
 import { ExplorerMissionBanner } from "@/components/courses/explorer-mission-banner";
@@ -60,8 +58,7 @@ export default async function LessonPage({
   const mentorMeta = getMentorMissionMeta(slug, lesson.title);
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Navbar />
+    <div className="flex flex-1 flex-col">
       <main className="nova-page-main py-8">
         <div className="nova-container max-w-4xl">
           <Link
@@ -145,7 +142,6 @@ export default async function LessonPage({
           </div>
         </div>
       </main>
-      <Footer />
-    </div>
+      </div>
   );
 }

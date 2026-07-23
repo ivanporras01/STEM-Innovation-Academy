@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -11,9 +9,7 @@ export const metadata: Metadata = buildPageMetadata({
 
 export default function PrivacyPage() {
   return (
-    <div className="relative flex min-h-screen flex-col">
-      <Navbar />
-
+    <div className="relative flex flex-1 flex-col">
       <main className="nova-page-main flex-1 py-12">
         <div className="nova-container max-w-3xl">
           <article className="nova-glass-island p-8 sm:p-10">
@@ -87,7 +83,6 @@ export default function PrivacyPage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+      </div>
   );
 }

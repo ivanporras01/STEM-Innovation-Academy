@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import {
   NOVAHUB_ACCESS_TIERS,
   NOVAHUB_IMPACT_GOALS,
@@ -35,9 +33,7 @@ function ladderHrefEs(path: string) {
 
 export default function SpanishMissionPage() {
   return (
-    <div className="relative flex min-h-screen flex-col">
-      <Navbar />
-
+    <div className="relative flex flex-1 flex-col">
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-20 text-white sm:py-28">
         <div className="nova-nebula-glow absolute -left-32 top-0 h-96 w-96 bg-nova-cyan/25" />
         <div className="nova-nebula-glow absolute -right-32 bottom-0 h-[28rem] w-[28rem] bg-nova-orange/15" />
@@ -211,7 +207,6 @@ export default function SpanishMissionPage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+      </div>
   );
 }

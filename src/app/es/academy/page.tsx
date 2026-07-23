@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { NOVA_ACADEMY, NOVA_COLLEGE, NOVA_STEM_HUB } from "@/lib/novahub-brand";
 import { buildPageMetadata } from "@/lib/seo";
 
@@ -15,9 +13,7 @@ export const metadata: Metadata = buildPageMetadata({
 
 export default function SpanishAcademyHomePage() {
   return (
-    <div className="relative flex min-h-screen flex-col">
-      <Navbar />
-
+    <div className="relative flex flex-1 flex-col">
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-20 text-white">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-cyan/10 via-transparent to-nova-orange/10" />
         <div className="nova-container relative">
@@ -75,7 +71,6 @@ export default function SpanishAcademyHomePage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+      </div>
   );
 }

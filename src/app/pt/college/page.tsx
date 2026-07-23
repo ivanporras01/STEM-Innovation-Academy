@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { CollegeTrackCard } from "@/components/college/college-track-card";
 import {
   NOVA_COLLEGE,
@@ -24,9 +22,7 @@ export default function PortugueseCollegeCatalogPage() {
   const advancedTracks = novaCollegeTrackIndex.filter((track) => track.tier === "advanced");
 
   return (
-    <div className="relative flex min-h-screen flex-col">
-      <Navbar />
-
+    <div className="relative flex flex-1 flex-col">
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white">
         <div className="nova-container relative">
           <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-nova-orange">
@@ -89,7 +85,6 @@ export default function PortugueseCollegeCatalogPage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+      </div>
   );
 }

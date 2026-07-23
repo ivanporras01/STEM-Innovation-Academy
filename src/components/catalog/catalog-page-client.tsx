@@ -2,8 +2,6 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { CatalogProgramCard } from "@/components/catalog/catalog-program-card";
 import {
   CATALOG_STATS,
@@ -30,9 +28,7 @@ export function CatalogPageClient() {
   }, [filter]);
 
   return (
-    <div className="relative flex min-h-screen flex-col">
-      <Navbar />
-
+    <div className="relative flex flex-1 flex-col">
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white lg:py-20">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-deep-blue/50 via-transparent to-nova-orange/5" />
         <div className="nova-container relative">
@@ -191,7 +187,6 @@ export function CatalogPageClient() {
         </div>
       </main>
 
-      <Footer />
     </div>
   );
 }

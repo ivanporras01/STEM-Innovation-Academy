@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { ProgramEnrollSection } from "@/components/enrollment/program-enroll-section";
 import {
   getAllEnrollableProgramSlugs,
@@ -38,8 +36,7 @@ export default async function EnrollProgramPage({ params, searchParams }: Props)
   const product = await ensureCourseProduct(course.id, course.slug, program.tuitionUsd * 100);
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Navbar />
+    <div className="flex flex-1 flex-col">
       <main className="nova-page-main flex-1 py-12">
         <div className="nova-container max-w-3xl">
           <Link
@@ -69,7 +66,6 @@ export default async function EnrollProgramPage({ params, searchParams }: Props)
           </p>
         </div>
       </main>
-      <Footer />
-    </div>
+      </div>
   );
 }

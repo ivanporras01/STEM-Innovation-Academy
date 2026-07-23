@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { LanguageCourseCard } from "@/components/language/language-course-card";
 import { JsonLd, breadcrumbJsonLd } from "@/components/seo/json-ld";
 import { NOVA_LANGUAGE_PAGE_EN } from "@/data/nova-language/catalog-en";
@@ -26,15 +24,13 @@ export default function NovaLanguageCatalogPage() {
   const copy = NOVA_LANGUAGE_PAGE_EN;
 
   return (
-    <div className="relative flex min-h-screen flex-col">
+    <div className="relative flex flex-1 flex-col">
       <JsonLd
         data={breadcrumbJsonLd([
           { name: NOVA_STEM_HUB.name, path: "/" },
           { name: NOVA_LANGUAGE.name, path: "/language" },
         ])}
       />
-      <Navbar />
-
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-green/10 via-transparent to-nova-cyan/10" />
         <div className="nova-container relative">
@@ -80,7 +76,6 @@ export default function NovaLanguageCatalogPage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+      </div>
   );
 }

@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { EnrollButton } from "@/components/courses/enroll-button";
 import { MissionPathHero } from "@/components/courses/mission-path-hero";
@@ -111,8 +109,7 @@ export default async function CourseDetailPage({
     "inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold transition";
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Navbar />
+    <div className="flex flex-1 flex-col">
       <main className="nova-page-main py-12">
         <div className="nova-container">
           {meta ? (
@@ -294,7 +291,6 @@ export default async function CourseDetailPage({
           </div>
         </div>
       </main>
-      <Footer />
-    </div>
+      </div>
   );
 }

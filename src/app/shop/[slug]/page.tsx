@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { AddToCartButton } from "@/components/shop/add-to-cart-button";
 import { ShopProductImage } from "@/components/shop/shop-product-image";
 import { JsonLd, breadcrumbJsonLd, productJsonLd } from "@/components/seo/json-ld";
@@ -45,7 +43,7 @@ export default async function ShopProductPage({ params }: Props) {
   const description = localized?.description ?? product.description;
 
   return (
-    <div className="relative flex min-h-screen flex-col">
+    <div className="relative flex flex-1 flex-col">
       <JsonLd
         data={[
           productJsonLd({
@@ -62,8 +60,6 @@ export default async function ShopProductPage({ params }: Props) {
           ]),
         ]}
       />
-      <Navbar />
-
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-14 text-white">
         <div className="nova-container relative">
           <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-nova-orange">
@@ -117,7 +113,6 @@ export default async function ShopProductPage({ params }: Props) {
         </div>
       </main>
 
-      <Footer />
-    </div>
+      </div>
   );
 }

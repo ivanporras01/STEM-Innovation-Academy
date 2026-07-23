@@ -1,8 +1,6 @@
 ﻿import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { getNovaSchoolElectiveBySlug, novaSchoolElectives } from "@/data/nova-school";
 import { getSchoolElectiveCopy } from "@/lib/program-locale-copy";
 import { getExperience } from "@/lib/experiences/catalog";
@@ -35,9 +33,7 @@ export default async function SchoolElectivePage({ params }: Props) {
   const copy = getSchoolElectiveCopy(slug, "en");
 
   return (
-    <div className="relative flex min-h-screen flex-col">
-      <Navbar />
-
+    <div className="relative flex flex-1 flex-col">
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-14 text-white">
         <div className="nova-container relative">
           <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-nova-cyan">
@@ -124,7 +120,6 @@ export default async function SchoolElectivePage({ params }: Props) {
         </div>
       </main>
 
-      <Footer />
-    </div>
+      </div>
   );
 }

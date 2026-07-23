@@ -13,9 +13,6 @@ import { LocaleSwitcher } from "@/components/layout/locale-switcher";
 import { StemHubNavMenu } from "@/components/layout/stem-hub-nav-menu";
 import { NovaLogo } from "@/components/ui/nova-logo-mark";
 
-const HEADER_HEIGHT = "h-[88px]";
-const MOBILE_NAV_TOP = "top-[88px]";
-
 /** Horizontal nav from lg+ — header container is wider so all tabs fit at ~1280px */
 const DESKTOP_NAV = "hidden lg:flex";
 
@@ -24,7 +21,7 @@ function isActiveNav(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function Navbar() {
+export function Header() {
   const pathname = usePathname();
   const { data: session } = useSession();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -53,12 +50,11 @@ export function Navbar() {
     <header className="nova-glass-nav sticky top-0 z-50 transition-colors">
       <div
         className={cn(
-          "nova-header-container nova-header-bar grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-1.5 sm:gap-2 lg:gap-2.5",
-          HEADER_HEIGHT,
+          "nova-header-container nova-header-bar h-header grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-1.5 sm:gap-2 lg:gap-2.5",
         )}
       >
         {/* Brand lockup: unified NOVA STEM HUB wordmark with gradient. */}
-        <div className="nova-header-brand relative z-20 shrink-0 pl-1 md:pl-2">
+        <div className="nova-header-brand relative z-20 shrink-0">
           <Link
             href={brand.homeHref}
             className="group flex items-center gap-2 sm:gap-2.5"
@@ -178,8 +174,7 @@ export function Navbar() {
       )}
       <nav
         className={cn(
-          "absolute left-0 right-0 z-40 flex flex-col gap-3 border-b border-white/10 bg-[#0a1628] p-4 shadow-nova backdrop-blur-xl lg:hidden",
-          MOBILE_NAV_TOP,
+          "absolute left-0 right-0 top-header z-40 flex flex-col gap-3 border-b border-white/10 bg-[#0a1628] p-4 shadow-nova backdrop-blur-xl lg:hidden",
           !menuOpen && "hidden",
         )}
       >

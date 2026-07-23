@@ -1,8 +1,6 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { NOVA_STEM_HUB } from "@/lib/novahub-brand";
 import { NovaLogoIcon } from "@/components/ui/nova-logo-mark";
 import { buildPageMetadata } from "@/lib/seo";
@@ -26,8 +24,7 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Navbar />
+    <div className="flex flex-1 flex-col">
       <section className="nova-section-cosmic border-b border-white/10 py-6 text-white">
         <div className="nova-container">
           <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-nova-cyan">
@@ -40,7 +37,6 @@ export default async function DashboardLayout({
         </div>
       </section>
       <div className="nova-page-main">{children}</div>
-      <Footer />
-    </div>
+      </div>
   );
 }

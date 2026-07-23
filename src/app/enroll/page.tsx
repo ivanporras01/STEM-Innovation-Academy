@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { NOVA_PROGRAM_CATALOG } from "@/data/courses";
 import { PARTNERSHIP_APPLY_PATH } from "@/data/novahub/partnerships";
 import { buildPageMetadata } from "@/lib/seo";
@@ -37,9 +35,7 @@ async function EnrollHubContent({
   const showRegisteredBanner = registered === "1";
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Navbar />
-
+    <div className="flex flex-1 flex-col">
       <section className="nova-section-cosmic border-b border-white/10 py-14 text-white lg:py-16">
         <div className="nova-container">
           <p className="text-sm font-bold uppercase tracking-[0.25em] text-nova-cyan">
@@ -147,7 +143,6 @@ async function EnrollHubContent({
         </div>
       </main>
 
-      <Footer />
-    </div>
+      </div>
   );
 }

@@ -1,5 +1,7 @@
 import { Inter } from "next/font/google";
 import { Providers } from "./providers";
+import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
 import { NovaCosmosBackground } from "@/components/ui/nova-universe";
 import { GoogleAnalytics } from "@/components/seo/google-analytics";
 import { buildRootMetadata } from "@/lib/seo";
@@ -37,8 +39,12 @@ export default function RootLayout({
         </a>
         <GoogleAnalytics />
         <NovaCosmosBackground />
-        <div id="main-content" className="relative z-[1]">
-          <Providers>{children}</Providers>
+        <div id="main-content" className="relative z-[1] flex min-h-screen flex-col">
+          <Providers>
+            <Header />
+            <div className="relative flex flex-1 flex-col">{children}</div>
+            <Footer />
+          </Providers>
         </div>
       </body>
     </html>

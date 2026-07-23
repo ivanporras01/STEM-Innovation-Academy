@@ -19,6 +19,9 @@ const config: Config = {
           black: "#101828",
         },
       },
+      spacing: {
+        header: "88px",
+      },
       fontFamily: {
         sans: [
           "Inter",

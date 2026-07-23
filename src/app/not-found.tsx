@@ -36,7 +36,7 @@ export default function NotFound() {
   const copy = COPY[localeFromPathname(pathname ?? "/")];
 
   return (
-    <div className="relative flex min-h-screen flex-col items-center justify-center px-4 text-center">
+    <div className="relative flex flex-1 flex-col items-center justify-center px-4 text-center">
       <div className="mb-4">
         <NovaLogo size="sm" showText={true} />
       </div>

@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { getNovaLanguageCourseBySlug, novaLanguageCourses } from "@/data/nova-language";
 import { getLanguageCoursePt } from "@/data/nova-language/catalog-pt";
 import { NOVA_LANGUAGE, NOVA_STEM_HUB } from "@/lib/novahub-brand";
@@ -37,9 +35,7 @@ export default async function PortugueseLanguageCoursePage({ params }: Props) {
   const description = localized?.description ?? course.description;
 
   return (
-    <div className="relative flex min-h-screen flex-col">
-      <Navbar />
-
+    <div className="relative flex flex-1 flex-col">
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-14 text-white">
         <div className="nova-container relative">
           <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-nova-green">
@@ -110,7 +106,6 @@ export default async function PortugueseLanguageCoursePage({ params }: Props) {
         </div>
       </main>
 
-      <Footer />
-    </div>
+      </div>
   );
 }

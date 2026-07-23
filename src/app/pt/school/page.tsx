@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { SchoolElectiveCard } from "@/components/school/school-elective-card";
 import { novaSchoolElectiveIndex } from "@/data/nova-school";
 import { NOVA_COLLEGE, NOVA_SCHOOL, NOVA_STEM_HUB } from "@/lib/novahub-brand";
@@ -16,9 +14,7 @@ export const metadata: Metadata = buildPageMetadata({
 
 export default function PortugueseSchoolCatalogPage() {
   return (
-    <div className="relative flex min-h-screen flex-col">
-      <Navbar />
-
+    <div className="relative flex flex-1 flex-col">
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white">
         <div className="nova-container relative">
           <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-nova-cyan">
@@ -67,7 +63,6 @@ export default function PortugueseSchoolCatalogPage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+      </div>
   );
 }

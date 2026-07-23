@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { PartnershipPaymentForm } from "@/components/partnerships/partnership-payment-form";
 import { PARTNERSHIP_APPLY_PATH } from "@/data/novahub/partnerships";
 import { db } from "@/lib/db";
@@ -76,8 +74,7 @@ export default async function PartnershipPaymentPage({ searchParams }: Props) {
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Navbar />
+    <div className="flex flex-1 flex-col">
       <main className="nova-space-section flex-1 py-12">
         <div className="nova-container">
           <Link
@@ -98,7 +95,6 @@ export default async function PartnershipPaymentPage({ searchParams }: Props) {
           />
         </div>
       </main>
-      <Footer />
-    </div>
+      </div>
   );
 }

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Atom, Orbit, Sparkles } from "lucide-react";
 import { auth } from "@/lib/auth";
-import { Navbar } from "@/components/layout/navbar";
 import { buildPageMetadata } from "@/lib/seo";
 import { isNovaAiTutoringEnabled } from "@/lib/nova-ai-tutoring";
 
@@ -20,7 +19,6 @@ export default async function AiTutoringPage() {
   if (!isNovaAiTutoringEnabled) {
     return (
       <>
-        <Navbar />
         <main className="nova-section-cosmic relative overflow-hidden py-20 text-white sm:py-28">
           <div className="absolute inset-0 opacity-40 [background:radial-gradient(circle_at_20%_20%,rgba(0,212,255,0.16),transparent_26%),radial-gradient(circle_at_80%_65%,rgba(127,86,217,0.2),transparent_30%)]" />
           <div className="nova-container relative max-w-5xl">

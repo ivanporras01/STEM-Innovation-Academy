@@ -55,7 +55,7 @@ export default async function CertificadoMuestraPage({
   const labels = CERTIFICATE_SAMPLE_PLACEHOLDER[locale];
 
   return (
-    <div className="cert-sample-page min-h-screen bg-[#0B1D3A] py-8 text-white sm:py-12">
+    <div className="cert-sample-page flex-1 bg-[#0B1D3A] py-8 text-white sm:py-12">
       <div className="nova-container max-w-4xl">
         <CertificateSampleToolbar locale={locale} />
         <div className="mt-8">

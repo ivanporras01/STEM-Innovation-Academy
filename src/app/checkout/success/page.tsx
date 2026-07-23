@@ -1,7 +1,5 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { completePendingPayment } from "@/lib/payments/activate-enrollment";
@@ -53,8 +51,7 @@ export default async function CheckoutSuccessPage({
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Navbar />
+    <div className="flex flex-1 flex-col">
       <main className="nova-page-main flex flex-1 items-center justify-center py-12">
         <div className="nova-container max-w-lg text-center">
           <div className="nova-glass-island shadow-nova p-8">
@@ -86,7 +83,6 @@ export default async function CheckoutSuccessPage({
           </div>
         </div>
       </main>
-      <Footer />
-    </div>
+      </div>
   );
 }

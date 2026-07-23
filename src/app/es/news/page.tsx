@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { NovaNewsFeed } from "@/components/news/nova-news-feed";
 import { NOVA_NEWS_ITEMS } from "@/data/nova-news";
 import { NOVA_STEM_HUB } from "@/lib/novahub-brand";
@@ -16,9 +14,7 @@ export const metadata: Metadata = buildPageMetadata({
 
 export default function NovaNewsEsPage() {
   return (
-    <div className="relative flex min-h-screen flex-col">
-      <Navbar />
-
+    <div className="relative flex flex-1 flex-col">
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-12 text-white sm:py-16">
         <div className="absolute inset-0 opacity-35 [background:radial-gradient(circle_at_15%_20%,rgba(0,212,255,0.18),transparent_28%),radial-gradient(circle_at_85%_30%,rgba(214,94,20,0.12),transparent_26%)]" />
         <div className="nova-container relative">
@@ -49,7 +45,6 @@ export default function NovaNewsEsPage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+      </div>
   );
 }

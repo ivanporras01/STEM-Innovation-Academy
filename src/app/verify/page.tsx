@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { VerifyCertificateSearch } from "@/components/verify/verify-certificate-search";
 import { DEMO_CERTIFICATES } from "@/data/novahub/certificates";
 import { SAMPLE_CERTIFICATE_PAGE_PATH, SAMPLE_CERTIFICATE_PDF_PATH } from "@/lib/certificates/constants";
@@ -18,9 +16,7 @@ export default function VerifyPage() {
   const demoCodes = DEMO_CERTIFICATES.map((c) => c.code);
 
   return (
-    <div className="relative flex min-h-screen flex-col">
-      <Navbar />
-
+    <div className="relative flex flex-1 flex-col">
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-green/10 via-transparent to-nova-cyan/10" />
         <div className="nova-container relative text-center">
@@ -55,7 +51,6 @@ export default function VerifyPage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+      </div>
   );
 }

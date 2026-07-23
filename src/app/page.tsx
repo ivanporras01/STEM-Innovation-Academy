@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { NovaOrbitRings } from "@/components/ui/nova-universe";
 import { NovaHeroLogoMark } from "@/components/ui/nova-logo-mark";
 import { JsonLd, organizationJsonLd, webSiteJsonLd } from "@/components/seo/json-ld";
@@ -68,34 +66,32 @@ const PRODUCT_CARDS = [
 
 export default function StemHubLandingPage() {
   return (
-    <div className="relative flex min-h-screen flex-col">
+    <div className="relative flex flex-1 flex-col">
       <JsonLd data={[organizationJsonLd(), webSiteJsonLd()]} />
-      <Navbar />
-
       <main className="relative flex-1">
         <section className="nova-section-cosmic relative overflow-hidden py-20 text-white sm:py-28">
           <div className="nova-nebula-glow absolute -left-32 top-0 h-96 w-96 bg-nova-cyan/25" />
           <div className="nova-nebula-glow absolute -right-32 bottom-0 h-[28rem] w-[28rem] bg-nova-orange/15" />
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-deep-blue/45 via-[#0a1628]/30 to-nova-deep-blue/50" />
 
-          <div className="nova-container relative text-center">
+          <div className="nova-container relative">
             <p className="mb-6 text-sm font-semibold uppercase tracking-widest text-nova-cyan-light">
               ✦ {NOVA_STEM_HUB.name}
             </p>
 
-            <div className="nova-glass-island mx-auto mb-8 max-w-3xl border border-nova-cyan/35 px-6 py-5 shadow-[0_0_40px_rgba(0,212,255,0.12)] sm:px-8 sm:py-6">
+            <div className="nova-glass-island mb-8 max-w-3xl border border-nova-cyan/35 px-6 py-5 shadow-[0_0_40px_rgba(0,212,255,0.12)] sm:px-8 sm:py-6">
               <p className="text-lg font-semibold leading-relaxed text-nova-cyan-light sm:text-xl sm:leading-relaxed">
                 {NOVA_STEM_HUB.missionStatement}
               </p>
             </div>
 
-            <h1 className="mx-auto max-w-4xl text-3xl font-bold leading-tight text-white/95 sm:text-4xl lg:text-5xl">
+            <h1 className="max-w-4xl text-3xl font-bold leading-tight text-white/95 sm:text-4xl lg:text-5xl">
               {NOVA_STEM_HUB.heroHeadline}
             </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-nova-cyan-light/85 sm:text-lg">
+            <p className="mt-5 max-w-2xl text-base leading-relaxed text-nova-cyan-light/85 sm:text-lg">
               {NOVA_STEM_HUB.heroSubhead}
             </p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <div className="mt-8 flex flex-wrap items-center justify-start gap-3">
               <Link href="/catalog" className="nova-btn-primary nova-btn-glow inline-flex">
                 Explore programs
               </Link>
@@ -106,14 +102,14 @@ export default function StemHubLandingPage() {
                 NOVA News
               </Link>
             </div>
-            <div className="mx-auto mt-8 flex max-w-3xl flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-semibold text-white/70">
+            <div className="mt-8 flex max-w-3xl flex-wrap items-center justify-start gap-x-5 gap-y-2 text-xs font-semibold text-white/70">
               <Link href="/verify" className="hover:text-nova-cyan-light">Verifiable certificates</Link>
               <span className="text-white/30" aria-hidden>·</span>
               <span>EN · ES · PT</span>
               <span className="text-white/30" aria-hidden>·</span>
               <Link href="/partnership" className="hover:text-nova-cyan-light">Institutional partnership</Link>
             </div>
-            <div className="relative mx-auto mt-12 flex max-w-md items-center justify-center">
+            <div className="relative mt-12 flex max-w-md items-center justify-center">
               <NovaOrbitRings size="sm" />
               <div className="absolute flex items-center justify-center">
                 <NovaHeroLogoMark />
@@ -222,7 +218,6 @@ export default function StemHubLandingPage() {
         </section>
       </main>
 
-      <Footer />
-    </div>
+      </div>
   );
 }
