@@ -9,6 +9,7 @@ type PageHeroProps = {
   align?: "left" | "center";
   className?: string;
   titleClassName?: string;
+  subtitleClassName?: string;
 };
 
 /**
@@ -29,6 +30,7 @@ export function PageHero({
   align = "left",
   className,
   titleClassName,
+  subtitleClassName,
 }: PageHeroProps) {
   const center = align === "center";
 
@@ -62,6 +64,7 @@ export function PageHero({
         <p
           className={cn(
             "mt-4 max-w-2xl text-lg text-white/80",
+            subtitleClassName,
             center && "mx-auto"
           )}
         >

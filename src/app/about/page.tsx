@@ -17,6 +17,7 @@ export default function AboutPage() {
         <PageHero
           title="About"
           subtitle="Delivering future-ready STEM education through AI-powered curriculum design, industry standards, and expert collaboration."
+          subtitleClassName="text-nova-cyan-light"
         />
       </section>
 

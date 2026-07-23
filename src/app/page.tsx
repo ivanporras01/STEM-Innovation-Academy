@@ -84,6 +84,7 @@ export default function StemHubLandingPage() {
           <PageHero
             title={NOVA_STEM_HUB.heroHeadline}
             subtitle={NOVA_STEM_HUB.heroSubhead}
+            subtitleClassName="text-nova-cyan-light"
             titleClassName="max-w-4xl"
           >
             <div className="flex flex-wrap items-center justify-start gap-3">
