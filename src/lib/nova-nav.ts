@@ -14,10 +14,6 @@ export type NovaNavItem = {
   description?: string;
 };
 
-export type NovaHeaderNavItem = NovaNavItem & {
-  kind: "product" | "resources";
-};
-
 export type NovaNavSection = {
   title: string;
   links: readonly NovaNavItem[];
@@ -170,22 +166,21 @@ export function getNovaPrimaryNav(locale: AppLocale): readonly NovaNavItem[] {
  * Header ordering: School → College → Languages → Resources → News → About (last).
  * Shop omitted until NOVA_SHOP_HEADER_ENABLED.
  */
-export function getNovaHeaderNav(locale: AppLocale): readonly NovaHeaderNavItem[] {
+export function getNovaHeaderNav(locale: AppLocale): readonly NovaNavItem[] {
   const paths = LOCALE_PATHS[locale];
-  const hub = getNovaStemHubNav(locale);
   const labels = STEM_HUB_LABELS[locale];
 
-  const items: NovaHeaderNavItem[] = [
-    { href: paths.school, label: NOVA_SCHOOL.name, kind: "product" },
-    { href: paths.college, label: NOVA_COLLEGE.name, kind: "product" },
-    { href: paths.language, label: NOVA_LANGUAGE.name, kind: "product" },
-    { href: hub.resourcesHref, label: hub.menuLabel, kind: "resources" },
-    { href: paths.news, label: labels.news, kind: "product" },
-    { href: paths.about, label: labels.about, kind: "product" },
+  const items: NovaNavItem[] = [
+    { href: paths.school, label: NOVA_SCHOOL.name },
+    { href: paths.college, label: NOVA_COLLEGE.name },
+    { href: paths.language, label: NOVA_LANGUAGE.name },
+    { href: paths.resources, label: labels.menuLabel },
+    { href: paths.news, label: labels.news },
+    { href: paths.about, label: labels.about },
   ];
 
   if (NOVA_SHOP_HEADER_ENABLED) {
-    items.push({ href: paths.shop, label: NOVA_SHOP.name, kind: "product" });
+    items.push({ href: paths.shop, label: NOVA_SHOP.name });
   }
 
   return items;

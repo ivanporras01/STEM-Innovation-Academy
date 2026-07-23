@@ -6,11 +6,10 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { dashboardRoutes } from "@/lib/auth.config";
-import { getNovaHeaderNav, getNovaStemHubNav } from "@/lib/nova-nav";
+import { getNovaHeaderNav } from "@/lib/nova-nav";
 import { getLocaleFromPath } from "@/lib/locale";
 import { NOVA_SCHOOL, getNavBrandContext } from "@/lib/novahub-brand";
 import { LocaleSwitcher } from "@/components/layout/locale-switcher";
-import { StemHubNavMenu } from "@/components/layout/stem-hub-nav-menu";
 import { NovaLogo } from "@/components/ui/nova-logo-mark";
 
 /** Horizontal nav from lg+ — header container is wider so all tabs fit at ~1280px */
@@ -28,7 +27,6 @@ export function Header() {
 
   const locale = getLocaleFromPath(pathname);
   const headerNav = getNovaHeaderNav(locale);
-  const stemHubNav = getNovaStemHubNav(locale);
   const brand = getNavBrandContext(pathname);
 
   const dashboardHref = session?.user?.role ? dashboardRoutes[session.user.role] : "/login";
@@ -78,10 +76,6 @@ export function Header() {
           >
             <div className="flex flex-wrap items-center justify-center gap-0.5 lg:gap-1">
               {headerNav.map((link) => {
-                if (link.kind === "resources") {
-                  return <StemHubNavMenu key={link.href} hub={stemHubNav} variant="desktop" />;
-                }
-
                 const active = isActiveNav(pathname, link.href);
                 return (
                   <Link
@@ -181,10 +175,6 @@ export function Header() {
           <>
             <div className="flex flex-col gap-1">
               {headerNav.map((link) => {
-                if (link.kind === "resources") {
-                  return <StemHubNavMenu key={link.href} hub={stemHubNav} variant="mobile" onNavigate={closeMobile} />;
-                }
-
                 const active = isActiveNav(pathname, link.href);
                 return (
                   <Link
