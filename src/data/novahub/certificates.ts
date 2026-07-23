@@ -18,6 +18,18 @@ export type VerifiedCertificate = {
   isDemo?: boolean;
   scorePercent?: number;
   locale?: "en" | "es" | "pt";
+  /** v2.0 public fields */
+  certificateId?: string;
+  programTitle?: string;
+  programSlug?: string;
+  credentialTitle?: string;
+  category?: string;
+  credentialLevel?: string;
+  completionDate?: string;
+  issueDate?: string;
+  learningHours?: number;
+  passingScore?: number;
+  verificationUrl?: string;
 };
 
 export const DEMO_CERTIFICATES: VerifiedCertificate[] = [
@@ -77,8 +89,6 @@ export function verifyCertificateCode(raw: string): VerifiedCertificate | null {
 
 export function isValidCertificateFormat(code: string): boolean {
   const normalized = code.trim().toUpperCase();
-  return (
-    /^NOVA-COL-[A-Z0-9]+-\d{4}-[A-Z0-9]+$/.test(normalized) ||
-    /^NOVA-CERT-\d{4}-[A-Z0-9]+$/.test(normalized)
-  );
+  // Supports e.g. NOVA-CERT-2026-A1B2C3, NOVA-COL-IT-2026-A1B2C3, NOVA-SCH-COD-2026-A1B2C3
+  return /^NOVA-[A-Z0-9-]+-\d{4}-[A-Z0-9]+$/.test(normalized);
 }

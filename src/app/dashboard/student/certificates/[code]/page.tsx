@@ -8,6 +8,7 @@ import { CertificatePrintActions } from "@/components/certificates/certificate-p
 import { db } from "@/lib/db";
 import type { AppLocale } from "@/lib/locale";
 import { isCertificateLocale } from "@/lib/certificates/locale";
+import { buildVerificationUrl, generateCertificateQrCode } from "@/lib/certificates/qr-code";
 import { ArrowLeft } from "lucide-react";
 
 type Props = {
@@ -42,6 +43,12 @@ export default async function StudentCertificateDetailPage({ params }: Props) {
     ? certificate.locale
     : "en";
 
+  const verifyUrl = buildVerificationUrl(certificate.code, certificate.verificationToken ?? undefined);
+  const qrCodeDataUrl = await generateCertificateQrCode(
+    certificate.code,
+    certificate.verificationToken ?? undefined,
+  );
+
   return (
     <DashboardShell user={session.user}>
       <div className="mb-6">
@@ -54,7 +61,10 @@ export default async function StudentCertificateDetailPage({ params }: Props) {
         </Link>
       </div>
 
-      <CertificatePrintActions code={certificate.code} />
+      <CertificatePrintActions
+        code={certificate.code}
+        verificationToken={certificate.verificationToken ?? undefined}
+      />
 
       <div className="mt-6">
         <NovaCertificateTemplate
@@ -65,6 +75,18 @@ export default async function StudentCertificateDetailPage({ params }: Props) {
           scorePercent={certificate.scorePercent}
           prefix={certificate.prefix}
           locale={certLocale}
+          verifyUrl={verifyUrl}
+          credentialTitle={certificate.credentialTitle ?? undefined}
+          category={certificate.category ?? undefined}
+          credentialLevel={certificate.credentialLevel ?? undefined}
+          completionDate={certificate.completionDate?.toISOString() ?? undefined}
+          learningHours={certificate.learningHours ?? undefined}
+          passingScore={
+            certificate.passingScore != null
+              ? Math.round(certificate.passingScore * 100)
+              : undefined
+          }
+          qrCodeDataUrl={qrCodeDataUrl}
         />
       </div>
     </DashboardShell>

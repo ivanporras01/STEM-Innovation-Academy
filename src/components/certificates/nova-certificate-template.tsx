@@ -4,6 +4,7 @@ import Link from "next/link";
 import { CalendarDays, Feather, ShieldCheck, Star } from "lucide-react";
 import { NovaLogo } from "@/components/ui/nova-logo-mark";
 import { getCertificateTemplateCopy } from "@/lib/certificates/copy";
+import { PASSING_SCORE_PERCENT } from "@/lib/certificates/constants";
 import type { AppLocale } from "@/lib/locale";
 
 export type NovaCertificateTemplateProps = {
@@ -16,6 +17,13 @@ export type NovaCertificateTemplateProps = {
   verifyUrl?: string;
   locale?: AppLocale;
   sampleMode?: boolean;
+  credentialTitle?: string;
+  category?: string;
+  credentialLevel?: string;
+  completionDate?: string;
+  learningHours?: number;
+  passingScore?: number;
+  qrCodeDataUrl?: string;
 };
 
 const CERT_VERIFY_DISPLAY = "verify.novastemhub.education";
@@ -109,13 +117,25 @@ export function NovaCertificateTemplate({
   verifyUrl = "https://stem-innovation-academy.vercel.app/verify",
   locale = "en",
   sampleMode = false,
+  credentialTitle,
+  category,
+  credentialLevel,
+  completionDate,
+  learningHours,
+  passingScore,
+  qrCodeDataUrl,
 }: NovaCertificateTemplateProps) {
   const copy = getCertificateTemplateCopy();
-  const formattedDate = new Date(issuedAt).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const displayTitle = credentialTitle ?? copy.title;
+  const displayDate = (completionDate || issuedAt)
+    ? new Date((completionDate || issuedAt) as string).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : "—";
+  const displayLevel = credentialLevel ?? copy.levelLabel;
+  const displayPassing = passingScore != null ? `${passingScore}%` : copy.minimum;
   const verificationUrl = sampleMode
     ? `https://${CERT_VERIFY_DISPLAY}`
     : verifyUrl;
@@ -163,7 +183,7 @@ export function NovaCertificateTemplate({
           </header>
 
           <h2 className="nova-cert-achievement-title mt-3 w-full text-center font-serif text-[clamp(1.5rem,3.6vw,2.35rem)] font-bold uppercase leading-none text-[#F5C451]">
-            {copy.title}
+            {displayTitle}
           </h2>
 
           <p className="nova-cert-presented-to mt-3 w-full text-center">{copy.certifies}</p>
@@ -186,14 +206,25 @@ export function NovaCertificateTemplate({
           <h3 className="nova-cert-program-title mx-auto mt-1 max-w-2xl px-4 text-center text-[clamp(1rem,2.1vw,1.35rem)] font-bold uppercase tracking-[0.22em] text-[#00E5FF]">
             {programTitle}
           </h3>
-          <p className="nova-cert-excellence mx-auto max-w-lg px-4 text-center">{copy.excellence}</p>
+
+          <div className="mx-auto mt-2 flex flex-wrap justify-center gap-x-6 gap-y-1 text-xs text-nova-cyan-light/80">
+            {category && (
+              <span><strong className="text-white/70">{copy.categoryLabel}:</strong> {category}</span>
+            )}
+            <span><strong className="text-white/70">{copy.levelLabel}:</strong> {displayLevel}</span>
+            {learningHours != null && (
+              <span><strong className="text-white/70">{copy.hoursLabel}:</strong> {learningHours}</span>
+            )}
+          </div>
+
+          <p className="nova-cert-excellence mx-auto max-w-lg px-4 text-center">{copy.institutional}</p>
 
           <div className="nova-cert-stats mx-auto grid w-full max-w-3xl grid-cols-[1fr_auto_1fr] items-center gap-3 sm:gap-4">
             <div className="nova-cert-data-card nova-cert-data-card-left flex items-center justify-end gap-2.5 text-right">
               <div>
                 <p>{copy.assessment}</p>
                 <strong>{scorePercent}%</strong>
-                <small>{copy.minimum}</small>
+                <small>{copy.minimum.includes(String(PASSING_SCORE_PERCENT)) ? displayPassing : copy.minimum}</small>
               </div>
               <div className="nova-cert-hex">
                 <Star strokeWidth={2} />
@@ -208,7 +239,7 @@ export function NovaCertificateTemplate({
               </div>
               <div>
                 <p>{copy.date}</p>
-                <strong className="nova-cert-date">{formattedDate}</strong>
+                <strong className="nova-cert-date">{displayDate}</strong>
               </div>
             </div>
           </div>
@@ -223,7 +254,18 @@ export function NovaCertificateTemplate({
               />
 
               <div className="nova-cert-verification">
-                <div className="nova-cert-qr" aria-label={copy.verifyCode} />
+                <div className="nova-cert-qr" aria-label={copy.verifyCode}>
+                  {qrCodeDataUrl && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={qrCodeDataUrl}
+                      alt={copy.verifyCode}
+                      width={72}
+                      height={72}
+                      className="h-[72px] w-[72px] rounded-sm"
+                    />
+                  )}
+                </div>
                 <div className="nova-cert-verification-copy">
                   {prefix && !sampleMode && <small className="nova-cert-prefix">{prefix}</small>}
                   <strong>{copy.verifyCertificate}</strong>

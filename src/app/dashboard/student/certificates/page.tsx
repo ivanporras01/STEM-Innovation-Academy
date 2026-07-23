@@ -4,7 +4,7 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { getUserCertificates } from "@/lib/certificates/service";
-import { Award, ExternalLink } from "lucide-react";
+import { Award, ExternalLink, FileDown } from "lucide-react";
 import { PASSING_SCORE_PERCENT } from "@/lib/certificates/constants";
 
 export const metadata: Metadata = {
@@ -60,6 +60,15 @@ export default async function StudentCertificatesPage() {
                   className="nova-btn-primary nova-btn-glow inline-flex text-sm"
                 >
                   Ver certificado
+                </Link>
+                <Link
+                  href={`/api/certificates/${encodeURIComponent(cert.code)}/pdf`}
+                  className="nova-btn-secondary inline-flex items-center gap-1 border-white/20 text-sm text-white"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Descargar PDF
+                  <FileDown className="h-3.5 w-3.5" />
                 </Link>
                 <Link
                   href={`/verify?code=${encodeURIComponent(cert.code)}`}

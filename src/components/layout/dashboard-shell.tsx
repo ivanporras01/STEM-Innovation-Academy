@@ -20,7 +20,7 @@ const studentLinks = [
   { href: "/dashboard/student", label: "Overview", icon: LayoutDashboard },
   { href: "/courses", label: "Mission Paths", icon: BookOpen },
   { href: "/news", label: "NOVA News", icon: Newspaper },
-  { href: "/dashboard/student/certificates", label: "Certificates", icon: Award },
+  { href: "/dashboard/student/certificates", label: "Achievements & Certificates", icon: Award },
 ];
 
 const mentorLinks = [
@@ -34,6 +34,7 @@ const adminLinks = [
   { href: "/dashboard/admin/users", label: "Users", icon: Users },
   { href: "/dashboard/admin/courses", label: "Courses", icon: Settings },
   { href: "/dashboard/admin/payments", label: "Payments", icon: GraduationCap },
+  { href: "/dashboard/admin/certificates", label: "Certificates", icon: Award },
   { href: "/dashboard/admin/partnerships", label: "Partnerships", icon: Users },
   { href: "/dashboard/admin/scholarships", label: "Becas", icon: GraduationCap },
   { href: "/college", label: "NOVA College", icon: BookOpen },

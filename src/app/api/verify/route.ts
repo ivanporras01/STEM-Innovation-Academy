@@ -3,11 +3,40 @@ import {
   isValidCertificateFormat,
   verifyCertificateCode,
 } from "@/data/novahub/certificates";
-import { lookupCertificateByCode } from "@/lib/certificates/service";
+import { verifyCertificateByCode } from "@/lib/certificates/verification";
+import type { PublicCertificateView } from "@/lib/certificates/verification";
+import type { VerifiedCertificate } from "@/data/novahub/certificates";
+
+function mapPublicToVerified(view: PublicCertificateView): VerifiedCertificate {
+  return {
+    code: view.certificateId,
+    holderName: view.holderName,
+    trackTitle: view.programTitle,
+    trackSlug: view.programSlug,
+    prefix: view.certificateId.split("-")[1] ?? "NOVA",
+    issuedAt: view.issueDate ?? "",
+    status: view.status === "valid" ? "valid" : "revoked",
+    scorePercent: view.finalScore ?? undefined,
+    locale: view.locale,
+    isDemo: false,
+    programTitle: view.programTitle,
+    programSlug: view.programSlug,
+    credentialTitle: view.credentialTitle,
+    category: view.category,
+    credentialLevel: view.credentialLevel,
+    completionDate: view.completionDate ?? undefined,
+    issueDate: view.issueDate ?? undefined,
+    learningHours: view.learningHours ?? undefined,
+    passingScore: view.passingScore ?? undefined,
+    certificateId: view.certificateId,
+    verificationUrl: view.verificationUrl,
+  };
+}
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
+  const token = searchParams.get("token");
 
   if (!code?.trim()) {
     return NextResponse.json({ error: "Ingresa un código de certificado" }, { status: 400 });
@@ -25,15 +54,16 @@ export async function GET(request: Request) {
     );
   }
 
-  const dbCertificate = await lookupCertificateByCode(normalized);
-  if (dbCertificate) {
-    if (dbCertificate.status !== "valid") {
+  const view = await verifyCertificateByCode(normalized, token || undefined);
+
+  if (view) {
+    if (view.status !== "valid") {
       return NextResponse.json(
         { error: "Este certificado ya no está activo en el registro NOVA STEM HUB" },
         { status: 404 },
       );
     }
-    return NextResponse.json({ certificate: dbCertificate });
+    return NextResponse.json({ certificate: mapPublicToVerified(view) });
   }
 
   const demoCertificate =

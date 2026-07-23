@@ -13,6 +13,8 @@ export type CertificateTemplateCopy = {
   title: string;
   certifies: string;
   completed: string;
+  achievement: string;
+  institutional: string;
   excellence: string;
   assessment: string;
   minimum: string;
@@ -26,6 +28,9 @@ export type CertificateTemplateCopy = {
   verified: string;
   novaCertified: string;
   sampleBanner: string;
+  categoryLabel: string;
+  levelLabel: string;
+  hoursLabel: string;
 };
 
 export const CERTIFICATE_TEMPLATE_COPY: Record<AppLocale, CertificateTemplateCopy> = {
@@ -36,8 +41,10 @@ export const CERTIFICATE_TEMPLATE_COPY: Record<AppLocale, CertificateTemplateCop
     org: "STEM Innovation Academy",
     subtitle: "NOVA STEM HUB",
     title: "Certificate of Achievement",
-    certifies: "This certificate is presented to",
-    completed: "for successfully completing all requirements of",
+    certifies: "This certifies that",
+    completed: "Has successfully completed all academic and practical requirements established by NOVA STEM HUB and demonstrated competency in the knowledge and skills required for this program.",
+    achievement: "Has successfully completed all academic and practical requirements established by NOVA STEM HUB and demonstrated competency in the knowledge and skills required for this program.",
+    institutional: "Designed with advanced AI, aligned with industry standards, and developed in collaboration with leading subject matter experts.",
     excellence: "Demonstrating dedication, knowledge, and skills in Science, Technology, Engineering, and Mathematics through innovation and excellence.",
     assessment: "Final Exam Score",
     minimum: `Minimum Passing: ${PASSING_SCORE_PERCENT}%`,
@@ -51,6 +58,9 @@ export const CERTIFICATE_TEMPLATE_COPY: Record<AppLocale, CertificateTemplateCop
     verified: "Verified",
     novaCertified: "NOVA Certified",
     sampleBanner: "SAMPLE",
+    categoryLabel: "Category",
+    levelLabel: "Level",
+    hoursLabel: "Learning Hours",
   },
   es: {
     hub: "NOVA STEM HUB",
@@ -59,8 +69,10 @@ export const CERTIFICATE_TEMPLATE_COPY: Record<AppLocale, CertificateTemplateCop
     org: "STEM Innovation Academy",
     subtitle: "NOVA STEM HUB",
     title: "Certificado de Logro",
-    certifies: "Este certificado se otorga a",
-    completed: "por completar satisfactoriamente todos los requisitos de",
+    certifies: "Esto certifica que",
+    completed: "Ha completado satisfactoriamente todos los requisitos académicos y prácticos establecidos por NOVA STEM HUB y ha demostrado competencia en los conocimientos y habilidades requeridos para este programa.",
+    achievement: "Ha completado satisfactoriamente todos los requisitos académicos y prácticos establecidos por NOVA STEM HUB y ha demostrado competencia en los conocimientos y habilidades requeridos para este programa.",
+    institutional: "Diseñado con inteligencia artificial avanzada, alineado con estándares de la industria y desarrollado en colaboración con expertos en la materia líderes.",
     excellence: "Demostrando dedicación, conocimiento y habilidades en Ciencia, Tecnología, Ingeniería y Matemáticas mediante innovación y excelencia.",
     assessment: "Calificación final",
     minimum: `Mínimo para aprobar: ${PASSING_SCORE_PERCENT}%`,
@@ -74,6 +86,9 @@ export const CERTIFICATE_TEMPLATE_COPY: Record<AppLocale, CertificateTemplateCop
     verified: "Verificado",
     novaCertified: "NOVA Certificado",
     sampleBanner: "MUESTRA",
+    categoryLabel: "Categoría",
+    levelLabel: "Nivel",
+    hoursLabel: "Horas de aprendizaje",
   },
   pt: {
     hub: "NOVA STEM HUB",
@@ -82,8 +97,10 @@ export const CERTIFICATE_TEMPLATE_COPY: Record<AppLocale, CertificateTemplateCop
     org: "STEM Innovation Academy",
     subtitle: "NOVA STEM HUB",
     title: "Certificado de Conquista",
-    certifies: "Este certificado é apresentado a",
-    completed: "por concluir com êxito todos os requisitos de",
+    certifies: "Isto certifica que",
+    completed: "Concluiu com êxito todos os requisitos acadêmicos e práticos estabelecidos pela NOVA STEM HUB e demonstrou competência nos conhecimentos e habilidades exigidos para este programa.",
+    achievement: "Concluiu com êxito todos os requisitos acadêmicos e práticos estabelecidos pela NOVA STEM HUB e demonstrou competência nos conhecimentos e habilidades exigidos para este programa.",
+    institutional: "Projetado com IA avançada, alinhado aos padrões do setor e desenvolvido em colaboração com especialistas líderes.",
     excellence: "Demonstrando dedicação, conhecimento e habilidades em Ciência, Tecnologia, Engenharia e Matemática por meio da inovação e excelência.",
     assessment: "Nota do exame final",
     minimum: `Mínimo para aprovação: ${PASSING_SCORE_PERCENT}%`,
@@ -97,6 +114,9 @@ export const CERTIFICATE_TEMPLATE_COPY: Record<AppLocale, CertificateTemplateCop
     verified: "Verificado",
     novaCertified: "NOVA Certificado",
     sampleBanner: "AMOSTRA",
+    categoryLabel: "Categoria",
+    levelLabel: "Nível",
+    hoursLabel: "Horas de aprendizagem",
   },
 };
 

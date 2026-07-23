@@ -7,29 +7,9 @@ import {
   PASSING_SCORE_PERCENT,
 } from "@/lib/certificates/constants";
 import { gradeFinalExam } from "@/lib/certificates/final-exam";
-import { collegeCatalogSlugFromCourseSlug, resolveCertificatePrefix } from "@/lib/certificates/prefix";
-import { normalizeCertificateLocale } from "@/lib/certificates/locale";
-import type { AppLocale } from "@/lib/locale";
+import { issueCertificate } from "@/lib/certificates/issue-certificate";
 import type { VerifiedCertificate } from "@/data/novahub/certificates";
-
-function randomCodeSuffix(length = 6): string {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let out = "";
-  for (let i = 0; i < length; i += 1) {
-    out += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return out;
-}
-
-export async function generateUniqueCertificateCode(prefix: string): Promise<string> {
-  const year = new Date().getFullYear();
-  for (let attempt = 0; attempt < 8; attempt += 1) {
-    const code = `${prefix}-${year}-${randomCodeSuffix()}`;
-    const existing = await db.certificate.findUnique({ where: { code } });
-    if (!existing) return code;
-  }
-  throw new Error("Unable to generate unique certificate code");
-}
+import type { AppLocale } from "@/lib/locale";
 
 export async function canTakeFinalAssessment(userId: string, courseId: string): Promise<{
   allowed: boolean;
@@ -37,14 +17,15 @@ export async function canTakeFinalAssessment(userId: string, courseId: string): 
 }> {
   const enrollment = await db.enrollment.findUnique({
     where: { userId_courseId: { userId, courseId } },
-    include: { certificate: true },
+    include: { certificates: true },
   });
 
   if (!enrollment || !hasCourseAccess(enrollment)) {
     return { allowed: false, reason: "Debes estar inscrito y con acceso activo al curso." };
   }
 
-  if (enrollment.certificate) {
+  const activeCertificate = enrollment.certificates.find((c) => c.status === "VALID");
+  if (activeCertificate) {
     return { allowed: false, reason: "Ya obtuviste el certificado de este curso." };
   }
 
@@ -167,108 +148,70 @@ export async function submitFinalAssessment(
     return { ok: false as const, error: "Curso o inscripción no encontrados." };
   }
 
-  const completionEvidence = await db.assignment.findMany({
-    where: { courseId },
-    select: {
-      maxScore: true,
-      submissions: {
-        where: { userId, status: "REVIEWED" },
-        select: { score: true },
-        take: 1,
-      },
-    },
-  });
-  const evidenceScores = completionEvidence
-    .map((assignment) => {
-      const score = assignment.submissions[0]?.score;
-      return score !== null && score !== undefined && assignment.maxScore > 0
-        ? Math.round((score / assignment.maxScore) * 100)
-        : null;
-    })
-    .filter((score): score is number => score !== null);
-  if (
-    completionEvidence.length === 0 ||
-    evidenceScores.length !== completionEvidence.length
-  ) {
-    return { ok: false as const, error: "La evidencia final revisada ya no está disponible." };
-  }
-  const credentialScorePercent = Math.round(
-    evidenceScores.reduce((sum, score) => sum + score, 0) / evidenceScores.length,
-  );
-
   const { scorePercent } = gradeFinalExam(answers);
   const passed = scorePercent >= PASSING_SCORE_PERCENT;
-  const prefix = resolveCertificatePrefix(course.slug);
-  const code = passed ? await generateUniqueCertificateCode(prefix) : null;
-  const catalogSlug = collegeCatalogSlugFromCourseSlug(course.slug) ?? course.slug;
-  const certificateLocale = normalizeCertificateLocale(locale, course.slug, catalogSlug);
-  const holderName = `${user.firstName} ${user.lastName}`.trim();
 
-  const recorded = await db.$transaction(async (tx) => {
+  let attemptNumber = 0;
+
+  const attempt = await db.$transaction(async (tx) => {
     const existingAttempts = await tx.courseAssessmentAttempt.count({
       where: { userId, courseId },
     });
     if (existingAttempts >= MAX_ASSESSMENT_ATTEMPTS) return null;
 
-    const attempt = await tx.courseAssessmentAttempt.create({
+    attemptNumber = existingAttempts + 1;
+
+    return tx.courseAssessmentAttempt.create({
       data: {
         userId,
         courseId,
-        attemptNumber: existingAttempts + 1,
+        attemptNumber,
         scorePercent,
         passed,
       },
     });
-
-    if (!passed || !code) {
-      return { attempt, certificate: null };
-    }
-
-    const certificate = await tx.certificate.upsert({
-      where: { enrollmentId: enrollment.id },
-      update: {},
-      create: {
-        code,
-        userId,
-        courseId,
-        enrollmentId: enrollment.id,
-        holderName,
-        programTitle: course.title,
-        programSlug: catalogSlug,
-        scorePercent: credentialScorePercent,
-        prefix,
-        locale: certificateLocale,
-        status: "VALID",
-      },
-    });
-
-    await tx.enrollment.update({
-      where: { id: enrollment.id },
-      data: { completedAt: new Date() },
-    });
-
-    return { attempt, certificate };
-  }, {
-    isolationLevel: "Serializable",
   });
 
-  if (!recorded) {
+  if (!attempt) {
     return { ok: false as const, error: "Agotaste los 3 intentos permitidos." };
   }
 
-  const { attempt, certificate } = recorded;
+  if (!passed) {
+    return {
+      ok: true as const,
+      passed: false,
+      scorePercent,
+      attemptNumber,
+      attemptsRemaining: Math.max(0, MAX_ASSESSMENT_ATTEMPTS - attempt.attemptNumber),
+      certificateCode: null,
+    };
+  }
+
+  // Issue certificate atomically in a separate transaction now that the attempt is committed.
+  const issueResult = await issueCertificate({
+    userId,
+    courseId,
+    enrollmentId: enrollment.id,
+    locale,
+  });
+
+  if (!issueResult.ok) {
+    return { ok: false as const, error: issueResult.error };
+  }
+
   return {
     ok: true as const,
-    passed,
+    passed: true,
     scorePercent,
-    attemptNumber: attempt.attemptNumber,
+    attemptNumber,
     attemptsRemaining: Math.max(0, MAX_ASSESSMENT_ATTEMPTS - attempt.attemptNumber),
-    certificateCode: certificate?.code ?? null,
+    certificateCode: issueResult.certificate.code,
   };
 }
 
 function mapDbStatus(status: PrismaCertificateStatus): VerifiedCertificate["status"] {
   if (status === "REVOKED") return "revoked";
+  if (status === "REPLACED") return "expired";
   return "valid";
 }
 

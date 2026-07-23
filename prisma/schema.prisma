@@ -69,6 +69,7 @@ enum PartnershipStatus {
 enum CertificateStatus {
   VALID
   REVOKED
+  REPLACED
 }
 
 model User {
@@ -95,6 +96,9 @@ model User {
   studentProfile StudentProfile?
   certificates   Certificate[]
   assessmentAttempts CourseAssessmentAttempt[]
+
+  @@index([role])
+  @@index([email])
 }
 
 model StudentProfile {
@@ -152,6 +156,7 @@ model Course {
   mentor      User?     @relation("CourseMentor", fields: [mentorId], references: [id])
   schoolId    String?
   school      School?   @relation(fields: [schoolId], references: [id])
+  certificateConfig Json?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
@@ -202,9 +207,10 @@ model Enrollment {
   payment     Payment?         @relation(fields: [paymentId], references: [id])
   enrolledAt  DateTime         @default(now())
   completedAt DateTime?
-  certificate Certificate?
+  certificates Certificate[]
 
   @@unique([userId, courseId])
+  @@index([status])
 }
 
 model CourseAssessmentAttempt {
@@ -222,22 +228,47 @@ model CourseAssessmentAttempt {
 }
 
 model Certificate {
-  id           String            @id @default(cuid())
-  code         String            @unique
-  userId       String
-  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  courseId     String
-  course       Course            @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  enrollmentId String?           @unique
-  enrollment   Enrollment?       @relation(fields: [enrollmentId], references: [id])
-  holderName   String
-  programTitle String
-  programSlug  String
-  scorePercent Int
-  prefix       String            @default("NOVA-CERT")
-  locale       String            @default("en")
-  status       CertificateStatus @default(VALID)
-  issuedAt     DateTime          @default(now())
+  id                String            @id @default(cuid())
+  certificateId     String?           @unique
+  verificationToken String?           @unique
+  code              String            @unique
+  userId            String
+  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId          String
+  course            Course            @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  enrollmentId      String?
+  enrollment        Enrollment?       @relation(fields: [enrollmentId], references: [id])
+  holderName        String
+  programTitle      String
+  programSlug       String
+  credentialTitle   String?
+  category          String?
+  credentialLevel   String?
+  completionDate    DateTime?
+  issueDate         DateTime?         @default(now())
+  learningHours     Int?
+  scorePercent      Int
+  finalScore        Float?
+  passingScore      Float?
+  prefix            String            @default("NOVA-CERT")
+  locale            String            @default("en")
+  status            CertificateStatus @default(VALID)
+  templateVersion   String            @default("2.0")
+  pdfUrl            String?
+  pdfStorageKey     String?
+  metadata          Json?
+  revokedAt         DateTime?
+  revocationReason  String?
+  replacesId        String?           @unique
+  replaces          Certificate?      @relation("CertificateReplacement", fields: [replacesId], references: [id], onDelete: SetNull)
+  replacedBy        Certificate?      @relation("CertificateReplacement")
+  issuedAt          DateTime          @default(now())
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  @@index([userId, status])
+  @@index([courseId, status])
+  @@index([status])
 }
 
 model CourseProduct {

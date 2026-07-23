@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { calculateCourseProgress } from "@/lib/utils";
 import { hasCourseAccess } from "@/lib/enrollment-access";
+import type { Prisma } from "@prisma/client";
 
 export async function getPublishedCourses() {
   return db.course.findMany({
@@ -72,8 +73,13 @@ export async function getUserEnrollments(userId: string) {
     });
 }
 
-export async function getCourseProgress(userId: string, courseId: string) {
-  const course = await db.course.findUnique({
+export async function getCourseProgress(
+  userId: string,
+  courseId: string,
+  tx?: Prisma.TransactionClient,
+) {
+  const client = tx ?? db;
+  const course = await client.course.findUnique({
     where: { id: courseId },
     include: {
       modules: { include: { lessons: { select: { id: true } } } },
@@ -83,7 +89,7 @@ export async function getCourseProgress(userId: string, courseId: string) {
   if (!course) return { total: 0, completed: 0, percent: 0 };
 
   const lessonIds = course.modules.flatMap((m) => m.lessons.map((l) => l.id));
-  const completed = await db.lessonProgress.count({
+  const completed = await client.lessonProgress.count({
     where: { userId, lessonId: { in: lessonIds }, completed: true },
   });
 
