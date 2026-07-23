@@ -103,18 +103,16 @@ export function Footer() {
           </div>
 
           <div className="space-y-8">
-            {locale !== "pt" && (
-              <div>
-                <h3 className="mb-3 text-sm font-semibold text-white">{copy.portal}</h3>
-                <div className="flex flex-col gap-2 text-sm text-nova-cyan-light/85">
-                  {NOVA_FOOTER_PORTAL.map((link) => (
-                    <Link key={link.href} href={link.href} className="transition hover:text-white">
-                      {link.label}
-                    </Link>
-                  ))}
-                </div>
+            <div>
+              <h3 className="mb-3 text-sm font-semibold text-white">{copy.portal}</h3>
+              <div className="flex flex-col gap-2 text-sm text-nova-cyan-light/85">
+                {NOVA_FOOTER_PORTAL.map((link) => (
+                  <Link key={link.href} href={link.href} className="transition hover:text-white">
+                    {link.label}
+                  </Link>
+                ))}
               </div>
-            )}
+            </div>
             <div>
               <h3 className="mb-3 text-sm font-semibold text-white">{copy.principle}</h3>
               <p className="text-sm italic leading-relaxed text-nova-cyan-light/85">{copy.principleText}</p>

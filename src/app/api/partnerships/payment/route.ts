@@ -94,11 +94,21 @@ export async function POST(request: Request) {
         return NextResponse.json({ stripe: true, url: checkoutSession.url });
       }
 
+      // Stripe is not configured yet — record a manual pending confirmation instead.
+      await db.partnershipApplication.update({
+        where: { id: application.id },
+        data: {
+          paymentStatus: "PENDING",
+          paymentNotes: paymentNotes || `Stripe requested but not configured — ${refCode}`,
+        },
+      });
+
       return NextResponse.json({
-        demo: true,
-        applicationId: application.id,
+        pending: true,
         reference: refCode,
         amountCents,
+        method,
+        institutionName: application.institutionName,
       });
     }
 

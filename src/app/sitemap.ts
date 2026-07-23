@@ -60,6 +60,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     entry("/privacy", 0.6, "monthly"),
     entry("/terms", 0.6, "monthly"),
     entry("/cookies", 0.6, "monthly"),
+    entry("/internships", 0.8, "monthly"),
+    entry("/internships/apply", 0.75, "monthly"),
+    entry("/es/internships/apply", 0.7, "monthly"),
+    entry("/scholarships/apply", 0.75, "monthly"),
+    entry("/es/scholarships/apply", 0.7, "monthly"),
+    entry("/scholarships/partners", 0.75, "monthly"),
+    entry("/scholarships/partners/apply", 0.7, "monthly"),
+    entry("/orbito", 0.8, "weekly"),
+    entry("/experiences", 0.75, "weekly"),
   ];
 
   for (const program of NOVA_PROGRAM_CATALOG) {

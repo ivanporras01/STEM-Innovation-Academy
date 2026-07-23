@@ -46,8 +46,8 @@ export function EnrollButton({
 
       {pendingPayment && (
         <p className="text-sm text-nova-orange">
-          Payment pending verification — we&apos;ll unlock your path within 24 hours once your
-          PayPal payment is confirmed. You can resubmit below if needed.
+          Enrollment request pending — we&apos;ll unlock your path once your request and payment
+          arrangement are confirmed. You can resubmit below if needed.
         </p>
       )}
 
@@ -63,15 +63,15 @@ export function EnrollButton({
         className="nova-btn-primary"
       >
         {pendingPayment
-          ? "Complete or update PayPal payment"
+          ? "Complete or update enrollment request"
           : priceLabel
-            ? `Enroll — ${priceLabel}`
-            : "Enroll in Mission Path"}
+            ? `Request enrollment — ${priceLabel}`
+            : "Request enrollment"}
       </button>
 
       {!enrolled && hasPrice && (
         <p className="text-xs text-nova-cyan-light/60">
-          Play free demo missions first, then enroll for full path access. Pay with PayPal only.
+          Play free demo missions first, then submit a request for full path access.
         </p>
       )}
 

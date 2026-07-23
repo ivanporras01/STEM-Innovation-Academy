@@ -30,6 +30,7 @@ export const LOCALE_PATHS = {
     news: "/news",
     home: "/",
     about: "/about",
+    resources: "/resources",
   },
   es: {
     hub: "/es",
@@ -47,7 +48,8 @@ export const LOCALE_PATHS = {
     partnerScholarships: "/scholarships/partners",
     news: "/es/news",
     home: "/es",
-    about: "/about",
+    about: "/es/about",
+    resources: "/es/resources",
   },
   pt: {
     hub: "/pt",
@@ -65,7 +67,8 @@ export const LOCALE_PATHS = {
     partnerScholarships: "/scholarships/partners",
     news: "/pt/news",
     home: "/pt",
-    about: "/about",
+    about: "/pt/about",
+    resources: "/pt/resources",
   },
 } as const;
 

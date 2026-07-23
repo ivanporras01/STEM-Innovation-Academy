@@ -33,7 +33,6 @@ export function Header() {
 
   const dashboardHref = session?.user?.role ? dashboardRoutes[session.user.role] : "/login";
   const isDashboard = pathname.startsWith("/dashboard");
-  const onPortal = pathname.startsWith("/dashboard");
 
   const closeMobile = () => setMenuOpen(false);
 
@@ -130,7 +129,7 @@ export function Header() {
           <LocaleSwitcher />
           {session ? (
             <>
-              {!onPortal && locale !== "pt" && (
+              {!isDashboard && (
                 <Link
                   href={dashboardHref}
                   className="whitespace-nowrap rounded-lg px-2 py-2 text-xs font-medium text-white/85 transition hover:bg-white/10 hover:text-nova-cyan-light 2xl:px-2.5 2xl:text-sm"
@@ -147,7 +146,7 @@ export function Header() {
                 Sign Out
               </Link>
             </>
-          ) : locale !== "pt" ? (
+          ) : (
             <>
               <Link
                 href="/register"
@@ -159,7 +158,7 @@ export function Header() {
                 Login
               </Link>
             </>
-          ) : null}
+          )}
         </div>
       </div>
 
@@ -212,7 +211,7 @@ export function Header() {
           <LocaleSwitcher onNavigate={closeMobile} />
           {session ? (
             <>
-              {!onPortal && locale !== "pt" && (
+              {!isDashboard && (
                 <Link
                   href={dashboardHref}
                   className="rounded-lg px-3 py-2 text-sm font-medium text-white/85 hover:bg-white/10"
@@ -229,7 +228,7 @@ export function Header() {
                 Sign Out
               </Link>
             </>
-          ) : locale !== "pt" ? (
+          ) : (
             <>
               <Link
                 href="/register"
@@ -242,7 +241,7 @@ export function Header() {
                 Login
               </Link>
             </>
-          ) : null}
+          )}
         </div>
       </nav>
     </header>

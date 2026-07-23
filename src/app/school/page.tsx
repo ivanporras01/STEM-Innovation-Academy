@@ -5,6 +5,8 @@ import { NOVA_SCHOOL_PAGE_EN } from "@/data/nova-school/catalog-en";
 import { novaSchoolElectiveIndex } from "@/data/nova-school";
 import { NOVA_COLLEGE, NOVA_SCHOOL } from "@/lib/novahub-brand";
 import { buildPageMetadata } from "@/lib/seo";
+import { WhyNovaBlock } from "@/components/why-nova";
+import { PageHero } from "@/components/ui/page-hero";
 
 export const metadata: Metadata = buildPageMetadata({
   title: NOVA_SCHOOL.metadataTitle,
@@ -19,11 +21,8 @@ export default function NovaSchoolCatalogPage() {
     <div className="relative flex flex-1 flex-col">
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-cyan/10 via-transparent to-nova-blue/10" />
-        <div className="nova-container relative">
-          <h1 className="text-3xl font-black sm:text-4xl lg:text-5xl">{NOVA_SCHOOL.name}</h1>
-          <p className="mt-4 max-w-2xl text-lg text-white/80">{NOVA_SCHOOL.tagline}</p>
-          <p className="mt-3 max-w-3xl text-sm text-nova-cyan-light/80">{copy.heroDescription}</p>
-          <div className="mt-6 flex flex-wrap gap-3 text-sm">
+        <PageHero title={NOVA_SCHOOL.name} subtitle={NOVA_SCHOOL.tagline} description={copy.heroDescription}>
+          <div className="flex flex-wrap gap-3 text-sm">
             <Link href={NOVA_COLLEGE.path} className="nova-btn-secondary inline-flex border-white/20 text-white">
               {NOVA_COLLEGE.name}
             </Link>
@@ -31,7 +30,7 @@ export default function NovaSchoolCatalogPage() {
               Edición en Español ↗
             </Link>
           </div>
-        </div>
+        </PageHero>
       </section>
 
       <main className="nova-space-section relative flex-1">
@@ -64,6 +63,7 @@ export default function NovaSchoolCatalogPage() {
             </Link>
           </section>
         </div>
+        <WhyNovaBlock />
       </main>
 
       </div>

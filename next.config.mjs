@@ -1,6 +1,22 @@
 /** @type {import('next').NextConfig} */
 
+const CSP = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "font-src 'self' https://fonts.gstatic.com",
+  "img-src 'self' data: https://www.googletagmanager.com",
+  "connect-src 'self' https://www.google-analytics.com https://analytics.google.com",
+  "frame-src https://www.youtube.com https://www.youtube-nocookie.com",
+  "frame-ancestors 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "upgrade-insecure-requests",
+].join("; ");
+
 const SECURITY_HEADERS = [
+
+  { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
 
   { key: "X-Frame-Options", value: "DENY" },
 
@@ -17,6 +33,8 @@ const SECURITY_HEADERS = [
   },
 
   { key: "X-DNS-Prefetch-Control", value: "on" },
+
+  { key: "Content-Security-Policy", value: CSP },
 
 ];
 

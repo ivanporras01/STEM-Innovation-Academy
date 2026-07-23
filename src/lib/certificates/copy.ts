@@ -115,7 +115,7 @@ export type CertificatePromoCopy = {
 
 export const CERTIFICATE_PROMO_COPY: Record<AppLocale, CertificatePromoCopy> = {
   en: {
-    eyebrow: "Your achievement awaits",
+    eyebrow: "Official, verifiable certificate",
     title: "Earn your NOVA STEM HUB Certificate of Achievement",
     subtitle:
       "Complete your program and pass the final assessment to receive an official, verifiable certificate you can share with schools, colleges, and employers.",

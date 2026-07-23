@@ -11,6 +11,7 @@ import {
   novaCollegeTrackIndex
 } from "@/lib/novahub";
 import { buildPageMetadata } from "@/lib/seo";
+import { PageHero } from "@/components/ui/page-hero";
 
 export const metadata: Metadata = buildPageMetadata({
   title: `${NOVA_COLLEGE.name} — Edición en Español`,
@@ -26,11 +27,8 @@ export default function SpanishCollegeCatalogPage() {
     <div className="relative flex flex-1 flex-col">
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-orange/10 via-transparent to-nova-cyan/10" />
-        <div className="nova-container relative">
-          <h1 className="text-3xl font-black sm:text-4xl lg:text-5xl">{NOVA_COLLEGE.name}</h1>
-          <p className="mt-4 max-w-2xl text-lg text-white/80">{copy.heroSubtitle}</p>
-          <p className="mt-3 max-w-3xl text-sm text-nova-cyan-light/80">{copy.heroDescription}</p>
-          <div className="mt-4 flex flex-wrap gap-2">
+        <PageHero title={NOVA_COLLEGE.name} subtitle={copy.heroSubtitle} description={copy.heroDescription}>
+          <div className="flex flex-wrap gap-2">
             <span className="rounded-full border border-nova-cyan/30 bg-nova-cyan/10 px-3 py-1 text-xs font-semibold text-nova-cyan-light">
               {NOVA_COLLEGE.trackCount} tracks en total
             </span>
@@ -46,7 +44,7 @@ export default function SpanishCollegeCatalogPage() {
               {copy.englishEditionLink}
             </Link>
           </div>
-        </div>
+        </PageHero>
       </section>
 
       <main className="nova-space-section relative flex-1">

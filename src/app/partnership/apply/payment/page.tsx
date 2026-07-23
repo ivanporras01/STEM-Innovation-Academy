@@ -9,9 +9,9 @@ import { buildPageMetadata } from "@/lib/seo";
 import { getStripe, isStripeConfigured } from "@/lib/stripe";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Partnership Payment — NOVA STEM HUB",
+  title: "Partnership Deposit — NOVA STEM HUB",
   description:
-    "Complete your institutional licensing deposit after partnership registration.",
+    "Complete your institutional licensing deposit or confirmation after partnership registration.",
   path: "/partnership/apply/payment",
   noIndex: true,
 });
@@ -68,8 +68,8 @@ export default async function PartnershipPaymentPage({ searchParams }: Props) {
         });
         paidReturn = true;
       }
-    } catch (err) {
-      console.error("[partnership-payment-page]", err);
+    } catch {
+      // Payment return handling failed; fall back to default state.
     }
   }
 

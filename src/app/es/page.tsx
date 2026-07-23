@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { NOVA_COLLEGE, NOVA_LANGUAGE, NOVA_SCHOOL, NOVA_SHOP, NOVA_STEM_HUB } from "@/lib/novahub-brand";
 import { buildPageMetadata } from "@/lib/seo";
+import { PageHero } from "@/components/ui/page-hero";
 
 export const metadata: Metadata = buildPageMetadata({
   title: `${NOVA_STEM_HUB.name} — Edición en Español`,
@@ -21,7 +22,7 @@ const PRODUCT_CARDS = [
       "Mission Paths",
       "Tech creativa para teens · Impacto social · más",
     ],
-    cta: "Entrar a NOVA School",
+    cta: "Explorar NOVA School",
     ctaClass: "nova-btn-primary nova-btn-glow",
   },
   {
@@ -34,7 +35,7 @@ const PRODUCT_CARDS = [
       "Certificados verificables",
       "Programa QCW (Tier 2)",
     ],
-    cta: `Explorar ${NOVA_COLLEGE.name}`,
+    cta: `Explorar NOVA ${NOVA_COLLEGE.name}`,
     ctaClass: "nova-btn-primary nova-btn-glow bg-nova-orange hover:bg-nova-orange/90",
   },
   {
@@ -47,7 +48,7 @@ const PRODUCT_CARDS = [
       "Inglés · Español · Portugués",
       "MCER · labs de conversación",
     ],
-    cta: `Explorar ${NOVA_LANGUAGE.name}`,
+    cta: `Explorar NOVA ${NOVA_LANGUAGE.name}`,
     ctaClass: "nova-btn-primary nova-btn-glow bg-nova-green hover:bg-nova-green/90",
   },
 ] as const;
@@ -56,7 +57,7 @@ export default function SpanishStemHubLandingPage() {
   return (
     <div className="relative flex flex-1 flex-col">
       <main className="relative flex-1">
-        <section className="nova-section-cosmic relative overflow-hidden py-20 text-white sm:py-24">
+        <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white">
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-cyan/10 via-transparent to-nova-orange/10" />
           <div className="nova-container relative">
             <div className="nova-glass-island mb-8 max-w-3xl border border-nova-cyan/35 px-6 py-5 shadow-[0_0_40px_rgba(0,212,255,0.12)] sm:px-8 sm:py-6">
@@ -64,14 +65,13 @@ export default function SpanishStemHubLandingPage() {
                 {NOVA_STEM_HUB.missionStatementEs}
               </p>
             </div>
-
-            <h1 className="max-w-3xl text-3xl font-black text-white/95 sm:text-4xl lg:text-5xl">
-              {NOVA_STEM_HUB.heroHeadlineEs}
-            </h1>
-            <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/75 sm:text-lg">
-              {NOVA_STEM_HUB.heroSubheadEs}
-            </p>
           </div>
+
+          <PageHero
+            title={NOVA_STEM_HUB.heroHeadlineEs}
+            subtitle={NOVA_STEM_HUB.heroSubheadEs}
+            titleClassName="max-w-4xl"
+          />
         </section>
 
         <section className="nova-space-section pb-20">

@@ -115,21 +115,21 @@ const COPY = {
     payment: "Payment",
     paymentMethod: "Preferred payment method",
     paymentMethodHint:
-      "You'll complete your licensing deposit on the next screen — card, wire, Zelle, Venmo, or custom.",
+      "You'll complete your licensing deposit details on the next screen — wire, Zelle, Venmo, custom, or card when available.",
     message: "Goals & timeline",
     messagePlaceholder:
       `Student age range, timeline for launch, why ${NOVA_STEM_HUB.name}, pilot scope…`,
     acceptTerms:
       "I confirm the information is accurate and agree to be contacted about NOVA School and/or NOVA College licensing.",
     disclaimer:
-      "By submitting, you proceed to institutional payment. Our partnerships team reviews within 5–7 business days.",
+      "By submitting, you proceed to institutional deposit. Our partnerships team reviews within 5–7 business days.",
     submitting: "Submitting…",
-    submit: "Continue to payment",
+    submit: "Continue to deposit",
   },
   es: {
     submitError: "No pudimos enviar tu registro. Intenta de nuevo.",
     networkError: "Algo salió mal. Por favor intenta de nuevo.",
-    stepHint: "Paso 1 de 2 — después enviarás el depósito de licencia.",
+    stepHint: "Paso 1 de 2 — después completarás los detalles del depósito de licencia.",
     institution: "Institución",
     institutionName: "Nombre de la institución",
     institutionNamePlaceholder: "Colegio Técnico Nacional",
@@ -174,16 +174,16 @@ const COPY = {
     payment: "Pago",
     paymentMethod: "Método de pago preferido",
     paymentMethodHint:
-      "Completarás el depósito de licencia en la siguiente pantalla — tarjeta, transferencia, Zelle, Venmo u otro.",
+      "Completarás los detalles del depósito de licencia en la siguiente pantalla — transferencia, Zelle, Venmo, otro o tarjeta cuando esté disponible.",
     message: "Objetivos y cronograma",
     messagePlaceholder:
       `Rango de edades, cronograma, por qué ${NOVA_STEM_HUB.name}, alcance piloto…`,
     acceptTerms:
       "Confirmo que la información es correcta y acepto ser contactado sobre licencias NOVA School y/o NOVA College.",
     disclaimer:
-      "Al enviar, continúas al pago institucional. Nuestro equipo revisa en 5–7 días hábiles.",
+      "Al enviar, continúas al depósito institucional. Nuestro equipo revisa en 5–7 días hábiles.",
     submitting: "Enviando…",
-    submit: "Continuar al pago",
+    submit: "Continuar al depósito",
   },
 } as const;
 

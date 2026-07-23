@@ -186,7 +186,7 @@ export function ExperiencePlayer({
     goTo(2);
   }
 
-  function handleLabComplete(_msg?: string) {
+  function handleLabComplete() {
     progressFlagsRef.current.labComplete = true;
     setLabComplete(true);
     setShowLabVictory(true);

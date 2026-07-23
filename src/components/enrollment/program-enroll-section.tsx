@@ -48,24 +48,25 @@ export async function ProgramEnrollSection({
     <section className="nova-glass-island border-2 border-nova-cyan/25 p-6 sm:p-8">
       {justRegistered && (
         <div className="mb-5 rounded-xl border border-nova-green/30 bg-nova-green/10 px-4 py-3 text-sm text-nova-green">
-          <strong className="text-white">Welcome, Explorer!</strong> Your account is ready — complete
-          PayPal payment below to unlock this mission path.
+          <strong className="text-white">Welcome, Explorer!</strong> Your account is ready — submit
+          your enrollment request below to start your mission path.
         </div>
       )}
       <p className="text-xs font-bold uppercase tracking-[0.2em] text-nova-cyan">
-        Enroll &amp; pay
+        Request enrollment
       </p>
       <h2 className="mt-2 text-xl font-black text-white">{copy.title}</h2>
       <p className="mt-2 text-sm text-nova-cyan-light/85">
         Tuition:{" "}
-        <SalePriceFromCents listCents={priceCents} className="align-middle" /> — pay with PayPal.
-        Access unlocks when payment is confirmed (usually within 24 hours).
+        <SalePriceFromCents listCents={priceCents} className="align-middle" /> — submit your
+        enrollment request. Access unlocks after your request is reviewed and your payment
+        arrangement is confirmed.
       </p>
 
       <ol className="mt-5 grid gap-3 sm:grid-cols-3">
         {[
           { step: "1", title: "Create account", body: "Free Explorer registration" },
-          { step: "2", title: "Pay with PayPal", body: "Send tuition + reference code" },
+          { step: "2", title: "Submit request", body: "Send your enrollment details" },
           { step: "3", title: "Start learning", body: "Full program access unlocked" },
         ].map((item) => (
           <li
@@ -93,7 +94,7 @@ export async function ProgramEnrollSection({
         ) : (
           <>
             <Link href={registerHref} className="nova-btn-primary nova-btn-glow inline-flex flex-wrap items-center gap-2">
-              <span>Create account &amp; enroll —</span>
+              <span>Create account &amp; request enrollment —</span>
               <SalePriceFromCents listCents={priceCents} showBadge={false} />
             </Link>
             <Link href={loginHref} className="nova-btn-secondary border-white/20 text-white">

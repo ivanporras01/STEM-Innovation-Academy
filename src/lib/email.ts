@@ -29,7 +29,7 @@ export type PendingPaymentNotifyInput = {
 };
 
 /**
- * Notify admin that a student PayPal (manual) payment is awaiting approval.
+ * Notify admin that a student enrollment/payment request is awaiting follow-up.
  * Returns false when skipped or failed — never throws.
  */
 export async function notifyAdminPendingPayment(
@@ -47,11 +47,11 @@ export async function notifyAdminPendingPayment(
 
   const adminUrl = `${getSiteUrl().replace(/\/$/, "")}/dashboard/admin/payments`;
   const amount = formatUsd(input.amountCents);
-  const method = input.method ?? "PAYPAL";
+  const method = input.method ?? "Enrollment request";
 
-  const subject = `Pending payment: ${input.studentName} — ${input.courseTitle}`;
+  const subject = `Enrollment request: ${input.studentName} — ${input.courseTitle}`;
   const html = `
-    <p>A student submitted a payment that is waiting for admin approval.</p>
+    <p>A student submitted an enrollment request that is waiting for follow-up.</p>
     <ul>
       <li><strong>Student:</strong> ${escapeHtml(input.studentName)} &lt;${escapeHtml(input.studentEmail)}&gt;</li>
       <li><strong>Course:</strong> ${escapeHtml(input.courseTitle)}</li>

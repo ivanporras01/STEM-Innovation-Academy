@@ -4,15 +4,17 @@ import { NOVA_PROGRAM_CATALOG } from "@/data/courses";
 import { PARTNERSHIP_APPLY_PATH } from "@/data/novahub/partnerships";
 import { buildPageMetadata } from "@/lib/seo";
 import { enrollPathForProgram } from "@/lib/program-enrollment";
+import { WhyNovaBlock } from "@/components/why-nova";
 import { localizeProgram } from "@/lib/program-locale-copy";
+import { PageHero } from "@/components/ui/page-hero";
 import { CertificatePreviewPromo } from "@/components/certificates/certificate-preview-promo";
 import { SaleTuitionDisplay } from "@/components/pricing/sale-price";
 import { ArrowRight, Building2, GraduationCap, UserPlus } from "lucide-react";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Enroll & Pay — Students & Schools",
+  title: "Enroll — Students & Schools",
   description:
-    "Register as a NOVA Explorer, enroll in programs, and pay online. Schools and colleges can apply for institutional licensing.",
+    "Register as a NOVA Explorer, request enrollment in programs, and get next steps. Schools and colleges can apply for institutional licensing.",
   path: "/enroll",
 });
 
@@ -36,19 +38,12 @@ async function EnrollHubContent({
 
   return (
     <div className="flex flex-1 flex-col">
-      <section className="nova-section-cosmic border-b border-white/10 py-14 text-white lg:py-16">
-        <div className="nova-container">
-          <p className="text-sm font-bold uppercase tracking-[0.25em] text-nova-cyan">
-            NOVA STEM HUB · Enrollment
-          </p>
-          <h1 className="mt-3 max-w-3xl text-3xl font-black sm:text-4xl">
-            Register, enroll, and pay — all in one place
-          </h1>
-          <p className="mt-4 max-w-2xl text-lg text-white/80">
-            Individual Explorers choose a program and pay online. Schools and colleges register
-            through NOVA Partnership for bulk student access.
-          </p>
-        </div>
+      <section className="nova-section-cosmic border-b border-white/10 py-16 text-white">
+        <PageHero
+          eyebrow="NOVA STEM HUB · Enrollment"
+          title="Enroll"
+          subtitle="Individual Explorers create a free account, choose a program, and submit an enrollment request. Schools and colleges register through NOVA Partnership for bulk student access."
+        />
       </section>
 
       <main className="nova-space-section flex-1 py-12">
@@ -56,7 +51,7 @@ async function EnrollHubContent({
           {showRegisteredBanner && (
             <div className="mb-8 rounded-xl border border-nova-green/30 bg-nova-green/10 px-5 py-4 text-sm text-nova-green">
               <strong className="text-white">Account created!</strong> Choose a program below and
-              complete payment to unlock your mission path.
+              submit your enrollment request to start your mission path.
             </div>
           )}
           <CertificatePreviewPromo className="mb-10" />
@@ -68,14 +63,14 @@ async function EnrollHubContent({
               </div>
               <h2 className="text-2xl font-black text-white">For students &amp; families</h2>
               <p className="mt-3 text-sm leading-relaxed text-nova-cyan-light/85">
-                Create your free Explorer account, pick any program from the catalog, and complete
-                payment with PayPal. Your courses unlock after our team confirms payment (usually
-                within 24 hours).
+                Create your free Explorer account, pick any program from the catalog, and submit your
+                enrollment request. Your courses unlock after our team reviews your request and your
+                payment arrangement is confirmed.
               </p>
               <ol className="mt-5 space-y-2 text-sm text-white/80">
-                <li>1. <Link href="/register" className="text-nova-cyan hover:underline">Register</Link> (free — then pay immediately)</li>
-                <li>2. Choose a program below or in the <Link href="/catalog" className="text-nova-cyan hover:underline">catalog</Link></li>
-                <li>3. Pay and start learning</li>
+                <li>1. <Link href="/register" className="text-nova-cyan hover:underline">Register free</Link> and choose your program</li>
+                <li>2. Select a track below or browse the full <Link href="/catalog" className="text-nova-cyan hover:underline">catalog</Link></li>
+                <li>3. Submit your enrollment request and unlock your mission path</li>
               </ol>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link href="/register" className="nova-btn-primary nova-btn-glow inline-flex items-center gap-2">
@@ -94,9 +89,9 @@ async function EnrollHubContent({
               </div>
               <h2 className="text-2xl font-black text-white">For schools &amp; colleges</h2>
               <p className="mt-3 text-sm leading-relaxed text-nova-cyan-light/85">
-                Register your institution, choose a payment method (card, wire transfer, Zelle,
-                Venmo, or custom), and once your contract is approved we bulk-enroll your students
-                with full program access.
+                Register your institution, tell us your preferred payment arrangement (card, wire
+                transfer, Zelle, Venmo, or custom), and once your contract is approved we bulk-enroll
+                your students with full program access.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
@@ -116,8 +111,9 @@ async function EnrollHubContent({
           <section className="mt-14">
             <h2 className="text-xl font-black text-white">Enroll in a program</h2>
             <p className="mt-2 text-sm text-nova-cyan-light/80">
-              Select a program to register and pay. Students pay with PayPal only (50% off list
-              tuition). Institutional licensing uses partnership checkout.
+              Select a program to register and request enrollment. Tuition shown reflects 50% off list
+              price; payment instructions will be provided after your request is reviewed.
+              Institutional licensing uses the partnership application flow.
             </p>
             <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {NOVA_PROGRAM_CATALOG.map((program) => {
@@ -141,6 +137,7 @@ async function EnrollHubContent({
             </div>
           </section>
         </div>
+        <WhyNovaBlock />
       </main>
 
       </div>

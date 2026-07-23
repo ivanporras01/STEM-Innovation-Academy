@@ -11,6 +11,7 @@ import {
 } from "@/data/courses";
 import { cn } from "@/lib/utils";
 import { SaleTuitionDisplay } from "@/components/pricing/sale-price";
+import { PageHero } from "@/components/ui/page-hero";
 
 const FILTERS: { id: "all" | ProgramVertical; label: string }[] = [
   { id: "all", label: "All programs" },
@@ -29,23 +30,26 @@ export function CatalogPageClient() {
 
   return (
     <div className="relative flex flex-1 flex-col">
-      <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white lg:py-20">
+      <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-deep-blue/50 via-transparent to-nova-orange/5" />
-        <div className="nova-container relative">
-          <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-nova-cyan">
-            NOVA STEM HUB · Official Catalog
-          </p>
-          <h1 className="max-w-3xl text-3xl font-black sm:text-4xl lg:text-5xl">
-            21 programs. One ecosystem.{" "}
-            <span className="text-nova-cyan-light">Play to learn</span> — explore before you enroll.
-          </h1>
-          <p className="mt-5 max-w-2xl text-lg text-white/80">
-            Every syllabus and outcome is public — no login required. Start with{" "}
-            <strong className="text-nova-cyan-light">free demo missions</strong> on NOVA School electives,
-            then unlock the full journey when you&apos;re ready.
-          </p>
-
-          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+        <PageHero
+          eyebrow="NOVA STEM HUB · Official Catalog"
+          title={
+            <>
+              21 programs. One ecosystem.{" "}
+              <span className="text-nova-cyan-light">Play to learn</span> — explore before you enroll.
+            </>
+          }
+          titleClassName="max-w-3xl"
+          subtitle={
+            <>
+              Every syllabus and outcome is public — no login required. Start with{" "}
+              <strong className="text-nova-cyan-light">free demo missions</strong> on NOVA School electives,
+              then unlock the full journey when you&apos;re ready.
+            </>
+          }
+        >
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
             {[
               { label: "Total programs", value: CATALOG_STATS.totalPrograms },
               { label: "School electives", value: CATALOG_STATS.school },
@@ -82,7 +86,7 @@ export function CatalogPageClient() {
               Print / Save as PDF
             </a>
           </div>
-        </div>
+        </PageHero>
       </section>
 
       <main className="nova-space-section flex-1">

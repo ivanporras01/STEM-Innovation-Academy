@@ -45,8 +45,8 @@ export default async function CheckoutSuccessPage({
         courseTitle = course?.title ?? null;
         courseSlug = course?.slug ?? null;
       }
-    } catch (err) {
-      console.error("[checkout-success]", err);
+    } catch {
+      // Payment confirmation lookup failed; continue with generic success state.
     }
   }
 
@@ -62,7 +62,7 @@ export default async function CheckoutSuccessPage({
             <p className="mt-3 text-nova-cyan-light/85">
               {activated && courseTitle ? (
                 <>
-                  Payment confirmed — <strong className="text-white">{courseTitle}</strong> is
+                  Enrollment confirmed — <strong className="text-white">{courseTitle}</strong> is
                   ready. Your crew is cheering you on. Launch your first mission when you&apos;re
                   ready!
                 </>

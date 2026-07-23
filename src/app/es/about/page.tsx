@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { NOVA_COLLEGE, NOVA_SCHOOL, NOVA_STEM_HUB } from "@/lib/novahub-brand";
 import { buildPageMetadata } from "@/lib/seo";
+import { PageHero } from "@/components/ui/page-hero";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Sobre NOVA STEM HUB — Nuestra Misión, Visión y Valores",
+  title: "Nosotros — Nuestra Misión, Visión y Valores",
   description: "Conozca el compromiso de NOVA STEM HUB de empoderar a futuros innovadores a través de educación STEM de clase mundial.",
   path: "/es/about",
   locale: "es",
@@ -14,12 +15,10 @@ export default function AboutPageEs() {
   return (
     <div className="relative flex flex-1 flex-col">
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white">
-        <div className="nova-container relative">
-          <h1 className="text-3xl font-black sm:text-4xl lg:text-5xl">Sobre NOVA STEM HUB</h1>
-          <p className="mt-4 max-w-2xl text-lg text-white/80">
-            Empoderando a futuros innovadores a través de educación STEM de clase mundial
-          </p>
-        </div>
+        <PageHero
+          title="Nosotros"
+          subtitle="Empoderando a futuros innovadores a través de educación STEM de clase mundial"
+        />
       </section>
 
       <main className="nova-space-section relative flex-1">

@@ -34,23 +34,23 @@ type Props = {
 
 const COPY = {
   en: {
-    title: "Complete institutional payment",
+    title: "Complete institutional deposit",
     subtitle:
-      "Your partnership application was received. Submit your licensing deposit to move forward — our team reviews within 5–7 business days.",
+      "Your partnership application was received. Submit your licensing deposit or confirmation to move forward — our team reviews within 5–7 business days.",
     amountLabel: "Licensing deposit",
     methodLabel: "Payment method",
-    stripeHint: "Secure card checkout for pilot or annual licensing deposits.",
-    stripeDemo: "Card checkout in demo mode — payment simulates instantly in dev.",
+    stripeHint: "Secure card checkout will be enabled once the payment provider is selected.",
+    stripeDemo: "Card checkout is currently not active. Please submit your deposit confirmation below and our team will follow up.",
     referenceLabel: "Your reference (wire memo / confirmation #)",
     referencePlaceholder: "e.g. PO number or wire confirmation",
     otherNoteLabel: "Additional notes (optional)",
-    submitStripe: "Pay deposit by card",
-    submitManual: "Submit payment confirmation",
+    submitStripe: "Continue to card checkout",
+    submitManual: "Submit deposit confirmation",
     processing: "Processing payment…",
-    pendingTitle: "Payment submitted — pending verification",
+    pendingTitle: "Deposit confirmation submitted — pending verification",
     pendingBody:
-      "Include your reference code with your payment. Our partnerships team will email you at {email} once verified and schedule onboarding.",
-    completedTitle: "Deposit confirmed",
+      "Include your reference code with your deposit. Our partnerships team will email you at {email} once verified and schedule onboarding.",
+    completedTitle: "Deposit confirmation received",
     completedBody:
       "Thank you! Our partnerships team will contact you within 5–7 business days to finalize licensing and pilot scope.",
     backPartnership: "Back to NOVA Partnership",
@@ -58,23 +58,23 @@ const COPY = {
     cancelled: "Checkout cancelled — you can try again when ready.",
   },
   es: {
-    title: "Completa el pago institucional",
+    title: "Completa el depósito institucional",
     subtitle:
-      "Recibimos tu solicitud de partnership. Envía el depósito de licencia para continuar — nuestro equipo revisa en 5–7 días hábiles.",
+      "Recibimos tu solicitud de partnership. Envía el depósito o confirmación de licencia para continuar — nuestro equipo revisa en 5–7 días hábiles.",
     amountLabel: "Depósito de licencia",
     methodLabel: "Método de pago",
-    stripeHint: "Pago seguro con tarjeta para depósitos piloto o licencia anual.",
-    stripeDemo: "Checkout en modo demo — el pago se simula al instante en desarrollo.",
+    stripeHint: "El pago seguro con tarjeta se habilitará una vez seleccionado el proveedor de pagos.",
+    stripeDemo: "El pago con tarjeta no está activo. Envía tu confirmación de depósito abajo y nuestro equipo se pondrá en contacto.",
     referenceLabel: "Tu referencia (memo de transferencia / confirmación)",
     referencePlaceholder: "ej. número de PO o confirmación bancaria",
     otherNoteLabel: "Notas adicionales (opcional)",
-    submitStripe: "Pagar depósito con tarjeta",
-    submitManual: "Enviar confirmación de pago",
+    submitStripe: "Continuar al pago con tarjeta",
+    submitManual: "Enviar confirmación de depósito",
     processing: "Procesando pago…",
-    pendingTitle: "Pago enviado — pendiente de verificación",
+    pendingTitle: "Confirmación de depósito enviada — pendiente de verificación",
     pendingBody:
-      "Incluye tu código de referencia con el pago. Nuestro equipo escribirá a {email} cuando se verifique y agendará el onboarding.",
-    completedTitle: "Depósito confirmado",
+      "Incluye tu código de referencia con el depósito. Nuestro equipo escribirá a {email} cuando se verifique y agendará el onboarding.",
+    completedTitle: "Confirmación de depósito recibida",
     completedBody:
       "¡Gracias! Nuestro equipo de partnerships te contactará en 5–7 días hábiles para finalizar la licencia y el alcance piloto.",
     backPartnership: "Volver a NOVA Partnership",
@@ -97,6 +97,11 @@ export function PartnershipPaymentForm({
   const method = application.paymentMethod ?? "WIRE_TRANSFER";
   const methodMeta = INSTITUTION_PAYMENT_METHODS.find((m) => m.id === method);
   const instructions = getInstitutionPaymentInstructions(method);
+  const showCardCheckout = method === "STRIPE" && stripeAvailable;
+  const activeInstructions =
+    method === "STRIPE" && !stripeAvailable
+      ? getInstitutionPaymentInstructions("OTHER")
+      : instructions;
   const referenceCode = buildPartnershipReference(application.id);
 
   const [reference, setReference] = useState("");
@@ -189,12 +194,12 @@ export function PartnershipPaymentForm({
         <p className="text-sm text-nova-cyan-light/85">
           {copy.pendingBody.replace("{email}", application.email)}
         </p>
-        {instructions && (
+        {activeInstructions && (
           <>
-            <h3 className="font-semibold text-white">{instructions.heading}</h3>
-            {instructions.account && (
+            <h3 className="font-semibold text-white">{activeInstructions.heading}</h3>
+            {activeInstructions.account && (
               <p className="rounded-xl bg-nova-cyan/10 px-4 py-2 font-mono text-sm text-nova-cyan">
-                {instructions.account}
+                {activeInstructions.account}
               </p>
             )}
             <p className="text-sm text-nova-cyan-light/85">
@@ -202,7 +207,7 @@ export function PartnershipPaymentForm({
               <strong className="text-white">{formatPrice(application.depositCents)}</strong>
             </p>
             <ol className="list-decimal space-y-2 pl-5 text-sm text-nova-cyan-light/85">
-              {instructions.steps.map((step) => (
+              {activeInstructions.steps.map((step) => (
                 <li key={step}>{step}</li>
               ))}
             </ol>
@@ -261,12 +266,9 @@ export function PartnershipPaymentForm({
         Reference: {referenceCode}
       </p>
 
-      {method === "STRIPE" ? (
+      {showCardCheckout ? (
         <div className="space-y-3">
           <p className="text-sm text-nova-cyan-light/85">{copy.stripeHint}</p>
-          {!stripeAvailable && (
-            <p className="text-xs text-nova-orange">{copy.stripeDemo}</p>
-          )}
           <button
             type="button"
             disabled={loading}
@@ -278,16 +280,16 @@ export function PartnershipPaymentForm({
         </div>
       ) : (
         <div className="space-y-4">
-          {instructions && (
+          {activeInstructions && (
             <>
-              <h3 className="font-semibold text-white">{instructions.heading}</h3>
-              {instructions.account && (
+              <h3 className="font-semibold text-white">{activeInstructions.heading}</h3>
+              {activeInstructions.account && (
                 <p className="rounded-xl bg-nova-cyan/10 px-4 py-2 font-mono text-sm text-nova-cyan">
-                  {instructions.account}
+                  {activeInstructions.account}
                 </p>
               )}
               <ol className="list-decimal space-y-2 pl-5 text-sm text-nova-cyan-light/85">
-                {instructions.steps.map((step) => (
+                {activeInstructions.steps.map((step) => (
                   <li key={step}>{step}</li>
                 ))}
               </ol>

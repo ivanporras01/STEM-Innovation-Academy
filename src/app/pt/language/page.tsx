@@ -5,6 +5,7 @@ import { NOVA_LANGUAGE_PAGE_PT } from "@/data/nova-language/catalog-pt";
 import { novaLanguageCourseIndex } from "@/data/nova-language";
 import { NOVA_LANGUAGE, NOVA_STEM_HUB } from "@/lib/novahub-brand";
 import { buildPageMetadata } from "@/lib/seo";
+import { PageHero } from "@/components/ui/page-hero";
 
 export const metadata: Metadata = buildPageMetadata({
   title: `${NOVA_LANGUAGE.name} — Edição em Português`,
@@ -19,11 +20,8 @@ export default function PortugueseNovaLanguageCatalogPage() {
   return (
     <div className="relative flex flex-1 flex-col">
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white">
-        <div className="nova-container relative">
-          <h1 className="text-3xl font-black sm:text-4xl">{NOVA_LANGUAGE.name}</h1>
-          <p className="mt-4 max-w-2xl text-lg text-white/80">{NOVA_LANGUAGE.taglinePt}</p>
-          <p className="mt-3 max-w-3xl text-sm text-nova-cyan-light/80">{copy.heroDescription}</p>
-          <div className="mt-6 flex flex-wrap gap-3 text-sm">
+        <PageHero title={NOVA_LANGUAGE.name} subtitle={NOVA_LANGUAGE.taglinePt} description={copy.heroDescription}>
+          <div className="flex flex-wrap gap-3 text-sm">
             <Link href="/pt" className="nova-btn-secondary inline-flex border-white/20 text-white">
               ← {NOVA_STEM_HUB.name}
             </Link>
@@ -34,7 +32,7 @@ export default function PortugueseNovaLanguageCatalogPage() {
               Edición en Español ↗
             </Link>
           </div>
-        </div>
+        </PageHero>
       </section>
 
       <main className="nova-space-section relative flex-1">

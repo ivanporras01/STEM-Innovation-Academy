@@ -68,8 +68,8 @@ export default async function SpanishPartnershipPaymentPage({ searchParams }: Pr
         });
         paidReturn = true;
       }
-    } catch (err) {
-      console.error("[partnership-payment-page-es]", err);
+    } catch {
+      // Payment return handling failed; fall back to default state.
     }
   }
 

@@ -1,10 +1,18 @@
 import type { PaymentMethod } from "@prisma/client";
 
-/** Zelle recipient — phone or email (kept for institutional / legacy) */
+/** Zelle recipient — phone or email read from environment (kept for institutional / legacy).
+ *   ZELLE_PHONE="..."
+ *   ZELLE_EMAIL="..."
+ */
+const ZELLE_PHONE = (process.env.ZELLE_PHONE ?? "").trim();
+const ZELLE_EMAIL = (process.env.ZELLE_EMAIL ?? "").trim();
 export const ZELLE_PAYMENT_CONTACT = {
-  phone: "954-997-3487",
-  email: "hectorporras0916@gmail.com",
-  label: "954-997-3487 or hectorporras0916@gmail.com",
+  phone: ZELLE_PHONE,
+  email: ZELLE_EMAIL,
+  label:
+    ZELLE_PHONE && ZELLE_EMAIL
+      ? `${ZELLE_PHONE} or ${ZELLE_EMAIL}`
+      : ZELLE_PHONE || ZELLE_EMAIL || "Contact NOVA for Zelle details",
 };
 
 /**
@@ -41,16 +49,15 @@ export type PaymentMethodOption = {
 };
 
 /**
- * B2C student checkout — PayPal only for now.
- * Stripe / Zelle / Venmo remain in code for institutional + future re-enable.
+ * B2C student checkout — provider-neutral while the payment provider decision is pending.
+ * The request creates a pending enrollment that the NOVA team follows up on.
  */
 export const STUDENT_PAYMENT_METHODS: PaymentMethodOption[] = [
   {
-    id: "PAYPAL",
-    label: "PayPal",
-    description: isPayPalConfigured()
-      ? `Send the exact tuition via PayPal to ${paypalReceiveLabel()} — include your reference code. We verify and unlock within 24 hours.`
-      : "Pay with PayPal — send the exact tuition amount and include your reference code. We verify and unlock within 24 hours.",
+    id: "OTHER",
+    label: "Submit enrollment request",
+    description:
+      "Send your request. The NOVA team will review it and contact you with next steps and payment options.",
   },
 ];
 
@@ -150,12 +157,12 @@ export const PAYMENT_INSTRUCTIONS: Partial<Record<PaymentMethod, PaymentInstruct
     ],
   },
   OTHER: {
-    heading: "Alternative payment",
+    heading: "Submit enrollment request",
     steps: [
-      "Contact enrollments@steminnovationacademy.org with your reference code.",
-      "Include how you'd like to pay.",
-      "Our team will reply with instructions within one business day.",
-      "Your mission path unlocks when payment is confirmed.",
+      "Review the program details and tuition below.",
+      "Click Submit enrollment request to create your request.",
+      "The NOVA team will review your request and contact you with next steps.",
+      "Your mission path unlocks after your request and payment arrangement are confirmed.",
     ],
   },
 };

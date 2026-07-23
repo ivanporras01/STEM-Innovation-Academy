@@ -28,7 +28,6 @@ export async function POST(request: Request) {
       submittedAt: new Date().toISOString(),
       id: `intern-${Date.now()}`,
     };
-    console.log("[internship-application]", JSON.stringify(application));
     try {
       await mkdir(DIR, { recursive: true });
       await appendFile(FILE, `${JSON.stringify(application)}\n`, "utf-8");

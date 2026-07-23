@@ -6,6 +6,7 @@ import { getLmsCoursePublicPresentation } from "@/lib/program-locale-copy";
 import { pathwayLabels } from "@/lib/utils";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { PageHero } from "@/components/ui/page-hero";
 
 export const metadata: Metadata = {
   title: "Mission Paths",
@@ -34,17 +35,18 @@ export default async function CoursesPage() {
     <div className="relative flex flex-1 flex-col">
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-deep-blue/40 via-transparent to-transparent" />
-        <div className="nova-container relative text-center">
-          <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-nova-cyan">
-            ✦ Chart Your Course Through the Cosmos
-          </p>
-          <h1 className="text-3xl font-black sm:text-4xl lg:text-5xl">Mission Paths</h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-white/80">
-            Three galaxies of innovation await. Pick a path, tap{" "}
-            <strong className="text-nova-cyan-light">Explore Now</strong> to begin your first
-            quest, then journey through phases with your Innovation Mentor.
-          </p>
-        </div>
+        <PageHero
+          align="center"
+          eyebrow="✦ Chart Your Course Through the Cosmos"
+          title="School Mission Paths"
+          subtitle={
+            <>
+              Three galaxies of innovation await. Pick a path, tap{" "}
+              <strong className="text-nova-cyan-light">Explore Now</strong> to begin your first
+              quest, then journey through phases with your Innovation Mentor.
+            </>
+          }
+        />
       </section>
 
       <main className="nova-space-section relative flex-1">

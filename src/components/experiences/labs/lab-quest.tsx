@@ -38,26 +38,29 @@ export function LabQuest({ experienceSlug, onComplete }: Props) {
   }
 }
 
-function LabViralBrief({ onComplete }: { onComplete: (msg: string) => void }) {
-  const audiences = [
-    { id: "explorers", label: "NOVA Explorers (8–16)", score: 28, icon: "🧑‍🚀", sub: "Precision audience" },
-    { id: "parents", label: "Parents & guardians", score: 18, icon: "👨‍👩‍👧", sub: "Good, but secondary" },
-    { id: "random", label: "Everyone on Earth", score: 6, icon: "🌍", sub: "Too broad — weak signal" },
-  ];
-  const hooks = [
-    { id: "mission", label: "“Your first STEM mission starts in 60 seconds”", score: 32, icon: "✨", sub: "Curiosity invite" },
-    { id: "discount", label: "“Buy now before prices explode!!!!”", score: 8, icon: "💸", sub: "Fake urgency" },
-    { id: "fear", label: "“If you don’t share this, you’ll fail forever”", score: 4, icon: "😱", sub: "Dark pattern" },
-  ];
-  const channels = [
-    { id: "reels", label: "Short video / Reels", score: 30, icon: "🎬", sub: "High reach + ethical" },
-    { id: "poster", label: "Static poster only", score: 12, icon: "🖼️", sub: "Low momentum" },
-    { id: "spam", label: "Mass DM spam", score: 2, icon: "📵", sub: "Burns trust" },
-  ];
+const audiences = [
+  { id: "explorers", label: "NOVA Explorers (8–16)", score: 28, icon: "🧑‍🚀", sub: "Precision audience" },
+  { id: "parents", label: "Parents & guardians", score: 18, icon: "👨‍👩‍👧", sub: "Good, but secondary" },
+  { id: "random", label: "Everyone on Earth", score: 6, icon: "🌍", sub: "Too broad — weak signal" },
+] as const;
 
-  const [audience, setAudience] = useState(audiences[0]!.id);
-  const [hook, setHook] = useState(hooks[0]!.id);
-  const [channel, setChannel] = useState(channels[0]!.id);
+const hooks = [
+  { id: "mission", label: "“Your first STEM mission starts in 60 seconds”", score: 32, icon: "✨", sub: "Curiosity invite" },
+  { id: "discount", label: "“Buy now before prices explode!!!!”", score: 8, icon: "💸", sub: "Fake urgency" },
+  { id: "fear", label: "“If you don’t share this, you’ll fail forever”", score: 4, icon: "😱", sub: "Dark pattern" },
+] as const;
+
+const channels = [
+  { id: "reels", label: "Short video / Reels", score: 30, icon: "🎬", sub: "High reach + ethical" },
+  { id: "poster", label: "Static poster only", score: 12, icon: "🖼️", sub: "Low momentum" },
+  { id: "spam", label: "Mass DM spam", score: 2, icon: "📵", sub: "Burns trust" },
+] as const;
+
+function LabViralBrief({ onComplete }: { onComplete: (msg: string) => void }) {
+
+  const [audience, setAudience] = useState<string>(audiences[0]!.id);
+  const [hook, setHook] = useState<string>(hooks[0]!.id);
+  const [channel, setChannel] = useState<string>(channels[0]!.id);
   const [launched, setLaunched] = useState(false);
   const [success, setSuccess] = useState(false);
   const [attempts, setAttempts] = useState(0);

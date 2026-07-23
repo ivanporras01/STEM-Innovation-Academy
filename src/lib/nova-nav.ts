@@ -29,6 +29,8 @@ export type NovaStemHubNav = {
   homeLabel: string;
   megaTitle: string;
   homeHref: string;
+  /** Direct landing page for the Resources tab / footer link */
+  resourcesHref: string;
   sections: readonly NovaNavSection[];
   /** @deprecated flat list — derived from sections */
   links: readonly NovaNavItem[];
@@ -45,8 +47,8 @@ const STEM_HUB_LABELS = {
     sectionInstitutions: "Institutions",
     catalog: "Program Catalog",
     catalogDesc: "21 programs — play demo missions, browse pricing & syllabi",
-    enrollHub: "Enroll & Pay",
-    enrollHubDesc: "Register, choose a program, pay online (students)",
+    enrollHub: "Enroll",
+    enrollHubDesc: "Register and request enrollment (students)",
     missionPaths: "School Mission Paths",
     missionPathsDesc: "Free demo missions for youth electives",
     verify: "Verify Certificate",
@@ -67,19 +69,21 @@ const STEM_HUB_LABELS = {
     partnershipApplyDesc: "Register your institution online",
     contact: "Contact",
     contactDesc: "Reach the NOVA STEM HUB team",
+    about: "About",
+    news: "News",
   },
   es: {
-    menuLabel: "Resources",
+    menuLabel: "Recursos",
     homeLabel: "Inicio del hub",
-    megaTitle: "Resources",
+    megaTitle: "Recursos",
     sectionPrograms: "Programas",
     sectionFunding: "Financiamiento",
     sectionCareers: "Carreras",
     sectionInstitutions: "Instituciones",
     catalog: "Catálogo de programas",
     catalogDesc: "21 programas — misiones demo gratis, precios y syllabus",
-    enrollHub: "Inscribirse y pagar",
-    enrollHubDesc: "Registro, programa y pago en línea (estudiantes)",
+    enrollHub: "Inscribirse",
+    enrollHubDesc: "Registro y solicitud de inscripción (estudiantes)",
     missionPaths: "Mission Paths School",
     missionPathsDesc: "Misiones demo gratis para electivas juveniles",
     verify: "Verificar certificado",
@@ -100,19 +104,21 @@ const STEM_HUB_LABELS = {
     partnershipApplyDesc: "Registra tu institución en línea",
     contact: "Contacto",
     contactDesc: "Equipo NOVA STEM HUB",
+    about: "Nosotros",
+    news: "Noticias",
   },
   pt: {
-    menuLabel: "Resources",
+    menuLabel: "Recursos",
     homeLabel: "Visão geral do hub",
-    megaTitle: "Resources",
+    megaTitle: "Recursos",
     sectionPrograms: "Programas",
     sectionFunding: "Financiamento",
     sectionCareers: "Carreiras",
     sectionInstitutions: "Instituições",
     catalog: "Catálogo de programas",
     catalogDesc: "21 programas — missões demo grátis, preços e syllabus",
-    enrollHub: "Inscrever-se e pagar",
-    enrollHubDesc: "Registo, programa e pagamento online (estudantes)",
+    enrollHub: "Inscrever-se",
+    enrollHubDesc: "Registo e pedido de inscrição (estudantes)",
     missionPaths: "Mission Paths School",
     missionPathsDesc: "Missões demo gratuitas para eletivas juvenis",
     verify: "Verificar certificado",
@@ -133,6 +139,8 @@ const STEM_HUB_LABELS = {
     partnershipApplyDesc: "Registe a sua instituição online",
     contact: "Contacto",
     contactDesc: "Equipa NOVA STEM HUB",
+    about: "Sobre",
+    news: "Notícias",
   },
 } as const;
 
@@ -148,12 +156,13 @@ export const NOVA_SHOP_HEADER_ENABLED = false;
 export function getNovaPrimaryNav(locale: AppLocale): readonly NovaNavItem[] {
   const paths = LOCALE_PATHS[locale];
   const hub = getNovaStemHubNav(locale);
+  const labels = STEM_HUB_LABELS[locale];
   return [
     { href: paths.school, label: NOVA_SCHOOL.name },
     { href: paths.college, label: NOVA_COLLEGE.name },
     { href: paths.language, label: NOVA_LANGUAGE.name },
-    { href: hub.homeHref, label: hub.menuLabel },
-    { href: paths.news, label: "News" },
+    { href: hub.resourcesHref, label: hub.menuLabel },
+    { href: paths.news, label: labels.news },
   ];
 }
 
@@ -164,14 +173,15 @@ export function getNovaPrimaryNav(locale: AppLocale): readonly NovaNavItem[] {
 export function getNovaHeaderNav(locale: AppLocale): readonly NovaHeaderNavItem[] {
   const paths = LOCALE_PATHS[locale];
   const hub = getNovaStemHubNav(locale);
+  const labels = STEM_HUB_LABELS[locale];
 
   const items: NovaHeaderNavItem[] = [
     { href: paths.school, label: NOVA_SCHOOL.name, kind: "product" },
     { href: paths.college, label: NOVA_COLLEGE.name, kind: "product" },
     { href: paths.language, label: NOVA_LANGUAGE.name, kind: "product" },
-    { href: hub.homeHref, label: hub.menuLabel, kind: "resources" },
-    { href: paths.news, label: "News", kind: "product" },
-    { href: "/about", label: "About", kind: "product" },
+    { href: hub.resourcesHref, label: hub.menuLabel, kind: "resources" },
+    { href: paths.news, label: labels.news, kind: "product" },
+    { href: paths.about, label: labels.about, kind: "product" },
   ];
 
   if (NOVA_SHOP_HEADER_ENABLED) {
@@ -241,6 +251,7 @@ export function getNovaStemHubNav(locale: AppLocale): NovaStemHubNav {
     homeLabel: labels.homeLabel,
     megaTitle: labels.megaTitle,
     homeHref: paths.hub,
+    resourcesHref: paths.resources,
     sections,
     links: flatLinks,
   };

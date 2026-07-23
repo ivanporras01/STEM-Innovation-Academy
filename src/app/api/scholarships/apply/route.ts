@@ -31,7 +31,6 @@ export async function POST(request: Request) {
       id: `beca-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     };
 
-    console.log("[scholarship-application]", JSON.stringify(application));
 
     try {
       await mkdir(APPLICATIONS_DIR, { recursive: true });

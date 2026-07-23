@@ -69,7 +69,6 @@ export async function POST(request: Request) {
       },
     });
 
-    console.log("[partnership-application]", JSON.stringify(record));
 
     try {
       await mkdir(APPLICATIONS_DIR, { recursive: true });

@@ -26,7 +26,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Course ID required" }, { status: 400 });
     }
 
-    const method = (rawMethod ?? "PAYPAL") as PaymentMethod;
+    const method = (rawMethod ?? "OTHER") as PaymentMethod;
     if (!isStudentPaymentMethod(method)) {
       return NextResponse.json(
         { error: "Invalid payment method for student checkout" },

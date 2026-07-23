@@ -4,6 +4,7 @@ import { JsonLd, organizationJsonLd, webSiteJsonLd } from "@/components/seo/json
 import { NOVA_COLLEGE, NOVA_LANGUAGE, NOVA_SCHOOL, NOVA_SHOP, NOVA_STEM_HUB } from "@/lib/novahub-brand";
 import { PARTNERSHIP_APPLY_PATH } from "@/data/novahub/partnerships";
 import { buildPageMetadata, SEO_DEFAULT_DESCRIPTION } from "@/lib/seo";
+import { PageHero } from "@/components/ui/page-hero";
 
 export const metadata: Metadata = buildPageMetadata({
   title: NOVA_STEM_HUB.metadataTitle,
@@ -31,7 +32,7 @@ const PRODUCT_CARDS = [
       "Mission Paths",
       "Creative Tech for Teens · Social impact · more",
     ],
-    cta: `Enter ${NOVA_SCHOOL.name}`,
+    cta: `Explore NOVA ${NOVA_SCHOOL.name}`,
     ctaClass: "nova-btn-primary nova-btn-glow",
   },
   {
@@ -44,7 +45,7 @@ const PRODUCT_CARDS = [
       "Verifiable certificates",
       "QCW quantum program (Tier 2)",
     ],
-    cta: `Explore ${NOVA_COLLEGE.name}`,
+    cta: `Explore NOVA ${NOVA_COLLEGE.name}`,
     ctaClass: "nova-btn-primary nova-btn-glow bg-nova-orange hover:bg-nova-orange/90",
   },
   {
@@ -57,7 +58,7 @@ const PRODUCT_CARDS = [
       "English · Spanish · Portuguese",
       "CEFR-aligned · speaking labs",
     ],
-    cta: `Explore ${NOVA_LANGUAGE.name}`,
+    cta: `Explore NOVA ${NOVA_LANGUAGE.name}`,
     ctaClass: "nova-btn-primary nova-btn-glow bg-nova-green hover:bg-nova-green/90",
   },
 ] as const;
@@ -67,7 +68,7 @@ export default function StemHubLandingPage() {
     <div className="relative flex flex-1 flex-col">
       <JsonLd data={[organizationJsonLd(), webSiteJsonLd()]} />
       <main className="relative flex-1">
-        <section className="nova-section-cosmic relative overflow-hidden py-20 text-white sm:py-28">
+        <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white">
           <div className="nova-nebula-glow absolute -left-32 top-0 h-96 w-96 bg-nova-cyan/25" />
           <div className="nova-nebula-glow absolute -right-32 bottom-0 h-[28rem] w-[28rem] bg-nova-orange/15" />
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-deep-blue/45 via-[#0a1628]/30 to-nova-deep-blue/50" />
@@ -78,22 +79,22 @@ export default function StemHubLandingPage() {
                 {NOVA_STEM_HUB.missionStatement}
               </p>
             </div>
+          </div>
 
-            <h1 className="max-w-4xl text-3xl font-bold leading-tight text-white/95 sm:text-4xl lg:text-5xl">
-              {NOVA_STEM_HUB.heroHeadline}
-            </h1>
-            <p className="mt-5 max-w-2xl text-base leading-relaxed text-nova-cyan-light/85 sm:text-lg">
-              {NOVA_STEM_HUB.heroSubhead}
-            </p>
-            <div className="mt-8 flex flex-wrap items-center justify-start gap-3">
+          <PageHero
+            title={NOVA_STEM_HUB.heroHeadline}
+            subtitle={NOVA_STEM_HUB.heroSubhead}
+            titleClassName="max-w-4xl"
+          >
+            <div className="flex flex-wrap items-center justify-start gap-3">
               <Link href="/catalog" className="nova-btn-primary nova-btn-glow inline-flex">
                 Explore programs
               </Link>
               <Link href="/enroll" className="nova-btn-secondary inline-flex border-white/25 text-white">
-                Enroll &amp; pay
+                Start your mission
               </Link>
               <Link href="/news" className="nova-btn-secondary inline-flex border-nova-cyan/40 text-nova-cyan-light">
-                NOVA News
+                News
               </Link>
             </div>
             <div className="mt-8 flex max-w-3xl flex-wrap items-center justify-start gap-x-5 gap-y-2 text-xs font-semibold text-white/70">
@@ -103,7 +104,7 @@ export default function StemHubLandingPage() {
               <span className="text-white/30" aria-hidden>·</span>
               <Link href="/partnership" className="hover:text-nova-cyan-light">Institutional partnership</Link>
             </div>
-          </div>
+          </PageHero>
         </section>
 
         <section className="nova-space-section pb-24">

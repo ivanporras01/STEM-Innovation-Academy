@@ -3,6 +3,7 @@ import Link from "next/link";
 import { SCHOLARSHIP_FAQ, SCHOLARSHIP_PROGRAMS } from "@/data/novahub/scholarships";
 import { NOVA_COLLEGE } from "@/lib/novahub-brand";
 import { buildPageMetadata } from "@/lib/seo";
+import { PageHero } from "@/components/ui/page-hero";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "NOVA STEM HUB Scholarships",
@@ -22,29 +23,27 @@ export default function ScholarshipsPage() {
     <div className="relative flex flex-1 flex-col">
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-orange/15 via-transparent to-nova-cyan/10" />
-        <div className="nova-container relative">
-          <h1 className="text-3xl font-black sm:text-4xl lg:text-5xl">
-            NOVA Scholarships
-          </h1>
-          <p className="mt-4 max-w-2xl text-lg text-white/85">
-            Scholarships funded directly by NOVA for learners who need financial support to access{" "}
-            {NOVA_COLLEGE.name}. For partner-funded options, see{" "}
-            <Link href="/scholarships/partners" className="text-nova-cyan hover:underline">
-              Partner Scholarships
-            </Link>
-            .
-          </p>
-          <p className="mt-3 max-w-3xl text-sm text-nova-cyan-light/80">
-            Verifiable certificates · ~120 hours per track · real employability. Human review —
-            approval is not guaranteed.
-          </p>
+        <PageHero
+          title="NOVA Scholarships"
+          subtitle={
+            <>
+              Scholarships funded directly by NOVA for learners who need financial support to access{" "}
+              {NOVA_COLLEGE.name}. For partner-funded options, see{" "}
+              <Link href="/scholarships/partners" className="text-nova-cyan hover:underline">
+                Partner Scholarships
+              </Link>
+              .
+            </>
+          }
+          description="Verifiable certificates · ~120 hours per track · real employability. Human review — approval is not guaranteed."
+        >
           <Link
             href="/scholarships/apply"
-            className="nova-btn-primary nova-btn-glow mt-8 inline-flex bg-nova-orange hover:bg-nova-orange/90"
+            className="nova-btn-primary nova-btn-glow inline-flex bg-nova-orange hover:bg-nova-orange/90"
           >
             Apply for scholarship
           </Link>
-        </div>
+        </PageHero>
       </section>
 
       <main className="nova-space-section relative flex-1">

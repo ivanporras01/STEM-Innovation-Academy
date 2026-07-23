@@ -18,7 +18,7 @@ export const NOVA_STEM_HUB = {
   /** Hub landing hero — professional entry message (not the nav tagline) */
   heroHeadline: "Explore the frontier of STEM education",
   heroSubhead:
-    "Three integrated programs — youth exploration, employability tracks, and trilingual learning — united in one global ecosystem with verifiable credentials and institutional partnerships.",
+    "Three integrated programs — youth exploration, technical employability tracks, and language learning — united in one global ecosystem with verifiable credentials and institutional partnerships.",
   heroHeadlineEs: "Explora la frontera de la educación STEM",
   heroSubheadEs:
     "Tres programas integrados — exploración juvenil, empleabilidad técnica e idiomas — en un ecosistema global con certificados verificables y alianzas institucionales.",
@@ -48,7 +48,7 @@ export const NOVA_STEM_HUB = {
     verify: "https://verify.novastemhub.education",
   },
   deliveryModel: {
-    b2c: "Direct enrollment · PayPal",
+    b2c: "Direct enrollment · online request",
     b2b: "Institutional license · curriculum + platform + facilitator guide",
   },
   path: "/",
@@ -76,7 +76,6 @@ export const NOVA_SCHOOL = {
   metadataTitle: "School — STEM Innovation for Young Explorers",
   metadataTemplate: "%s | NOVA STEM HUB",
   pillars: "Learn • Build • Innovate • Inspire",
-  heroEyebrow: "✦ NOVA STEM HUB",
   electiveCount: 9,
   path: "/school",
   pathEs: "/es/school",
@@ -101,7 +100,6 @@ export const NOVA_LANGUAGE = {
     "Três programas de idiomas alinhados ao CEFR com labs de conversação, contexto cultural e certificados verificáveis. Licença para escolas e instituições.",
   metadataTitle: "Languages — NOVA STEM HUB",
   metadataTemplate: "%s | NOVA STEM HUB",
-  heroEyebrow: "✦ NOVA STEM HUB",
   courseCount: 3,
   path: "/language",
   pathEs: "/es/language",
@@ -119,7 +117,6 @@ export const NOVA_SHOP = {
     "NOVA-branded apparel, accessories, and stationery — for Explorers, mentors, and STEM fans everywhere.",
   metadataTitle: "NOVA Shop — NOVA STEM HUB",
   metadataTemplate: "%s | NOVA Shop",
-  heroEyebrow: "✦ NOVA STEM HUB",
   path: "/shop",
   pathEs: "/es/shop",
   cartPath: "/shop/cart",
@@ -141,7 +138,6 @@ export const NOVA_COLLEGE = {
     "Programas técnicos de ~120 horas, certificados verificables, alineados a CompTIA, ETA, IBM Quantum y mais. Modelo B2B para colégios técnicos e community colleges.",
   metadataTitle: "College — NOVA STEM HUB",
   metadataTemplate: "%s | NOVA STEM HUB",
-  heroEyebrow: "✦ NOVA STEM HUB",
   isEntryProduct: true,
   ages: "16–25+",
   path: "/college",

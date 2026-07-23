@@ -8,6 +8,7 @@ import {
 } from "@/lib/novahub-impact";
 import { NOVA_COLLEGE, NOVAHUB } from "@/lib/novahub-brand";
 import { buildPageMetadata } from "@/lib/seo";
+import { PageHero } from "@/components/ui/page-hero";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Roadmap | NOVA STEM HUB",
@@ -31,17 +32,11 @@ export default function RoadmapPage() {
   return (
     <div className="relative flex flex-1 flex-col">
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white">
-        <div className="nova-container relative">
-          <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-nova-cyan">
-            ✦ {NOVAHUB.name}
-          </p>
-          <h1 className="text-3xl font-black sm:text-4xl">The path to the dream</h1>
-          <p className="mt-4 max-w-2xl text-nova-cyan-light/85">
-            We build step by step — firm and steady — so thousands of students without real
-            opportunities can access {NOVA_COLLEGE.name}, verifiable certificates, and their first
-            tech job.
-          </p>
-        </div>
+        <PageHero
+          eyebrow={`✦ ${NOVAHUB.name}`}
+          title="Roadmap"
+          subtitle="We build step by step — firm and steady — so thousands of students without real opportunities can access NOVA College, verifiable certificates, and their first tech job."
+        />
       </section>
 
       <main className="nova-space-section relative flex-1">

@@ -11,6 +11,7 @@ import {
 import { NOVAHUB_INSTITUTIONAL_PROGRAM } from "@/data/novahub/access-programs";
 import { SCHOLARSHIP_PROGRAMS } from "@/data/novahub/scholarships";
 import { NOVA_COLLEGE, QUANTUM_WORKFORCE, NOVAHUB } from "@/lib/novahub-brand";
+import { PageHero } from "@/components/ui/page-hero";
 
 export const metadata: Metadata = {
   title: "Mission & Impact",
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
 const STATUS_LABELS: Record<string, { label: string; className: string }> = {
   active: { label: "Available", className: "bg-nova-green/20 text-nova-green" },
   pilot: { label: "Pilot", className: "bg-nova-orange/20 text-nova-orange" },
-  roadmap: { label: "Coming soon", className: "bg-white/10 text-nova-cyan-light/70" },
+  roadmap: { label: "Planned", className: "bg-white/10 text-nova-cyan-light/70" },
 };
 
 function tierCta(tier: (typeof NOVAHUB_ACCESS_TIERS)[number]) {
@@ -30,20 +31,18 @@ function tierCta(tier: (typeof NOVAHUB_ACCESS_TIERS)[number]) {
 export default function MissionPage() {
   return (
     <div className="relative flex flex-1 flex-col">
-      <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-20 text-white sm:py-28">
+      <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white">
         <div className="nova-nebula-glow absolute -left-32 top-0 h-96 w-96 bg-nova-cyan/25" />
         <div className="nova-nebula-glow absolute -right-32 bottom-0 h-[28rem] w-[28rem] bg-nova-orange/15" />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-deep-blue/45 via-[#0a1628]/30 to-nova-deep-blue/50" />
 
-        <div className="nova-container relative">
-          <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-nova-cyan">
-            ✦ {NOVAHUB.name}
-          </p>
-          <h1 className="max-w-4xl text-3xl font-black sm:text-4xl lg:text-5xl">
-            {NOVAHUB_MISSION.headlineEn}
-          </h1>
-          <p className="mt-4 max-w-3xl text-lg text-white/85">{NOVAHUB_MISSION.bodyEn}</p>
-          <p className="mt-3 max-w-2xl text-sm italic text-nova-cyan-light/70">
+        <PageHero
+          eyebrow={`✦ ${NOVAHUB.name}`}
+          title={NOVAHUB_MISSION.headlineEn}
+          subtitle={NOVAHUB_MISSION.bodyEn}
+          titleClassName="max-w-4xl"
+        >
+          <p className="max-w-2xl text-sm italic text-nova-cyan-light/70">
             {NOVAHUB_MISSION.visionEn}
           </p>
           <p className="mt-4 max-w-2xl text-sm font-medium text-nova-cyan-light/90">
@@ -66,7 +65,7 @@ export default function MissionPage() {
               Contact {NOVAHUB.name}
             </Link>
           </div>
-        </div>
+        </PageHero>
       </section>
 
       <main className="nova-space-section relative flex-1">

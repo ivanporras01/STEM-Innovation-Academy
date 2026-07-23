@@ -165,7 +165,7 @@ export function CheckoutModal({
         <div className="mb-4 flex items-start justify-between gap-3">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-nova-cyan">
-              Enroll in mission path
+              Request enrollment
             </p>
             <h2 id="checkout-title" className="text-xl font-bold text-white">
               {courseTitle}
@@ -194,8 +194,7 @@ export function CheckoutModal({
         {step === "choose" && (
           <div className="space-y-3">
             <p className="text-sm text-nova-cyan-light/85">
-              Pay with PayPal. Your mission path unlocks once payment is confirmed — usually within
-              24 hours.
+              Submit your enrollment request. The NOVA team will follow up with next steps and payment options.
             </p>
             {STUDENT_PAYMENT_METHODS.map((method) => (
               <button
@@ -208,7 +207,7 @@ export function CheckoutModal({
                 <p className="mt-1 text-sm text-nova-cyan-light/75">{method.description}</p>
                 {method.id === "STRIPE" && !stripeReady && (
                   <p className="mt-1 text-xs text-nova-orange">
-                    Card checkout in demo mode — payment simulates instantly in dev.
+                    Card checkout will be enabled once the payment provider is selected.
                   </p>
                 )}
               </button>
@@ -248,33 +247,33 @@ export function CheckoutModal({
             )}
             <div>
               <label htmlFor="payment-ref" className="nova-label">
-                Your PayPal confirmation or name
+                Your reference or confirmation number
               </label>
               <input
                 id="payment-ref"
                 className="nova-input"
                 value={reference}
                 onChange={(e) => setReference(e.target.value)}
-                placeholder="e.g. PayPal transaction ID or your name"
+                placeholder="e.g. transaction ID, confirmation number, or your name"
               />
             </div>
             {selectedMethod.id === "OTHER" && (
               <div>
                 <label htmlFor="other-note" className="nova-label">
-                  How will you pay?
+                  Preferred payment method or questions
                 </label>
                 <input
                   id="other-note"
                   className="nova-input"
                   value={otherNote}
                   onChange={(e) => setOtherNote(e.target.value)}
-                  placeholder="Describe your method"
+                  placeholder="Let us know how you would prefer to pay or ask anything"
                 />
               </div>
             )}
             <div className="flex flex-wrap gap-2">
               <button type="button" onClick={submitManualPayment} className="nova-btn-primary">
-                I&apos;ve paid / submit PayPal request
+                Submit enrollment request
               </button>
               {STUDENT_PAYMENT_METHODS.length > 1 && (
                 <button type="button" onClick={() => setStep("choose")} className="nova-btn-secondary">
@@ -288,10 +287,10 @@ export function CheckoutModal({
         {step === "instructions" && pending && (
           <div className="space-y-4">
             <div className="rounded-xl border border-nova-green/30 bg-nova-green/10 px-4 py-3 text-sm text-nova-green">
-              Payment request received! Include reference{" "}
-              <strong className="font-mono">{pending.reference}</strong> with your{" "}
-              {selectedMethod?.label ?? "PayPal"} payment. We&apos;ll email you when your path
-              unlocks.
+              Enrollment request received! Reference{" "}
+              <strong className="font-mono">{pending.reference}</strong>{" "}
+              has been created. The NOVA team will email you with next steps and payment options once
+              the request is reviewed.
             </div>
             {instructions && (
               <>

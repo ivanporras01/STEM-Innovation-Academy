@@ -108,9 +108,6 @@ export default function AcademyHomePage() {
 
           <div className="nova-container relative grid items-center gap-12 lg:grid-cols-2">
             <div>
-              <p className="mb-4 text-sm font-semibold uppercase tracking-widest text-nova-cyan-light">
-                {NOVA_ACADEMY.heroEyebrow}
-              </p>
               <h1 className="text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
                 Every learner is a{" "}
                 <span className="bg-gradient-to-r from-nova-cyan to-nova-cyan-light bg-clip-text text-transparent">

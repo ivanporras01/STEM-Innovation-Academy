@@ -25,8 +25,8 @@ export default function PartnershipApplyPage() {
           </p>
           <h1 className="text-3xl font-black sm:text-4xl">Register your institution</h1>
           <p className="mt-4 max-w-2xl text-nova-cyan-light/85">
-            Tell us about your school or college, then complete your licensing deposit on the next
-            screen. Our partnerships team reviews applications within 5–7 business days.
+            Tell us about your school or college, then complete your licensing deposit details on the
+            next screen. Our partnerships team reviews applications within 5–7 business days.
           </p>
         </div>
       </section>

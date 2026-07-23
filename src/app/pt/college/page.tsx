@@ -8,6 +8,7 @@ import {
   novaCollegeTrackIndex
 } from "@/lib/novahub";
 import { buildPageMetadata } from "@/lib/seo";
+import { PageHero } from "@/components/ui/page-hero";
 
 export const metadata: Metadata = buildPageMetadata({
   title: `${NOVA_COLLEGE.name} — Edição em Português`,
@@ -23,14 +24,12 @@ export default function PortugueseCollegeCatalogPage() {
   return (
     <div className="relative flex flex-1 flex-col">
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white">
-        <div className="nova-container relative">
-          <h1 className="text-3xl font-black sm:text-4xl">{NOVA_COLLEGE.name}</h1>
-          <p className="mt-4 max-w-2xl text-lg text-white/80">{NOVA_COLLEGE.taglinePt}</p>
-          <p className="mt-3 max-w-2xl text-sm text-nova-cyan-light/75">
-            {NOVA_COLLEGE.trackCount} trilhas técnicas com certificados verificáveis — da sala de aula ao
-            primeiro emprego tech, incluindo {QUANTUM_WORKFORCE.shortName} (Tier 2).
-          </p>
-          <div className="mt-6 flex flex-wrap gap-3 text-sm">
+        <PageHero
+          title={NOVA_COLLEGE.name}
+          subtitle={NOVA_COLLEGE.taglinePt}
+          description={`${NOVA_COLLEGE.trackCount} trilhas técnicas com certificados verificáveis — da sala de aula ao primeiro emprego tech, incluindo ${QUANTUM_WORKFORCE.shortName} (Tier 2).`}
+        >
+          <div className="flex flex-wrap gap-3 text-sm">
             <Link href="/pt/school" className="nova-btn-secondary inline-flex border-white/20 text-white">
               {NOVA_SCHOOL.name}
             </Link>
@@ -38,7 +37,7 @@ export default function PortugueseCollegeCatalogPage() {
               English edition ↗
             </Link>
           </div>
-        </div>
+        </PageHero>
       </section>
 
       <main className="nova-space-section relative flex-1">
