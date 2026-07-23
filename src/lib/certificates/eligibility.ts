@@ -43,7 +43,7 @@ const defaultConfig: Required<CertificateEligibilityConfig> = {
   passingScorePercent: PASSING_SCORE_PERCENT,
   requireAllLessonsCompleted: true,
   requireAssignmentsSubmitted: true,
-  requireAssignmentsReviewed: true,
+  requireAssignmentsReviewed: false,
   requireFinalAssessmentPassed: true,
   requireAdminApproval: false,
   learningHours: 0,
@@ -155,9 +155,6 @@ export async function evaluateCertificateEligibility(
       const percent = Math.round((submission.score / assignment.maxScore) * 100);
       assignmentScoreSum += percent;
       assignmentScoreCount += 1;
-      if (percent < config.passingScorePercent) {
-        missing.push(`Assignment "${assignment.title}" score (${percent}%) is below the passing threshold (${config.passingScorePercent}%).`);
-      }
     }
   }
 

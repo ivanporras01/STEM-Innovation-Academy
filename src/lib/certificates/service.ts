@@ -71,18 +71,10 @@ export async function canTakeFinalAssessment(userId: string, courseId: string): 
 
   for (const assignment of assignments) {
     const submission = assignment.submissions[0];
-    if (submission?.status !== "REVIEWED" || submission.score === null) {
+    if (!submission || submission.status === "DRAFT") {
       return {
         allowed: false,
-        reason: `Tu evidencia “${assignment.title}” debe ser revisada por un Innovation Mentor.`,
-      };
-    }
-    const scorePercent =
-      assignment.maxScore > 0 ? (submission.score / assignment.maxScore) * 100 : 0;
-    if (scorePercent < PASSING_SCORE_PERCENT) {
-      return {
-        allowed: false,
-        reason: `Tu evidencia “${assignment.title}” necesita una nueva iteración antes de certificar.`,
+        reason: `Debes entregar la evidencia “${assignment.title}” antes de presentar el examen final.`,
       };
     }
   }
