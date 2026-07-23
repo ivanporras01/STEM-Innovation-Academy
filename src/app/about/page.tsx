@@ -16,7 +16,7 @@ export default function AboutPage() {
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white">
         <PageHero
           title="About"
-          subtitle="Empowering future innovators through world-class STEM education"
+          subtitle="Delivering future-ready STEM education through AI-powered curriculum design, industry standards, and expert collaboration."
         />
       </section>
 

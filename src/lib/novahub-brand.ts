@@ -18,7 +18,7 @@ export const NOVA_STEM_HUB = {
   /** Hub landing hero — professional entry message (not the nav tagline) */
   heroHeadline: "Explore the frontier of STEM education",
   heroSubhead:
-    "Three integrated programs — youth exploration, technical employability tracks, and language learning — united in one global ecosystem with verifiable credentials and institutional partnerships.",
+    "Delivering future-ready STEM education through AI-powered curriculum design, industry standards, and expert collaboration.",
   heroHeadlineEs: "Explora la frontera de la educación STEM",
   heroSubheadEs:
     "Tres programas integrados — exploración juvenil, empleabilidad técnica e idiomas — en un ecosistema global con certificados verificables y alianzas institucionales.",
