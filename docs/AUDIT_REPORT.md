@@ -1,7 +1,7 @@
 # NOVA STEM HUB — Design System & UX Audit Report
 
 **Date:** 2026-07-23  
-**Commit:** `c8dfaf0`  
+**Commit:** `73de3e7`  
 **Branch:** `main`
 
 ## 1. Executive Summary
@@ -38,10 +38,24 @@ This pass focused on design-system hygiene and high-visibility consistency fixes
 - Converted the custom CTA links in `src/components/news/nova-news-feed.tsx` to `nova-btn-secondary` / `nova-btn-primary`.
 - Converted the custom "Send" button in `src/components/ai-tutoring/ai-tutoring-experience.tsx` to `nova-btn-primary`.
 
-### 2.4 Verification
-- `npm run lint` → 0 warnings / 0 errors.
-- `npm run build` → compiled, 204 static pages generated, exit 1 came from the previous wrapper script, not the build itself (`build.log` shows a clean build).
-- Changes committed and pushed to `origin/main`.
+### 2.4 PageHero Adoption (Top-Level Public Pages)
+- Converted the legal pages `terms`, `privacy`, and `cookies` to use `PageHero`.
+- Converted `ai-tutoring/page.tsx` (coming-soon view) to use `PageHero`.
+- Converted `partnership/page.tsx` (via `PartnershipPageContent`) to use `PageHero`, covering both English and Spanish routes.
+- Converted `orbito/page.tsx` to use `PageHero`.
+- `catalog/page.tsx` already uses `PageHero` through `CatalogPageClient`; `resources/page.tsx` uses `PageHero` through `ResourcesHub`; `experiences/page.tsx` and `pathways/page.tsx` are redirects and do not need a hero.
+
+### 2.5 Border Radius Standardization
+- Replaced all remaining arbitrary `rounded-[Npx]` Tailwind classes with standard tokens:
+  - `rounded-[16px]` → `rounded-2xl`
+  - `rounded-[18px]` / `rounded-[20px]` → `rounded-nova`
+  - `rounded-[24px]` / `rounded-[28px]` / `rounded-[32px]` → `rounded-3xl`
+- Files cleaned: `src/components/ui/pathway-icon.tsx`, `src/components/experiences/mission-cinema.tsx`, `src/components/experiences/experience-player.tsx`, `src/components/experiences/labs/lab-arena.tsx`, `src/components/experiences/buddy-avatar.tsx`, `src/components/courses/mission-path-hero.tsx`, `src/app/globals.css`.
+
+### 2.6 Verification
+- `npm run lint` → 0 warnings / 0 errors (verified after the latest PageHero and radius changes).
+- `npm run build` → compiled successfully, 204 static pages generated (`build.log` shows a clean build).
+- All changes committed and pushed to `origin/main`.
 
 ---
 
@@ -57,12 +71,12 @@ This pass focused on design-system hygiene and high-visibility consistency fixes
    - `src/app/catalog/print/catalog-print.css` has 42.
    - **Action:** map these to `theme('colors.nova.*')` or to the existing Tailwind token classes. The Orbito palette in particular should be centralized in `src/lib/novahub-brand.ts` or a dedicated theme file.
 
-2. **Many public pages still do not use `PageHero`**
-   - 68 `page.tsx` files in `src/app` do not import `PageHero` directly.
-   - Public top-level pages still missing the standardized hero include:
-     - `academy`, `ai-tutoring`, `catalog`, `certificado-muestra`, `checkout/success`, `cookies`, `experiences`, `internships/apply`, `login`, `orbito`, `partnership` (+ apply/payment), `pathways`, `privacy`, `register`, `resources` (uses `ResourcesHub`, which wraps `PageHero`, but the page itself does not import it), `scholarships/apply` and `scholarships/partners`, `terms`.
-     - Spanish and Portuguese localized equivalents (`es/*`, `pt/*`) mirror most of these gaps.
-   - Dashboard, auth, and detail pages may intentionally use different layouts, but every public top-level page should be evaluated for `PageHero` adoption.
+2. **Remaining public pages that do not use `PageHero` directly**
+   - `academy` uses a custom two-column hero with a gradient wordmark and illustration; evaluate whether to adapt to `PageHero` or document as an intentional exception.
+   - `certificado-muestra`, `checkout/success`, `login`, `register`, and the various `/apply` + `/payment` form pages are transactional and generally do not need a hero.
+   - `shop/cart`, `shop/[slug]`, `courses/[slug]`, `school/[slug]`, `college/[slug]`, `language/[slug]`, and `enroll/[slug]` are detail/transactional pages where a hero may not fit.
+   - Dashboard routes intentionally use app-style headers rather than marketing heroes.
+   - `resources` and `catalog` already use `PageHero` through their wrapper components; `experiences` and `pathways` are redirects.
 
 3. **Custom / non-standard buttons remain in experiences and labs**
    - `src/components/experiences/experience-player.tsx` uses a custom `rounded-full` SFX button.
@@ -71,15 +85,8 @@ This pass focused on design-system hygiene and high-visibility consistency fixes
    - **Action:** audit every `<button>` and CTA `<Link>` outside `nova-btn-primary` / `nova-btn-secondary` and either migrate to the design-system classes or document why a custom style is required.
 
 4. **Arbitrary `rounded-[Npx]` values**
-   - 7 files still use `rounded-[24px]`, `rounded-[28px]`, or `rounded-[22px]`:
-     - `src/app/globals.css` (`rounded-[28px]` on `.lab-hud-shell`)
-     - `src/components/ui/pathway-icon.tsx` (5 occurrences)
-     - `src/components/courses/mission-path-hero.tsx`
-     - `src/components/experiences/buddy-avatar.tsx`
-     - `src/components/experiences/experience-player.tsx`
-     - `src/components/experiences/labs/lab-arena.tsx`
-     - `src/components/experiences/mission-cinema.tsx`
-   - **Action:** extend `tailwind.config.ts` with `2xl`, `3xl`, or a `nova-lg` radius token, then replace arbitrary values.
+   - Resolved in this pass. All `rounded-[Npx]` classes in `src` have been mapped to `rounded-2xl`, `rounded-nova`, or `rounded-3xl`.
+   - Future work should avoid adding new arbitrary radius values; if a larger branded radius is needed, add `rounded-nova-lg` / `rounded-nova-xl` tokens to `tailwind.config.ts`.
 
 ### 3.2 Medium
 
@@ -114,11 +121,10 @@ This pass focused on design-system hygiene and high-visibility consistency fixes
 ## 4. Next Steps (Recommended Priority Order)
 
 1. **Tokenize the remaining `globals.css` hex values** (124 occurrences). Start with the most visible surfaces (`#0a1628`, `#030712`, `#061321`, `#0d1b3d`) and shadow/glow colors (`#00b4d8`).
-2. **Adopt `PageHero` on public top-level pages** (academy, catalog, experiences, internships, partnership, pathways, etc.) while preserving locale variants.
+2. **Adopt `PageHero` on the remaining public top-level page** (`academy`) or document its custom two-column hero as an intentional exception, and align localized equivalents.
 3. **Audit and migrate all remaining CTA `<button>` / `<Link>` elements** to `nova-btn-primary` / `nova-btn-secondary`.
-4. **Remove arbitrary `rounded-[Npx]` values** by adding a `rounded-nova-lg` or `rounded-3xl` convention.
-5. **Centralize Orbito, certificate, and lab accent palettes** in `src/lib/novahub-brand.ts` or `src/app/globals.css` `:root` variables.
-6. Add `tsconfig.tsbuildinfo` to `.gitignore` and clean tracked build artifacts.
+4. **Centralize Orbito, certificate, and lab accent palettes** in `src/lib/novahub-brand.ts` or `src/app/globals.css` `:root` variables.
+5. Add `tsconfig.tsbuildinfo` to `.gitignore` and clean tracked build artifacts.
 
 ---
 
@@ -131,13 +137,13 @@ This pass focused on design-system hygiene and high-visibility consistency fixes
 - `src/lib/nova-nav.ts`
 - `src/lib/novahub-brand.ts`
 - `src/app/page.tsx`, `src/app/about/page.tsx`, `src/app/es/page.tsx`, `src/app/es/about/page.tsx`, `src/app/pt/page.tsx`, `src/app/pt/about/page.tsx`
-- `src/app/academy/page.tsx`, `src/app/es/mission/page.tsx`, `src/app/mission/page.tsx`, `src/app/orbito/page.tsx`, `src/app/layout.tsx`
+- `src/app/academy/page.tsx`, `src/app/ai-tutoring/page.tsx`, `src/app/cookies/page.tsx`, `src/app/es/mission/page.tsx`, `src/app/mission/page.tsx`, `src/app/orbito/page.tsx`, `src/app/privacy/page.tsx`, `src/app/terms/page.tsx`, `src/app/layout.tsx`
 - `src/components/ai-tutoring/ai-tutoring-experience.tsx`
 - `src/components/certificates/certificate-preview-promo.tsx`, `src/components/certificates/nova-certificate-template.tsx`
-- `src/components/courses/explorer-mission-banner.tsx`
-- `src/components/experiences/buddy-avatar.tsx`, `src/components/experiences/buddy-companion.tsx`, `src/components/experiences/experience-player.tsx`, `src/components/experiences/stage-buddy-select.tsx`
+- `src/components/courses/explorer-mission-banner.tsx`, `src/components/courses/mission-path-hero.tsx`
+- `src/components/experiences/buddy-avatar.tsx`, `src/components/experiences/buddy-companion.tsx`, `src/components/experiences/experience-player.tsx`, `src/components/experiences/labs/lab-arena.tsx`, `src/components/experiences/mission-cinema.tsx`, `src/components/experiences/stage-buddy-select.tsx`
 - `src/components/layout/footer.tsx`, `src/components/news/nova-news-feed.tsx`
-- `src/components/orbit/orbit-welcome.tsx`, `src/components/shop/shop-product-image.tsx`
+- `src/components/orbit/orbit-welcome.tsx`, `src/components/partnerships/partnership-page-content.tsx`, `src/components/shop/shop-product-image.tsx`, `src/components/ui/pathway-icon.tsx`
 - Deleted: `src/components/ui/nova-page-hero.tsx`, `src/components/layout/stem-hub-nav-menu.tsx`, `docs/UI_GUIDELINES.md`, `resources.html`, `build.log`, `server.log`
 - Updated docs: `docs/DESIGN_SYSTEM.md`, `docs/PRODUCTION_READINESS_REPORT.md`
 
