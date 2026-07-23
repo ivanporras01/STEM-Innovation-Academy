@@ -3,12 +3,12 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { RegisterForm } from "@/components/auth/register-form";
 import { CertificatePreviewPromo } from "@/components/certificates/certificate-preview-promo";
-import { NovaHeroLogoMark } from "@/components/ui/nova-logo-mark";
-import { NOVA_SCHOOL } from "@/lib/nova-brand";
+import { NovaLogo } from "@/components/ui/nova-logo-mark";
+import { NOVA_STEM_HUB } from "@/lib/novahub-brand";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata = buildPageMetadata({
-  title: `Register — ${NOVA_SCHOOL.portalName}`,
+  title: `Register — ${NOVA_STEM_HUB.name}`,
   description:
     "Complete NOVA Explorer registration with student profile, emergency contact, guardian info, and academic background.",
   path: "/register",
@@ -25,11 +25,11 @@ export default function RegisterPage() {
             <div className="order-2 xl:order-1">
               <div className="nova-glass-island shadow-nova p-6 sm:p-8">
                 <div className="mb-8 text-center xl:text-left">
-                  <span className="mb-3 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-nova-cyan/20 to-nova-blue/10 ring-1 ring-nova-cyan/30">
-                    <NovaHeroLogoMark className="h-10 w-10 min-h-10 min-w-10 sm:h-11 sm:w-11 sm:min-h-11 sm:min-w-11" />
-                  </span>
+                  <div className="mb-3 flex justify-center xl:justify-start">
+                    <NovaLogo size="sm" showText={true} />
+                  </div>
                   <h1 className="text-2xl font-bold text-white sm:text-3xl">
-                    Complete student registration
+                    Create your account
                   </h1>
                   <p className="mx-auto mt-2 max-w-xl text-sm text-nova-cyan-light/80 xl:mx-0">
                     Create your NOVA Explorer account with the full profile schools and colleges require

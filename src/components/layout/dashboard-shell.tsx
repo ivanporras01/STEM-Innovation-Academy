@@ -13,7 +13,7 @@ import {
   Settings,
   Users,
 } from "lucide-react";
-import { NOVA_SCHOOL } from "@/lib/nova-brand";
+import { NOVA_STEM_HUB } from "@/lib/novahub-brand";
 import { NovaLogoIcon } from "@/components/ui/nova-logo-mark";
 
 const studentLinks = [
@@ -78,10 +78,10 @@ export function DashboardShell({
             <div className="mb-5 border-b border-white/10 pb-4">
               <div className="mb-3 flex items-center gap-2">
                 <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-nova-cyan/20 to-nova-blue/10 ring-1 ring-nova-cyan/30">
-                  <NovaLogoIcon size="sm" className="h-7 w-7 min-h-7 min-w-7" />
+                  <NovaLogoIcon size="sm" />
                 </span>
                 <div>
-                  <p className="text-sm font-bold text-white">{NOVA_SCHOOL.portalName}</p>
+                  <p className="text-sm font-bold text-white">{NOVA_STEM_HUB.name}</p>
                   <span
                     className={cn(
                       "mt-0.5 inline-block rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",

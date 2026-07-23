@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { PartnershipApplyForm } from "@/components/partnerships/partnership-apply-form";
-import { NovaHeroLogoMark } from "@/components/ui/nova-logo-mark";
+import { NovaLogoIcon } from "@/components/ui/nova-logo-mark";
 import { NOVA_STEM_HUB } from "@/lib/novahub-brand";
 import { NOVA_STEM_HUB_IMPACT } from "@/lib/novahub-impact";
 import { buildPageMetadata } from "@/lib/seo";
@@ -24,7 +24,7 @@ export default function PartnershipApplyPage() {
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-cyan/10 via-transparent to-nova-orange/10" />
         <div className="nova-container relative">
           <p className="mb-2 flex items-center gap-2 text-sm font-bold uppercase tracking-[0.2em] text-nova-cyan">
-            <NovaHeroLogoMark className="h-5 w-5" />
+            <NovaLogoIcon size="sm" />
             {NOVA_STEM_HUB.name} · NOVA Partnership
           </p>
           <h1 className="text-3xl font-black sm:text-4xl">Register your institution</h1>

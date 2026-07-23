@@ -134,7 +134,7 @@ export default async function StudentDashboardPage() {
         </p>
         <h1 className="flex flex-wrap items-center gap-2 text-2xl font-bold text-white">
           <span>Welcome back, {session.user.firstName}!</span>
-          <NovaLogoIcon size="sm" className="h-6 w-6 min-h-6 min-w-6 opacity-90" />
+          <NovaLogoIcon size="sm" className="opacity-90" />
         </h1>
         <p className="mt-1 text-nova-cyan-light/80">
           Your mission command center — you belong here. Pick up where you left off and launch

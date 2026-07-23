@@ -43,7 +43,7 @@ export default function OpenGraphImage() {
           />
           <circle cx="25.5" cy="10.5" r="2" fill="#00D4FF" />
         </svg>
-        <div style={{ fontSize: 72, fontWeight: 800, letterSpacing: -2 }}>NOVA</div>
+        <div style={{ fontSize: 60, fontWeight: 800, letterSpacing: -2 }}>{NOVA_STEM_HUB.name}</div>
         <div style={{ fontSize: 24, marginTop: 20, color: "#6ee7f9", textAlign: "center" }}>
           {NOVA_STEM_HUB.tagline}
         </div>
