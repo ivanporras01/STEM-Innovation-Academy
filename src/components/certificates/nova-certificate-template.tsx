@@ -129,7 +129,7 @@ export function NovaCertificateTemplate({
       id="nova-certificate"
       data-sample={sampleMode ? "true" : "false"}
       data-locale={locale}
-      className="nova-certificate relative mx-auto min-h-[520px] w-full max-w-4xl select-none rounded-sm bg-[#030810] shadow-2xl shadow-black/60 print:shadow-none"
+      className="nova-certificate relative mx-auto min-h-[520px] w-full max-w-4xl select-none rounded-sm bg-nova-abyss shadow-2xl shadow-black/60 print:shadow-none"
     >
       <div className="nova-cert-outer-border absolute inset-0 rounded-sm" aria-hidden />
       <div className="nova-cert-inner relative m-[6px] flex flex-col items-center p-5 text-white sm:p-7 md:p-8">

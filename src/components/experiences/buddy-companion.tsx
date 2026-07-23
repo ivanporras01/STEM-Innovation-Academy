@@ -18,7 +18,7 @@ export function BuddyCompanion({ buddyId, buddyNickname, message, compact }: Pro
 
   if (compact) {
     return (
-      <div className="flex items-start gap-3 rounded-xl border border-white/15 border-l-4 border-l-[var(--exp-accent)] bg-[#0a1628]/80 px-4 py-3 backdrop-blur-sm">
+      <div className="flex items-start gap-3 rounded-xl border border-white/15 border-l-4 border-l-[var(--exp-accent)] bg-nova-surface/80 px-4 py-3 backdrop-blur-sm">
         <BuddyAvatar
           src={buddy.image}
           alt={displayName}

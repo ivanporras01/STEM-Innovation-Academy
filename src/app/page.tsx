@@ -71,7 +71,7 @@ export default function StemHubLandingPage() {
         <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white">
           <div className="nova-nebula-glow absolute -left-32 top-0 h-96 w-96 bg-nova-cyan/25" />
           <div className="nova-nebula-glow absolute -right-32 bottom-0 h-[28rem] w-[28rem] bg-nova-orange/15" />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-deep-blue/45 via-[#0a1628]/30 to-nova-deep-blue/50" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-deep-blue/45 via-nova-surface/30 to-nova-deep-blue/50" />
 
           <div className="nova-container relative">
             <div className="nova-glass-island mb-8 max-w-3xl border border-nova-cyan/35 px-6 py-5 shadow-[0_0_40px_rgba(0,212,255,0.12)] sm:px-8 sm:py-6">

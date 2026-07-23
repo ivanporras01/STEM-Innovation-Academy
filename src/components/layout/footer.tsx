@@ -67,7 +67,7 @@ export function Footer() {
   ];
 
   return (
-    <footer className="relative overflow-hidden border-t border-white/10 bg-[#030712]/50 text-white backdrop-blur-md">
+    <footer className="relative overflow-hidden border-t border-white/10 bg-nova-abyss/50 text-white backdrop-blur-md">
       <div className="relative">
         <div className="nova-container grid gap-8 py-12 md:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-2">

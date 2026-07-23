@@ -104,7 +104,7 @@ export function OrbitWelcome({ locale, autoOpen = true }: Props) {
           aria-modal="false"
           aria-labelledby="orbita-chat-greeting"
         >
-          <div className="relative overflow-hidden rounded-[inherit] bg-[#0a1628]/98">
+          <div className="relative overflow-hidden rounded-[inherit] bg-nova-surface/98">
             <div className="relative z-[2] flex items-center gap-2 border-b border-white/10 px-3 py-2 pr-9">
               <div className="nova-orbita-portal nova-orbita-portal-sm relative shrink-0 rounded-lg">
                 <OrbitoRealGuide
@@ -164,7 +164,7 @@ export function OrbitWelcome({ locale, autoOpen = true }: Props) {
       <button
         type="button"
         className={cn(
-          "nova-orbita-panel pointer-events-auto flex items-center gap-1.5 rounded-full border bg-[#0a1628]/95 py-0.5 pl-0.5 pr-2.5 text-[11px] font-bold text-white backdrop-blur-md transition hover:scale-105",
+          "nova-orbita-panel pointer-events-auto flex items-center gap-1.5 rounded-full border bg-nova-surface/95 py-0.5 pl-0.5 pr-2.5 text-[11px] font-bold text-white backdrop-blur-md transition hover:scale-105",
           chatOpen ? "border-nova-cyan/60" : "border-nova-cyan/45",
           !reduceMotion && !chatOpen && "motion-safe:animate-[novito-float_3s_ease-in-out_infinite]",
         )}

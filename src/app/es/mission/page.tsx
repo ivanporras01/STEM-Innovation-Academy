@@ -37,7 +37,7 @@ export default function SpanishMissionPage() {
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-20 text-white sm:py-28">
         <div className="nova-nebula-glow absolute -left-32 top-0 h-96 w-96 bg-nova-cyan/25" />
         <div className="nova-nebula-glow absolute -right-32 bottom-0 h-[28rem] w-[28rem] bg-nova-orange/15" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-deep-blue/45 via-[#0a1628]/30 to-nova-deep-blue/50" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-deep-blue/45 via-nova-surface/30 to-nova-deep-blue/50" />
 
         <div className="nova-container relative">
           <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-nova-cyan">

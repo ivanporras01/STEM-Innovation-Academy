@@ -9,7 +9,7 @@
   }
 
   body {
-    @apply bg-[#030712] text-nova-black antialiased;
+    @apply bg-nova-abyss text-nova-black antialiased;
   }
 }
 
@@ -130,7 +130,7 @@
   }
 
   .nova-glass-island {
-    @apply rounded-[24px] border border-white/10 bg-[#0a1628]/55 p-6 shadow-[0_8px_40px_rgba(0,0,0,0.4)] backdrop-blur-xl;
+    @apply rounded-nova border border-white/10 bg-nova-surface/55 p-6 shadow-[0_8px_40px_rgba(0,0,0,0.4)] backdrop-blur-xl;
   }
 
   /* Galactic portal border — Orbita welcome panel (inset frame ring only, no outer glow) */
@@ -181,7 +181,7 @@
   }
 
   .nova-glass-card {
-    @apply rounded-nova border border-white/15 bg-[#0d1b3d]/70 p-6 shadow-[0_0_30px_rgba(0,180,216,0.08)] backdrop-blur-md transition duration-300 hover:-translate-y-1 hover:border-nova-cyan/40 hover:shadow-[0_0_40px_rgba(0,180,216,0.18)];
+    @apply rounded-nova border border-white/15 bg-nova-deep-blue/70 p-6 shadow-[0_0_30px_rgba(0,180,216,0.08)] backdrop-blur-md transition duration-300 hover:-translate-y-1 hover:border-nova-cyan/40 hover:shadow-[0_0_40px_rgba(0,180,216,0.18)];
   }
 
   .nova-glass-card-light {
@@ -216,7 +216,7 @@
   }
 
   .nova-glass-nav {
-    @apply border-b border-white/10 bg-[#0a1628]/55 backdrop-blur-xl;
+    @apply border-b border-white/10 bg-nova-surface/55 backdrop-blur-xl;
     transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
   }
 
@@ -243,7 +243,7 @@
   }
 
   body.nova-nav-explore-open .nova-glass-nav {
-    @apply border-nova-cyan/25 bg-[#0a1628]/80;
+    @apply border-nova-cyan/25 bg-nova-surface/80;
     box-shadow: 0 4px 40px rgba(0, 180, 216, 0.12);
   }
 
@@ -287,11 +287,11 @@
   }
 
   .nova-card {
-    @apply rounded-nova border border-white/15 bg-[#0d1b3d]/70 p-6 shadow-[0_0_30px_rgba(0,180,216,0.08)] backdrop-blur-md;
+    @apply rounded-nova border border-white/15 bg-nova-deep-blue/70 p-6 shadow-[0_0_30px_rgba(0,180,216,0.08)] backdrop-blur-md;
   }
 
   .nova-btn-primary {
-    @apply inline-flex items-center justify-center rounded-xl bg-nova-cyan px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-nova-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nova-cyan;
+    @apply inline-flex items-center justify-center rounded-xl bg-nova-cyan px-5 py-2.5 text-sm font-semibold text-nova-ink transition hover:bg-nova-cyan-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nova-cyan;
   }
 
   .nova-btn-secondary {

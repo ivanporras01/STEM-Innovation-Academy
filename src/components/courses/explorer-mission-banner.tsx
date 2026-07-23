@@ -35,7 +35,7 @@ export function ExplorerMissionBanner({
   const mentorLed = meta?.mentorLed ?? false;
 
   return (
-    <div className="nova-glass-card mb-8 border-nova-cyan/25 bg-[#0a1628]/80">
+    <div className="nova-glass-card mb-8 border-nova-cyan/25 bg-nova-surface/80">
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <span className="inline-flex items-center gap-1.5 rounded-full bg-nova-cyan/20 px-3 py-1 text-xs font-bold uppercase tracking-wide text-nova-cyan-light">
           <Sparkles className="h-3.5 w-3.5" />

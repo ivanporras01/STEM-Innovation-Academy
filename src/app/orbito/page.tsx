@@ -33,7 +33,7 @@ export default function OrbitoGalleryPage() {
           <div className="nova-glass-card mx-auto max-w-lg border-2 border-nova-cyan/30 p-6 sm:p-8">
             {/* Big number */}
             <div className="text-center">
-              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-nova-cyan text-5xl font-black text-[#030712] shadow-[0_0_40px_rgba(0,180,216,0.4)]">
+              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-nova-cyan text-5xl font-black text-nova-abyss shadow-[0_0_40px_rgba(0,180,216,0.4)]">
                 {variant.number}
               </div>
               <p className="mt-3 text-sm font-bold uppercase tracking-[0.3em] text-nova-orange">
@@ -105,7 +105,7 @@ export default function OrbitoGalleryPage() {
                     onClick={() => { setIndex(i); setAnimating(false); }}
                     className={`flex h-9 w-9 items-center justify-center rounded-lg text-sm font-bold transition ${
                       i === index
-                        ? "bg-nova-cyan text-[#030712] shadow-[0_0_16px_rgba(0,180,216,0.5)]"
+                        ? "bg-nova-cyan text-nova-abyss shadow-[0_0_16px_rgba(0,180,216,0.5)]"
                         : "bg-white/10 text-white/70 hover:bg-white/20"
                     }`}
                   >

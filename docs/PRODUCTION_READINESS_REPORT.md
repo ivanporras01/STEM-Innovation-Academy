@@ -543,7 +543,7 @@ The platform is **READY FOR PUBLIC LAUNCH** with confidence in:
 
 ### Accessibility Improvements
 
-- `NovaPageHero` enforces semantic `h1` hierarchy on every page that adopts it.
+- `PageHero` enforces semantic `h1` hierarchy on every page that adopts it.
 - `NovaLogo` `aria-label` remains descriptive in the header.
 - Header active states use `aria-current="page"`.
 - Focus-visible rings use `outline-nova-cyan`.
@@ -555,10 +555,10 @@ The platform is **READY FOR PUBLIC LAUNCH** with confidence in:
 
 ### Remaining Recommendations
 
-1. **Migrate all public pages to `NovaPageHero`:** While hero eyebrows are normalized, converting every page to the shared component will eliminate remaining markup duplication and guarantee the exact same responsive behavior.
+1. **Migrate all public pages to `PageHero`:** While hero eyebrows are normalized, converting every page to the shared component will eliminate remaining markup duplication and guarantee the exact same responsive behavior.
 2. **Audit experiences for hero consistency:** The `/experiences` immersive UI uses a different visual language for missions; ensure its hero cards follow the brand label → title → subtitle hierarchy where possible.
 3. **Visual regression test across breakpoints:** Manually verify 1920, 1600, 1440, 1366, 1280, 1024, tablet, and mobile to confirm the aligned header container still accommodates all nav tabs.
-4. **Remove or fix `docs/UI_GUIDELINES.md`:** The file currently contains null bytes and cannot be opened; either restore it from git history or remove it now that `DESIGN_SYSTEM.md` is the canonical source.
+4. ~~**Remove or fix `docs/UI_GUIDELINES.md`:**~~ Removed — `docs/UI_GUIDELINES.md` was deleted and `DESIGN_SYSTEM.md` is the canonical source.
 5. **Standardize shop display name:** Consider introducing `NOVA_SHOP.displayName` for body copy so `name` can remain `Shop` while marketing sentences still read naturally.
 
 ### Final Checklist
@@ -568,7 +568,7 @@ The platform is **READY FOR PUBLIC LAUNCH** with confidence in:
 - [x] Header container aligned with page container
 - [x] Logo group given optical right offset
 - [x] Hero eyebrows normalized to brand-only label
-- [x] `NovaPageHero` shared component created
+- [x] `PageHero` shared component created
 - [x] Shop page hero title standardized to `Shop`
 - [x] Footer copyright uses `NOVA STEM HUB`
 - [x] Navigation labels consistent (School, College, Languages, Resources, News, About)

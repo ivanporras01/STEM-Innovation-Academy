@@ -781,7 +781,7 @@ function VirtualClassroom({ name, subject, topic, onActivity, onEnd }: { name: s
               type="button"
               onClick={() => void sendMessage()}
               disabled={isResponding || !message.trim()}
-              className="rounded-xl bg-nova-cyan px-4 py-3 text-sm font-bold text-[#061321] disabled:opacity-60"
+              className="nova-btn-primary px-4 py-3 font-bold disabled:opacity-60"
             >
               Send
             </button>

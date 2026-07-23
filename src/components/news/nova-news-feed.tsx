@@ -215,16 +215,16 @@ export function NovaNewsFeed() {
               Turn a headline into a skill path. Start with the program that matches what you just read.
             </p>
             <div className="mt-4 flex flex-col gap-2">
-              <Link href="/school" className="rounded-xl border border-white/15 px-3 py-2.5 text-xs font-semibold text-white transition hover:border-nova-cyan hover:bg-nova-cyan/10">
+              <Link href="/school" className="nova-btn-secondary px-3 text-xs">
                 NOVA School
               </Link>
-              <Link href="/college" className="rounded-xl border border-white/15 px-3 py-2.5 text-xs font-semibold text-white transition hover:border-nova-cyan hover:bg-nova-cyan/10">
+              <Link href="/college" className="nova-btn-secondary px-3 text-xs">
                 NOVA College
               </Link>
-              <Link href="/language" className="rounded-xl border border-white/15 px-3 py-2.5 text-xs font-semibold text-white transition hover:border-nova-cyan hover:bg-nova-cyan/10">
+              <Link href="/language" className="nova-btn-secondary px-3 text-xs">
                 NOVA Language
               </Link>
-              <Link href="/catalog" className="rounded-xl bg-nova-cyan px-3 py-2.5 text-center text-xs font-bold text-[#061321] transition hover:brightness-110">
+              <Link href="/catalog" className="nova-btn-primary px-3 text-xs font-bold">
                 Browse program catalog
               </Link>
             </div>

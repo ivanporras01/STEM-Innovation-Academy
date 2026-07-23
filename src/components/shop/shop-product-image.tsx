@@ -20,9 +20,9 @@ const ACCENT_RING: Record<Props["accent"], string> = {
 };
 
 const ACCENT_GRADIENT: Record<Props["accent"], string> = {
-  cyan: "from-[#0B1D3A] via-[#0a1628] to-nova-blue",
-  orange: "from-[#0B1D3A] via-[#0a1628] to-nova-orange/40",
-  green: "from-[#0B1D3A] via-[#0a1628] to-nova-green/40",
+  cyan: "from-nova-deep-blue via-nova-surface to-nova-blue",
+  orange: "from-nova-deep-blue via-nova-surface to-nova-orange/40",
+  green: "from-nova-deep-blue via-nova-surface to-nova-green/40",
 };
 
 export function ShopProductImage({ imagePath, name, accent, className, priority }: Props) {
@@ -31,7 +31,7 @@ export function ShopProductImage({ imagePath, name, accent, className, priority 
   return (
     <div
       className={cn(
-        "relative overflow-hidden bg-[#0a1628]",
+        "relative overflow-hidden bg-nova-surface",
         "ring-1 ring-inset",
         ACCENT_RING[accent],
         className,

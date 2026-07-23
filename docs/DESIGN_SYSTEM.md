@@ -142,7 +142,7 @@ Single source of truth for the visual language of **NOVA STEM HUB**. Every page,
 ## 8. Hero System
 
 ### Standard Component
-- `NovaPageHero` in `src/components/ui/nova-page-hero.tsx`
+- `PageHero` in `src/components/ui/page-hero.tsx`
 
 ### Hierarchy
 1. Small Brand Label: `✦ NOVA STEM HUB`
@@ -152,7 +152,7 @@ Single source of truth for the visual language of **NOVA STEM HUB**. Every page,
 5. CTA (optional)
 
 ### Rules
-- Every public page should use `NovaPageHero` or follow this exact hierarchy.
+- Every public page should use `PageHero` or follow this exact hierarchy.
 - Never combine brand and title in the eyebrow (e.g., `NOVA STEM HUB · School` is incorrect).
 - Never reverse the order (e.g., `About NOVA STEM HUB` is incorrect).
 
@@ -264,7 +264,7 @@ Single source of truth for the visual language of **NOVA STEM HUB**. Every page,
 ## 15. Component Adoption Rules
 
 1. **Always use `NovaLogo`** for the brand lockup. Never inline the SVG + text.
-2. **Always use `NovaPageHero`** for public page heroes.
+2. **Always use `PageHero`** for public page heroes.
 3. **Always use `.nova-container`** or `.nova-header-container` for content bounds.
 4. **Always use `nova-btn-primary` / `nova-btn-secondary`** for buttons.
 5. **Always use `nova-card` / `nova-glass-island`** for card surfaces.
@@ -275,7 +275,7 @@ Single source of truth for the visual language of **NOVA STEM HUB**. Every page,
 ## 16. Future Pages Checklist
 
 Before adding a new page, verify:
-- [ ] Uses `NovaPageHero` with correct hierarchy
+- [ ] Uses `PageHero` with correct hierarchy
 - [ ] Uses `.nova-container` for content
 - [ ] Uses `NovaLogo` in any header/footer
 - [ ] Uses `nova-btn-*` classes for CTAs

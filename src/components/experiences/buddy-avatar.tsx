@@ -43,7 +43,7 @@ export function BuddyAvatar({ src, alt, className, size = "md" }: Props) {
   return (
     <div
       className={cn(
-        "relative isolate shrink-0 overflow-hidden bg-[#0a1628]",
+        "relative isolate shrink-0 overflow-hidden bg-nova-surface",
         sizeClasses[size],
         className,
       )}

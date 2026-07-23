@@ -167,7 +167,7 @@ export function Header() {
       )}
       <nav
         className={cn(
-          "absolute left-0 right-0 top-header z-40 flex flex-col gap-3 border-b border-white/10 bg-[#0a1628] p-4 shadow-nova backdrop-blur-xl lg:hidden",
+          "absolute left-0 right-0 top-header z-40 flex flex-col gap-3 border-b border-white/10 bg-nova-surface p-4 shadow-nova backdrop-blur-xl lg:hidden",
           !menuOpen && "hidden",
         )}
       >

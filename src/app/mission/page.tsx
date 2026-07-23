@@ -34,7 +34,7 @@ export default function MissionPage() {
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white">
         <div className="nova-nebula-glow absolute -left-32 top-0 h-96 w-96 bg-nova-cyan/25" />
         <div className="nova-nebula-glow absolute -right-32 bottom-0 h-[28rem] w-[28rem] bg-nova-orange/15" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-deep-blue/45 via-[#0a1628]/30 to-nova-deep-blue/50" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-deep-blue/45 via-nova-surface/30 to-nova-deep-blue/50" />
 
         <PageHero
           eyebrow={`✦ ${NOVAHUB.name}`}

@@ -44,8 +44,8 @@ function BuddyCard({
       className={cn(
         "group relative flex min-w-0 flex-col overflow-hidden rounded-2xl border-2 text-left transition-all duration-300",
         selected
-          ? "border-[var(--exp-accent)] -translate-y-1 scale-[1.02] bg-[#0d1b3d]/90 ring-4 ring-[var(--exp-accent)]/25"
-          : "border-white/15 bg-[#0a1628]/70 hover:border-[var(--exp-accent)]/40 hover:bg-[#0d1b3d]/80"
+          ? "border-[var(--exp-accent)] -translate-y-1 scale-[1.02] bg-nova-deep-blue/90 ring-4 ring-[var(--exp-accent)]/25"
+          : "border-white/15 bg-nova-surface/70 hover:border-[var(--exp-accent)]/40 hover:bg-nova-deep-blue/80"
       )}
     >
       <div
@@ -174,7 +174,7 @@ export function StageBuddySelect({
         </section>
       )}
 
-      <div className="rounded-2xl border border-white/15 bg-[#0a1628]/80 p-6 backdrop-blur-md">
+      <div className="rounded-2xl border border-white/15 bg-nova-surface/80 p-6 backdrop-blur-md">
         <div className="grid gap-6 lg:grid-cols-[auto_1fr] lg:items-center">
           <BuddyAvatar
             src={buddy.image}

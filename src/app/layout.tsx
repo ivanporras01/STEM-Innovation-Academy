@@ -33,7 +33,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[300] focus:rounded-lg focus:bg-nova-cyan focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-[#061321]"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[300] focus:rounded-lg focus:bg-nova-cyan focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-nova-ink"
         >
           Skip to main content
         </a>

@@ -36,7 +36,7 @@ export function CertificatePreviewPromo({
 
   return (
     <section
-      className={`nova-cert-preview-promo overflow-hidden rounded-2xl border border-[#D4AF37]/25 bg-gradient-to-br from-[#0B1D3A]/90 via-[#071428]/95 to-[#040d1a]/90 ${className}`}
+      className={`nova-cert-preview-promo overflow-hidden rounded-2xl border border-[#D4AF37]/25 bg-gradient-to-br from-nova-deep-blue/90 via-[#071428]/95 to-[#040d1a]/90 ${className}`}
       aria-labelledby="cert-preview-heading"
     >
       <div className={`${compact ? "p-5" : "p-6 sm:p-8"}`}>

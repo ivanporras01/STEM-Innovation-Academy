@@ -17,6 +17,9 @@ const config: Config = {
           gray: "#667085",
           "dark-gray": "#344054",
           black: "#101828",
+          surface: "#0a1628",
+          abyss: "#030712",
+          ink: "#061321",
         },
       },
       spacing: {
