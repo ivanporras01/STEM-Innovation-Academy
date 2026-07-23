@@ -26,7 +26,7 @@ export function MissionCinemaPanel({
   className,
 }: Props) {
   return (
-    <aside className={cn("mission-cinema relative overflow-hidden rounded-[28px] p-6 sm:p-8", className)}>
+    <aside className={cn("mission-cinema relative overflow-hidden rounded-3xl p-6 sm:p-8", className)}>
       <div className="mission-cinema-aurora" aria-hidden />
       <div className="mission-cinema-grid" aria-hidden />
 
@@ -101,7 +101,7 @@ export function MissionInviteCard({
 }: CtaProps) {
   return (
     <section
-      className="mission-invite relative overflow-hidden rounded-[28px] border border-white/15 p-6 text-center sm:p-10"
+      className="mission-invite relative overflow-hidden rounded-3xl border border-white/15 p-6 text-center sm:p-10"
       style={
         {
           "--exp-accent": accent,

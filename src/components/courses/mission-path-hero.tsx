@@ -19,7 +19,7 @@ export function MissionPathHero({
   totalPhases,
 }: Props) {
   return (
-    <div className="mb-10 overflow-hidden rounded-[28px] border border-nova-light-gray bg-gradient-to-br from-nova-deep-blue via-[#0b1a3b] to-[#103663] p-8 text-white shadow-nova-lg sm:p-10">
+    <div className="mb-10 overflow-hidden rounded-3xl border border-nova-light-gray bg-gradient-to-br from-nova-deep-blue via-[#0b1a3b] to-[#103663] p-8 text-white shadow-nova-lg sm:p-10">
       <div className="grid gap-8 lg:grid-cols-[auto_1fr] lg:items-start">
         <PathwayIcon
           pathway={meta.pathway}

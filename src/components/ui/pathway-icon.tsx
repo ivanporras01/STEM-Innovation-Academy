@@ -24,19 +24,19 @@ const VARIANT_STYLES = {
     sizes: "36px",
   },
   sm: {
-    box: "h-12 w-12 rounded-[16px]",
+    box: "h-12 w-12 rounded-2xl",
     sizes: "48px",
   },
   card: {
-    box: "h-[68px] w-[68px] rounded-[20px]",
+    box: "h-[68px] w-[68px] rounded-nova",
     sizes: "68px",
   },
   hero: {
-    box: "h-28 w-28 rounded-[32px]",
+    box: "h-28 w-28 rounded-3xl",
     sizes: "112px",
   },
   badge: {
-    box: "h-[88px] w-[88px] rounded-[24px]",
+    box: "h-[88px] w-[88px] rounded-3xl",
     sizes: "88px",
   },
 } as const;
@@ -56,7 +56,7 @@ export function PathwayIcon({ pathway, variant = "card", className }: Props) {
     return (
       <span
         className={cn(
-          "grid h-[68px] w-[68px] place-items-center rounded-[20px] bg-nova-deep-blue text-2xl text-white",
+          "grid h-[68px] w-[68px] place-items-center rounded-nova bg-nova-deep-blue text-2xl text-white",
           className
         )}
         aria-hidden

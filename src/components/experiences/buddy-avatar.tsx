@@ -14,7 +14,7 @@ const sizeClasses = {
   /** Compact circular portrait for LAB grid cells / rover tokens. */
   tile: "h-10 w-10 rounded-full sm:h-12 sm:w-12",
   sm: "h-10 w-10 rounded-xl",
-  md: "h-[72px] w-[72px] rounded-[18px]",
+  md: "h-[72px] w-[72px] rounded-nova",
   lg: "h-24 w-24 rounded-3xl",
   xl: "h-28 w-28 rounded-3xl",
   /** Portrait frame matching buddy art (~2:3) so faces stay proportional in the grid. */

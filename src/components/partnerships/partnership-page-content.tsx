@@ -11,6 +11,7 @@ import {
 import { NOVA_COLLEGE, NOVA_SCHOOL, NOVA_STEM_HUB } from "@/lib/novahub-brand";
 import type { AppLocale } from "@/lib/locale";
 import { getCopyLocale } from "@/lib/locale";
+import { PageHero } from "@/components/ui/page-hero";
 
 const COPY = {
   en: {
@@ -89,20 +90,17 @@ export function PartnershipPageContent({ locale = "en" }: Props) {
     <>
       <section className="nova-section-cosmic relative overflow-hidden border-b border-white/10 py-16 text-white">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-nova-cyan/15 via-transparent to-nova-orange/10" />
-        <div className="nova-container relative">
-          <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-nova-cyan">
-            ✦ {NOVA_STEM_HUB.name}
-          </p>
-          <h1 className="text-3xl font-black sm:text-4xl lg:text-5xl">{copy.title}</h1>
-          <p className="mt-4 max-w-2xl text-lg text-white/85">{copy.subtitle}</p>
-          <p className="mt-3 max-w-3xl text-sm text-nova-cyan-light/80">{copy.description}</p>
-          <p className="mt-2 text-xs font-semibold uppercase tracking-wider text-nova-orange/90">
-            {copy.metaLine}
-          </p>
-          <Link href={applyPath} className="nova-btn-primary nova-btn-glow mt-8 inline-flex">
+        <PageHero
+          eyebrow={`✦ ${NOVA_STEM_HUB.name}`}
+          title={copy.title}
+          subtitle={copy.subtitle}
+          description={copy.description}
+        >
+          <p className="text-xs font-semibold uppercase tracking-wider text-nova-orange/90">{copy.metaLine}</p>
+          <Link href={applyPath} className="nova-btn-primary nova-btn-glow mt-4 inline-flex">
             {copy.registerCta}
           </Link>
-        </div>
+        </PageHero>
       </section>
 
       <main className="nova-space-section relative flex-1">

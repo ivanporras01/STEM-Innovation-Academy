@@ -289,7 +289,7 @@ export function ExperiencePlayer({
 
         <main
           className={cn(
-            "experience-stage overflow-hidden rounded-[28px] border border-white/10 shadow-2xl",
+            "experience-stage overflow-hidden rounded-3xl border border-white/10 shadow-2xl",
             stage === "lab" ? "bg-transparent p-0" : "bg-nova-surface/95 p-6 text-white sm:p-10 lg:p-14",
             animating && "experience-stage-exit"
           )}

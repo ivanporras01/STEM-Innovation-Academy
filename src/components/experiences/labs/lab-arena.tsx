@@ -62,7 +62,7 @@ export function LabArena({
     <div
       data-theme={theme}
       className={cn(
-        "lab-arena relative overflow-hidden rounded-[28px] border p-4 sm:p-6",
+        "lab-arena relative overflow-hidden rounded-3xl border p-4 sm:p-6",
         THEME_CLASS[theme],
         failFlash && "lab-arena--fail",
         success && "lab-arena--win",

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { PageHero } from "@/components/ui/page-hero";
 import { OrbitoRealGuide } from "@/components/orbit/orbito-real-guide";
 import { ORBITO_REAL_VARIANTS, type OrbitoRealId } from "@/components/orbit/orbito-real-catalog";
 
@@ -21,13 +22,13 @@ export default function OrbitoGalleryPage() {
   return (
     <div className="relative flex flex-1 flex-col">
       <main className="nova-space-section flex-1">
-        <div className="nova-container py-8">
-          <div className="mx-auto mb-8 max-w-xl text-center">
-            <h1 className="text-3xl font-black text-white sm:text-4xl">Elige tu Orbita</h1>
-            <p className="mt-3 text-nova-cyan-light/80">
-              Uno por uno — usa las flechas para comparar. Cuando elijas, escríbeme el número.
-            </p>
-          </div>
+        <PageHero
+          title="Elige tu Orbita"
+          description="Uno por uno — usa las flechas para comparar. Cuando elijas, escríbeme el número."
+          align="center"
+          className="py-8"
+        />
+        <div className="nova-container pb-8">
 
           {/* Single robot viewer */}
           <div className="nova-glass-card mx-auto max-w-lg border-2 border-nova-cyan/30 p-6 sm:p-8">

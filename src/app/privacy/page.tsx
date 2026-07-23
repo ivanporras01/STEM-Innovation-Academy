@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHero } from "@/components/ui/page-hero";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -11,12 +12,10 @@ export default function PrivacyPage() {
   return (
     <div className="relative flex flex-1 flex-col">
       <main className="nova-page-main flex-1 py-12">
+        <PageHero title="Privacy Policy" description="Effective Date: January 1, 2026" className="mb-8" />
         <div className="nova-container max-w-3xl">
           <article className="nova-glass-island p-8 sm:p-10">
-            <h1 className="text-2xl font-bold text-white sm:text-3xl">Privacy Policy</h1>
-            <p className="mt-2 text-sm text-nova-cyan-light/70">Effective Date: January 1, 2026</p>
-
-            <section className="mt-8 space-y-6 text-sm leading-relaxed text-nova-cyan-light/85">
+            <section className="space-y-6 text-sm leading-relaxed text-nova-cyan-light/85">
               <div>
                 <h2 className="text-lg font-semibold text-white">1. Introduction</h2>
                 <p className="mt-2">

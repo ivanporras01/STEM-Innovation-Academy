@@ -704,7 +704,7 @@
 
   /* ── Mission Control LAB HUD ── */
   .lab-hud-shell {
-    @apply relative overflow-hidden rounded-[28px] border shadow-2xl;
+    @apply relative overflow-hidden rounded-3xl border shadow-2xl;
     border-color: color-mix(in srgb, var(--exp-accent) 32%, transparent);
     background:
       radial-gradient(ellipse at 12% 0%, color-mix(in srgb, var(--exp-accent) 22%, transparent), transparent 50%),

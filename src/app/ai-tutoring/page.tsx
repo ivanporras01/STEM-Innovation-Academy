@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Atom, Orbit, Sparkles } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { buildPageMetadata } from "@/lib/seo";
+import { PageHero } from "@/components/ui/page-hero";
 import { isNovaAiTutoringEnabled } from "@/lib/nova-ai-tutoring";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -21,19 +22,17 @@ export default async function AiTutoringPage() {
       <>
         <main className="nova-section-cosmic relative overflow-hidden py-20 text-white sm:py-28">
           <div className="absolute inset-0 opacity-40 [background:radial-gradient(circle_at_20%_20%,rgba(0,212,255,0.16),transparent_26%),radial-gradient(circle_at_80%_65%,rgba(127,86,217,0.2),transparent_30%)]" />
-          <div className="nova-container relative max-w-5xl">
-            <div className="mx-auto max-w-3xl text-center">
-              <p className="inline-flex items-center gap-2 rounded-full border border-nova-orange/40 bg-nova-orange/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-nova-orange">
-                <Sparkles className="h-3.5 w-3.5" aria-hidden />
-                Coming Soon
-              </p>
-              <h1 className="mt-6 text-4xl font-black tracking-tight text-white sm:text-6xl">
-                NOVA AI Tutoring is on its way.
-              </h1>
-              <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-nova-cyan-light/85 sm:text-xl">
-                A quiet Math &amp; Science tutoring space for Middle &amp; High School (grades 6–12)—designed to help Explorers think through problems, one step at a time.
-              </p>
-            </div>
+          <div className="nova-container relative max-w-5xl text-center">
+            <p className="inline-flex items-center gap-2 rounded-full border border-nova-orange/40 bg-nova-orange/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-nova-orange">
+              <Sparkles className="h-3.5 w-3.5" aria-hidden />
+              Coming Soon
+            </p>
+            <PageHero
+              title="NOVA AI Tutoring is on its way."
+              subtitle="A quiet Math &amp; Science tutoring space for Middle &amp; High School (grades 6–12)—designed to help Explorers think through problems, one step at a time."
+              align="center"
+              className="mt-4"
+            />
 
             <div className="mt-12 grid gap-4 sm:grid-cols-3">
               {[
